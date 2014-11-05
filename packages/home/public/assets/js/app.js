@@ -178,9 +178,10 @@ $(function(){
 
         //频道选择类型
         choseType: function(e){
+            console.log(event);
             $('.classify input').removeClass('chosen');
-            $(event.currentTarget).addClass('chosen');
-            this.channel.set({type : $(event.currentTarget).attr('name')});
+            $(event.target).addClass('chosen');
+            this.channel.set({type : $(event.target).attr('name')});
         },
 
         //创建频道

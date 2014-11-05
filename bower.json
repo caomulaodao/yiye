@@ -6,6 +6,7 @@
     "bootstrap": "3.1.1",
     "underscore": "1.7.0",
     "backbone": "1.1.2",
-    "moment": "~2.8.3"
+    "moment": "~2.8.3",
+    "plupload": "~2.1.2"
   }
 }
