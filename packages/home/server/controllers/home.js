@@ -1,0 +1,126 @@
+/**
+ * Created by laodao on 14-10-15.
+ */
+
+var mongoose = require('mongoose'),
+    async = require('async'),
+    Channel2User = mongoose.model('Channel2User'),
+    Channels = mongoose.model('Channels'),
+    Bookmarks = mongoose.model('Bookmarks');
+
+//获取channel数据
+exports.getInitChannels = function(req,res,Home){
+    async.parallel({
+            adm: function(callback1){
+                //userId:req.user._id,type:{$in:['creator','admin']}
+                Channel2User.find({userId:req.user._id,type:{$in:['creator','admin']}},'channelId name logo type lastTime news',function(err,admChannels){
+                    if(err) return console.log(err);
+                    async.map(admChannels,function(item,callback2){
+                        Bookmarks.count({channelId:item.channelId,postTime:{$gte:item.lastTime}},function(err,count){
+                            item['news'] = count;
+                            callback2(null,item);
+                        });
+                    },function(err,results){
+                        results.sort(function(a,b){
+                            return a.news < b.news ? 1 : -1;
+                        });
+                        callback1(null,results);
+                    });
+                });
+            },
+            sub: function(callback1){
+                Channel2User.find({userId:req.user._id,type:'follower'},'channelId name logo type lastTime news',function(err,subChannels){
+                    if(err) return console.log(err);
+                    async.map(subChannels,function(item,callback2){
+                        Bookmarks.count({channelId:item.channelId,postTime:{$gte:item.lastTime}},function(err,count){
+                            item['news'] = count;
+                            callback2(null,item);
+                        });
+                    },function(err,results){
+                        results.sort(function(a,b){
+                            return a.news < b.news ? 1 : -1;
+                        });
+                        callback1(null,results);
+                    });
+                });
+            },
+            creatNum: function(callback){
+                Channel2User.count({userId:req.user._id,type:'creator'},function(err,count){
+                    callback(null,count)
+                });
+            }
+        },
+        function(err, results) {
+            //渲染home页面
+            Home.render('index', {admChannelList:results.adm,subChannelList:results.sub,creatNum:results.creatNum}, function (err, html) {
+                //Rendering a view from the Package server/views
+                if(err) return console.log(err);
+                res.send(html);
+            });
+        });
+}
+
+//添加管理员与频道对应关系
+exports.addAdmChannel = function(){
+
+};
+
+//新建一个频道
+exports.createChannel = function(req,res){
+    var channels = new Channels(req.body);
+    channels.tags = getTags(channels.tags);
+    channels.creator = req.user.username;
+    channels.save(function(err,doc){
+        if(err){
+            return res.send({info:err});
+        }
+        var admChannel = new Channel2User({
+            userId:req.user._id,
+            channelId:doc._id,
+            name: channels.name,
+            type: "creator",
+            logo: channels.logo
+        });
+        admChannel.save(function(err){
+            if(err){
+                return res.send({info:err});
+            }
+            res.send({info:"success"});
+        });
+    });
+};
+
+//获取关注或是建立的频道
+exports.getChannelsList = function(req,res){
+    if(!req.user) return res.status(401).send({info:'请先登录或注册'});
+    Channel2User.find({userId:req.user._id},'channelId name logo type lastTime news',function(err,channels){
+        if(err) return console.log(err);
+        async.map(channels,function(item,callback){
+            Bookmarks.count({channelId:item.channelId,postTime:{$gte:item.lastTime}},function(err,count){
+                item['news'] = count;
+                callback(null,item);
+            });
+        },function(err,results){
+            if(err) return console.log(err);
+            results.sort(function(a,b){
+                return a.news < b.news ? 1 : -1;
+            });
+            res.json(results);
+        });
+    });
+};
+
+
+function getTags(str){
+    if(!str) return [];
+    str = str.toString();
+    var tags = [];
+    var array = str.split(/[,，]/);
+    array.forEach(function(item){
+        newItem = item.trim();
+        if(newItem !== ''){
+            tags.push(newItem);
+        }
+    });
+    return tags;
+}

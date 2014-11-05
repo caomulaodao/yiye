@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{channel.name}}-频道管理</title>
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/channels/assets/css/channels.css">
+</head>
+
+<body>
+<!-- control page -->
+<div id="control-page">
+    <div>
+        <div id="bg-img" style="background: url({{ channel.banner }}) no-repeat;background-size: cover;"></div>
+        <div id="bg-opacity"></div>
+    </div>
+    <div id="control-page-content">
+        <div id="control-header">
+            <a href="javascript:;" id="yiye-logo">
+                <img src="/channels/assets/img/logo_white2.png">
+            </a>
+            <div id="menu-btn">
+                <i class="glyphicon glyphicon-align-justify"></i>
+                <ul id="channel-menu">
+                    <li id="links-btn"><a href="/channel/{{ ''+channel._id }}" >书签</a></li>
+                    <li id="members-btn"><a href="/channel/{{ ''+channel._id }}/follower" >关注者</a></li>
+                    {% if channel.type == 'follower' %} <li id="cancel-sub"><a href="#">取消订阅</a></li>  {% endif %}
+                </ul>
+            </div>
+
+        </div>
+
+        <div id="control-body" data-channelId="{{ ''+channel._id }}">
+            <div id="channel-part">
+                <div id="channel-logo">
+                    <img src="{{ channel.logo }}">
+                </div>
+                <div id="channel-name">
+                    <p>{{ channel.name }}</p>
+                </div>
+                <div id="founder">
+                    <span>创始人:&nbsp </span><a href="javascript:;">{{ channel.creator }}</a>
+                </div>
+                <div id="ctrl-description">
+                    <h5>描述：</h5>
+                    <span>{{ channel.description }}</span>
+                </div>
+            </div>
+            <div id="subscribe">
+                <button id="subscribe-btn">{% if channel.type == 'not' %} <span id="channel-sub">订阅该频道</span> {% endif %} {% if channel.type == 'admin' %} <span id="channel-manage">管理</span> {% endif %} {% if channel.type == 'follower' %} <span id="channel-subed">已订阅</span> {% endif %} <span>|</span><span class="icon-rss"></span>{{ channel.subNum }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- content page -->
+<div id="content-page">
+    <div id="content-page-content">
+        <div id="post-list">
+            <div id="post-list-title">
+                <h3>新提交</h3>
+            </div>
+            <ul>
+                <li class="post-item">
+                    <div class="link-part-content">
+                        <div id="bookmark-pic"><img src="http://yiye.qiniudn.com/bImage/cc71e81061b890975638da4d0b26d727.jpg"/></div>
+                        <a class="link" target="_blank" href="http://www.zhihu.com/question/20304744">win下有没有这样的软件：为不同的应用程序保留输入法状态，或者可以设置不同的默认输入法？ - 知乎</a>
+                        <div class="description">
+                            <span>描述：</span>知乎黄江舟我的主页私信设置退出知乎搜索搜索提问首页话题发现消息0消息0用户0赞同和感谢0查看全部»x软件MicrosoftWindows输入法修改win下有没有这样的软件：为不同的应用程序保留输入法状
+                        </div>
+                        <div class="footer-part">
+                            <span class="submit-time">提交于:04:11:00</span>
+                            <span>by <a href="#" data-userId="[object Object]">huhualo</a></a></span>
+                            <span><i class="glyphicon glyphicon-star"></i><a class="collect" href="#">通过</a></span>
+                            <span><i class="glyphicon glyphicon-star"></i><a class="collect" href="#">编辑</a></span>
+                            <span><i class="glyphicon glyphicon-star"></i><a class="collect" href="#">退回</a></span>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script rel="script" src="/bower_components/jquery/dist/jquery.js"></script>
+<script rel="script" src="/channels/assets/js/channels.js"></script>
+</body>
+</html>

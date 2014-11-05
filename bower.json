@@ -1,0 +1,11 @@
+{
+  "name": "mean",
+  "version": "0.3.3",
+  "dependencies": {
+    "jquery": "1.x",
+    "bootstrap": "3.1.1",
+    "underscore": "1.7.0",
+    "backbone": "1.1.2",
+    "moment": "~2.8.3"
+  }
+}

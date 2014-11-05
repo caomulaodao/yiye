@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>登陆 | 一叶书签账户</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/system/assets/css/common.css">
+</head>
+
+<body>
+<section class="content">
+    <div class="form-unit">
+        <a class="brand">
+            <img src="/system/assets/img/logo.png">
+        </a>
+        <h3>使用您的 一叶书签 账号登录</h3>
+        <form class="auth-form" id="YIYE_SigninForm" >
+            <div class="form-field">
+                <input type="email" placeholder="邮箱" name="email" value="" class="form-control" autofocus=""/>
+                <span class="glyphicon glyphicon-envelope"/>
+            </div>
+            <div class="form-field">
+                <input type="password" placeholder="密码" name="password" class="form-control"/>
+                <span class="glyphicon glyphicon-lock"/>
+            </div>
+            <p class="bg-danger danger-info" id="YIYE_ErrorInfo"></p>
+            <button type="button" class="btn" id="YIYE_Signin">登录</button>
+            <div class="action-wrapper">
+                <a href="/forgot" class="forget">忘记密码？</a>
+                <a href="/signup" class="signup">免费注册</a>
+            </div>
+        </form>
+    </div>
+</section>
+<script rel="script" src="/bower_components/jquery/dist/jquery.js"></script>
+<script rel="script" src="/system/assets/js/system.signin.js"></script>
+
+</body>

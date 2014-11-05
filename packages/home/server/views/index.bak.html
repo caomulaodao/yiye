@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Personal_page</title>
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/home/assets/css/home.css">
+</head>
+<body>
+<!--shadow filter-->
+<div class="shadow"></div>
+<!--Popup personal center-->
+<div class="personal-center">
+    <header>
+        <a href="javascript:;" class="close-icon"></a>
+        <p class="personal-center-title">个人中心</p>
+        <div class="change-avatar">
+            <img src="https://avatars0.githubusercontent.com/u/4972516?v=2&s=460">
+            <div><span class="glyphicon glyphicon-pencil"></span></div>
+        </div>
+    </header>
+    <nav class="personal-center-tab">
+        <ul>
+            <li class="active">消息提醒</li>
+            <li>账号设置</li>
+            <li>功能设置</li>
+        </ul>
+    </nav>
+    <div class="tab-content">
+        <div class="message-content">
+            <ul>
+                <li>您提交到&nbsp<a href="javascript:;">前端开发前段开发前端开发前读卡第三方阿萨帝开发前端开发前读卡第三方阿萨帝开发前端开发前读卡第三方阿萨帝开发前端开发前读卡第三方阿萨帝发生的爱仕达爱施德f</a>&nbsp的书签通过审核</li>
+                <li><a href="javascript:;">王小二</a>&nbsp向您的&nbsp<a href="javascript:;">摄影与绘画</a>&nbsp频道提交书签</li>
+                <li><a href="javascript:;">李狗蛋</a>&nbsp在&nbsp<a href="javascript:;">一条链接名字中</a>&nbsp中回复了您</li>
+            </ul>
+        </div>
+        <div class="account-set">
+            <form class="account-content">
+                <label>昵&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp称：</label>
+                <span class="original-name">zweipix</span><a class="edit-button"><i class="glyphicon glyphicon-pencil"></i>修改</a><input class="reset-name short-ver"type="text"value="zweipix" style="display:none">
+                <input class="reset-name-confirm" type="button" value="确定"><br><br>
+                <div class="name-divide"></div>
+                <label>当前密码：</label><input class="recent-password"type="password"><br>
+                <label>新&nbsp&nbsp密&nbsp&nbsp码：</label><input class="new-password"type="password"><br>
+                <label>确认密码：</label><input class="comfirm-password"type="password"><br>
+                <button class="confirm-change">修改密码</button>
+            </form>
+
+            <button class="exit-account">退出账号</button>
+        </div>
+        <div class="function-set">
+            <form class="notification-form">
+                <div class="form-group">
+                    <label>功能一</label>
+                    <div class="toggle green pull-right">
+                        <input class="check" type="button" data-type="newpost.mobile">
+                        <div class="switch"></div>
+                        <div class="track"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>功能二</label>
+                    <div class="toggle green pull-right">
+                        <input class="check" type="button" data-type="newpost.mobile">
+                        <div class="switch"></div>
+                        <div class="track"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>功能三</label>
+                    <div class="toggle green pull-right">
+                        <input class="check" type="button" data-type="newpost.mobile">
+                        <div class="switch"></div>
+                        <div class="track"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>功能四</label>
+                    <div class="toggle green pull-right">
+                        <input class="check" type="button" data-type="newpost.mobile">
+                        <div class="switch"></div>
+                        <div class="track"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>功能五</label>
+                    <div class="toggle green pull-right">
+                        <input class="check" type="button" data-type="newpost.mobile">
+                        <div class="switch"></div>
+                        <div class="track"></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!--create channel page-->
+<div class="create-page">
+    <header>
+        <span>新建频道</span>
+        <a class="close-icon"></a>
+        <div class="channel-logo">
+            <img src="https://avatars0.githubusercontent.com/u/4972516?v=2&s=460">
+            <div class="change-logo"><span class="glyphicon glyphicon-pencil"></span></div>
+        </div>
+
+        <form class="input-channel-name"><input class="channel-name-setting" type="text" placeholder="输入频道名称" name="channel-name" class="form-control" autofocus="true"></form>
+        <div class="background-change"><span class="glyphicon glyphicon-pencil"></span></div>
+    </header>
+    <div class="body">
+        <form>
+            <div class="brief-inf">
+                <label>描述：</label>
+                <textarea class="brief-inf-content"></textarea>
+            </div>
+            <div class="classify">
+                <label>分类：</label><br>
+                <input type="button" value="生活" name="life">
+                <input type="button" value="科技" name="technology">
+                <input type="button" value="人文" name="humanities">
+                <input type="button" value="娱乐" name="entertainment">
+                <input type="button" value="体育" name="sports">
+            </div>
+            <div class="channel-tags">
+                <label>标签：</label>
+                <div class="channel-tags-content" contenteditable="true">
+
+                </div>
+            </div>
+            <div class="finish-button"><button class="finish-channel">创建频道</button></div>
+        </form>
+    </div>
+</div>
+
+<!--setting channel page-->
+<div class="setting-channel">
+    <div class="header">
+        <span>频道信息</span>
+        <a class="close-icon"></a>
+        <div class="channel-logo">
+            <img src="https://avatars0.githubusercontent.com/u/4972516?v=2&s=460">
+            <div class="change-logo"><span class="glyphicon glyphicon-pencil"></span></div>
+        </div>
+
+        <div class="input-channel-name"><input class="readonly-name" type="text" value="频道的名字" readonly="readonly" name="channel-name" class="form-control" autofocus="true"></div>
+        <div class="background-change"><span class="glyphicon glyphicon-pencil"></span></div>
+    </div>
+    <div class="body">
+
+        <div class="channel-inf-tab">
+            <div class="basic-inf-tab active">基本信息</div>
+            <div class="member-inf-tab">成员管理</div>
+        </div>
+
+        <div class="channel-tab-content">
+            <div class="basic-inf">
+                <form class="channel-inf-form">
+
+                    <label>频道名字：</label><input class="channel-name-reset"type="text" value="前段开发频道" placeholder="输入频道名字"><br><br>
+                    <label>描&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp述：</label><textarea class="description-reset" >这些放置描述的内容，可以被用户修改</textarea><br><br>
+                    <div class="classify-reset">
+                        <label>分&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp类：</label>
+                        <div class="classify reset">
+                            <input type="button" value="生活" name="life">
+                            <input type="button" value="科技" name="technology">
+                            <input type="button" value="人文" name="humanities">
+                            <input type="button" value="娱乐" name="entertainment">
+                            <input type="button" value="体育" name="sports">
+                        </div>
+                    </div><br>
+                    <label>标&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp签：</label><input type="text">
+                    <div class="reset-button-box"><button class="reset-button">重置</button></div>
+                </form>
+            </div>
+            <div class="member-inf">
+                <ul class="member-list">
+                    <li class="founder">
+                        <a href="javascript:;"><img src="./img/users_img/2.jpg"></a>
+                        <a href="javascript:;">飞翔的企鹅</a><br>
+                        <span>建立者</span>
+                    </li>
+                    <li class="admin">
+                        <a href="javascript:;"><img src="https://avatars0.githubusercontent.com/u/4972516?v=2&s=460"></a>
+                        <button>删除管理员</button>
+                        <a href="javascript:;">王老二</a><br>
+                        <span>管理员</span>
+                    </li>
+                    <li class="admin">
+                        <a href="javascript:;"><img src="https://avatars0.githubusercontent.com/u/4972516?v=2&s=460"></a>
+                        <button>删除管理员</button>
+                        <a href="javascript:;">李狗蛋</a><br>
+                        <span>管理员</span>
+                    </li>
+                    <li>
+                        <a href="javascript:;">
+                            <img src="https://avatars0.githubusercontent.com/u/4972516?v=2&s=460">
+                        </a>
+                        <button>设为管理员</button>
+                        <a href="javascript:;">张三</a><br>
+                        <span class="already-submit">已提交：23</span>
+                    </li>
+                    <li>
+                        <a href="javascript:;">
+                            <img src="https://avatars0.githubusercontent.com/u/4972516?v=2&s=460">
+                        </a>
+                        <button>设为管理员</button>
+                        <a href="javascript:;">张三</a><br>
+                        <span class="already-submit">已提交：23</span>
+                    </li>
+
+                    <li>
+                        <a href="javascript:;">
+                            <img src="https://avatars0.githubusercontent.com/u/4972516?v=2&s=460">
+                        </a>
+                        <button>设为管理员</button>
+                        <a href="javascript:;">张三</a><br>
+                        <span class="already-submit">已提交：23</span>
+                    </li>
+                    <li>
+                        <a href="javascript:;">
+                            <img src="https://avatars0.githubusercontent.com/u/4972516?v=2&s=460">
+                        </a>
+                        <button>设为管理员</button>
+                        <a href="javascript:;">张三</a><br>
+                        <span class="already-submit">已提交：23</span>
+                    </li>
+                    <li>
+                        <a href="javascript:;">
+                            <img src="https://avatars0.githubusercontent.com/u/4972516?v=2&s=460">
+                        </a>
+                        <button>设为管理员</button>
+                        <a href="javascript:;">张三</a><br>
+                        <span class="already-submit">已提交：23</span>
+                    </li>
+                    <li>
+                        <a href="javascript:;">
+                            <img src="https://avatars0.githubusercontent.com/u/4972516?v=2&s=460">
+                        </a>
+                        <button>设为管理员</button>
+                        <a href="javascript:;">张三</a><br>
+                        <span class="already-submit">已提交：23</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<!--control page-->
+<div class="control-page">
+    <div class="control-page-content">
+        <div class="control-header">
+            <a class="avatar">
+                <img src="https://avatars0.githubusercontent.com/u/4972516?v=2&s=460">
+                <div class="red-point">9</div>
+            </a>
+            <img src="/home/assets/img/brand_name_white.png">
+            <a href="http://www.baidu.com"><span class="glyphicon glyphicon-th-large"></span></a>
+        </div>
+
+        <div class="control-body">
+            <div class="chose-button">
+                <button class="subscription active">订阅</button>
+                <button class="administration ">管理</button>
+            </div>
+
+            <div class="channel-list">
+                <ul>
+                    <li class="active">
+                        <div class="channel-img">
+                            <img src="http://images.51cto.com/files/uploadimg/20120808/0929370.jpg">
+                        </div>
+                        <span class="channel-name">前端开发</span>
+                        <span class="links-num">78</span>
+                    </li>
+                    <li>
+                        <div class="channel-img">
+                            <img src="http://images.51cto.com/files/uploadimg/20120808/0929370.jpg">
+                        </div>
+                        <span class="channel-name">前端开发</span>
+                        <span class="links-num">78</span>
+                    </li>
+                    <li>
+                        <div class="channel-img">
+                            <img src="http://images.51cto.com/files/uploadimg/20120808/0929370.jpg">
+                        </div>
+                        <span class="channel-name">前端开发</span>
+                        <span class="links-num">78</span>
+                    </li>
+                    <li>
+                        <div class="channel-img">
+                            <img src="http://images.51cto.com/files/uploadimg/20120808/0929370.jpg">
+                        </div>
+                        <span class="channel-name">前端开发</span>
+                        <span class="links-num">78</span>
+                    </li>
+                    <li>
+                        <div class="channel-img">
+                            <img src="http://images.51cto.com/files/uploadimg/20120808/0929370.jpg">
+                        </div>
+                        <span class="channel-name">前端开发</span>
+                        <span class="links-num">78</span>
+                    </li>
+
+                </ul>
+                <div style="height:180px"></div>
+            </div>
+
+            <div class="admin-interface">
+                <ul>
+                    <li class="active">
+                        <div class="channel-img">
+                            <img src="https://avatars0.githubusercontent.com/u/4972516?v=2&s=460">
+                        </div>
+                        <span class="channel-name">Front-End-Engineer</span>
+                        <span class="links-num">234</span>
+                    </li>
+
+
+                    <div class="create-channel">
+                        <button>
+                            <span class="glyphicon glyphicon-plus"></span>
+                            <span>新建频道</span>
+                        </button>
+                    </div>
+                </ul>
+                <div style="height:180px"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--content page-->
+<div class="content-page">
+    <div class="content-page-content">
+        <div class="content-header">
+            <div class="content-channel">
+                <div class="header-channel-img">
+                    <a href="javascript:;"><img src="http://images.51cto.com/files/uploadimg/20120808/0929370.jpg"></a>
+                </div>
+                <a class="header-channel-name">前端开发</a>
+            </div>
+            <div class="header-component">
+                <div class="channel-info-iten">
+                    <strong>书签</strong>
+                    <a href="#">234</a>
+                </div>
+                <div class="channel-info-iten">
+                    <strong>订阅者</strong>
+                    <a href="#">376</a>
+                </div>
+            </div>
+        </div>
+        <div class="content-body">
+            <ul>
+                <div class="date-divide">
+                    <div>今天</div>
+                </div>
+                <li>
+                    <div class="single-link">
+                        <div class="single-link-button">
+                            <button class="up" title="赞同">
+                                <i class="vote-up"></i>
+                                <!-- <span class="lable">赞同</span> -->
+                                <span class="count">6</span>
+                            </button>
+                            <button class="down" title="反对，不会显示你的姓名">
+                                <i class="vote-down"></i>
+                                <!-- <span class="label">
+                                    反对，不会显示你的姓名
+                                </span> -->
+                            </button>
+                        </div>
+                        <div class="link-part-content">
+                            <div id="bookmark-pic"><img src="http://yiye.qiniudn.com/sss.png"/></div>
+                            <a class="link" target="_blank"href="javascript:;">这是一条链接的名字</a>
+                            <div class="description">
+                                <span>描述：</span>when we first met you told me that disguise is always self-portrait , how true of you ,the combanation to your safe , your measurements. but this , this is far more intermate, this is your heart, and you should never let it rule your head.
+                            </div>
+                            <div class="footer-part">
+                                <span class="submit-time">提交于:12:32</span>
+                                <span>by <a href="#">xxx</a></a></span>
+                                <span><i class="glyphicon glyphicon-comment"></i><a class="comment" href="#">评论(256)</a></span>
+                                <span><i class="glyphicon glyphicon-star"></i><a class="collect" href="#">收藏</a></span>
+                            </div>
+                        </div>
+
+                    </div>
+                </li>
+
+                <div class="date-divide">
+                    <div>昨天</div>
+                </div>
+
+
+                <div class="date-divide">
+                    <div>2014-9-23</div>
+                </div>
+
+
+            </ul>
+            <div style="height:200px"></div>
+        </div>
+    </div>
+</div>
+
+<script rel="script" src="/bower_components/underscore/underscore.js"></script>
+<script rel="script" src="/bower_components/backbone/backbone.js"></script>
+<script rel="script" src="/bower_components/jquery/dist/jquery.js"></script>
+<script rel="script" src="/home/assets/js/home.js"></script>
+<script rel="script" src="/home/assets/js/app.js"></script>
+</body>
+</html>

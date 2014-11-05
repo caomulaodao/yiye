@@ -1,0 +1,270 @@
+'use strict';
+
+/**
+ * Module dependencies.
+ */
+var mongoose = require('mongoose'),
+  User = mongoose.model('User'),
+  async = require('async'),
+  config = require('meanio').loadConfig(),
+  crypto = require('crypto'),
+  nodemailer = require('nodemailer'),
+  templates = require('../template');
+
+/**
+ * Auth callback
+ */
+exports.authCallback = function(req, res) {
+  res.redirect('/');
+};
+
+/**
+ * Show login form
+ */
+exports.signin = function(req, res) {
+  if (req.isAuthenticated()) {
+    return res.redirect('/');
+  }
+  res.redirect('#!/login');
+};
+
+/**
+ * Logout
+ */
+exports.signout = function(req, res) {
+  req.logout();
+  res.redirect('/');
+};
+
+/**
+ * Session
+ */
+exports.session = function(req, res) {
+  res.redirect('/');
+};
+
+/**
+ * Create user
+ */
+exports.create = function(req, res, next) {
+  var user = new User(req.body);
+
+  user.provider = 'local';
+  user.verifyToken = crypto.randomBytes(20).toString('hex') + crypto.createHash('md5').update(user.email).digest('hex').substr(0,16);
+  // because we set our user.provider to local our models/user.js validation will always be true
+  req.assert('email', '请输入有效的邮箱地址').isEmail();
+  req.assert('password', '密码长度为6到20位').len(6, 20);
+  req.assert('username', '用户名长度为1到20位').len(1, 20);
+
+  var errors = req.validationErrors();
+  if (errors) {
+    return res.status(400).send(errors);
+  }
+
+  // Hard coded for now. Will address this with the user permissions system in v0.3.5
+  user.roles = ['authenticated'];
+  user.save(function(err) {
+    if (err) {
+      switch (err.code) {
+        case 11000:
+          res.status(400).send([{
+            msg: '用户名已经被注册',
+            param: 'email'
+          }]);
+          break;
+        case 11001:
+          res.status(400).send([{
+            msg: '用户名已经被注册',
+            param: 'username'
+          }]);
+          break;
+        default:
+          var modelErrors = [];
+
+          if (err.errors) {
+
+            for (var x in err.errors) {
+              modelErrors.push({
+                param: x,
+                msg: err.errors[x].message,
+                value: err.errors[x].value
+              });
+            }
+
+            res.status(400).send(modelErrors);
+          }
+      }
+
+      return res.status(400);
+    }
+    sendVerify(user,req, function() {
+      var emailServer = 'http://mail.'+(user.email).split("@")[1];
+      req.flash('emailServer',emailServer);
+      return res.status(200).send({
+          redirectUrl:'/verify'
+      });
+    });
+  });
+};
+/**
+ * Send User
+ */
+exports.me = function(req, res) {
+  res.json(req.user || null);
+};
+
+/**
+ * Find user by id
+ */
+exports.user = function(req, res, next, id) {
+  User
+    .findOne({
+      _id: id
+    })
+    .exec(function(err, user) {
+      if (err) return next(err);
+      if (!user) return next(new Error('Failed to load User ' + id));
+      req.profile = user;
+      next();
+    });
+};
+
+/**
+ * Resets the password
+ */
+
+exports.resetpassword = function(req, res, next) {
+  User.findOne({
+    resetPasswordToken: req.body.token,
+    resetPasswordExpires: {
+      $gt: Date.now()
+    }
+  }, function(err, user) {
+    if (err) {
+      return res.status(400).json({
+        message: err
+      });
+    }
+    if (!user) {
+      return res.status(400).json({
+        message: '此链接失效，请重新找回密码'
+      });
+    }
+    req.assert('password', '密码长度为6到20位').len(6, 20);
+    req.assert('password2', '两次输入密码不相同').equals(req.body.password);
+    var errors = req.validationErrors();
+    if (errors) {
+      return res.status(400).send(errors);
+    }
+    user.password = req.body.password;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    user.save(function(err) {
+      req.logIn(user, function(err) {
+        if (err) return next(err);
+        return res.status(200).send({
+            redirectUrl:'/home'
+        });
+      });
+    });
+  });
+};
+
+/**
+ * Send reset password email
+ */
+function sendMail(mailOptions) {
+  var transport = nodemailer.createTransport('SMTP', config.mailer);
+  transport.sendMail(mailOptions, function(err, response) {
+    if (err) {console.log('err:'+err);return err;}
+    transport.close();
+    return response;
+  });
+}
+/**
+ *  发送验证邮件
+ */
+
+function sendVerify(user,req,done){
+    var mailOptions = {
+        to: user.email,
+        from: config.emailFrom
+    };
+    mailOptions = templates.verify_register_email(user, req, user.verifyToken, mailOptions);
+    var sendInfo = sendMail(mailOptions);
+    done();
+}
+
+/**
+ * 激活邮箱
+ */
+exports.verify = function(req, res, next){
+    User.findOne({
+        verifyToken: req.params.token
+    }, function(err, user) {
+        if (err) {
+           return res.redirect('/');
+        }
+        if(!user) {
+           return res.redirect('/');
+        }
+        user.verifyToken = undefined;
+        user.save(function(err) {
+            req.logIn(user, function(err) {
+                if (err) return next(err);
+                return res.redirect('/home');
+            });
+        });
+    });
+}
+
+/**
+ * Callback for forgot password link
+ */
+exports.forgotpassword = function(req, res, next) {
+  async.waterfall([
+      function(done) {
+        crypto.randomBytes(20, function(err, buf) {
+          var token = buf.toString('hex');
+          done(err, token);
+        });
+      },
+      function(token, done) {
+        User.findOne({
+            email: req.body.email
+        }, function(err, user) {
+          if (err || !user) return done(true);
+          done(err, user, token);
+        });
+      },
+      function(user, token, done) {
+        user.resetPasswordToken = token;
+        user.resetPasswordExpires = Date.now() + 3600000; // 1 hour
+        user.save(function(err) {
+          done(err, token, user);
+        });
+      },
+      function(token, user, done) {
+        var mailOptions = {
+          to: user.email,
+          from: config.emailFrom
+        };
+        mailOptions = templates.forgot_password_email(user, req, token, mailOptions);
+        sendMail(mailOptions);
+        var emailServer = 'http://mail.'+(user.email).split("@")[1];
+        req.flash('emailServer',emailServer);
+        done(null, true);
+      }
+    ],
+    function(err, status) {
+      if (err) {
+          return res.status(401).send({
+              message: "此邮箱用户不存在"
+          });
+      }
+      res.status(200).send({
+          redirectUrl:'/waitReset'
+      });
+    }
+  );
+};

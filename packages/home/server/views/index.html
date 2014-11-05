@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>黄江舟·一叶书签</title>
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/home/assets/css/home.css">
+</head>
+<body>
+<!--shadow filter-->
+<div class="shadow"></div>
+
+<!-- 弹出层 -->
+<div id="home-popup-layer">
+
+</div>
+
+<!--control page-->
+<div class="control-page">
+    <div class="control-page-content">
+        <div class="control-header" >
+            <a class="avatar" id="user-center">
+                <img src="https://avatars0.githubusercontent.com/u/4972516?v=2&s=460">
+                <div class="red-point">9</div>
+            </a>
+            <img src="/home/assets/img/brand_name_white.png" >
+            <a href="/"><span class="glyphicon glyphicon-th-large"></span></a>
+        </div>
+
+        <div class="control-body">
+            <div class="chose-button">
+                <button class="subscription active">订阅</button>
+                <button class="administration ">管理</button>
+            </div>
+
+            <div class="channel-list">
+                <ul id="sub-channel-list">
+                    {% for channel in subChannelList %}
+                    <li data-id="{{ ''+channel.channelId }}">
+                        <div class="channel-img">
+                            <img src="{{ channel.logo }}">
+                        </div>
+                        <span class="channel-name">{{ channel.name }}</span>
+                        <span class="links-num">{{ channel.news }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <div style="height:180px"></div>
+            </div>
+
+            <div class="admin-interface">
+                <ul id="admin-channel-list">
+                    {% for channel in admChannelList %}
+                        <li data-id="{{ ''+channel.channelId }}">
+                            <div class="channel-img">
+                                <img src="{{ channel.logo }}">
+                            </div>
+                            <span class="channel-name">{{ channel.name }}</span>
+                            <span class="links-num">{{ channel.news }}</span>
+                        </li>
+                    {% endfor %}
+                    <div class="create-channel">
+                        <button>
+                            <span class="glyphicon glyphicon-plus"></span>
+                            <span>新建频道({{ creatNum }}/5)</span>
+                        </button>
+                    </div>
+                </ul>
+                <div style="height:180px"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--content page-->
+<div class="content-page">
+</div>
+
+<!--create channel page-->
+<script type="text/template" id="tp-create-channels">
+    <div class="create-page">
+        <header id="channel-header">
+            <span>新建频道</span>
+            <a class="close-icon"></a>
+            <div class="channel-logo">
+                <img src="https://avatars0.githubusercontent.com/u/4972516?v=2&s=460" id="channel-logo">
+                <div class="change-logo" ><span class="glyphicon glyphicon-pencil" id="change-channel-logo"></span></div>
+            </div>
+            <form class="input-channel-name"><input class="channel-name-setting" type="text" placeholder="输入频道名称" name="channel-name" class="form-control" autofocus="true" id="new-channel-name"></form>
+            <div class="background-change"><span class="glyphicon glyphicon-pencil" id="change-channel-banner"></span></div>
+        </header>
+        <div class="body">
+                <div class="brief-inf">
+                    <label>描述：</label>
+                    <textarea class="brief-inf-content" id="new-channel-description"></textarea>
+                </div>
+                <div class="classify">
+                    <label>分类：</label><br>
+                    <input type="button" value="生活" name="life">
+                    <input type="button" value="科技" name="technology">
+                    <input type="button" value="人文" name="humanities">
+                    <input type="button" value="娱乐" name="entertainment">
+                    <input type="button" value="体育" name="sports">
+                </div>
+                <div class="channel-tags">
+                    <label>标签：</label>
+                    <input class="channel-tags-content" type="text" placeholder="多个标签请用逗号隔开" id="new-channel-tags">
+                </div>
+                <div class="finish-button"><button class="finish-channel">创建频道</button></div>
+        </div>
+    </div>
+</script>
+<script type="text/x-handlebars-template" id="tp-personal-center">
+    <div class="personal-center">
+        <header>
+            <a href="javascript:;" class="close-icon"></a>
+            <p class="personal-center-title">个人中心</p>
+            <div class="change-avatar">
+                <img src="https://avatars0.githubusercontent.com/u/4972516?v=2&s=460">
+                <div><span class="glyphicon glyphicon-pencil"></span></div>
+            </div>
+        </header>
+        <nav class="personal-center-tab">
+            <ul>
+                <li>消息设置</li>
+                <li class="active">账号管理</li>
+                <li>密码管理</li>
+            </ul>
+        </nav>
+        <div class="tab-content">
+            <div class="message-content">
+                <ul></ul>
+            </div>
+            <div  class="account-set" style="display:block">
+                <h1>姓名设置</h1>
+                <div id="account-change-name">
+                    <label>姓&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp名：</label>
+                    <span class="original-name">zweipix</span><a class="edit-button"><i class="glyphicon glyphicon-pencil"></i>修改</a>
+                </div>
+                <h1>修改密码</h1>
+                <div id="account-change-password">
+                    <div class="form-group">
+                        <label>当前密码：</label>
+                        <input type="password"  placeholder="Email">
+                    </div>
+                    <div class="form-group">
+                        <label>新&nbsp&nbsp密&nbsp&nbsp码：</label>
+                        <input type="password"  placeholder="Email">
+                    </div>
+                    <div class="form-group">
+                        <label>修改密码：</label>
+                        <input type="password" placeholder="Email">
+                    </div>
+                    <button class="btn confirm-change">修改密码</button>
+                </div>
+                <button class="btn account-quit">退出</button>
+
+
+            </div>
+            <div class="function-set">
+                <form class="notification-form">
+                    <div class="form-group">
+                        <label>功能一</label>
+                        <div class="toggle green pull-right">
+                            <input class="check" type="button" data-type="newpost.mobile">
+                            <div class="switch"></div>
+                            <div class="track"></div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/x-handlebars-template" id="tp-channels-main">
+    <div class="content-page-content">
+        <div class="content-header">
+            <div class="content-channel">
+                <div class="header-channel-img">
+                    <a href="javascript:;"><img src="<%= info.logo %>"></a>
+                </div>
+                <a class="header-channel-name" target="_blank" href="http://127.0.0.1:3000/channel/<%= info._id %>"><%= info.name %></a>
+            </div>
+            <div class="header-component">
+                <div class="channel-info-iten">
+                    <strong>书签</strong>
+                    <a href="#"><%= info.bmkNum %></a>
+                </div>
+                <div class="channel-info-iten">
+                    <strong>订阅者</strong>
+                    <a href="#"><%= info.subNum %></a>
+                </div>
+            </div>
+        </div>
+        <div class="content-body">
+            <ul>
+                <% for(var i = 0;i< list.length; i++){%>
+                <div class="date-divide">
+                    <div><%= list[i]['day']%></div>
+                </div>
+                    <% for(var j = 0;j < list[i]['dList'].length; j++){%>
+                        <li>
+                            <div class="single-link">
+                                <div class="single-link-button">
+                                    <button class="up" title="赞同" data-bookmarkid="<%= list[i]['dList'][j]['_id']%>">
+                                        <i class="vote-up"></i>
+                                        <!-- <span class="lable">赞同</span> -->
+                                        <span class="count"><%= list[i]['dList'][j]['likeNum'] %></span>
+                                    </button>
+                                    <button class="down" title="反对" data-bookmarkid="<%= list[i]['dList'][j]['_id']%>">
+                                        <i class="vote-down"></i>
+                                    </button>
+                                </div>
+                                <div class="link-part-content">
+                                    <div id="bookmark-pic"><img src="http://yiye.qiniudn.com/<%= list[i]['dList'][j]['image'] %>"/></div>
+                                    <a class="link" target="_blank" href="<%= list[i]['dList'][j]['url'] %>"><%= list[i]['dList'][j]['title'] %></a>
+                                    <div class="description">
+                                        <span>描述：</span><%= list[i]['dList'][j]['description'] %>
+                                    </div>
+                                    <div class="footer-part">
+                                        <span class="submit-time">提交于:<%= moment(''+list[i]['dList'][j]['postTime']).format('H:mm:ss') %></span>
+                                        <span>by <a href="#" data-userId="<%= list[i]['dList'][j]['postUser']['userId']%>"><%= list[i]['dList'][j]['postUser']['username'] %></a></a></span>
+                                        <span><i class="glyphicon glyphicon-comment"></i><a class="comment" href="#">评论(256)</a></span>
+                                        <span><i class="glyphicon glyphicon-star"></i><a class="collect" href="#">收藏</a></span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </li>
+                    <% } %>
+                <% } %>
+            </ul>
+            <div style="height:200px"></div>
+        </div>
+    </div>
+</script>
+<script rel="script" src="/bower_components/jquery/dist/jquery.js"></script>
+<script rel="script" src="/bower_components/moment/moment.js"></script>
+<script rel="script" src="/bower_components/underscore/underscore.js"></script>
+<script rel="script" src="/bower_components/backbone/backbone.js"></script>
+<script rel="script" src="/bower_components/plupload/js/plupload.full.min.js"></script>
+<script rel="script" src="/home/assets/js/qiniu.js"></script>
+<script rel="script" src="/home/assets/js/home.js"></script>
+<script rel="script" src="/home/assets/js/app.js"></script>
+</body>
+</html>
