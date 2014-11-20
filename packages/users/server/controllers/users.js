@@ -268,3 +268,61 @@ exports.forgotpassword = function(req, res, next) {
     }
   );
 };
+
+/**
+ * 更新用户信息
+ *
+ */
+exports.update = function(req,res){
+    if(!req.user) return res.send({err:true,info:'请先登陆或注册'});
+    var update = {};
+    if(req.body.avatar && req.body.intro){
+        update.avatar = req.body.avatar;
+        update.intro = req.body.intro;
+        User.update({_id:req.user._id},update,function(err,doc){
+            if(err) return console.log(err);
+            return res.status(200).send({
+                info:'个人信息修改成功',
+                success:true
+            });
+        });
+    }else{
+        return res.status(401).send({
+            info:'请提交修改的数据',
+            success:false
+        });
+    }
+}
+
+/*
+ * 修改密码
+ */
+exports.changePassword = function(req,res){
+    if(!req.user) return res.send({err:true,info:'请先登陆或注册'});
+    var oldPassword = req.body.old;
+    var newPassword = req.body.new;
+    if(newPassword.lenght < 6 || newPassword.lenght > 20){
+        return res.status(401).send({
+            info:'新密码长度在6到20位之间。',
+            success:false
+        });
+    }
+    User.findOne({_id:req.user._id},function(err,doc){
+        if(err) console.log(err);
+        if(!doc){
+            return res.status(401).send({
+                info:'原密码输入错误。',
+                success:false
+            });
+        }
+        if(doc.hashed_password === doc.hashPassword(oldPassword)){
+            User.update({_id:req.user._id},{hashed_password:doc.hashPassword(newPassword)},function(err,num){
+                if(err)  console.log(err);
+                return res.status(200).send({
+                    info:'个人信息修改成功',
+                    success:true
+                });
+            });
+        }
+    });
+}

@@ -1,25 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>一叶书签 | 发现(pre)</title>
+    <title>一叶书签 | 发现网络之美</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
     <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">
-    <link rel="stylesheet" href="/system/assets/css/common.css">
-    <link rel="stylesheet" href="/system/assets/icons/style.css">
+    <link rel="stylesheet" href="/system/assets/css/style.css">
 </head>
-
 <body>
-<!--navbar-->
-<div id="explore-navbar" role="navigation">
-    <div id="explore-navbar-container" class="container">
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+    <div class="container">
         <div class="navbar-header">
-            <a id="logo"><img src="/system/assets/img/logo_white.png"/></a>
+            <a id="logo"><img src="/system/assets/img/yiye_logo.png"/></a>
         </div>
         <div class="collapse navbar-collapse" >
-            <ul class="nav navbar-nav navbar-right right-links">
-                <li><a href="download.html">下载</a></li>
+            <ul class="nav navbar-nav navbar-right right-links" id="index-navbar">
+                <li><a href="/explore">发现</a></li>
                 <li><a href="#">帮助</a></li>
                 <li><a href="/signup" target="_blank">注册</a></li>
                 <li><button type="button" class="btn btn-default navbar-btn" onclick="window.open('/signin')">登录</button></li>
@@ -27,24 +24,85 @@
         </div>
     </div>
 </div>
-
-<!--explore header-->
-<div id="explore-header">
-    <div id="explore-header-middle">
-        <div id="explore-header-img">
-            <img src="/system/assets/img/yiye_header_logo.png"/>
+<div class="green">
+    <h1 id="name"><img src="/system/assets/img/brand_name_white.png" style="width:200px;"></h1>
+    <p id="slogan"><span>发现网络之美</span></p>
+    <div id="video-button">
+        <a id="watch-video"></a>
+        <p>点击播放</p>
+    </div>
+    <div id="signup">
+        <button type="button" class="btn btn-lg  btn-block" onclick = "window.open('/signup')">立即注册</button>
+    </div>
+</div>
+<div id="down-wrapper">
+    <div class="container">
+        <h1>下载</h1>
+        <div class="row">
+            <div class="col-md-6">
+                <h2>浏览器插件</h2>
+                <p>浏览器插件可以帮助你保存网页，并且对保存的网页进行打标签、内容抓取、稍后阅读等。快速打开某个书签。</p>
+                <div class="down-button" id="down-chrome"><a class="btn btn-lg"><i></i>从chrome商店下载</a></div>
+            </div>
+            <div class="col-md-6">
+                <h2>手机客户端</h2>
+                <p>手机客户端方便你随时随地通过手机打开你保存的网页。并且准时推送你的稍后乐队内容为你。</p>
+                <div class="down-button"  id="down-android"><a type="button" class="btn btn-lg"><i></i>下载android客户端</a></div>
+            </div>
         </div>
-        <div id="explore-head-slogan">
-            <img src="/system/assets/img/brand_name_white.png">
-            <div id="cutting-line"></div>
-            <span>发现网络之美</span>
+    </div>
+</div>
+<div id="feature-wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="info col-md-4">
+                <i class="icon icon-record"></i>
+                <h2>记录</h2>
+                <p>记录你看见的好的文章，内容。并且为他们打上标签，和稍后阅读的时间。</p>
+            </div>
+            <div class="info col-md-4">
+                <i class="icon icon-manage"></i>
+                <h2>发现</h2>
+                <p>你可以看到你关注的用户最新保存的所有书签，并且通过标签以及搜索发现更多感兴趣的内容。</p>
+            </div>
+            <div class="info col-md-4">
+                <i class="icon icon-share"></i>
+                <h2>分享</h2>
+                <p>保存的书签默认会分享给关注你的所有用户，并且你也可以将这些书签分享到各种社交网络去。</p>
+            </div>
+            <div class="info col-md-4">
+                <i class="icon icon-discover"></i>
+                <h2>同步</h2>
+                <p>你所保存的一切内容都会进行云端存储。并且可以随时随地在各种设备快捷浏览。</p>
+            </div>
+            <div class="info col-md-4">
+                <i class="icon icon-read"></i>
+                <h2>管理</h2>
+                <p>对用户保存的书签以及稍后阅读内容进行管理。并且可以通过浏览器插件快速访问保存的书签。</p>
+            </div>
+            <div class="info col-md-4">
+                <i class="icon icon-sync"></i>
+                <h2>阅读</h2>
+                <p>我们会将你需要保存内容的网页进行优化排版，并且在移动设备离线存储。方便你随时阅读。</p>
+            </div>
         </div>
     </div>
 </div>
 
 
-
-
-
+<div id="discover-wrapper">
+    <h1>目前我们拥有<span>10000</span>名用户，他们创建了<span>50000</span>个书签频道，上面保存了<span>100000</span>个书签。去发现你感兴趣的内容吧。</h1>
+    <div id="discover-button">
+        <a href="/explore" class="btn btn-lg">发现</a>
+    </div>
+</div>
+<div id="footer">
+    <div class="follow-us">
+        <a id="weibo-us"></a><a id="renren-us"></a><a id="weixin-us"></a><a id="douban-us"></a>
+    </div>
+    <h5>一叶书签<span>·</span>发现网络之美</h5>
+    <div id="about-us"><a>关于我们</a><a>加入我们</a><a>联系我们</a><a>意见反馈</a></div>
+</div>
+</div>
 </body>
 </html>

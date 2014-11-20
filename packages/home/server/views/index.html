@@ -20,8 +20,8 @@
     <div class="control-page-content">
         <div class="control-header" >
             <a class="avatar" id="user-center">
-                <img src="https://avatars0.githubusercontent.com/u/4972516?v=2&s=460">
-                <div class="red-point">9</div>
+                <img src="http://yiye.qiniudn.com{{ user.avatar }}">
+                {% if news.length > 0 %} <div class="red-point" id="news-popup-num">{{ news.length }}</div> {% endif %}
             </a>
             <img src="/home/assets/img/brand_name_white.png" >
             <a href="/"><span class="glyphicon glyphicon-th-large"></span></a>
@@ -61,7 +61,6 @@
                     {% endfor %}
                     <div class="create-channel">
                         <button>
-                            <span class="glyphicon glyphicon-plus"></span>
                             <span>新建频道({{ creatNum }}/5)</span>
                         </button>
                     </div>
@@ -77,100 +76,212 @@
 <div class="content-page">
 </div>
 
+
+<!-- 结果提示页面  -->
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="result-dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="mySmallModalLabel">提示</h4>
+            </div>
+            <div class="modal-body" id="result-dialog-content">
+                书签添加成功。
+            </div>
+        </div>
+    </div>
+</div>
+
 <!--create channel page-->
 <script type="text/template" id="tp-create-channels">
-    <div class="create-page">
-        <header id="channel-header">
-            <span>新建频道</span>
-            <a class="close-icon"></a>
-            <div class="channel-logo">
-                <img src="https://avatars0.githubusercontent.com/u/4972516?v=2&s=460" id="channel-logo">
-                <div class="change-logo" ><span class="glyphicon glyphicon-pencil" id="change-channel-logo"></span></div>
+    <div id="create-channel">
+        <h3 id="create-channel-title">创建频道</h3>
+        <div>
+            <div id="channel-info-wrapper">
+                <div class="channel-create-item">
+                    <label>名称:</label>
+                    <div class="channel-create-item-main">
+                        <div id="channel-create-name">
+                            <input type="text" class="form-control" placeholder="Email">
+                        </div>
+                        <div id="channel-create-name-info">
+                        </div>
+                    </div>
+                </div>
+                <div class="channel-create-item" id="channel-logo-box">
+                    <label  class="">logo:</label>
+                    <div class="channel-create-item-main">
+                        <div id="channel-create-logo">
+                            <img src="http://yiye.qiniudn.com/cLogo/4079016d940210b418b50a78ad576c51.png" id="channel-logo">
+                        </div>
+                        <div id="channel-create-logo-info">
+                            <div><button class="btn" id="change-channel-logo">上传</button></div>
+                            <p>支持 JPG、PNG、GIF 格式，不要超过 2M 。</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="channel-create-item">
+                    <label>描述:</label>
+                    <div class="channel-create-item-main">
+                        <div id="channel-create-description">
+                            <textarea rows="5" class="form-control" ></textarea>
+                        </div>
+                        <div id="channel-create-description-info">
+                            请填写比较详细的描述信息。
+                        </div>
+                    </div>
+                </div>
+                <div class="channel-create-item">
+                    <label>分类:</label>
+                    <div class="channel-create-item-main">
+                        <form id="channel-create-type">
+                                <label class="checkbox-inline">
+                                    <input type="radio" name="type"  value="life" > 生活
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="radio" name="type"  value="technology" > 科技
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="radio" name="type"  value="humanities" > 人文
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="radio" name="type"  value="entertainment" > 娱乐
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="radio" name="type"  value="sports" > 体育
+                                </label>
+                        </form>
+                        <div id="channel-create-type-info">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="channel-create-item">
+                    <label>标签:</label>
+                    <div class="channel-create-item-main">
+                        <div id="channel-create-tags">
+                            <input type="email" class="form-control" placeholder="Email">
+                        </div>
+                        <div id="channel-create-tags-info">
+
+                        </div>
+                    </div>
+                </div>
             </div>
-            <form class="input-channel-name"><input class="channel-name-setting" type="text" placeholder="输入频道名称" name="channel-name" class="form-control" autofocus="true" id="new-channel-name"></form>
-            <div class="background-change"><span class="glyphicon glyphicon-pencil" id="change-channel-banner"></span></div>
-        </header>
-        <div class="body">
-                <div class="brief-inf">
-                    <label>描述：</label>
-                    <textarea class="brief-inf-content" id="new-channel-description"></textarea>
-                </div>
-                <div class="classify">
-                    <label>分类：</label><br>
-                    <input type="button" value="生活" name="life">
-                    <input type="button" value="科技" name="technology">
-                    <input type="button" value="人文" name="humanities">
-                    <input type="button" value="娱乐" name="entertainment">
-                    <input type="button" value="体育" name="sports">
-                </div>
-                <div class="channel-tags">
-                    <label>标签：</label>
-                    <input class="channel-tags-content" type="text" placeholder="多个标签请用逗号隔开" id="new-channel-tags">
-                </div>
-                <div class="finish-button"><button class="finish-channel">创建频道</button></div>
+        </div>
+        <p class="bg-danger danger-info" id="Channel-Create-Error"></p>
+        <div id="channel-create-button-box">
+            <button class="btn" id="channel-create-button">创建</button>
         </div>
     </div>
 </script>
 <script type="text/x-handlebars-template" id="tp-personal-center">
     <div class="personal-center">
-        <header>
-            <a href="javascript:;" class="close-icon"></a>
-            <p class="personal-center-title">个人中心</p>
-            <div class="change-avatar">
-                <img src="https://avatars0.githubusercontent.com/u/4972516?v=2&s=460">
-                <div><span class="glyphicon glyphicon-pencil"></span></div>
-            </div>
-        </header>
-        <nav class="personal-center-tab">
-            <ul>
-                <li>消息设置</li>
-                <li class="active">账号管理</li>
-                <li>密码管理</li>
-            </ul>
-        </nav>
+        <ul class="nav nav-tabs" role="tablist" id="channel-manage-tab">
+            <li role="presentation" class="active"><a href="#new" role="tab" data-toggle="tab">账号</a></li>
+            <li role="presentation"><a href="#profile" role="tab" data-toggle="tab">密码</a></li>
+            <li role="news"><a href="#news" role="tab" data-toggle="tab" id="news-tab" data-num="{{ news.length }}">新消息{% if news.length > 0 %}({{ news.length }}){% endif %}</a></li>
+            <li role="news"><a href="#history" role="tab" data-toggle="tab">历史消息</a></li>
+        </ul>
         <div class="tab-content">
-            <div class="message-content">
-                <ul></ul>
-            </div>
-            <div  class="account-set" style="display:block">
-                <h1>姓名设置</h1>
-                <div id="account-change-name">
-                    <label>姓&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp名：</label>
-                    <span class="original-name">zweipix</span><a class="edit-button"><i class="glyphicon glyphicon-pencil"></i>修改</a>
-                </div>
-                <h1>修改密码</h1>
-                <div id="account-change-password">
-                    <div class="form-group">
-                        <label>当前密码：</label>
-                        <input type="password"  placeholder="Email">
-                    </div>
-                    <div class="form-group">
-                        <label>新&nbsp&nbsp密&nbsp&nbsp码：</label>
-                        <input type="password"  placeholder="Email">
-                    </div>
-                    <div class="form-group">
-                        <label>修改密码：</label>
-                        <input type="password" placeholder="Email">
-                    </div>
-                    <button class="btn confirm-change">修改密码</button>
-                </div>
-                <button class="btn account-quit">退出</button>
-
-
-            </div>
-            <div class="function-set">
-                <form class="notification-form">
-                    <div class="form-group">
-                        <label>功能一</label>
-                        <div class="toggle green pull-right">
-                            <input class="check" type="button" data-type="newpost.mobile">
-                            <div class="switch"></div>
-                            <div class="track"></div>
+            <div role="tabpanel" class="tab-pane active" id="new">
+                <div class="user-info-item">
+                    <label>用户名:</label>
+                    <div class="user-info-item-main">
+                        <div id="user-info-name">
+                            {{ user.username }}
+                        </div>
+                        <div id="channel-info-name-info">
                         </div>
                     </div>
-                </form>
+                </div>
+                <div class="user-info-item">
+                    <label  class="">头像:</label>
+                    <div class="user-info-item-main">
+                        <div id="user-info-logo">
+                            <img src="http://yiye.qiniudn.com{{ user.avatar }}" id="user-change-logo">
+                        </div>
+                        <div id="user-info-logo-info">
+                            <div><button class="btn" id="change-user-logo">上传</button></div>
+                            <p>支持 JPG、PNG、GIF 格式，不要超过 2M 。</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="user-info-item">
+                    <label>签名:</label>
+                    <div class="user-info-item-main">
+                        <div id="user-info-intro">
+                            <textarea rows="5" class="form-control">{{ user.intro }}</textarea>
+                        </div>
+                        <div id="user-info-intro-info">
+                        </div>
+                    </div>
+                </div>
+                <p class="bg-danger danger-info" id="password-Change-Error"></p>
+                <div id="user-info-button-box">
+                    <button class="btn" id="user-info-button">更新</button> <button type="button" class="btn btn-link" id="user-quit-button" onclick="window.open('/logout')">账号退出</button>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="profile">
+                <div class="user-password-item">
+                    <label>当前密码:</label>
+                    <div class="user-password-item-main" >
+                        <input type="password"  id="user-current-password" class="form-control">
+                    </div>
+                </div>
+                <div class="user-password-item">
+                    <label>新的密码:</label>
+                    <div class="user-password-item-main" >
+                        <input type="password"  id="user-new-password" class="form-control">
+                    </div>
+                </div>
+                <div class="user-password-item">
+                    <label>确认密码:</label>
+                    <div class="user-password-item-main" >
+                        <input type="password"  id="user-repeat-password" class="form-control">
+                    </div>
+                </div>
+                <p class="bg-danger danger-info" id="User-Change-Error"></p>
+                <div id="password-change-button-box">
+                    <button class="btn" id="password-change-button">修改</button>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="news">
+                <ul class="user-news-list">
+                    {% for item in news %}
+                        <li id="news-{{ loop.index }}">
+                            {% if item.checked == 1%}
+                                <div class="status pass">
+                                    通过
+                                </div>
+                            {% endif %}
+                            {% if item.checked == 2%}
+                                <div class="status fail">
+                                    失败
+                                </div>
+                            {% endif %}
+                            <div class="main">
+                                <div class="user-news-bookmarks" ><a href="#">{{ item.title }}</a> <div class="user-news-info"><span>频道:<a href="#">{{ item.channelInfo.channelName }}</a></span><span>审核:<a href="#">{{ item.checkUser.username }}</a></span></div></div>
+                                {% if item.checked == 2%}
+                                    <div class="user-news-fail-result">
+                                        <span>原因：</span>{{ item.deleteInfo }}
+                                    </div>
+                                {% endif %}
+                                <div class="user-news-footer"><span>时间：</span>{{  ''+item.postTime|date('Y-m-d H:m:s') }}  <a href="#" class="sure" data-bookmarkid="{{ ''+item._id }}" data-index="{{ loop.index }}">确定</a></div>
+                            </div>
+                        </li>
+                    {% endfor %}
+
+
+
+
+                </ul>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="history">
+                历史消息
             </div>
         </div>
+
     </div>
 </script>
 <script type="text/x-handlebars-template" id="tp-channels-main">
@@ -221,7 +332,6 @@
                                     <div class="footer-part">
                                         <span class="submit-time">提交于:<%= moment(''+list[i]['dList'][j]['postTime']).format('H:mm:ss') %></span>
                                         <span>by <a href="#" data-userId="<%= list[i]['dList'][j]['postUser']['userId']%>"><%= list[i]['dList'][j]['postUser']['username'] %></a></a></span>
-                                        <span><i class="glyphicon glyphicon-comment"></i><a class="comment" href="#">评论(256)</a></span>
                                         <span><i class="glyphicon glyphicon-star"></i><a class="collect" href="#">收藏</a></span>
                                     </div>
                                 </div>
@@ -236,6 +346,7 @@
     </div>
 </script>
 <script rel="script" src="/bower_components/jquery/dist/jquery.js"></script>
+<script rel="script" src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
 <script rel="script" src="/bower_components/moment/moment.js"></script>
 <script rel="script" src="/bower_components/underscore/underscore.js"></script>
 <script rel="script" src="/bower_components/backbone/backbone.js"></script>

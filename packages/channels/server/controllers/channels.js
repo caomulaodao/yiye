@@ -12,11 +12,13 @@ var mongoose = require('mongoose'),
     BookmarkLike = mongoose.model('BookmarkLike'),
     BookmarkHate = mongoose.model('BookmarkHate');
 
+//展示频道中的书签
 exports.renderMain = function(req,res,Package){
     var channelId = req.params['channelId'];
     async.parallel({
-        type:function(callback){
+        userType:function(callback){
                 var type = 'not';
+                //判断访问者是否登录
                 if(req.user){
                     Channel2User.findOne({channelId: channelId,userId:req.user._id}, function (err, doc) {
                         if (doc) {
@@ -39,7 +41,7 @@ exports.renderMain = function(req,res,Package){
             });
         },
         list:function(callback){
-            Bookmarks.find({channelId:channelId}).sort({postTime:-1}).limit(10).exec(function (err, doc) {
+            Bookmarks.find({channelId:channelId,checked:1}).sort({postTime:-1}).limit(10).exec(function (err, doc) {
                 if(err) console.log(err);
                 if(doc.length === 0) return callback(null,[]);
                 callback(null,listToArray(doc));
@@ -50,7 +52,7 @@ exports.renderMain = function(req,res,Package){
         if(!results.channel) return res.redirect('/');
         var channel = results.channel;
         var list = results.list;
-        channel.type = results.type;
+        channel.userType = results.userType;
         Package.render('index', {
             channel:channel,
             list:list
@@ -92,7 +94,7 @@ exports.renderFollower = function(req,res,Package){
     var channelId = req.params['channelId'];
     var page = req.body.page;
     async.parallel({
-            type:function(callback){
+            userType:function(callback){
                 var type = 'not';
                 if(req.user){
                     Channel2User.findOne({channelId: channelId,userId:req.user._id}, function (err, doc) {
@@ -176,7 +178,7 @@ exports.renderFollower = function(req,res,Package){
         function(err,results){
             if(!results.channel) return res.redirect('/');
             var channel = results.channel;
-            channel.type = results.type;
+            channel.userType = results.userType;
             var users = results.users;
             Package.render('follower', {
                 channel:channel,
@@ -192,7 +194,7 @@ exports.renderFollower = function(req,res,Package){
 exports.renderCheck = function(req,res,Package){
     var channelId = req.params['channelId'];
     async.parallel({
-            type:function(callback){
+            userType:function(callback){
                 var type = 'not';
                 if(req.user){
                     Channel2User.findOne({channelId: channelId,userId:req.user._id}, function (err, doc) {
@@ -216,10 +218,10 @@ exports.renderCheck = function(req,res,Package){
                 });
             },
             list:function(callback){
-                Bookmarks.find({channelId:channelId}).sort({postTime:-1}).limit(10).exec(function (err, doc) {
+                Bookmarks.find({channelId:channelId,checked:0}).sort({postTime:-1}).limit(10).exec(function (err, doc) {
                     if(err) console.log(err);
                     if(doc.length === 0) return callback(null,[]);
-                    callback(null,listToArray(doc));
+                    callback(null,doc);
                 });
             }
         },
@@ -227,7 +229,7 @@ exports.renderCheck = function(req,res,Package){
             if(!results.channel) return res.redirect('/');
             var channel = results.channel;
             var list = results.list;
-            channel.type = results.type;
+            channel.userType = results.userType;
             Package.render('manage', {
                 channel:channel,
                 list:list
@@ -238,6 +240,25 @@ exports.renderCheck = function(req,res,Package){
         });
 
 };
+
+//更新频道信息
+exports.update = function(req,res){
+    var channelId = req.params['channelId'];
+    var update = {};
+    if(req.body.name)  update.name = req.body.name;
+    if(req.body.logo)  update.logo = req.body.logo;
+    if(req.body.description) update.description = req.body.description;
+    if(req.body.type) update.type  = req.body.type;
+    if(req.body.tags) update.tags = req.body.tags;
+
+    Channels.update({_id:channelId},update,function(err,doc){
+        if(err) return console.log(err);
+        res.status(200).send({success:true,info:'修改信息成功'});
+
+    });
+
+
+}
 
 //将一个bookmarks列表格式化为按时间集合排序的数组。
 function listToArray(list){

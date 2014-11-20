@@ -24,19 +24,18 @@
                 <ul id="channel-menu">
                     <li id="links-btn"><a href="/channel/{{ ''+channel._id }}" >书签</a></li>
                     <li id="members-btn"><a href="/channel/{{ ''+channel._id }}/follower" >关注者</a></li>
-                    {% if channel.type == 'follower' %} <li id="cancel-sub"><a href="#">取消订阅</a></li>  {% endif %}
+                    {% if channel.userType == 'follower' %} <li id="cancel-sub"><a href="#">取消订阅</a></li>  {% endif %}
                 </ul>
             </div>
-
         </div>
 
-        <div id="control-body" data-channelId="{{ ''+channel._id }}">
+        <div id="control-body" data-channelid="{{ ''+channel._id }}">
             <div id="channel-part">
                 <div id="channel-logo">
                     <img src="{{ channel.logo }}">
                 </div>
                 <div id="channel-name">
-                    <p>{{ channel.name }}</p>
+                    <p id="channel-title">{{ channel.name }}</p>
                 </div>
                 <div id="founder">
                     <span>创始人:&nbsp </span><a href="javascript:;">{{ channel.creator }}</a>
@@ -47,7 +46,7 @@
                 </div>
             </div>
             <div id="subscribe">
-                <button id="subscribe-btn">{% if channel.type == 'not' %} <span id="channel-sub">订阅该频道</span> {% endif %} {% if channel.type == 'admin' %} <span id="channel-manage"><a href="/channel/{{ ''+channel._id }}/check">管理</a></span> {% endif %} {% if channel.type == 'follower' %} <span id="channel-subed">已订阅</span> {% endif %} <span>|</span><span class="icon-rss"></span>{{ channel.subNum }}</button>
+                <button id="subscribe-btn">{% if channel.userType == 'not' %} <span id="channel-sub">订阅该频道</span> {% endif %} {% if channel.userType == 'admin' %} <span id="channel-manage"><a href="/channel/{{ ''+channel._id }}/check">管理</a></span> {% endif %} {% if channel.userType == 'follower' %} <span id="channel-subed">已订阅</span> {% endif %} <span>|</span><span class="icon-rss"></span>{{ channel.subNum }}</button>
             </div>
         </div>
     </div>
@@ -78,7 +77,7 @@
                         </button>
                     </div>
                     <div class="link-part-content">
-                        <div id="bookmark-pic"><img src="http://yiye.qiniudn.com/{{ bookmark['image'] }}"/></div>
+                        <div class="bookmark-pic"><img src="http://yiye.qiniudn.com/{{ bookmark['image'] }}"/></div>
                         <a class="link" target="_blank" href="{{ bookmark['url'] }}">{{ bookmark['title'] }}</a>
                         <div class="description">
                             <span>描述：</span>{{ bookmark['description'] }}

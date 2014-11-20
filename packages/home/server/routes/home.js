@@ -12,4 +12,8 @@ module.exports = function(Home, app, auth, database) {
     //获取用户所有相关频道
     app.route('/api/channel/all')
         .get(home.getChannelsList);
+
+    //已经查看某个通知
+    app.route('/api/news/viewed')
+        .post(home.newsViewed);
 };

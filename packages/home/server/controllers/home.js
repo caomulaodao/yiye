@@ -4,13 +4,20 @@
 
 var mongoose = require('mongoose'),
     async = require('async'),
+    User = mongoose.model('User'),
     Channel2User = mongoose.model('Channel2User'),
     Channels = mongoose.model('Channels'),
     Bookmarks = mongoose.model('Bookmarks');
 
 //获取channel数据
 exports.getInitChannels = function(req,res,Home){
+    if(!req.user) return res.redirect('/');
     async.parallel({
+            user: function(callback){
+                User.findOne({_id:req.user._id},function(err,user){
+                    callback(null,user);
+                });
+            },
             adm: function(callback1){
                 //userId:req.user._id,type:{$in:['creator','admin']}
                 Channel2User.find({userId:req.user._id,type:{$in:['creator','admin']}},'channelId name logo type lastTime news',function(err,admChannels){
@@ -48,11 +55,17 @@ exports.getInitChannels = function(req,res,Home){
                 Channel2User.count({userId:req.user._id,type:'creator'},function(err,count){
                     callback(null,count)
                 });
+            },
+            news: function(callback){
+                Bookmarks.find({"postUser.userId" : req.user._id,checked:{$in:[1,2]}},function(err,doc){
+                    if(err) console.log(err);
+                    callback(null,doc);
+                });
             }
         },
         function(err, results) {
             //渲染home页面
-            Home.render('index', {admChannelList:results.adm,subChannelList:results.sub,creatNum:results.creatNum}, function (err, html) {
+            Home.render('index', {admChannelList:results.adm,subChannelList:results.sub,creatNum:results.creatNum,user:results.user,news:results.news}, function (err, html) {
                 //Rendering a view from the Package server/views
                 if(err) return console.log(err);
                 res.send(html);
@@ -109,6 +122,25 @@ exports.getChannelsList = function(req,res){
         });
     });
 };
+
+//用户主页管理界面
+exports.check = function(req,res,Home){
+    Home.render('check', {}, function (err, html) {
+        //Rendering a view from the Package server/views
+        if(err) return console.log(err);
+        res.send(html);
+    });
+}
+
+
+//
+exports.newsViewed = function(req,res){
+    var bookmarkId = req.body.bookmarkId;
+    Bookmarks.update({_id:bookmarkId},{$inc:{checked:2}},function(err,num){
+        if(err) console.log(err);
+        res.status(200).send({success:true,info:'此信息已经加入历史记录。'});
+    });
+}
 
 
 function getTags(str){

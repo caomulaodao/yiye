@@ -19,4 +19,7 @@ module.exports = function(Channels, app, auth, database) {
     });
     //订阅某个频道
     app.get('/channel/sub/:channelId',channels.sub);
+
+    //更新频道信息
+    app.post('/channel/:channelId/update',channels.update);
 };

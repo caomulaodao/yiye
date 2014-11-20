@@ -5,8 +5,13 @@ module.exports = function(System, app, auth, database) {
   // Home route
   var index = require('../controllers/index');
   var user = require('../controllers/user');
+  //访问首页
   app.route('/')
     .get(index.render);
+
+  //访问发现页面
+  app.route('/explore')
+    .get(index.explore);
 
   app.route('/signup')
       .get(user.signup);

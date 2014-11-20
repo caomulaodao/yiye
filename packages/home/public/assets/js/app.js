@@ -9,7 +9,27 @@ $(function(){
 
     //新频道model
     var NewChannel = Backbone.Model.extend({
-        url:"/api/channels/create"
+        url:"/api/channels/create",
+        validate: function(attrs, options) {
+            if (!attrs.name ) {
+                return "请填写频道名称。";
+            }
+            if (!attrs.logo ) {
+                return "请上传频道logo。";
+            }
+            if (!attrs.banner ) {
+                return "请上传频道封面。";
+            }
+            if (!attrs.description ) {
+                return "请填写频道描述。";
+            }
+            if (!attrs.type ) {
+                return "请选择频道分类。";
+            }
+            if (!attrs.tags ) {
+                return "请为频道填写相关标签。";
+            }
+        }
     });
 
     //bookmarkLike
@@ -91,17 +111,18 @@ $(function(){
 
         channel : new NewChannel(),
 
-        layer: $('#home-popup-layer'),
+        layer: $('#content-page'),
 
         layerShadow: $('.shadow'),
 
         initialize: function() {
+            this.channel.on("invalid", function(model, error) {
+                $('#Channel-Create-Error').text(error).show();
+            });
         },
 
         events:{
-            "click .classify input" :"choseType",
-            "click .finish-channel" :"createChannel",
-            "click .close-icon" :"closeLayer"
+            "click #channel-create-button" :"createChannel"
         },
 
         render: function(){
@@ -115,7 +136,7 @@ $(function(){
             var cgChLogoUploader = Qiniu.uploader({
                 runtimes: 'html5,flash,html4',
                 browse_button : 'change-channel-logo',
-                max_file_size: '1mb',
+                max_file_size: '2mb',
                 flash_swf_url: '/bower_components/js/plupload/Moxie.swf',
                 dragdrop: true,
                 chunk_size: '1mb',
@@ -124,83 +145,38 @@ $(function(){
                 auto_start: true,
                 init: {
                     'Key': function(up,file,info){
-                        console.log(file);
                         return  "cLogo/"+(md5(Math.floor(Math.random()*10000))).slice(0,16)+(md5(file.name+Date.now())).slice(0,16)+".png";
                     },
                     'FilesAdded': function(){
-                        $('.channel-logo').addClass('upLoading');
+                        $('#channel-create-logo').addClass('upLoading');
                     },
                     'FileUploaded': function(up, file, info) {
                         var info  = JSON.parse(info);
                         var logo = "http://yiye.qiniudn.com/"+info.key;
-                        console.log(logo)
                         that.channel.set({logo : logo});
                         $('#channel-logo').attr('src',logo);
-                        $('.channel-logo').removeClass('upLoading');
+                        $('#channel-create-logo').removeClass('upLoading');
                     },
                     'Error': function(up, err, errTip) {
                         console.log(err);
                     }
                 }
             });
-            //频道banner上传
-            var cgChbannerUploader = Qiniu.uploader({
-                runtimes: 'html5,flash,html4',
-                browse_button : 'change-channel-banner',
-                max_file_size: '1mb',
-                flash_swf_url: '/bower_components/js/plupload/Moxie.swf',
-                dragdrop: true,
-                chunk_size: '1mb',
-                uptoken_url: "/uptoken",
-                domain: "http://yiye.qiniudn.com/",
-                auto_start: true,
-                init: {
-                    'Key': function(up,file,info){
-                        console.log(file);
-                        return  "cBanner/"+(md5(Math.floor(Math.random()*10000))).slice(0,16)+(md5(file.name+Date.now())).slice(0,16)+".png";
-                    },
-                    'FilesAdded': function(){
-                        $('#channel-header').addClass('upLoading');
-                    },
-                    'FileUploaded': function(up, file, info) {
-                        var info  = JSON.parse(info);
-                        var banner = "http://yiye.qiniudn.com/"+info.key;
-                        that.channel.set({banner : banner});
-                        $('#channel-header').css({"background-image":"url("+banner+")","background-size":"cover"});
-                        $('#channel-header').removeClass('upLoading');
-                    },
-                    'Error': function(up, err, errTip) {
-                        console.log(err);
-                    }
-                }
-            });
-        },
 
-        //频道选择类型
-        choseType: function(e){
-            console.log(event);
-            $('.classify input').removeClass('chosen');
-            $(event.target).addClass('chosen');
-            this.channel.set({type : $(event.target).attr('name')});
         },
 
         //创建频道
         createChannel: function(){
             var that = this;
-            this.channel.set({name : $('#new-channel-name').val()});
-            this.channel.set({description : $('#new-channel-description').val()});
-            this.channel.set({tags : $('#new-channel-tags').val()});
+            this.channel.set({name : $('#channel-create-name>input').val()});
+            this.channel.set({description : $('#channel-create-description>textarea').val()});
+            this.channel.set({tags : $('#channel-create-tags>input').val()});
+            this.channel.set({type: $("input[name='type']:checked").val()});
             this.channel.save(null,{error: function(model, response){
                 console.log('error'+response);
             },success: function(model, response){
-                that.closeLayer();
+                location.href = '/home';
             }});
-        },
-
-        //关闭弹出层
-        closeLayer: function(){
-            this.layerShadow.hide();
-            this.layer.html('');
         }
 
     });
@@ -212,14 +188,167 @@ $(function(){
 
         layer: $('#home-popup-layer'),
 
+        lock: {
+            info:false,
+            password:false,
+            viewed:false
+
+        },
+
         layerShadow: $('.shadow'),
+
+        //向主视图绑定事件
+        events: {
+            'click #user-info-button' : "upUserInfo",
+            'click #password-change-button' : "changePassword",
+            'click .sure' : "viewed"
+        },
 
         initialize: function() {
         },
 
         render: function(){
             return this;
+        },
+
+        renderAfter: function(){
+            //频道logo上传
+            var that = this;
+            var cgChLogoUploader = Qiniu.uploader({
+                runtimes: 'html5,flash,html4',
+                browse_button : 'change-user-logo',
+                max_file_size: '2mb',
+                flash_swf_url: '/bower_components/js/plupload/Moxie.swf',
+                dragdrop: true,
+                chunk_size: '1mb',
+                uptoken_url: "/uptoken",
+                domain: "http://yiye.qiniudn.com/",
+                auto_start: true,
+                init: {
+                    'Key': function(up,file,info){
+                        return  "avatar/"+(md5(Math.floor(Math.random()*10000))).slice(0,16)+(md5(file.name+Date.now())).slice(0,16)+".png";
+                    },
+                    'FilesAdded': function(){
+                        $('#user-info-logo').addClass('upLoading');
+                    },
+                    'FileUploaded': function(up, file, info) {
+                        var info  = JSON.parse(info);
+                        var logo = "http://yiye.qiniudn.com/"+info.key;
+                        $('#user-change-logo').attr('src',logo);
+                        $('#user-info-logo').removeClass('upLoading');
+                    },
+                    'Error': function(up, err, errTip) {
+                        console.log(err);
+                    }
+                }
+            });
+
+        },
+
+
+        upUserInfo: function(){
+            var user = {};
+            user.avatar = $('#user-change-logo').attr('src').split(".com")[1];
+            user.intro = $('#user-info-intro>textarea').val();
+            var that = this;
+            if(!that.lock.info){
+                that.lock.info = true;
+                $.ajax({
+                    url: '/api/account/update',
+                    type:'post',
+                    data:user,
+                    statusCode: {
+                        401: function() {
+                            //结果提示
+                            popup("个人信息更新失败");
+
+                            that.lock.info  = false;
+                        },
+                        200: function(){
+                            //结果提示
+                            popup("个人信息更新成功");
+
+                            that.lock.info = false;
+                        }
+                    }
+                });
+            }
+        },
+
+        changePassword:function(){
+            if(!$('#user-current-password').val()){
+                return $('#User-Change-Error').text('请先填写当前密码').show();
+            }
+            if(!$('#user-new-password').val()){
+                return $('#User-Change-Error').text('请填写新密码').show();
+            }
+            if(!$('#user-repeat-password').val()){
+                return $('#User-Change-Error').text('请填写确认密码密码').show();
+            }
+            if($('#user-repeat-password').val() !== $('#user-new-password').val()){
+                return $('#User-Change-Error').text('新的密码与确认密码不同').show();
+            }
+            var password =  {};
+            password.new = $('#user-new-password').val();
+            password.old = $('#user-current-password').val();
+            var that = this;
+            if(!that.lock.password){
+                that.lock.password = true;
+                $.ajax({
+                    url: '/api/account/changePassword',
+                    type:'post',
+                    data:password,
+                    statusCode: {
+                        401: function(jq) {
+                            //结果提示
+                            console.log(jq);
+                            $('#User-Change-Error').text(jq.responseJSON.info).show();
+
+                            that.lock.password  = false;
+                        },
+                        200: function(){
+                            //结果提示
+                            popup("密码修改成功");
+
+                            that.lock.password = false;
+                        }
+                    }
+                });
+            }
+
+        },
+
+        viewed:function(event){
+            var bookmarkId = $(event.target).data('bookmarkid');
+            var index = $(event.target).data('index');
+            var that = this;
+            if(!that.lock.viewed){
+                that.lock.viewed = true;
+                $.ajax({
+                    url: '/api/news/viewed',
+                    type:'post',
+                    data:{bookmarkId:bookmarkId},
+                    statusCode: {
+                        200: function(){
+                            //结果提示
+                            var num = $("#news-tab").data('num') - 1;
+                            $('#news-'+index).remove();
+                            if(num>0){
+                                $("#news-tab").data('num',num)
+                                $("#news-tab").text("新消息("+num+")");
+                                $("#news-popup-num").text(num);
+                            }else{
+                                $("#news-tab").text("新消息");
+                                $("#news-popup-num").remove();
+                            }
+                            that.lock.viewed = false;
+                        }
+                    }
+                });
+            }
+
         }
+
 
     });
 
@@ -245,20 +374,20 @@ $(function(){
             'click #sub-channel-list  li' : 'showChannel'
         },
 
+
         //展示创建频道弹出页
         createChannels : function(){
-            this.layerShadow.show();
             var view = new NewChannelView();
-            this.layer.html(view.render().el);
+            this.main.html(view.render().el);
             view.renderAfter();
         },
 
         //展示用户个人中心弹出层
         showPerson : function(){
-            this.layerShadow.show();
             var view = new PersonView();
-            this.layer.html(view.render().el);
-            //view.renderAfter();
+            this.main.html(view.render().el);
+            view.renderAfter();
+
         },
 
         //展示频道
@@ -271,6 +400,16 @@ $(function(){
 
     //实例化
     var App = new AppView;
+
+
+    //消息提示函数
+    function popup(info){
+        $('#result-dialog-content').text(info);
+        $('#result-dialog').modal('show');
+        setTimeout(function(){
+            $('#result-dialog').modal('hide');
+        },2000);
+    }
 
 
 });

@@ -45,6 +45,10 @@ var bookmarksSchema = Schema({
     channelId: {
         type:Schema.ObjectId
     },
+    channelInfo: {
+        channelId:Schema.ObjectId,
+        channelName:String
+    },
     comments: {
         type: Array
     },
@@ -55,6 +59,17 @@ var bookmarksSchema = Schema({
     hateNum: {
         type: Number,
         default:0
+    },
+    checked: {
+        type:Number,//0：未审核，1：审核通过，并且未通知，2：审核未通过，并且没通知，3：审核通过，并且已经通知， 4：审核没通过，并且已经通知， 5:管理员提交，不许审核
+        default:0
+    },
+    deleteInfo:{
+        type:String
+    },
+    checkUser:{
+        userId:Schema.ObjectId,
+        username:String
     }
 });
 

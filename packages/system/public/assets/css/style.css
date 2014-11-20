@@ -1,0 +1,253 @@
+.navbar-collapse .right-links li a{
+    color: #999999;
+}
+.navbar-collapse .right-links li a:hover{
+    background-color: #ffffff;
+    color: #00b7ee;
+}
+.navbar-default {
+    background-color: #FFF;
+    border-color: #E9E9E9;
+}
+#logo img{
+    height: 60px;
+    margin-left: 20px;
+}
+.navbar-nav > li > a.signin{
+    padding: 5px 15px;
+    margin: 15px;
+}
+.green{
+    margin-top: 60px;
+    background-image:url("../img/background.png");
+    background-repeat: no-repeat;
+    background-position: top center;
+    height: 550px;
+    background-color: #77C39C;
+}
+#name{
+    padding-top: 120px;
+    text-align: center;
+    color: #ffffff;
+    font-family: "幼圆";
+    font-size: 45px;
+    letter-spacing: 15px;
+}
+#name span{
+    padding-left: 15px;
+}
+#slogan{
+    padding-top: 5px;
+    text-align: center;
+    color: #fff;
+    letter-spacing: 10px;
+    font-family: "幼圆";
+    font-size: 21px;
+}
+#slogan span{
+    padding-left:10px;
+}
+#signup{
+    padding-top: 80px;
+    width: 200px;
+    margin: 0 auto;
+}
+#signup button{
+    color: #ffffff;
+    background-color: #43B27C;
+    border-color: #43B27C;
+}
+#video-button{
+    margin-top: 40px;
+    text-align: center;
+}
+#video-button p{
+    font-size: 12px;
+    color: #ffffff;
+}
+#watch-video{
+    height: 90px;
+    width: 120px;
+    color: #fff;
+    font-size: 13px;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    background: url("../img/icon-video.png") no-repeat center top;
+    cursor: pointer;
+}
+#down-wrapper{
+    padding: 20px 0px;
+}
+#down-wrapper h1{
+    text-align: center;
+    font-size: 25px;
+    color: #75C29B;
+}
+#down-wrapper h2{
+    text-align: center;
+    font-size: 20px;
+    color: #000;
+}
+#down-wrapper .col-md-6{
+    text-align: center;
+}
+#down-wrapper p{
+    color: #999999;
+    margin: 0 15%;
+}
+.down-button{
+    margin-top: 25px;
+    margin-bottom: 35px;
+}
+.down-button .btn{
+    background-color: #75C29B;
+    color: #ffffff;
+    border: solid 1px  #75C29B;
+    position: relative;
+    padding-left: 55px;
+}
+#down-chrome .btn i{
+    position: absolute;
+    height: 40px;
+    width: 39px;
+    top: 3px;
+    left: 10px;
+    background: url("../img/icons.png");
+    background-position: 0px -170px;
+}
+#down-android .btn i{
+    position: absolute;
+    height: 40px;
+    width: 39px;
+    top: 2px;
+    left: 10px;
+    background: url("../img/icons.png");
+    background-position: -50px -170px;
+}
+#feature-wrapper{
+    padding: 60px 0px;
+    background:#F3F6F8;
+}
+.info{
+    text-align: center;
+}
+.info h2{
+    font-size: 20px;
+    text-align: center;
+    margin-top: 0px;
+}
+.info p{
+    padding:0px 10px;
+    color: #999999;
+}
+.info .icon{
+    display: inline-block;
+    height: 80px;
+    width: 70px;
+    margin: 10px;
+}
+.icon-record{
+    background: url("../img/icons.png");
+    background-position: 0px 0px;
+}
+.icon-manage{
+    background: url("../img/icons.png");
+    background-position: -85px 0px;
+}
+.icon-share{
+    background: url("../img/icons.png");
+    background-position: -175px 0px;
+}
+.icon-discover{
+    background: url("../img/icons.png");
+    background-position: -265px 0px;
+}
+.icon-read{
+    background: url("../img/icons.png");
+    background-position: -357px 0px;
+}
+.icon-sync{
+    background: url("../img/icons.png");
+    background-position: -447px 0px;
+}
+#discover-wrapper{
+    height: 280px;
+    background: url("../img/background/Bristle_Grass.png");
+    background-position:top center;
+}
+#discover-wrapper h1{
+    padding: 80px 200px 40px 200px;
+    font-size: 20px;
+    color: #ffffff;
+    text-align: center;
+    font-weight: normal;
+    margin: 0px;
+}
+#discover-wrapper h1 span{
+    color: #398439;
+}
+#discover-button{
+    text-align: center;
+}
+#discover-button .btn{
+    width: 200px;
+    background-color: #398439;
+    border: solid 1px #398439;
+    color: #ffffff;
+}
+#footer{
+    text-align: center;
+}
+#footer h5{
+    font-size: 20px;
+    color: #75C29B;
+}
+#footer h5 span{
+    padding: 0px 8px;
+}
+.follow-us{
+    margin-top: 40px;
+    text-align: center;
+}
+.follow-us a{
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+    background: url("../img/icons.png") no-repeat;
+}
+.follow-us a:last-child{
+    margin-right: 0px;
+}
+#weibo-us{
+    background-position:0px -100px;
+}
+#renren-us{
+    background-position:-40px -100px;
+}
+#weixin-us{
+    background-position:-80px -100px;
+}
+#douban-us{
+    background-position:-120px -100px;
+}
+#about-us{
+    margin-bottom: 50px;
+}
+#about-us a{
+    color: #666;
+    margin-right: 20px;
+    cursor: pointer;
+}
+#about-us a:last-child{
+    margin-right: 0px;
+}
+#discover-head{
+    margin-top: 60px;
+    height: 80px;
+}
+#index-navbar{
+    margin-top: 5px;
+}
+

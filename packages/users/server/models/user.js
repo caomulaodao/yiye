@@ -62,7 +62,7 @@ var UserSchema = new Schema({
   },
   avatar:{
       type:String,
-      default:'http://yiye.qiniudn.com/cLogo/4079016d940210b418b50a78ad576c51.png'
+      default:'/cLogo/4079016d940210b418b50a78ad576c51.png'
   },
   provider: {
       type: String,
@@ -84,14 +84,13 @@ var UserSchema = new Schema({
       type: Number,
       default: 0
   },
+  intro:{
+      type: String,
+      default: '未设置任何签名'
+  },
   salt: String,
   resetPasswordToken: String,
-  resetPasswordExpires: Date,
-  facebook: {},
-  twitter: {},
-  github: {},
-  google: {},
-  linkedin: {}
+  resetPasswordExpires: Date
 });
 
 /**

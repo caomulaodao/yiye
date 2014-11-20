@@ -52,4 +52,14 @@ module.exports = function(MeanUser, app, auth, database, passport) {
       }
   );
 
+  //更新用户信息
+  app.route('/api/account/update')
+      .post(users.update);
+
+  //更新用户信息
+  app.route('/api/account/changePassword')
+      .post(users.changePassword);
+
+
+
 };

@@ -28,4 +28,16 @@ module.exports = function(Bookmarks, app, auth, database) {
     //获取离请求日期最近的某天的所有书签
     app.route('/api/bookmarks/oneDay/:channelId')
         .get(bookmarks.oneDay);
+
+    //审核通过某个书签
+    app.route('/api/bookmarks/pass/:channelId/:bookmarkId')
+        .post(bookmarks.pass);
+
+    //编辑并通过某个书签
+    app.route('/api/bookmarks/edit/:channelId/:bookmarkId')
+        .post(bookmarks.edit);
+
+    //编辑并通过某个书签
+    app.route('/api/bookmarks/delete/:channelId/:bookmarkId')
+        .post(bookmarks.delete);
 };

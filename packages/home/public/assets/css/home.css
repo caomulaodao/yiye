@@ -39,6 +39,18 @@ button:focus {outline:0;}
     color:    #fff;
 }
 
+.danger-info {
+    height: 40px;
+    line-height: 40px;
+    margin-bottom: 20px;
+    padding: 0px 20px;
+    font-size: 16px;
+    border: solid 1px #FAC4C4;
+    border-radius: 6px;
+    color: #DB5757;
+    display: none;
+}
+
 /*********web-loading***********/
 #web-loading {
     width: 100%;
@@ -65,273 +77,10 @@ button:focus {outline:0;}
 
 /******personal-center**********/
 .personal-center {
-    position: absolute;
-    width: 510px;
-    height: 600px;
-    background-color: #fff;
-    border-radius: 15px;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    top: 0;
-    margin: auto;
-    z-index: 20;
+    margin: 20px 20px;
 }
-.close-icon {
-    width: 25px;
-    height: 25px;
-    float: right;
-    margin-top: 10px;
-    margin-right: 10px;
-    background-size: cover;
-    background: url(../img/close-icon.png) no-repeat;
-}
-.close-icon:hover {
-    cursor: pointer;
-}
-.personal-center-title {
-    font-size: 2.3em;
-    color: #fff;
-    margin-left: 10px;
-    line-height: 38px;
-}
-.personal-center header {
-    width: 100%;
-    height: 200px;
-    -webkit-border-top-left-radius: 3px;
-    -webkit-border-top-right-radius: 3px;
-    background-color: #59b798;
-}
-.change-avatar {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    overflow: hidden;
-    margin: 0 auto;
-}
-.change-avatar>div {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    position: absolute;
-    text-align: center;
-    left: 279px;
-    top: 123px;
-    background-color: #fff;
-}
-.change-avatar>div>span {
-    vertical-align: middle;
-}
-.change-avatar>div:hover {
-    cursor: pointer;
-    color: #59b798;
-}
-.personal-center header img{
-    width: 100px;
-}
-.personal-center-tab {
-    height: 35px;
-}
-.personal-center-tab>ul {
-    list-style-type: none;
-    margin-bottom: 0;
-}
-.personal-center-tab>ul>li {
-    width: 170px;
-    height: 35px;
-    text-align: center;
-    line-height: 36px;
-    font-size: 1.6em;
-    float: left;
-    color: #999;
-    background-color: #F2F2F2;
-}
-.personal-center-tab>ul>li:not(.active):hover {
-    background-color: #e5e5e5;
-    color: #777;
-    cursor: pointer;
-}
-.personal-center-tab>ul>li.active {
-    background-color: #fff;
-    color: #777;
-}
-.tab-content {
-    width: 100%;
-    height: 400px;
-    background-color: #fff;
-    border-radius: 3px;
-    position: relative;
-}
-.tab-content>div {
-    width: 100%;
-    height: 100%;
-    -webkit-border-bottom-left-radius: 3px;
-    -webkit-border-bottom-right-radius: 3px;
-    position: absolute;
-    display: none;
-}
-.message-content {
-    display: block;
-    font-size: 1.4em;
-    overflow-y: auto;
-    padding: 10px 20px 0;
-}
-.message-content ul {
-    list-style-type: none;
-}
-.message-content ul li {
-    min-height: 35px;
-    padding: 7px;
-    border-bottom: 1px solid #ccc;
-}
-.account-set {
-    font-size: 1.4em;
-    padding: 20px ;
-}
-.account-set h1{
-    font-size: 16px;
-    margin: 0px;
-    border-bottom: 1px solid #EEEEEE;
-    margin-bottom: 10px;
-    padding-bottom: 10px;
-    color: #bbbbbb;
-}
-.account-set label{
-    font-size: 14px;
-    padding: 0px;
-    width: 18%;
-    height: 34px;
-    line-height: 30px;
-    float: left;
-}
-.account-set span{
-    height: 34px;
-    line-height: 34px;
-}
-.account-set .form-group input{
-    float: left;
-    height: 34px;
-    width: 82%;
-    display: block;
-    height: 34px;
-    padding: 6px 12px;
-    font-size: 14px;
-    line-height: 1.42857143;
-    color: #555;
-    background-color: #fff;
-    background-image: none;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
-    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-}
-.account-set .form-group{
-    height: 34px;
-    margin-bottom: 15px;
-}
-.account-content {
-    width: 100%;
-    height: 250px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    border-bottom: 1px dashed #ccc;
-}
-.account-quit,.account-quit:hover{
-    width: 100%;
-    background: #E44545;
-    margin-bottom: 40px;
-    color: #ffffff;
-}
-.edit-button {
-    width: 50px;
-    height: 20px;
-    margin-left: 8px;
-    margin-right: 103px;
-    border-radius: 5px;
-    color: #ccc;
-    display: inline-block;
-    text-decoration: none;
-}
-.edit-button i {
-    font-size: 0.6em;
-}
-.edit-button:hover {
-    background-color: #eff6fa;
-    text-decoration: none;
-    cursor: pointer;
 
-}
-.account-content .short-ver {
-    width: 145px;
-    margin-left: -4px;
-}
-.account-content .reset-name-confirm {
-    width: 60px;
-    height: 30px;
-    border-radius: 3px;
-    border: 0;
-    color: #fff;
-    display: none;
-    background-color: #40c192;
-    margin-left: 9px;
-}
-.reset-name-confirm:hover {
-    background-color: #54D3A7;
-}
-.confirm-change {
-    width: 100%;
-    height: 35px;
-    color: #fff;
-    background-color: #40c192;
-    border: 0;
-    border-radius: 3px;
-}
-.confirm-change:hover {
-    background-color: #54D3A7;
-    color: #fff;
-}
-#account-change-password{
-    margin-bottom: 20px;
-    font-size: 14px;
-}
-#account-change-name{
-    margin-bottom: 30px;
-    font-size: 14px;
-}
-.exit-account {
-    width: 80px;
-    height: 30px;
-    background-color: #c94857;
-    color: #fff;
-    border: 0;
-    border-radius: 3px;
-}
-.exit-account:hover {
-    background-color: #e0677a;
-}
-.name-divide {
-    height: 0;
-    width: 100%;
-    border-bottom: 1px dashed #ccc;
-    margin-bottom: 28px;
-}
-.function-set {
-    display: none;
-    padding: 40px 90px 0;
-}
-.notification-form {
-    height: 100%;
-}
-.form-group {
-    font-size: 1.8em;
-    margin-top: 10px;
-}
-.form-group label {
-    margin-top: 2px;
-}
+
 /*******Apple switch********/
 .toggle {
     position: relative;
@@ -413,102 +162,108 @@ button:focus {outline:0;}
     transition-delay:.05s, 0s;
 }
 /***************create page*************/
-.create-page {
-    position: absolute;
-    width: 435px;
-    height: 600px;
-    background-color: #ccc;
-    border-radius: 15px;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    top: 0;
-    margin: auto;
-    z-index: 20;
+#create-channel {
+    margin: 20px 40px;
 }
-
-/*******header*******/
-.create-page header {
-    height: 250px;
-    width: 100%;
-    position: relative;
-    -webkit-border-top-left-radius: 3px;
-    -webkit-border-top-right-radius: 3px;
-    overflow: hidden;
-    background-size: cover;
-    background-repeat: no-repeat;
+#create-channel .btn:focus{
+    outline: none;
 }
-.create-page header>span {
-    font-size: 2.3em;
-    color: #fff;
-    margin-left: 10px;
-    line-height: 38px;
+.channel-create-item label{
+    width: 80px;
+    font-weight: bolder;
+    line-height: 34px;
+    font-size: 15px;
+    vertical-align: top;
 }
-#channel-header.upLoading{
-    background-color: rgba(0,0,0,.3);
+.channel-create-item-main{
+    display: inline-block;
+    width: 800px;
+    min-width: 500px;
 }
-.channel-logo {
+#channel-info-wrapper>div{
+    margin-bottom: 20px;
+}
+#create-channel-title{
+    font-size: 18px;
+    margin: 20px 0px;
+    padding-bottom: 15px;
+    border-bottom: solid 1px #eeeeee;
+}
+#channel-create-logo{
+    display: inline-block;
     width: 100px;
+}
+#channel-create-logo img{
     height: 100px;
-    border-radius: 8px;
-    overflow: hidden;
-    margin-top: 30px;
-    margin-left: auto;
-    margin-right: auto;
-}
-.channel-logo img {
     width: 100px;
 }
-.channel-logo>div {
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    padding-top: 3px;
-    padding-left: 4px;
-    background-color: #fff;
-    border-radius: 3px;
-    left: 231px;
-    top: 147px;
+#channel-create-logo-info{
+    display: inline-block;
+    min-width: 250px;
+    padding-left: 20px;
 }
-.change-logo:hover {
-    cursor: pointer;
-    color: #59b798;
+#channel-create-logo-info button{
+    color: #ffffff;
+    background-color: #00C995;
 }
-.input-channel-name {
-    text-align: center;
+#channel-create-logo-info p{
+    padding-top: 10px;
 }
-.upLoading{
-    background-color: #000;
+#channel-create-name{
+    display: inline-block;
+    width: 300px;
 }
-.upLoading #channel-logo{
-    opacity: .3;
+#channel-create-name-info{
+    display: inline-block;
+    margin-left: 20px;
 }
-.channel-name-setting {
-    width: 200px;
-    height: 25px;
-    margin-top: 30px;
-    font-size: 1.5em;
-    text-align: center;
-    border-radius: 5px;
-    color: #fff;
-    background-color: rgba(0,0,0,.2);
-    outline: 0;
-    border: none;
+#channel-create-cover{
+    display: inline-block;
+    width: 300px;
 }
-.background-change {
-    position: absolute;
-    right: 2px;
-    bottom: 2px;
-    width: 20px;
-    height: 20px;
-    border-radius: 3px;
-    padding-top: 3px;
-    padding-left: 4px;
-    background-color: #fff;
+#channel-create-cover img{
+   width: 300px;
+   height: 200px;
 }
-.background-change:hover {
-    color: #59b798;
-    cursor: pointer;
+#channel-create-cover-info{
+    padding-left: 20px;
+    display: inline-block;
+    vertical-align: top;
+}
+#channel-create-cover-info button{
+    color: #ffffff;
+    background-color: #00C995;
+}
+#channel-create-cover-info p{
+    padding-top: 10px;
+}
+#channel-create-description{
+    display: inline-block;
+    width: 500px;
+}
+#channel-create-description-info{
+    display: inline-block;
+    vertical-align: top;
+    padding-left: 20px;
+}
+#channel-create-type{
+    display: inline-block;
+    width: 500px;
+}
+#channel-create-type .checkbox-inline{
+    padding-left: 0px;
+}
+#channel-create-tags{
+    display: inline-block;
+    width: 500px;
+}
+#channel-create-button-box button{
+    color: #ffffff;
+    background-color: #00C995;
+    width: 100px;
+}
+#Channel-Create-Error{
+    max-width: 800px;
 }
 /*********body*********/
 .create-page .body {
@@ -889,7 +644,6 @@ button:focus {outline:0;}
     cursor: pointer;
 }
 .red-point {
-    display: none;
     width: 17px;
     height: 17px;
     padding-top: 1px;
@@ -898,8 +652,8 @@ button:focus {outline:0;}
     position: absolute;
     border-radius: 15px;
     background-color: #f00;
-    left: 46px;
-    top: 18px;
+    left: 43px;
+    top: 8px;
 }
 .control-header>img {
     height: 28px;
@@ -1061,22 +815,23 @@ button:focus {outline:0;}
 .create-channel button {
     width: 250px;
     height: 40px;
-    border: 0;
-    color: #267c7b;
+    border: dashed 1px #10304F;
+    color: #10304F;
     border-radius: 10px;
-    background-color: #FFFFFF;
     vertical-align: middle;
     margin-top: 20px;
+    background-color: inherit;
 }
 .create-channel button:hover {
-    background-color: #C8EED8;
-    color: #3F9796;
+    border: dashed 1px #fff;
+    color: #fff;
 }
 /***************content page*****************/
 .content-page {
     height: 100%;
     margin-left: 330px;
     background-color: #fff;
+    overflow: scroll;
 }
 
 .content-page-content {
@@ -1549,3 +1304,161 @@ a.header-channel-name , a.header-channel-name:hover{
     margin-bottom: 15px;
 }
 
+/**   user set page  **/
+.tab-content{
+    padding-top: 20px;
+}
+.user-info-item{
+    margin-bottom: 20px;
+    padding-left: 5px;
+}
+.user-info-item-main{
+    display: inline-block;
+    width: 800px;
+    min-width: 500px;
+}
+#user-info-name{
+    display: inline-block;
+    width: 100px;
+    height: 34px;
+    line-height: 34px;
+    font-size: 16px;
+}
+.user-info-item label{
+    width: 80px;
+    font-weight: bolder;
+    line-height: 34px;
+    font-size: 15px;
+    vertical-align: top;
+}
+#user-info-logo{
+    display: inline-block;
+    width: 100px;
+}
+#user-info-logo img{
+    width: 100px;
+    height: 100px;
+}
+#user-info-logo-info{
+    display: inline-block;
+    min-width: 250px;
+    padding-left: 20px;
+}
+#user-info-logo-info button{
+    color: #ffffff;
+    background-color: #00C995;
+}
+#user-info-logo-info p{
+    padding-top: 10px;
+}
+#user-info-intro{
+    display: inline-block;
+    width: 500px;
+}
+#user-info-button-box{
+    padding-top: 10px;
+}
+#user-info-button{
+    color: #ffffff;
+    background-color: #00C995;
+    width: 100px;
+}
+#user-quit-button{
+    margin-left: 10px;
+}
+#User-Create-Error{
+    max-width: 800px;
+}
+.user-password-item{
+    margin-bottom: 20px;
+    padding-left: 5px;
+}
+.user-password-item label{
+    width: 80px;
+    font-weight: bolder;
+    line-height: 34px;
+    font-size: 15px;
+    vertical-align: top;
+}
+.user-password-item-main{
+    display: inline-block;
+    width: 800px;
+    min-width: 500px;
+}
+#user-current-password{
+    width: 300px;
+}
+#user-new-password{
+    width: 300px;
+}
+#user-repeat-password{
+    width: 300px;
+}
+#password-change-button-box{
+    padding-top: 10px;
+}
+#password-change-button-box button{
+    color: #ffffff;
+    background-color: #00C995;
+    width: 100px;
+}
+.user-news-list{
+    list-style: none;
+    margin: 10px 10px;
+}
+.user-news-list li{
+    position: relative;
+    margin-bottom: 10px;
+    border-bottom: solid 1px rgb(250,250,250);
+    padding-bottom: 5px;
+}
+.user-news-list li .status{
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 40px;
+    height: 26px;
+    line-height: 26px;
+    border-radius: 4px;
+    color: #ffffff;
+    text-align: center;
+    font-size: 13px;
+}
+.user-news-list li .status.pass{
+    background-color: #00C995;
+}
+.user-news-list li .status.fail{
+    background-color: #D8556E;
+}
+.user-news-list li .main{
+    margin-left: 50px;
+}
+.user-news-bookmarks{
+    height: 20px;
+    line-height: 20px;
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+.user-news-info{
+    font-size: 13px;
+    color: #AAAAAA;
+    float: right;
+}
+.user-news-info span{
+    margin-right: 10px;
+}
+.user-news-fail-result{
+    color: #999999;
+    width: 500px;
+    margin-bottom: 10px;
+}
+.user-news-fail-result span{
+    color: #666666;
+}
+.user-news-footer{
+    font-size: 13px;
+    color: #AAAAAA;
+}
+.user-news-footer .sure{
+    margin-left: 5px;
+}

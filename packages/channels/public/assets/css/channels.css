@@ -197,7 +197,10 @@ button:focus {outline:0;}
     overflow: hidden;
 }
 
-#channel-logo img {width: 120px;}
+#channel-logo img {
+    width: 120px;
+    height: 120px;
+}
 
 #channel-name {
     text-align: center;
@@ -266,7 +269,14 @@ button:focus {outline:0;}
 
 #subscribe span {margin: 0 5px;}
 
-
+#subscribe span a{
+    color: #ffffff;
+    text-decoration: none;
+}
+#subscribe span a:hover{
+    color: #ffffff;
+    text-decoration: none;
+}
 /* ======================================================================================
     content page
     ===================================================================================== */
@@ -792,14 +802,14 @@ button:focus {outline:0;}
 .link:hover {
     color: #157ccc;
 }
-#bookmark-pic{
+.bookmark-pic{
     float: right;
     margin-top: 27px;
     margin-left: 35px;
     height: 50px;
     width: 100px;
 }
-#bookmark-pic img{
+.bookmark-pic img{
     height: 50px;
     width: 100px;
 }
@@ -812,19 +822,13 @@ button:focus {outline:0;}
 
 
 /****  check page ****/
-
+#channel-manage-tab{
+    margin: 20px 20px;
+}
 #post-list{
     height: 100%;
-    padding-left: 50px;
+    padding-left: 25px;
     padding-top: 5px;
-}
-#post-list-title{
-    margin-bottom: 25px;
-    margin-right: 40px;
-}
-#post-list-title h3{
-    padding-bottom: 10px;
-    border-bottom: solid 1px #ddd;
 }
 #post-list ul{
     list-style-type: none;
@@ -835,4 +839,85 @@ button:focus {outline:0;}
 }
 .post-item .link-part-content{
     padding-left:0px;
+}
+#delete-result-box.error{
+    border-color: #843534;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;
+}
+.description b{
+    font-weight: normal;
+}
+#profile{
+    padding: 20px 40px;
+}
+.channel-info-item-main{
+    display: inline-block;
+    width: 800px;
+    min-width: 500px;
+}
+.channel-info-item{
+    margin-bottom: 20px;
+}
+.channel-info-item label{
+    width: 80px;
+    font-weight: bolder;
+    line-height: 34px;
+    font-size: 15px;
+    vertical-align: top;
+}
+#channel-info-name{
+    display: inline-block;
+    width: 400px;
+}
+#channel-info-name-info{
+    display: inline-block;
+}
+#channel-info-logo{
+    display: inline-block;
+    width: 100px;
+}
+#channel-info-logo img{
+    width: 100px;
+    height: 100px;
+}
+#channel-info-logo-info{
+    display: inline-block;
+    min-width: 250px;
+    padding-left: 20px;
+}
+#channel-info-logo-info button{
+    color: #ffffff;
+    background-color: #00C995;
+}
+#channel-info-logo-info p{
+    padding-top: 10px;
+}
+#channel-info-description{
+    display: inline-block;
+    width: 500px;
+}
+#channel-info-description-info{
+    display: inline-block;
+    vertical-align: top;
+    padding-left: 20px;
+}
+#channel-info-type{
+    display: inline-block;
+    width: 500px;
+}
+#channel-info-type .checkbox-inline{
+    padding-left: 0px;
+}
+#channel-info-tags{
+    display: inline-block;
+    width: 500px;
+}
+#channel-info-button-box button{
+    color: #ffffff;
+    background-color: #00C995;
+    width: 100px;
+}
+#Channel-Create-Error{
+    max-width: 800px;
 }

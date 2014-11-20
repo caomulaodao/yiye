@@ -24,18 +24,19 @@
                 <ul id="channel-menu">
                     <li id="links-btn"><a href="/channel/{{ ''+channel._id }}" >书签</a></li>
                     <li id="members-btn"><a href="/channel/{{ ''+channel._id }}/follower" >关注者</a></li>
-                    {% if channel.type == 'follower' %} <li id="cancel-sub"><a href="#">取消订阅</a></li>  {% endif %}
+                    {% if channel.userType == 'follower' %} <li id="cancel-sub"><a href="#">取消订阅</a></li>  {% endif %}
                 </ul>
             </div>
+
         </div>
 
-        <div id="control-body" data-channelId="{{ ''+channel._id }}">
+        <div id="control-body" data-channelid="{{ ''+channel._id }}">
             <div id="channel-part">
                 <div id="channel-logo">
                     <img src="{{ channel.logo }}">
                 </div>
                 <div id="channel-name">
-                    <p>{{ channel.name }}</p>
+                    <p id="channel-title">{{ channel.name }}</p>
                 </div>
                 <div id="founder">
                     <span>创始人:&nbsp </span><a href="javascript:;">{{ channel.creator }}</a>
@@ -46,7 +47,7 @@
                 </div>
             </div>
             <div id="subscribe">
-                <button id="subscribe-btn">{% if channel.type == 'not' %} <span id="channel-sub">订阅该频道</span> {% endif %} {% if channel.type == 'admin' %} <span id="channel-manage">管理</span> {% endif %} {% if channel.type == 'follower' %} <span id="channel-subed">已订阅</span> {% endif %} <span>|</span><span class="icon-rss"></span>{{ channel.subNum }}</button>
+                <button id="subscribe-btn">{% if channel.userType == 'not' %} <span id="channel-sub">订阅该频道</span> {% endif %} {% if channel.userType == 'admin' %} <span id="channel-manage"><a href="/channel/{{ ''+channel._id }}/check">管理</a></span> {% endif %} {% if channel.userType == 'follower' %} <span id="channel-subed">已订阅</span> {% endif %} <span>|</span><span class="icon-rss"></span>{{ channel.subNum }}</button>
             </div>
         </div>
     </div>
@@ -65,7 +66,7 @@
             {% if users.creator %}
             <li class="member founder-icon">
                 <a href="javascript:;">
-                    <img src="{{ users.creator.avatar }}">
+                    <img src="http://yiye.qiniudn.com/{{ users.creator.avatar }}">
                 </a>
                 <div class="member-inf">
                     <a class="member-name" href="javascript:;">{{ users.creator.username }}</a><br>
@@ -84,7 +85,7 @@
                 {% for admin in users.admins %}
                     <li class="member admin-icon">
                         <a href="javascript:;">
-                            <img src="{{ admin.avatar }}">
+                            <img src="http://yiye.qiniudn.com/{{ admin.avatar }}">
                         </a>
                         <div class="member-inf">
                             <a class="member-name" href="javascript:;">{{ admin.username }}</a><br>
@@ -104,7 +105,7 @@
                 {% for follower in users.followers %}
                     <li class="member">
                         <a href="javascript:;">
-                            <img src="{{ follower.avatar }}">
+                            <img src="http://yiye.qiniudn.com/{{ follower.avatar }}">
                         </a>
                         <div class="member-inf">
                             <a class="member-name" href="javascript:;">{{ follower.username }}</a><br>
