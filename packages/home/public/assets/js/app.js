@@ -17,9 +17,6 @@ $(function(){
             if (!attrs.logo ) {
                 return "请上传频道logo。";
             }
-            if (!attrs.banner ) {
-                return "请上传频道封面。";
-            }
             if (!attrs.description ) {
                 return "请填写频道描述。";
             }
@@ -182,6 +179,7 @@ $(function(){
             this.channel.set({description : $('#channel-create-description>textarea').val()});
             this.channel.set({tags : $('#channel-create-tags>input').val()});
             this.channel.set({type: $("input[name='type']:checked").val()});
+            this.channel.set({banner: '/channels/assets/img/background/cBg0' + (Math.ceil(Math.random()*10)) + '.png'});
             this.channel.save(null,{error: function(model, response){
                 console.log('error'+response);
             },success: function(model, response){
