@@ -173,8 +173,9 @@
 }
 #discover-wrapper{
     height: 280px;
-    background: url("../img/background/Bristle_Grass.png");
-    background-position:top center;
+    background: url("../img/background/pink_glass.jpeg");
+    background-position: top center;
+    background-size: cover;
 }
 #discover-wrapper h1{
     padding: 80px 200px 40px 200px;

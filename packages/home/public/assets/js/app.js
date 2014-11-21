@@ -17,9 +17,6 @@ $(function(){
             if (!attrs.logo ) {
                 return "请上传频道logo。";
             }
-            if (!attrs.banner ) {
-                return "请上传频道封面。";
-            }
             if (!attrs.description ) {
                 return "请填写频道描述。";
             }

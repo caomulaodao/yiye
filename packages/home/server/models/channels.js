@@ -28,7 +28,6 @@ var ChannelsSchema = Schema({
     },
     banner: {
         type: String,
-        required: true
     },
     creator: {
         type: String,
