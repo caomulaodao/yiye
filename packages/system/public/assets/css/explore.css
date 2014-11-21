@@ -259,20 +259,6 @@ body {background: #ffffff;}
     padding-left: 30px;
 }
 
-.water-fall-box {
-    width: 350px;
-    padding: 10px;
-    float: left;
-}
-
-.water-fall-box>div {
-    -webkit-box-shadow: 0 1px 3px rgba(0,0,0,.3);
-}
-
-.water-fall-pic {
-    padding: 0px;
-    margin-bottom: 0px;
-}
 
 .icon-rss {margin-right: 1px;}
 
@@ -543,6 +529,10 @@ body {background: #ffffff;}
     color: #00cf0d;
 }
 
+
+/*
+   频道橱窗
+*/
 .channel-showcase{
     position: relative;
     display: inline-block;
@@ -610,7 +600,7 @@ body {background: #ffffff;}
     border-radius: 10px;
 }
 .channel-showcase-description{
-    color: #222;
+    color: #666;
     margin:5px 0px 5px 0px;
     font-family: 'Helvetica Neue',Helvetica,Arial,Sans-serif;
 }

@@ -6,12 +6,14 @@ module.exports = function(System, app, auth, database) {
   var index = require('../controllers/index');
   var user = require('../controllers/user');
   //访问首页
-  app.route('/')
-    .get(index.render);
+  app.get('/',function (req,res,next){
+     index.render(req,res,System);
+  });
 
   //访问发现页面
-  app.route('/explore')
-    .get(index.explore);
+  app.get('/explore',function (req,res,next){
+     index.explore(req,res,System);
+  });
 
   app.route('/signup')
       .get(user.signup);

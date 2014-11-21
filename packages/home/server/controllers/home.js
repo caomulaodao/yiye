@@ -143,6 +143,28 @@ exports.newsViewed = function(req,res){
 }
 
 
+//获取频道排行榜
+exports.getChannelsTop = function(req,res){
+    var num = req.params['num'];
+    var limit = 20;
+    Channels.find().sort({subNum:1}).skip(num).limit(limit).exec(function (err, channels) {
+        if(err) return console.log(err);
+        res.status(200).json({channels:channels});
+    });
+}
+
+//获取历史记录
+exports.history = function(req,res){
+    if(!req.user) return res.status(401).send({info:'请先登录或注册'});
+    var num = req.params['num'];
+    var limit = 20;
+    Bookmarks.find({"postUser.userId" : req.user._id,checked:{$in:[3,4]}}).skip(num).limit(limit).exec(function(err,doc){
+        if(err) console.log(err);
+        res.status(200).json({historys:doc});
+    });
+
+}
+
 function getTags(str){
     if(!str) return [];
     str = str.toString();

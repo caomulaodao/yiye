@@ -42,198 +42,24 @@
 <h1 id="index-top-title">热门频道</h1>
 <!--water fall-->
 <ul id="water-fall-main">
+    {% for channel in channels %}
     <li class="channel-showcase">
         <div class="channel-logo">
-            <img src="http://yiye.qiniudn.com/cLogo/4079016d940210b418b50a78ad576c51.png"/>
+            <img src="{{ channel.logo }}"/>
         </div>
         <div class="channel-main">
             <div class="channel-showcase-head">
-                <a href="#">你好啊，这个世界</a>
+                <a href="#">{{ channel.name }}</a>
                 <span><a href="#">+关注</a></span>
             </div>
-            <p class="channel-showcase-description">这就是你的书签插件啊。这就是你的书签插件啊。这就是你的书签插件啊。这就是你的书签插件啊。</p>
+            <p class="channel-showcase-description">{{ channel.description }}</p>
             <div class="channel-showcase-footer">
-              <span>125书签</span><span>68关注者</span>
-              <img src="http://yiye.qiniudn.com/cLogo/4079016d940210b418b50a78ad576c51.png"/>
+              <span>{{ channel.bmkNum}}书签</span><span>{{ channel.subNum}}关注者</span>
+              <img src="{{ channel.creator }}"/>
             </div>
         </div>
     </li>
-    <li class="channel-showcase">
-        <div class="channel-logo">
-            <img src="http://yiye.qiniudn.com/cLogo/4079016d940210b418b50a78ad576c51.png"/>
-        </div>
-        <div class="channel-main">
-            <div class="channel-showcase-head">
-                <a href="#">你好啊，这个世界</a>
-                <span><a href="#">+关注</a></span>
-            </div>
-            <p class="channel-showcase-description">这就是你的书签插件啊。这就是你的书签插件啊。这就是你的书签插件啊。这就是你的书签插件啊。</p>
-            <div class="channel-showcase-footer">
-                <span>125书签</span><span>68关注者</span>
-                <img src="http://yiye.qiniudn.com/cLogo/4079016d940210b418b50a78ad576c51.png"/>
-            </div>
-        </div>
-    </li>
-    <li class="channel-showcase">
-        <div class="channel-logo">
-            <img src="http://yiye.qiniudn.com/cLogo/4079016d940210b418b50a78ad576c51.png"/>
-        </div>
-        <div class="channel-main">
-            <div class="channel-showcase-head">
-                <a href="#">你好啊，这个世界</a>
-                <span><a href="#">+关注</a></span>
-            </div>
-            <p class="channel-showcase-description">这就是你的书签插件啊。这就是你的书签插件啊。这就是你的书签插件啊。这就是你的书签插件啊。</p>
-            <div class="channel-showcase-footer">
-                <span>125书签</span><span>68关注者</span>
-                <img src="http://yiye.qiniudn.com/cLogo/4079016d940210b418b50a78ad576c51.png"/>
-            </div>
-        </div>
-    </li>
-    <li class="channel-showcase">
-        <div class="channel-logo">
-            <img src="http://yiye.qiniudn.com/cLogo/4079016d940210b418b50a78ad576c51.png"/>
-        </div>
-        <div class="channel-main">
-            <div class="channel-showcase-head">
-                <a href="#">你好啊，这个世界</a>
-                <span><a href="#">+关注</a></span>
-            </div>
-            <p class="channel-showcase-description">这就是你的书签插件啊。这就是你的书签插件啊。这就是你的书签插件啊。这就是你的书签插件啊。</p>
-            <div class="channel-showcase-footer">
-                <span>125书签</span><span>68关注者</span>
-                <img src="http://yiye.qiniudn.com/cLogo/4079016d940210b418b50a78ad576c51.png"/>
-            </div>
-        </div>
-    </li>
-    <li class="channel-showcase">
-        <div class="channel-logo">
-            <img src="http://yiye.qiniudn.com/cLogo/4079016d940210b418b50a78ad576c51.png"/>
-        </div>
-        <div class="channel-main">
-            <div class="channel-showcase-head">
-                <a href="#">你好啊，这个世界</a>
-                <span><a href="#">+关注</a></span>
-            </div>
-            <p class="channel-showcase-description">这就是你的书签插件啊。这就是你的书签插件啊。这就是你的书签插件啊。这就是你的书签插件啊。</p>
-            <div class="channel-showcase-footer">
-                <span>125书签</span><span>68关注者</span>
-                <img src="http://yiye.qiniudn.com/cLogo/4079016d940210b418b50a78ad576c51.png"/>
-            </div>
-        </div>
-    </li>
-    <li class="channel-showcase">
-        <div class="channel-logo">
-            <img src="http://yiye.qiniudn.com/cLogo/4079016d940210b418b50a78ad576c51.png"/>
-        </div>
-        <div class="channel-main">
-            <div class="channel-showcase-head">
-                <a href="#">你好啊，这个世界</a>
-                <span><a href="#">+关注</a></span>
-            </div>
-            <p class="channel-showcase-description">这就是你的书签插件啊。这就是你的书签插件啊。这就是你的书签插件啊。这就是你的书签插件啊。</p>
-            <div class="channel-showcase-footer">
-                <span>125书签</span><span>68关注者</span>
-                <img src="http://yiye.qiniudn.com/cLogo/4079016d940210b418b50a78ad576c51.png"/>
-            </div>
-        </div>
-    </li>
-    <li class="channel-showcase">
-        <div class="channel-logo">
-            <img src="http://yiye.qiniudn.com/cLogo/4079016d940210b418b50a78ad576c51.png"/>
-        </div>
-        <div class="channel-main">
-            <div class="channel-showcase-head">
-                <a href="#">你好啊，这个世界</a>
-                <span><a href="#">+关注</a></span>
-            </div>
-            <p class="channel-showcase-description">这就是你的书签插件啊。这就是你的书签插件啊。这就是你的书签插件啊。这就是你的书签插件啊。</p>
-            <div class="channel-showcase-footer">
-                <span>125书签</span><span>68关注者</span>
-                <img src="http://yiye.qiniudn.com/cLogo/4079016d940210b418b50a78ad576c51.png"/>
-            </div>
-        </div>
-    </li>
-    <li class="channel-showcase">
-        <div class="channel-logo">
-            <img src="http://yiye.qiniudn.com/cLogo/4079016d940210b418b50a78ad576c51.png"/>
-        </div>
-        <div class="channel-main">
-            <div class="channel-showcase-head">
-                <a href="#">你好啊，这个世界</a>
-                <span><a href="#">+关注</a></span>
-            </div>
-            <p class="channel-showcase-description">这就是你的书签插件啊。这就是你的书签插件啊。这就是你的书签插件啊。这就是你的书签插件啊。</p>
-            <div class="channel-showcase-footer">
-                <span>125书签</span><span>68关注者</span>
-                <img src="http://yiye.qiniudn.com/cLogo/4079016d940210b418b50a78ad576c51.png"/>
-            </div>
-        </div>
-    </li>
-    <li class="channel-showcase">
-        <div class="channel-logo">
-            <img src="http://yiye.qiniudn.com/cLogo/4079016d940210b418b50a78ad576c51.png"/>
-        </div>
-        <div class="channel-main">
-            <div class="channel-showcase-head">
-                <a href="#">你好啊，这个世界</a>
-                <span><a href="#">+关注</a></span>
-            </div>
-            <p class="channel-showcase-description">这就是你的书签插件啊。这就是你的书签插件啊。这就是你的书签插件啊。这就是你的书签插件啊。</p>
-            <div class="channel-showcase-footer">
-                <span>125书签</span><span>68关注者</span>
-                <img src="http://yiye.qiniudn.com/cLogo/4079016d940210b418b50a78ad576c51.png"/>
-            </div>
-        </div>
-    </li>
-    <li class="channel-showcase">
-        <div class="channel-logo">
-            <img src="http://yiye.qiniudn.com/cLogo/4079016d940210b418b50a78ad576c51.png"/>
-        </div>
-        <div class="channel-main">
-            <div class="channel-showcase-head">
-                <a href="#">你好啊，这个世界</a>
-                <span><a href="#">+关注</a></span>
-            </div>
-            <p class="channel-showcase-description">这就是你的书签插件啊。这就是你的书签插件啊。这就是你的书签插件啊。这就是你的书签插件啊。</p>
-            <div class="channel-showcase-footer">
-                <span>125书签</span><span>68关注者</span>
-                <img src="http://yiye.qiniudn.com/cLogo/4079016d940210b418b50a78ad576c51.png"/>
-            </div>
-        </div>
-    </li>
-    <li class="channel-showcase">
-        <div class="channel-logo">
-            <img src="http://yiye.qiniudn.com/cLogo/4079016d940210b418b50a78ad576c51.png"/>
-        </div>
-        <div class="channel-main">
-            <div class="channel-showcase-head">
-                <a href="#">你好啊，这个世界</a>
-                <span><a href="#">+关注</a></span>
-            </div>
-            <p class="channel-showcase-description">这就是你的书签插件啊。这就是你的书签插件啊。这就是你的书签插件啊。这就是你的书签插件啊。</p>
-            <div class="channel-showcase-footer">
-                <span>125书签</span><span>68关注者</span>
-                <img src="http://yiye.qiniudn.com/cLogo/4079016d940210b418b50a78ad576c51.png"/>
-            </div>
-        </div>
-    </li>
-    <li class="channel-showcase">
-        <div class="channel-logo">
-            <img src="http://yiye.qiniudn.com/cLogo/4079016d940210b418b50a78ad576c51.png"/>
-        </div>
-        <div class="channel-main">
-            <div class="channel-showcase-head">
-                <a href="#">你好啊，这个世界</a>
-                <span><a href="#">+关注</a></span>
-            </div>
-            <p class="channel-showcase-description">这就是你的书签插件啊。这就是你的书签插件啊。这就是你的书签插件啊。这就是你的书签插件啊。</p>
-            <div class="channel-showcase-footer">
-                <span>125书签</span><span>68关注者</span>
-                <img src="http://yiye.qiniudn.com/cLogo/4079016d940210b418b50a78ad576c51.png"/>
-            </div>
-        </div>
-    </li>
+    {% endfor %}
 </ul>
 <div id="pagination-part">
     <ul class="pagination">

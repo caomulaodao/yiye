@@ -260,6 +260,7 @@ exports.update = function(req,res){
 
 }
 
+
 //将一个bookmarks列表格式化为按时间集合排序的数组。
 function listToArray(list){
     var result = [];

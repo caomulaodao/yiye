@@ -24,7 +24,7 @@
                 {% if news.length > 0 %} <div class="red-point" id="news-popup-num">{{ news.length }}</div> {% endif %}
             </a>
             <img src="/home/assets/img/brand_name_white.png" >
-            <a href="/"><span class="glyphicon glyphicon-th-large"></span></a>
+            <span class="glyphicon glyphicon-th-large" id="explore"></span>
         </div>
 
         <div class="control-body">
@@ -181,7 +181,8 @@
             <li role="presentation" class="active"><a href="#new" role="tab" data-toggle="tab">账号</a></li>
             <li role="presentation"><a href="#profile" role="tab" data-toggle="tab">密码</a></li>
             <li role="news"><a href="#news" role="tab" data-toggle="tab" id="news-tab" data-num="{{ news.length }}">新消息{% if news.length > 0 %}({{ news.length }}){% endif %}</a></li>
-            <li role="news"><a href="#history" role="tab" data-toggle="tab">历史消息</a></li>
+            <li role="news"><a href="#history" role="tab" data-toggle="tab" id="history-tab">历史消息</a></li>
+            <button class="btn" id="gotoPerson" onclick="window.open('/u/{{ ''+user._id}}')">我的主页</button>
         </ul>
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="new">
@@ -271,14 +272,10 @@
                             </div>
                         </li>
                     {% endfor %}
-
-
-
-
                 </ul>
             </div>
             <div role="tabpanel" class="tab-pane" id="history">
-                历史消息
+                暂无历史记录
             </div>
         </div>
 
@@ -306,7 +303,7 @@
         </div>
         <div class="content-body">
             <ul>
-                <% for(var i = 0;i< list.length; i++){%>
+                <% for(var i = 0;i< list.length; i++){ %>
                 <div class="date-divide">
                     <div><%= list[i]['day']%></div>
                 </div>
@@ -344,6 +341,59 @@
             <div style="height:200px"></div>
         </div>
     </div>
+</script>
+<script type="text/x-handlebars-template" id="tp-channel-explore">
+    <div id="channel-explore">
+        <h1 id="channel-explore-title">发现频道</h1>
+        <p id="channel-explore-description">发现网路之美</p>
+        <ul>
+            <% for(var i = 0;i < channels.length; i++){ %>
+                <li class="channel-showcase">
+                    <div class="channel-logo">
+                        <img src="<%= channels[i]['logo'] %>"/>
+                    </div>
+                    <div class="channel-main">
+                        <div class="channel-showcase-head">
+                            <a href="#"><%= channels[i]['name']  %></a>
+                            <span><a href="#">+关注</a></span>
+                        </div>
+                        <p class="channel-showcase-description"><%= channels[i]['description']  %></p>
+                        <div class="channel-showcase-footer">
+                            <span><%=channels[i]['bmkNum']%>书签</span><span><%= channels[i]['subNum']%>关注者</span>
+                            <img src="http://yiye.qiniudn.com<%= channels[i]['creator']  %>"/>
+                        </div>
+                    </div>
+                </li>
+            <% } %>
+        </ul>
+    </div>
+</script>
+<script type="text/x-handlebars-template" id="tp-user-history">
+    <ul class="user-history-list">
+    <% for(var i = 0;i < historys.length; i++){ %>
+        <li>
+            <% if(historys[i].checked == 3){ %>
+            <div class="status pass">
+                通过
+            </div>
+            <% } %>
+            <% if(historys[i].checked == 4){ %>
+            <div class="status fail">
+                失败
+            </div>
+            <% } %>
+            <div class="main">
+                <div class="user-history-bookmarks" ><a href="#"><%= historys[i].title %></a> <div class="user-history-info"><span>频道:<a href="#"><%= historys[i].channelInfo.channelName %></a></span><span>审核:<a href="#"><%= historys[i].checkUser.username %></a></span></div></div>
+                <% if(historys[i].checked == 4){%>
+                <div class="user-history-fail-result">
+                    <span>原因：</span><%= historys[i].deleteInfo %>
+                </div>
+                <% } %>
+                <div class="user-history-footer"><span>时间：</span><%=  ''+historys[i].postTime %></div>
+            </div>
+        </li>
+    <% } %>
+    </ul>
 </script>
 <script rel="script" src="/bower_components/jquery/dist/jquery.js"></script>
 <script rel="script" src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>

@@ -22,4 +22,5 @@ module.exports = function(Channels, app, auth, database) {
 
     //更新频道信息
     app.post('/channel/:channelId/update',channels.update);
+
 };

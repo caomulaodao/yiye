@@ -48,7 +48,17 @@ $(function(){
         //url:"/api/bookmarks/list"
     });
 
+    //channel top list model
+    var channelShowcase = Backbone.Model.extend({
 
+    });
+
+    //历史记录视图
+    var historyModel = Backbone.Model.extend({
+
+    });
+
+    //书签列表视图
     var listView = Backbone.View.extend({
         el: $('.content-page'),
 
@@ -201,7 +211,8 @@ $(function(){
         events: {
             'click #user-info-button' : "upUserInfo",
             'click #password-change-button' : "changePassword",
-            'click .sure' : "viewed"
+            'click .sure' : "viewed",
+            'click #history-tab' : "history"
         },
 
         initialize: function() {
@@ -347,6 +358,41 @@ $(function(){
                 });
             }
 
+        },
+
+        history:function(){
+            var history = new historyModel;
+            var historyTemplate =  _.template($('#tp-user-history').html());
+
+            history.fetch({url:'/api/history/0',success:function(model,response){
+                $('#history').html(historyTemplate(response));
+            }});
+
+        }
+
+
+    });
+
+    //用户发现页面
+    var ExploreView = Backbone.View.extend({
+
+        el: $('.content-page'),
+
+        initTemplate: _.template($('#tp-channel-explore').html()),
+
+        events: {
+
+        },
+
+        initialize: function() {
+        },
+
+        render: function(){
+            var channels = new channelShowcase();
+            var that = this;
+            channels.fetch({url:'/api/channels/top/0',success:function(model,response){
+                that.$el.html(that.initTemplate(response));
+            }})
         }
 
 
@@ -371,9 +417,13 @@ $(function(){
             'click .create-channel>button' : "createChannels",
             'click #user-center' : "showPerson",
             'click #admin-channel-list  li' : 'showChannel',
-            'click #sub-channel-list  li' : 'showChannel'
+            'click #sub-channel-list  li' : 'showChannel',
+            'click #explore' : 'showExplore'
         },
 
+        initialize: function() {
+            this.showExplore();
+        },
 
         //展示创建频道弹出页
         createChannels : function(){
@@ -395,6 +445,12 @@ $(function(){
             var channelId = $(event.currentTarget).data('id');
             var list = new listView;
             list.render(channelId);
+        },
+
+        //展示发现页面
+        showExplore : function(){
+            var explore = new ExploreView();
+            explore.render();
         }
     });
 

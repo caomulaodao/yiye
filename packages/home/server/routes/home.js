@@ -8,6 +8,8 @@ module.exports = function(Home, app, auth, database) {
         if(!req.user) res.redirect('/');
         home.getInitChannels(req,res,Home);
     });
+
+    //创建频道
     app.post('/api/channels/create',home.createChannel);
     //获取用户所有相关频道
     app.route('/api/channel/all')
@@ -16,4 +18,12 @@ module.exports = function(Home, app, auth, database) {
     //已经查看某个通知
     app.route('/api/news/viewed')
         .post(home.newsViewed);
+
+    //获取频道排行榜
+    app.route('/api/channels/top/:num')
+        .get(home.getChannelsTop);
+
+    //获取历史记录
+    app.route('/api/history/:num')
+        .get(home.history);
 };

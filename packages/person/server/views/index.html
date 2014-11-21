@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>public_page</title>
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/person/assets/css/person.css">
+</head>
+<body>
+<!--web_loading-->
+<div id="web-loading">
+    <div></div>
+</div>
+
+<div class="control-page">
+    <div class="bg-style">
+        <div class="bg-img" style="background: url(http://yiye.qiniudn.com{{ user.avatar }}) no-repeat;background-size: cover;"></div>
+        <div class="bg-opacity"></div>
+    </div>
+    <div class="control-page-content">
+        <div class="control-header">
+            <a href="javascript:;" class="yiye-logo">
+                <img src="/person/assets/img/logo_white2.png">
+            </a>
+            <i href="javascript:;"title="我的主页" class="glyphicon glyphicon-home"></i>
+        </div>
+        <div class="control-body" >
+            <div class="user-part">
+                <div class="user-avatar">
+                    <img src="http://yiye.qiniudn.com{{ user.avatar }}">
+                </div>
+                <div class="user-name">
+                    <p>{{ user.username }}</p>
+                </div>
+            </div>
+            <div class="chose-item">
+                <ul>
+                    <li class="item-list active">
+                        <div>
+                            <span class="icon-rss"></span>
+                            <span>创建</span>
+                            <span>342</span>
+                        </div>
+                    </li>
+                    <li class="item-list">
+                        <div>
+                            <span class="icon-rss"></span>
+                            <span>订阅</span>
+                            <span>192</span>
+                        </div>
+                    </li>
+                    <li class="item-list">
+                        <div>
+                            <span class="glyphicon glyphicon-bookmark"></span>
+                            <span>提交</span>
+                            <span>232</span>
+                        </div>
+                    </li>
+                    <li class="item-list">
+                        <div>
+                            <span class="glyphicon glyphicon-bookmark"></span>
+                            <span>收藏</span>
+                            <span>3421</span>
+                        </div>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,190 @@
+html,body {
+    font-size: 10px;
+    height: 100%;
+    font-family: "微软雅黑";
+    overflow-y: hidden;
+}
+ul {
+    padding-left: 0;
+}
+
+button:focus {outline:0;}
+
+
+/***********webkit-scroll-style*************/
+::-webkit-scrollbar
+{
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track-piece
+{
+    background-color: #267C7B;
+    -webkit-border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:vertical
+{
+    height: 5px;
+    background-color: #aaa;
+    -webkit-border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:horizontal
+{
+    width: 5px;
+    background-color: #CCCCCC;
+    -webkit-border-radius: 6px;
+}
+
+
+/****************control page******************/
+.control-page {
+    position: fixed;
+    width: 30%;
+    min-width: 275px;
+    height: 100%;
+}
+.bg-style {
+
+}
+.bg-img {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background-color: #fff;
+    top: 0;
+    left: 0;
+    opacity: 1;
+    -webkit-filter: blur(2px);
+    filter: blur(2px);
+}
+.bg-opacity {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: #24282f;
+    opacity: 0.7;
+}
+.control-page-content {
+    width: 100%;
+    height: 100%;
+}
+
+
+/******header******/
+
+.control-header {
+    height: 60px;
+    padding-top: 5px;
+    padding-right: 20px;
+    width: 100%;
+    position: relative;
+}
+.yiye-logo {
+    width: 180px;
+    margin-left: 20px;
+    overflow: hidden;
+}
+.yiye-logo img {
+    width: 180px;
+}
+.control-header i {
+    float: right;
+    font-size: 2.5em;
+    margin-top: 20px;
+    color: #eee;
+}
+.control-header i:hover {
+    color: #fff;
+}
+.control-header>i:hover {
+    cursor: pointer;
+}
+.menu-arrow {
+    position: absolute;
+    left: 48px;
+    top: -40px;
+    width: 0;
+    height: 0;
+    border-width: 10px;
+    border-color: transparent transparent #fff transparent;
+    border-style: dashed dashed solid dashed;
+}
+
+
+/******body******/
+
+.control-body {
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
+.user-part {
+    width: 100%;
+    height: 200px;
+    margin-top: 100px;
+}
+.user-avatar {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto;
+    border-radius: 50%;
+    overflow: hidden;
+}
+.user-avatar img {
+    width: 120px;
+}
+.user-name {
+    text-align: center;
+    margin-top: 5px;
+    color:#fff;
+    font-size: 2em;
+}
+.chose-item {
+    width: 100%;
+    text-align: center;
+}
+.chose-item ul {
+    width: 100%;
+    margin: 0 auto;
+    list-style-type: none;
+}
+.item-list {
+    width: 100%;
+    height: 30px;
+    font-size: 1.8em;
+    padding-top: 4px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    color: #fff;
+}
+.item-list:last-child {
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.item-list>div {
+    width: 100%;
+    padding: 0 20px;
+    margin: 0 auto;
+}
+.item-list>div>span:first-child {
+    float: right;
+}
+
+.item-list>div>span:nth-child(2) {
+    float: left;
+}
+.item-list>div>span:last-child {
+    float: right;
+}
+.chose-item .item-list:hover {
+    background-color: #7AC5BC;
+    cursor: pointer;
+}
+.active {
+    background-color: #2B928A;
+}
+
+
+
+
+

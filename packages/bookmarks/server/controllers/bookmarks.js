@@ -72,6 +72,14 @@ exports.receive = function(req,res){
             });
         });
     });
+    // 添加用户自己留底的书签记录
+    var bookmark = Bookmarks(bookmarks);
+        bookmark.checked = 0;
+        bookmark.channelId =  undefined;
+        bookmark.postUser = {userId:req.user._id,username:req.user.username};
+        bookmark.save(function(err){
+            if(err) console.log(err);
+        });
     //返回频道信息
     Channel2User.find({userId:req.user._id,channelId:{$in:channels}},'channelId name logo type',function(err,channels){
         if(err) return res.send({info:"err"});
