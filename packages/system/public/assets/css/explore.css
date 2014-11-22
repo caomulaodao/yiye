@@ -37,7 +37,7 @@ body {background: #ffffff;}
     width: 100%;
     background: #fff;
     margin-bottom: 20px;
-    background: url(../img/background/cellphone.jpeg) no-repeat center;
+    background: url(../img/background/cellphone.png) no-repeat top center;
     background-size: cover;
 }
 
