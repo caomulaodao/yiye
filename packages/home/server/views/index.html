@@ -23,7 +23,7 @@
                 <img src="http://yiye.qiniudn.com{{ user.avatar }}">
                 {% if news.length > 0 %} <div class="red-point" id="news-popup-num">{{ news.length }}</div> {% endif %}
             </a>
-            <img src="/home/assets/img/brand_name_white.png" >
+            <img src="/home/assets/img/brand_name_white.png" onclick="window.open('/')">
             <span class="glyphicon glyphicon-th-large" id="explore"></span>
         </div>
 
@@ -354,7 +354,7 @@
                     </div>
                     <div class="channel-main">
                         <div class="channel-showcase-head">
-                            <a href="#"><%= channels[i]['name']  %></a>
+                            <a href="/channel/<%= channels[i]['_id'] %>" target="_blank"><%= channels[i]['name']  %></a>
                             <span><a href="#">+关注</a></span>
                         </div>
                         <p class="channel-showcase-description"><%= channels[i]['description']  %></p>
