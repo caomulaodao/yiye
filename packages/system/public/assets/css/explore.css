@@ -301,7 +301,6 @@ body {background: #ffffff;}
     width: 80px;
 }
 
-
 .subscription {
     opacity: 0;
     -webkit-transition: all 0.2s;
@@ -602,6 +601,12 @@ body {background: #ffffff;}
 .channel-showcase-description{
     color: #666;
     margin:5px 0px 5px 0px;
+    width: 220px;
+    height: 40px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
     font-family: 'Helvetica Neue',Helvetica,Arial,Sans-serif;
 }
 #index-top-title{
