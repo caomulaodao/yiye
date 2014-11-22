@@ -141,8 +141,18 @@ button:focus {outline:0;}
     color:#fff;
     font-size: 2em;
 }
+.user-intro {
+    height: 55px;
+    text-align: center;
+    margin-top: 5px;
+    color: #bbb;
+    font-size: 1.5em;
+    padding: 0 10px;
+    word-break: break-all;
+}
 .chose-item {
     width: 100%;
+    margin-top: 30px;
     text-align: center;
 }
 .chose-item ul {
@@ -150,41 +160,38 @@ button:focus {outline:0;}
     margin: 0 auto;
     list-style-type: none;
 }
+.chose-item ul>li:nth-child(2) {
+    border-left: 1px solid rgba(255,255,255,0.1);
+    border-right: 1px solid rgba(255,255,255,0.1);
+}
 .item-list {
-    width: 100%;
-    height: 30px;
+    display: inline-block;
+    width: 30%;
+    height: 55px;
     font-size: 1.8em;
     padding-top: 4px;
-    border-top: 1px solid rgba(255,255,255,0.1);
     color: #fff;
 }
-.item-list:last-child {
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+.item-list.active a {
+    color: #1CBED3;
 }
-.item-list>div {
-    width: 100%;
-    padding: 0 20px;
-    margin: 0 auto;
+.item-list a {
+    text-decoration: none;
+    color: #ccc;
 }
-.item-list>div>span:first-child {
-    float: right;
+.item-list a:hover {
+    color: #1CBED3;
 }
-
-.item-list>div>span:nth-child(2) {
-    float: left;
+.item-list a strong {
+    display: block;
+    font-weight: bold;
+    font-size: 1.1em;
 }
-.item-list>div>span:last-child {
-    float: right;
+.item-list a span {
+    display: block;
+    font-weight: lighter;
+    font-size: 0.9em;
 }
-.chose-item .item-list:hover {
-    background-color: #7AC5BC;
-    cursor: pointer;
-}
-.active {
-    background-color: #2B928A;
-}
-
-
 
 
 
