@@ -82,7 +82,7 @@ exports.addAdmChannel = function(){
 exports.createChannel = function(req,res){
     var channels = new Channels(req.body);
     channels.tags = getTags(channels.tags);
-    channels.creator = req.user.username;
+    channels.creator = {userId:req.user._id,userName:req.user.username,userLogo:req.user.avatar};
     channels.save(function(err,doc){
         if(err){
             return res.send({info:err});

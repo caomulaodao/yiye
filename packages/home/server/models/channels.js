@@ -27,11 +27,12 @@ var ChannelsSchema = Schema({
         required: true
     },
     banner: {
-        type: String,
+        type: String
     },
     creator: {
-        type: String,
-        required: true
+        userId:Schema.Types.ObjectId,
+        userName: String,
+        userLogo: String
     },
     subNum: {
         type: Number,

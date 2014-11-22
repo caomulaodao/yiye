@@ -658,6 +658,7 @@ button:focus {outline:0;}
 .control-header>img {
     height: 28px;
     margin-top: 16px;
+    cursor: pointer;
 }
 .control-header span {
     float: right;

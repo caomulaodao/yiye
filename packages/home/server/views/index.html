@@ -23,7 +23,7 @@
                 <img src="http://yiye.qiniudn.com{{ user.avatar }}">
                 {% if news.length > 0 %} <div class="red-point" id="news-popup-num">{{ news.length }}</div> {% endif %}
             </a>
-            <img src="/home/assets/img/brand_name_white.png" >
+            <img src="/home/assets/img/brand_name_white.png" onclick="window.open('/')">
             <span class="glyphicon glyphicon-th-large" id="explore"></span>
         </div>
 
@@ -329,7 +329,7 @@
                                     <div class="footer-part">
                                         <span class="submit-time">提交于:<%= moment(''+list[i]['dList'][j]['postTime']).format('H:mm:ss') %></span>
                                         <span>by <a href="#" data-userId="<%= list[i]['dList'][j]['postUser']['userId']%>"><%= list[i]['dList'][j]['postUser']['username'] %></a></a></span>
-                                        <span><i class="glyphicon glyphicon-star"></i><a class="collect" href="#">收藏</a></span>
+                                        <!-- <span><i class="glyphicon glyphicon-star"></i><a class="collect" href="#">收藏</a></span>  -->
                                     </div>
                                 </div>
 
@@ -354,13 +354,13 @@
                     </div>
                     <div class="channel-main">
                         <div class="channel-showcase-head">
-                            <a href="#"><%= channels[i]['name']  %></a>
+                            <a href="/channel/<%= channels[i]['_id'] %>" target="_blank"><%= channels[i]['name']  %></a>
                             <span><a href="#">+关注</a></span>
                         </div>
                         <p class="channel-showcase-description"><%= channels[i]['description']  %></p>
                         <div class="channel-showcase-footer">
                             <span><%=channels[i]['bmkNum']%>书签</span><span><%= channels[i]['subNum']%>关注者</span>
-                            <img src="http://yiye.qiniudn.com<%= channels[i]['creator']  %>"/>
+                            <a href="/u/<%= channels[i]['creator']['userId'] %>" target="_blank"><img src="http://yiye.qiniudn.com<%= channels[i]['creator']['userLogo']  %>"/></a>
                         </div>
                     </div>
                 </li>
