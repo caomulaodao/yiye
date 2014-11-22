@@ -173,14 +173,14 @@ button:focus {outline:0;}
     color: #fff;
 }
 .item-list.active a {
-    color: #1CBED3;
+    color: #00E2FF;
 }
 .item-list a {
     text-decoration: none;
     color: #ccc;
 }
 .item-list a:hover {
-    color: #1CBED3;
+    color: #00E2FF;
 }
 .item-list a strong {
     display: block;
