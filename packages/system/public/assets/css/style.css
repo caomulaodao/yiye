@@ -36,6 +36,16 @@
 #name span{
     padding-left: 15px;
 }
+#avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin: 5px 50px 5px 10px;
+    border: 1px solid #ccc;
+}
+#avatar img {
+    
+}
 #slogan{
     padding-top: 5px;
     text-align: center;
