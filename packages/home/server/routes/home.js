@@ -11,6 +11,7 @@ module.exports = function(Home, app, auth, database) {
 
     //创建频道
     app.post('/api/channels/create',home.createChannel);
+
     //获取用户所有相关频道
     app.route('/api/channel/all')
         .get(home.getChannelsList);
