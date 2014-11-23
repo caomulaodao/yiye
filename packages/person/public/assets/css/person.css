@@ -89,17 +89,15 @@ button:focus {outline:0;}
 .yiye-logo img {
     width: 180px;
 }
-.control-header i {
+.control-header a:last-child {
     float: right;
     font-size: 2.5em;
     margin-top: 20px;
+    text-decoration: none;
     color: #eee;
 }
-.control-header i:hover {
+.control-header a:last-child:hover {
     color: #fff;
-}
-.control-header>i:hover {
-    cursor: pointer;
 }
 .menu-arrow {
     position: absolute;
@@ -152,7 +150,7 @@ button:focus {outline:0;}
 }
 .chose-item {
     width: 100%;
-    margin-top: 30px;
+    margin-top: 35px;
     text-align: center;
 }
 .chose-item ul {

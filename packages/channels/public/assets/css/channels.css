@@ -13,7 +13,7 @@ html,body {
     height: 100%;
     font-family: "微软雅黑";
     overflow-y: hidden;
-    min-width: 812px;
+    min-width: 890px;
 }
 
 ul {
@@ -59,6 +59,7 @@ button:focus {outline:0;}
     width: 26%;
     min-width: 275px;
     height: 100%;
+    z-index: 4;
 }
 
 #bg-img {

@@ -1482,6 +1482,7 @@ a.header-channel-name , a.header-channel-name:hover{
     margin-bottom: 20px;
     cursor: pointer;
     border-radius: 4px;
+    text-align: left;
 }
 .channel-showcase:hover{
     background-color: #fff;
@@ -1539,10 +1540,16 @@ a.header-channel-name , a.header-channel-name:hover{
 .channel-showcase-description{
     color: #666;
     margin:5px 0px 5px 0px;
+    width: 220px;
+    height: 20px;
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
     font-family: 'Helvetica Neue',Helvetica,Arial,Sans-serif;
 }
 #channel-explore{
     margin: 20px;
+    text-align: center;
 }
 #channel-explore-title{
     text-align: center;
