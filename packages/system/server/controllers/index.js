@@ -11,11 +11,31 @@ var mongoose = require('mongoose'),
 
 //渲染首页
 exports.render = function(req, res,Package) {
-    Package.render('index', {
-    }, function(err, html) {
-        if(err) console.log(err);
-        res.send(html);
-    });
+    async.parallel([
+        function(cb){
+        User.count({},function(err,user_number){cb(err,user_number)});
+        },
+        function(cb){
+            Channels.count({},function(err,channel_number){cb(err,channel_number)});
+        },
+        function(cb){
+            Bookmarks.count({},function(err,label_number){cb(err,label_number)});
+        }],function(err,result){
+            if(err){
+                console.log(err);
+            }
+            else{
+                var user_number=result[0];
+                var channel_number=result[1];
+                var label_number=result[2];
+                Package.render('index',{user_number:user_number,channel_number:channel_number,label_number:label_number},
+                    function(err,html){
+                    if(err) consoe.log(err);
+                    res.send(html);
+                    }
+                )
+            }
+        })
 
 };
 
