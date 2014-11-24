@@ -43,6 +43,73 @@ exports.renderPost = function(req,res,Package){
         });
 }
 
+//展示用户创建的的频道
+exports.renderCreate = function(req,res,Package){
+    var userId = req.params['userId'];
+    async.parallel({
+            user:function (callback) {
+                User.findOne({_id:userId}, function (err, user) {
+                    callback(null,user);
+                });
+            },
+            list:function(callback){
+                Channels.find({"creator.userId":userId}).sort({time:-1}).limit(10).exec(function (err, doc) {
+                    if(err) console.log(err);
+                    if(doc.length === 0) return callback(null,[]);
+                    callback(null,doc);
+                });
+            }
+        },
+        function(err,results){
+            var user = results.user;
+            var list = results.list;
+            Package.render('create', {
+                user:user,
+                list:list
+            }, function(err, html) {
+                if(err) console.log(err);
+                res.send(html);
+            });
+        });
+}
+
+//展示用户关注的频道
+exports.renderWatch = function(req,res,Package){
+    var userId = req.params['userId'];
+    async.parallel({
+            user:function (callback) {
+                User.findOne({_id:userId}, function (err, user) {
+                    callback(null,user);
+                });
+            },
+            list:function(callback){
+                Channel2User.find({userId:userId},{ _id: 0, channelId: 1 },function(err,doc){
+                    if(err) console.log(err);
+                    var channelIds = []
+                    doc.forEach(function(item){
+                        channelIds.push(item.channelId);
+                    });
+                    Channels.find({_id:{$in:channelIds}}).sort({time:-1}).limit(10).exec(function (err, doc) {
+                        if(err) console.log(err);
+                        if(doc.length === 0) return callback(null,[]);
+                        callback(null,doc);
+                    });
+                });
+            }
+        },
+        function(err,results){
+            var user = results.user;
+            var list = results.list;
+            Package.render('watch', {
+                user:user,
+                list:list
+            }, function(err, html) {
+                if(err) console.log(err);
+                res.send(html);
+            });
+        });
+}
+
 
 //将一个bookmarks列表格式化为按时间集合排序的数组。
 function listToArray(list){

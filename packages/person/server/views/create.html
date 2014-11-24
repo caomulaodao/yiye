@@ -1,10 +1,111 @@
 <!DOCTYPE html>
 <html>
-<head lang="en">
+<head>
     <meta charset="UTF-8">
-    <title></title>
+    <title>{{user.username}}的个人主页</title>
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/person/assets/css/person.css">
 </head>
 <body>
+<!--web_loading-->
+<div id="web-loading">
+    <div></div>
+</div>
+
+<div class="control-page">
+    <div class="bg-style">
+        <div class="bg-img" style="background: url(http://yiye.qiniudn.com{{ user.avatar }}) no-repeat;background-size: cover;"></div>
+        <div class="bg-opacity"></div>
+    </div>
+    <div class="control-page-content">
+        <div class="control-header">
+            <a href="javascript:;" class="yiye-logo">
+                <img src="/person/assets/img/logo_white2.png">
+            </a>
+            <i href="javascript:;"title="我的主页" class="glyphicon glyphicon-home"></i>
+        </div>
+        <div class="control-body" >
+            <div class="user-part">
+                <div class="user-avatar">
+                    <img src="http://yiye.qiniudn.com{{ user.avatar }}">
+                </div>
+                <div class="user-name">
+                    <p>{{ user.username }}</p>
+                </div>
+                <div class="user-intro">
+                    <span>{{ user.intro }}</span>
+                </div>
+            </div>
+            <div class="chose-item">
+                <ul>
+                    <li class="item-list">
+                        <a href="/u/{{''+user._id}}">
+                            <strong>{{ user.postNum }}</strong>
+                            <span>提交</span>
+                        </a>
+                    </li>
+                    <li class="item-list active">
+                        <a href="/u/{{''+user._id}}/create">
+                            <strong>{{ user.createNum }}</strong>
+                            <span>创建</span>
+                        </a>
+                    </li>
+                    <li class="item-list">
+                        <a href="/u/{{''+user._id}}/watch">
+                            <strong>{{ user.subNum }}</strong>
+                            <span>订阅</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- content page -->
+<div id="content-page">
+    <div id="content-page-content">
+        <div class="part-wrapper">
+            <div class="part-list">
+                <div id="part-title">
+                    <h3>关注的频道</h3>
+                </div>
+                <ul class="part-ul" id="create-channel-list">
+                    {% for channel  in list %}
+                    <li class="channel-showcase">
+                        <div class="channel-logo">
+                            <img src="{{ channel.logo }}"/>
+                        </div>
+                        <div class="channel-main">
+                            <div class="channel-showcase-head">
+                                <a href="#">{{ channel.name }}</a>
+                                <span><a href="#">+关注</a></span>
+                            </div>
+                            <p class="channel-showcase-description">{{ channel.description }}</p>
+                            <div class="channel-showcase-footer">
+                                <span>{{ channel.bmkNum}}书签</span><span>{{ channel.subNum}}关注者</span>
+                                <img src="{{ channel.creator }}"/>
+                            </div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+                <div id="page-part">
+                    <ul class="pagination">
+                        <li class="disabled"><a href="#">&laquo;</a></li>
+                        <li class="active"><a href="#">1<span class="sr-only">(current)</span></a></li>
+                        <li><a href="#">2</a></li>
+                        <li><a href="#">3</a></li>
+                        <li><a href="#">4</a></li>
+                        <li><a href="#">5</a></li>
+                        <li><a href="#">&raquo;</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+     </div>
+</div>
+
 
 </body>
 </html>
