@@ -37,14 +37,20 @@ exports.signout = function(req, res) {
 };
 
 /**
- * Logout web API
+ * Logout web API (by coolbit.in@gmail.com)
  */
 exports.web_api_logout = function(req, res) {
-  req.logout();
-  if (req.isUnauthenticated())
-    res.json({result: 'ok'});
+  if (req.isAuthenticated()) {
+    req.logout();
+    if (req.isUnauthenticated())
+      res.json({result: 'ok'});
+    else
+      res.json({result: '注销失败'});
+  }
   else
-    res.json({result: '未成功注销'});
+    res.json({result: '未登录'});
+
+
 };
 /**
  * Session
