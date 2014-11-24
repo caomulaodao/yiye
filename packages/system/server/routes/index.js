@@ -14,6 +14,9 @@ module.exports = function(System, app, auth, database) {
   app.get('/explore',function (req,res,next){
      index.explore(req,res,System);
   });
+  app.get('/explore/query',function(req,res,next){
+    index.query(req,res,System);
+  })
 
   app.route('/signup')
       .get(user.signup);

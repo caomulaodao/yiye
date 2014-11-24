@@ -39,7 +39,7 @@
         <i class="glyphicon glyphicon-search"></i>
     </div>
 </div>
-<h1 id="index-top-title">热门频道</h1>
+<h1 id="index-query-top-title">{{query}}</h1>
 <!--water fall-->
 <ul id="water-fall-main">
     {% for channel in channels %}
@@ -64,11 +64,13 @@
 <div id="pagination-part">
     <ul class="pagination">
         <li class="disabled"><a href="#">&laquo;</a></li>
-        <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
-        <li><a href="#">2</a></li>
-        <li><a href="#">3</a></li>
-        <li><a href="#">4</a></li>
-        <li><a href="#">5</a></li>
+        {% for i in page.show %}
+            {% if i==page.now %}                
+                <li class="active"><a href="#">{{i}} <span class="sr-only">(current)</span></a></li>
+            {% else%}
+            <li><a href="{{'?q='+query+'&p='+i}}">{{i}}</a></li>
+            {% endif %}
+        {% endfor %}
         <li><a href="#">&raquo;</a></li>
     </ul>
 </div>
