@@ -51,35 +51,10 @@ button:focus {outline:0;}
     display: none;
 }
 
-/*********web-loading***********/
-#web-loading {
-    width: 100%;
-    height: 5px;
-    background-color: rgba(0,0,0,0);
-    position: fixed;
-    z-index: 9999;
-}
-#web-loading div {
-    width: 0;
-    height: 5px;
-    background-color: #40c192;
-}
-/***shadow***/
-.shadow {
-    display: none;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-color: #333;
-    opacity: 0.7;
-    z-index: 15;
-}
-
 /******personal-center**********/
 .personal-center {
     margin: 20px 20px;
 }
-
 
 /*******Apple switch********/
 .toggle {
@@ -187,7 +162,7 @@ button:focus {outline:0;}
     font-size: 18px;
     margin: 20px 0px;
     padding-bottom: 15px;
-    border-bottom: solid 1px #eeeeee;
+    border-bottom: solid 1px #dadada;
 }
 #channel-create-logo{
     display: inline-block;
@@ -609,13 +584,14 @@ button:focus {outline:0;}
     position: fixed;
     width: 330px;
     height: 100%;
-    background-color: #267C7B;
+    border-right: 1px solid #ccc;
+    background-color: #fafafa;
+    box-shadow: 0 0 1px #ccc;
 }
 
 .control-page-content {
     width: 100%;
     height: 100%;
-    background: #267C7B;
 }
 
 
@@ -624,7 +600,7 @@ button:focus {outline:0;}
 .control-header {
     height: 60px;
     padding-right: 20px;
-    border-bottom: 1px solid #a8ccb7;
+    border-bottom: 1px solid #ccc;
     width: 330px;
     text-align: center;
 }
@@ -665,11 +641,11 @@ button:focus {outline:0;}
     margin-top: 13px;
     margin-right: -1px;
     font-size: 3em;
-    color: #eee;
+    color: #bbb;
 }
 .control-header span:hover{
     cursor: pointer;
-    color: #fff;
+    color: #40c192;
 }
 
 /******body******/
@@ -691,28 +667,28 @@ button:focus {outline:0;}
     font-size: 1.6em;
 }
 .subscription {
-    color: #267c7b;
+    color: #333;
     padding-left: 4px;
-    background-color: #a8ccb7;
+    background-color: #cacaca;
     -webkit-border-top-left-radius: 15px;
     -webkit-border-bottom-left-radius: 15px;
 }
 
 .administration {
-    color: #267c7b;
+    color: #333;
     padding-right: -2px;
     margin-left: -4px;
-    background-color: #a8ccb7;
+    background-color: #cacaca;
     -webkit-border-top-right-radius: 15px;
     -webkit-border-bottom-right-radius: 15px;
 }
 .chose-button .active {
     color: #fff;
-    background-color: #046361;
+    background-color: #37A2E4;
 }
 .chose-button>button:not(.active):hover {
-    background-color: #C8EED8;
-    color: #3F9796;
+    background-color: #cfcfcf;
+    color: #000;
 }
 
 .channel-list {
@@ -741,8 +717,8 @@ button:focus {outline:0;}
 }
 .channel-list ul li:not(.active):hover {
     cursor: pointer;
-    background-color: #4D8F8D;
-    color: #fff;
+    background-color: #ddd;
+    color: #333;
 }
 .channel-img {
     width: 38px;
@@ -781,7 +757,7 @@ button:focus {outline:0;}
     height: 100%;
     margin-top: 20px;
     direction:rtl;
-    color: #C2E9D3;
+    color: #111;
     font-size: 1.5em;
     overflow-y: auto;
 }
@@ -797,15 +773,14 @@ button:focus {outline:0;}
 }
 .admin-interface ul li:not(.active):hover {
     cursor: pointer;
-    background-color: #4D8F8D;
-    color: #fff;
+    background-color: #eee;
+    color: #333;
 }
 .channel-name {
     float: left;
 }
 .admin-interface .active {
-    background-color: #096866;
-    color: #fff;
+    color: #40c192;
 }
 .create-channel {
     width: 100%;
@@ -814,24 +789,24 @@ button:focus {outline:0;}
     text-align: center;
 }
 .create-channel button {
-    width: 250px;
+    width: 150px;
     height: 40px;
-    border: dashed 1px #10304F;
-    color: #10304F;
+    border: dashed 1px #333;
+    color: #333;
     border-radius: 10px;
     vertical-align: middle;
     margin-top: 20px;
     background-color: inherit;
 }
 .create-channel button:hover {
-    border: dashed 1px #fff;
-    color: #fff;
+    border: dashed 1px #40c192;
+    color: #40c192;
 }
 /***************content page*****************/
 .content-page {
     height: 100%;
     margin-left: 330px;
-    background-color: #fff;
+    background-color: #f3f3f3;
     overflow: scroll;
 }
 
@@ -846,6 +821,7 @@ button:focus {outline:0;}
     position: absolute;
     background-color: rgba(255, 255, 255, 0.8);
     border-bottom: 1px solid #ccc;
+    box-shadow: 0 0 1px #ccc;
     z-index: 10;
     top: 0px;
     left: 0px;

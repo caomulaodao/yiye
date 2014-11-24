@@ -10,7 +10,7 @@
 
 *{margin:0;padding:0;}
 
-body {background: #ffffff;}
+body {background: #fafafa;}
 
 #explore-navbar {
     border-color: #fff;
@@ -37,7 +37,8 @@ body {background: #ffffff;}
     width: 100%;
     background: #fff;
     margin-bottom: 20px;
-    background: url(../img/background/cellphone.png) no-repeat top center;
+    background: url(../img/background/cellphone.png) no-repeat;
+    background-position: 50% 20%;
     background-size: cover;
 }
 

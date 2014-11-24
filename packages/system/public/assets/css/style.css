@@ -44,7 +44,7 @@
     border: 1px solid #ccc;
 }
 #avatar img {
-    
+
 }
 #slogan{
     padding-top: 5px;
@@ -116,6 +116,9 @@
     border: solid 1px  #75C29B;
     position: relative;
     padding-left: 55px;
+}
+.down-button .btn:hover {
+    background-color: #40C192;
 }
 #down-chrome .btn i{
     position: absolute;
