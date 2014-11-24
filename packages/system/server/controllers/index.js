@@ -58,7 +58,7 @@ exports.query = function(req,res,Package){
     var searchMax=15;
     var search = req.query.q;
     var searchPage;
-    var limit=1;//单页显示数
+    var limit=30;//单页显示数
     if(search.length>=searchMax){
         search=search.substr(0,searchMax);
     }
