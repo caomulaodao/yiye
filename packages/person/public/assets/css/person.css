@@ -191,5 +191,230 @@ button:focus {outline:0;}
     font-size: 0.9em;
 }
 
+/* ======================================================================================
+    content page
+    ===================================================================================== */
+
+#content-page {
+    height: 100%;
+    background-color: #fff;
+    margin-left: 30%;
+}
+
+#content-page-content {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
+/* ======================================================================================
+    content page
+    ===================================================================================== */
+
+.part-wrapper{
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.part-list{
+    height: 100%;
+    padding-left: 50px;
+    padding-top: 5px;
+}
+
+.part-ul{
+    display:table;
+    list-style-type: none;
+}
+
+.part-ul li{
+    float: left;
+    display: table-cell;
+    margin-right: 20px;
+    margin-bottom: 20px;
+}
+.part-title {
+    margin-bottom: 25px;
+}
+
+.part-title h3 {
+    font-size: 2.0em;
+}
+
+/* ======================================================================================
+    user post bookmark
+    ===================================================================================== */
+.channel-inf {
+    width:65px;
+    margin-top: 5px;
+    float: left;
+}
+
+.links-inf {
+    width: 65px;
+    margin-top: 5px;
+    float: right;
+}
+
+#page-part {
+    text-align: center;
+    padding-right: 50px;
+}
 
 
+.date-divide {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+.date-divide div {
+    font-size: 1.5em;
+    line-height: 55px;
+    color: #999;
+}
+
+.single-link {
+    margin-bottom: 15px;
+    margin-right: 40px;
+}
+
+.link-part-content {
+    width: 100%;
+    min-height: 100px;
+}
+.description {
+    margin-top: 10px;
+    font-size: 1.3em;
+    color: #666;
+}
+.description>span{
+    margin-right: 2px;
+    font-weight: bold;
+}
+.link {
+    font-size: 1.6em;
+    font-weight: bold;
+    color: #157CCC;
+}
+.link:hover {
+    color: #157ccc;
+}
+.bookmark-pic{
+    float: right;
+    margin-top: 27px;
+    margin-left: 35px;
+    height: 50px;
+    width: 100px;
+}
+.bookmark-pic img{
+    height: 50px;
+    width: 100px;
+}
+
+
+#sub-channel-list{
+    list-style-type: none;
+    padding-left: 40px;
+}
+.footer-part {
+    margin-top: 3px;
+    letter-spacing: 1px;
+}
+.footer-part span{
+    color: #999;
+    margin-right: 4px;
+}
+.footer-part a {
+    color: #999;
+}
+.footer-part i{
+    color: #999;
+    margin-right: 3px;
+}
+.footer-part a:hover {
+    color: #698EBF;
+}
+
+
+
+/* ======================================================================================
+    channel-showcase
+    ===================================================================================== */
+.channel-showcase{
+    position: relative;
+    display: inline-block;
+    width: 323px;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    transition: all 0.3s;
+    -webkit-transition: all 0.3s;
+    margin-right: 30px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+.channel-showcase:hover{
+    background-color: #fff;
+    border-color: #40c192;
+    box-shadow: 0 0 3px #40c192 inset;
+    transition: all 0.3s;
+    -webkit-transition: all 0.3s;
+}
+.channel-logo{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 60px;
+}
+.channel-logo img{
+    width: 40px;
+    height: 40px;
+    margin: 10px;
+    border-radius: 3px;
+}
+.channel-main{
+    margin: 10px 10px 10px 60px;
+}
+.channel-showcase-head{
+    margin-top: 5px;
+    height: 20px;
+    line-height: 20px;
+}
+.channel-showcase-head a{
+    color: #428bca;
+    font-weight: bold;
+}
+.channel-showcase-head span{
+    float: right;
+}
+.channel-showcase-head span a{
+    color: #698ebf;
+    font-weight:normal;
+}
+.channel-showcase-footer{
+    font-size: 12px;
+    height: 20px;
+    line-height: 20px;
+}
+.channel-showcase-footer span{
+    margin-right: 5px;
+    color: #999999;
+}
+.channel-showcase-footer img{
+    height: 20px;
+    width: 20px;
+    float: right;
+    border-radius: 10px;
+}
+.channel-showcase-description{
+    color: #666;
+    margin:5px 0px 5px 0px;
+    font-family: 'Helvetica Neue',Helvetica,Arial,Sans-serif;
+}
+
+#watch-channel-list{
+    margin-top: 20px;
+}
+#create-channel-list{
+    margin-top: 20px;
+}

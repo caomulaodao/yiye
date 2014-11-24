@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>public_page</title>
+    <title>{{user.username}}的个人主页</title>
     <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="/person/assets/css/person.css">
 </head>
@@ -39,21 +39,21 @@
             <div class="chose-item">
                 <ul>
                     <li class="item-list active">
-                        <a href="#">
-                            <strong>234</strong>
+                        <a href="/u/{{''+user._id}}">
+                            <strong>{{ user.postNum }}</strong>
+                            <span>提交</span>
+                        </a>
+                    </li>
+                    <li class="item-list">
+                        <a href="/u/{{''+user._id}}/create">
+                            <strong>{{ user.createNum }}</strong>
                             <span>创建</span>
                         </a>
                     </li>
                     <li class="item-list">
-                        <a href="#">
-                            <strong>231</strong>
+                        <a href="/u/{{''+user._id}}/watch">
+                            <strong>{{ user.subNum }}</strong>
                             <span>订阅</span>
-                        </a>
-                    </li>
-                    <li class="item-list">
-                        <a href="#">
-                            <strong>123</strong>
-                            <span>提交</span>
                         </a>
                     </li>
                 </ul>
@@ -61,5 +61,41 @@
         </div>
     </div>
 </div>
+
+<!-- content page -->
+<div id="content-page">
+    <div id="content-page-content">
+        <div id="links-part" class="open">
+            <ul id="sub-channel-list">
+                {% for box  in list %}
+                <div class="date-divide">
+                    <div>{{ box['day'] }}</div>
+                </div>
+                   {% for bookmark in box['dList'] %}
+                    <li>
+                        <div class="single-link">
+                            <div class="link-part-content">
+                                <div class="bookmark-pic"><img src="http://yiye.qiniudn.com/{{ bookmark['image'] }}"></div>
+                                <a class="link" target="_blank" href="{{ bookmark['url'] }}">{{ bookmark['title'] }}</a>
+                                <div class="description">
+                                    <span>描述：</span>{{ bookmark['description'] }}
+                                </div>
+                                <div class="footer-part">
+                                    <span class="submit-time">提交于:{{ ''+bookmark['postTime']|date('H:m:s') }}</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </li>
+                   {% endfor %}
+            {% endfor %}
+            </ul>
+
+        </div>
+    </div>
+</div>
 </body>
 </html>
+
+
+
