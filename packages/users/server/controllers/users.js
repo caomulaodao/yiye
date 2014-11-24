@@ -37,6 +37,16 @@ exports.signout = function(req, res) {
 };
 
 /**
+ * Logout web API
+ */
+exports.web_api_logout = function(req, res) {
+  req.logout();
+  if (req.isUnauthenticated())
+    res.json({result: 'ok'});
+  else
+    res.json({result: '未成功注销'});
+};
+/**
  * Session
  */
 exports.session = function(req, res) {
