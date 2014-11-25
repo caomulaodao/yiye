@@ -418,3 +418,8 @@ button:focus {outline:0;}
 #create-channel-list{
     margin-top: 20px;
 }
+/*翻页条*/
+#pagination-part {
+    margin-top: 20px;
+    text-align: center;
+}

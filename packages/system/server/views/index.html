@@ -18,11 +18,12 @@
             <ul class="nav navbar-nav navbar-right right-links" id="index-navbar">
                 <li><a href="/explore">发现</a></li>
                 <li><a href="#">帮助</a></li>
-                <li><a href="/home" id="avatar"><img src=""/></a></li>
-                <!--
+                {% if user%}
+                <li><a href="/home" id="avatar"><img src="http://yiye.qiniudn.com{{user.avatar}}"/></a></li>
+                {%else%}
                 <li><a href="/signup" target="_blank">注册</a></li>
                 <li><button type="button" class="btn btn-default navbar-btn" onclick="window.open('/signin')">登录</button></li>
-                -->
+                {% endif %}
             </ul>
         </div>
     </div>

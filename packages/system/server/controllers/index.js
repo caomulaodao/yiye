@@ -7,7 +7,8 @@ var mongoose = require('mongoose'),
     User = mongoose.model('User'),
     Channel2User = mongoose.model('Channel2User'),
     Channels = mongoose.model('Channels'),
-    Bookmarks = mongoose.model('Bookmarks');
+    Bookmarks = mongoose.model('Bookmarks'),
+    tool=require('../../../../config/tools/tool.js');
 
 //渲染首页 注入用户数量,频道数量,标签数量
 exports.render = function(req, res,Package) {
@@ -41,19 +42,33 @@ exports.render = function(req, res,Package) {
 
 //渲染发现页面
 exports.explore = function(req, res,Package){
-    var limit = 100;
-    Channels.find().sort({subNum:1}).skip(0).limit(limit).exec(function (err, channels) {
-        if(err) return console.log(err);
-        Package.render('explore', {
-            channels:channels
-        }, function(err, html) {
-            if(err) console.log(err);
-            res.send(html);
+    var limit = 1;//每页限制显示数
+    var p=req.query.p||1;
+    async.waterfall([function(cb){
+        Channels.count({},function(err,count){
+            if (err) return console.log(err);
+            cb(err,count);
+        })
+    }],function(err,count){
+        var pageLength=Math.ceil(count/limit),page=tool.skipPage(p,pageLength);
+        Channels.find().sort({subNum:1}).skip(limit*(p-1)).limit(limit).exec(function (err, channels) {
+            if(err) return console.log(err);
+            Package.render('explore', {
+                channels:channels,user:req.user,page:page
+            }, function(err, html) {
+                if(err) console.log(err);
+                res.send(html);
+            });
         });
-    });
+    })
+
 }
 //查询处理
 exports.query = function(req,res,Package){
+        console.log(req.query.q+"-----------");
+    if(!req.query.q){
+        res.redirect('/explore');
+    }
     //查询最大字数 searchMax
     var searchMax=15;
     var search = req.query.q;
@@ -62,7 +77,6 @@ exports.query = function(req,res,Package){
     if(search.length>=searchMax){
         search=search.substr(0,searchMax);
     }
-    
     async.waterfall([
         //返回频道总数count
         function(cb){
@@ -82,9 +96,9 @@ exports.query = function(req,res,Package){
         }
         //
         Channels.find({name:new RegExp(search,'i')}).sort({subNum:1}).skip(limit*(searchPage-1)).limit(limit).exec(function(err,channels){
-            var page=skipPage(searchPage,pageLength);
+            var page=tool.skipPage(searchPage,pageLength);
             if (err) return console.log(err);
-            Package.render('query',{channels:channels,query:search,page:page},function(err,html){
+            Package.render('query',{channels:channels,query:search,page:page,user:req.user},function(err,html){
                 if (err) console.log(err);
                 res.send(html);
             });       
@@ -93,35 +107,6 @@ exports.query = function(req,res,Package){
 
 }
 
-//分页 searchPage查询的页数 listLength返回的页数,limit每页限制数 返回一个包含当前页数和该显示页数的对象
-function skipPage(searchPage,listLength){
-    if(searchPage>listLength) searchPage=listLength;
-    if(searchPage<1) searchPage=1;
-    var show=[],i;
-    var number=0;//计数
-    //快到底页了
-    if(searchPage+2>listLength){
-        for(i=listLength,number=0;i>0;i--){
-            show.push(i);
-            if(number==4) break;
-        }
-        show.reverse();
-    }
-    else if(searchPage-2<1){
-        for(i=1,number=0;i<=listLength;i++){
-            show.push(i)
-            if(number==4) break;
-        }
-    }
-    else{
-        for(i=searchPage-2;i<=searchPage+2;i++){
-            show.push(i);
-        }
-    }
-    //当前页数和显示
-    return {
-        now:searchPage,
-        show:show
-        }
-}
+
+
 
