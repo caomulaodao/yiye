@@ -31,7 +31,7 @@ exports.render = function(req, res,Package) {
                 Package.render('index',{user_number:user_number,channel_number:channel_number,label_number:label_number,user:req.user},
                     function(err,html){
                     if(err) consoe.log(err);
-                    res.send(html);
+                        res.send(html);
                     }
                 )
             }

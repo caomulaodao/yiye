@@ -41,7 +41,7 @@ exports.renderMain = function(req,res,Package){
             });
         },
         list:function(callback){
-            Bookmarks.find({channelId:channelId,checked:1}).sort({postTime:-1}).limit(10).exec(function (err, doc) {
+            Bookmarks.find({channelId:channelId,checked:{$in:[3,5]}}).sort({postTime:-1}).limit(10).exec(function (err, doc) {
                 if(err) console.log(err);
                 if(doc.length === 0) return callback(null,[]);
                 callback(null,listToArray(doc));

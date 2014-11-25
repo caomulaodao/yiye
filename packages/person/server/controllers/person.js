@@ -23,7 +23,7 @@ exports.renderPost = function(req,res,Package){
                 });
             },
             list:function(callback){
-                Bookmarks.find({checked:0,"postUser.userId":req.user._id}).sort({postTime:-1}).limit(10).exec(function (err, doc) {
+                Bookmarks.find({checked:5,"postUser.userId":req.user._id}).sort({postTime:-1}).limit(10).exec(function (err, doc) {
                     if(err) console.log(err);
                     if(doc.length === 0) return callback(null,[]);
                     callback(null,listToArray(doc));

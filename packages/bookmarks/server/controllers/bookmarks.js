@@ -55,7 +55,7 @@ exports.receive = function(req,res){
             var bookmark = Bookmarks(bookmarks);
             //如果是管理员，则直接审核通过
             if(user){
-                bookmark.checked = 1;
+                bookmark.checked = 5;
             }
             bookmark.channelId = item;
             bookmark.postUser = {userId:req.user._id,username:req.user.username};
@@ -74,7 +74,7 @@ exports.receive = function(req,res){
     });
     // 添加用户自己留底的书签记录
     var bookmark = Bookmarks(bookmarks);
-        bookmark.checked = 0;
+        bookmark.checked = 6;
         bookmark.channelId =  undefined;
         bookmark.postUser = {userId:req.user._id,username:req.user.username};
         bookmark.save(function(err){
@@ -99,20 +99,20 @@ exports.init  =  function(req,res){
         },
         list: function(callback){
             //
-            Bookmarks.find({channelId:channelId,checked:1}).sort({postTime:-1}).limit(100).exec(function (err, doc) {
+            Bookmarks.find({channelId:channelId,checked:{$in:[3,5]}}).sort({postTime:-1}).limit(100).exec(function (err, doc) {
                 if(err) console.log(err);
                 if(doc.length === 0) return callback(null,[]);
                 var lastTime = doc[0]['postTime'];
                 var targetTime = doc[doc.length -1]['postTime'];
                 if(!moment(lastTime).isSame(targetTime, 'day')){
                     var startDay = moment(doc[doc.length -1]['postTime']).startOf('day').toDate();
-                    Bookmarks.find({channelId:channelId,checked:1,postTime:{$gte:startDay}}).sort({postTime:-1}).exec(function(err,list){
+                    Bookmarks.find({channelId:channelId,checked:{$in:[3,5]},postTime:{$gte:startDay}}).sort({postTime:-1}).exec(function(err,list){
                         if(err) console.log(err);
                         callback(null,listToArray(list));
                     });
                 }else{
                     var lastDay = moment(doc[0]['postTime']).startOf('day').toDate();
-                    Bookmarks.find({channelId:channelId,checked:1,postTime:{$gte:lastDay}}).sort({postTime:-1}).exec(function(err,list){
+                    Bookmarks.find({channelId:channelId,checked:{$in:[3,5]},postTime:{$gte:lastDay}}).sort({postTime:-1}).exec(function(err,list){
                         if(err) console.log(err);
                         callback(null,listToArray(list));
                     });
@@ -202,14 +202,14 @@ exports.oneDay = function(req,res){
     if(!day){
         async.waterfall([
             function(callback){
-                Bookmarks.find({channelId:channelId,checked:1}).sort({postTime:-1}).limit(1).exec(function (err, doc) {
+                Bookmarks.find({channelId:channelId,checked:{$in:[3,5]}}).sort({postTime:-1}).limit(1).exec(function (err, doc) {
                     if(err) return console.log(err);
                     var day =  moment(doc[0]['postTime']).startOf('day').toDate();
                     callback(null,day);
                 });
             },
             function(day,callback){
-                Bookmarks.find({channelId:channelId,checked:1,postTime:{$lt:day}}).sort({postTime:-1}).limit(1).exec(function (err, doc) {
+                Bookmarks.find({channelId:channelId,checked:{$in:[3,5]},postTime:{$lt:day}}).sort({postTime:-1}).limit(1).exec(function (err, doc) {
                     if(err) return console.log(err);
                     if(doc.length == 0){
                         var nextDay = null;
@@ -225,7 +225,7 @@ exports.oneDay = function(req,res){
             dayResult.nextDay = results.nextDay;
             var startDay = moment(day,"YYYY-MM-DD").startOf('day').toDate();
             var endDay = moment().add('days',1).toDate();
-            Bookmarks.find({channelId:channelId,checked:1,postTime:{$gte:startDay,$lt:endDay}}).sort({postTime:-1}).exec(function(err,list){
+            Bookmarks.find({channelId:channelId,checked:{$in:[3,5]},postTime:{$gte:startDay,$lt:endDay}}).sort({postTime:-1}).exec(function(err,list){
                 if(err) console.log(err);
                 list.sort(function(a,b){
                     var aRank = a['likeNum'] - a['hateNum'];
@@ -239,7 +239,7 @@ exports.oneDay = function(req,res){
     }else{
         var startDay = moment(day,"YYYY-MM-DD").startOf('day').toDate();
         var endDay = moment(day,"YYYY-MM-DD").add('days',1).toDate();
-        Bookmarks.find({channelId:channelId,checked:1,postTime:{$lt:startDay}}).sort({postTime:-1}).limit(1).exec(function (err, doc) {
+        Bookmarks.find({channelId:channelId,checked:{$in:[3,5]},postTime:{$lt:startDay}}).sort({postTime:-1}).limit(1).exec(function (err, doc) {
             if(err) return console.log(err);
             if(doc.length == 0){
                 var nextDay = null;
@@ -249,7 +249,7 @@ exports.oneDay = function(req,res){
             var dayResult = {};
             dayResult.day = day;
             dayResult.nextDay = nextDay;
-            Bookmarks.find({channelId:channelId,checked:1,postTime:{$gte:startDay,$lt:endDay}}).sort({postTime:-1}).exec(function(err,list){
+            Bookmarks.find({channelId:channelId,checked:{$in:[3,5]},postTime:{$gte:startDay,$lt:endDay}}).sort({postTime:-1}).exec(function(err,list){
                 if(err) console.log(err);
                 list.sort(function(a,b){
                     var aRank = a['likeNum'] - a['hateNum'];
