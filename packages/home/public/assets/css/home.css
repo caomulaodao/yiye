@@ -615,6 +615,8 @@ button:focus {outline:0;}
 }
 .control-header .avatar img {
     width: 40px;
+    height: 40px;
+    border-radius: 50%;
 }
 .control-header .avatar:hover {
     cursor: pointer;

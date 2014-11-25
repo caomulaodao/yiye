@@ -26,14 +26,14 @@ exports.renderPost = function(req,res,Package){
                 });
             },
             list:function(callback){
-                Bookmarks.find({checked:5,"postUser.userId":req.user._id}).sort({postTime:-1}).skip(limit*(p-1)).limit(limit).exec(function (err, doc) {
+                Bookmarks.find({checked:6,"postUser.userId":req.user._id}).sort({postTime:-1}).skip(limit*(p-1)).limit(limit).exec(function (err, doc) {
                     if(err) console.log(err);
                     if(doc.length === 0) return callback(null,[]);
                     callback(null,listToArray(doc));
                 });
             },
             count:function(callback){
-                Bookmarks.count({checked:0,'postUser.userId':req.user._id},function(err,count){
+                Bookmarks.count({checked:6,'postUser.userId':req.user._id},function(err,count){
                     if(err) return console.log(err);
                     callback(err,count)
                 })
@@ -43,7 +43,7 @@ exports.renderPost = function(req,res,Package){
             var user = results.user;
             var list = results.list;
             var count=results.count,pageLength=Math.ceil(count/limit);
-            var page=tool.skipPage(p,pageLength);console.log(page);
+            var page=tool.skipPage(p,pageLength);
             Package.render('index', {
                 user:user,
                 list:list,
