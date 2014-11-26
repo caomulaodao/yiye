@@ -1,26 +1,29 @@
 //分页 searchPage查询的页数 listLength为总页数,limit每页限制数 返回一个包含当前页数和该显示页数的对象
 function skipPage(searchPage,listLength){
+    searchPage=+searchPage;
+    if(isNaN(searchPage)) searchPage=1;
     if(searchPage>listLength) searchPage=listLength;
     if(searchPage<1) searchPage=1;
     var show=[],i;
     var number=0;//计数
     //快到底页了
-    if(searchPage+2>listLength){
-        for(i=listLength,number=0;i>0;i--){
+    if(searchPage+2>listLength){console.log('!!'+searchPage+listLength);
+        for(i=listLength,number=0;i>0;i--,number++){
             show.push(i);
             if(number==4) break;
         }
         show.reverse();
     }
     else if(searchPage-2<1){
-        for(i=1,number=0;i<=listLength;i++){
+        for(i=1,number=0;i<=listLength;i++,number++){
             show.push(i)
             if(number==4) break;
         }
     }
-    else{
-        for(i=searchPage-2;i<=searchPage+2;i++){
+    else{console.log('??');
+        for(i=searchPage-2,number=0;;i++,number++){
             show.push(i);
+            if(number==4) break;
         }
     }
     //当前页数和显示
@@ -29,7 +32,8 @@ function skipPage(searchPage,listLength){
         now:searchPage,
         show:show,
         before:searchPage-1,//上一页
-        after:parseInt(searchPage)+1
+        after:parseInt(searchPage)+1,
+        max:listLength
         }
 }
 
