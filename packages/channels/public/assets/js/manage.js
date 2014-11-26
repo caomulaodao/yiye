@@ -17,6 +17,8 @@ var lock = {
     update:false
 };
 
+var cdnUrl = "http://yiye.qiniudn.com/";
+
 function initialize() {
     //通过某个书签 弹出确认对话框
     $('.passBookmark').click(function(event){
@@ -181,7 +183,7 @@ function initialize() {
         var channelId = $('#control-body').data('channelid');
         var channel = {};
         channel.name = $('#channel-info-name>input').val();
-        channel.logo = $('#channel-change-logo').attr('src');
+        channel.logo = $('#channel-change-logo').attr('src').split(".com/")[1];
         channel.description = $('#channel-info-description>textarea').text();
         channel.type = $("input[name='type']:checked").val();
         channel.tags = $("#channel-info-tags>input").val();
@@ -253,8 +255,8 @@ function uploadLogo(){
             },
             'FileUploaded': function(up, file, info) {
                 var info  = JSON.parse(info);
-                var logo = "http://yiye.qiniudn.com/"+info.key;
-                $('#channel-change-logo').attr('src',logo);
+                var logo = info.key;
+                $('#channel-change-logo').attr('src',cdnUrl + logo);
                 $('#channel-info-logo').removeClass('upLoading');
             },
             'Error': function(up, err, errTip) {
