@@ -514,6 +514,7 @@ button:focus {outline:0;}
     border-right: 1px solid #ccc;
     background-color: #fafafa;
     box-shadow: 0 0 1px #ccc;
+    z-index:5;
 }
 
 .control-page-content {
@@ -737,7 +738,8 @@ button:focus {outline:0;}
     height: 100%;
     margin-left: 330px;
     background-color: #f3f3f3;
-    overflow: scroll;
+    overflow-x: hidden;
+    overflow-y: scroll;
 }
 
 .content-page-content {
@@ -748,14 +750,13 @@ button:focus {outline:0;}
 /*******header*******/
 .content-header {
     height: 60px;
-    position: absolute;
-    background-color: rgba(255, 255, 255, 0.8);
-    border-bottom: 1px solid #ccc;
-    box-shadow: 0 0 1px #ccc;
-    z-index: 10;
-    top: 0px;
-    left: 0px;
-    right: 0px;
+    min-width: 500px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-top: 20px;
+    margin-left: 30px;
+    margin-right: 30px;
 }
 
 .content-channel {
@@ -766,7 +767,7 @@ button:focus {outline:0;}
     height: 40px;
     float: left;
     overflow: hidden;
-    margin: 11px 0 0 40px;
+    margin: 10px 0 0 15px;
 }
 .header-channel-img img {
     width: 40px;
@@ -808,12 +809,8 @@ a.header-channel-name , a.header-channel-name:hover{
 
 
 
-.content-body {
-    height: 100%;
-    padding-top: 60px;
-    overflow-x: hidden;
-    overflow-y: scroll;
-}
+.content-body {height: 100%;}
+
 .single-list {
     height: 100px;
 }
@@ -1450,7 +1447,10 @@ a.header-channel-name , a.header-channel-name:hover{
     font-family: 'Helvetica Neue',Helvetica,Arial,Sans-serif;
 }
 #channel-explore{
-    margin: 20px;
+    padding: 20px;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: scroll;
     text-align: center;
 }
 #channel-explore-title{
