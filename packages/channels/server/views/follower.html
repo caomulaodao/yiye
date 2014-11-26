@@ -122,17 +122,29 @@
                 {% endfor%}
             {% endif %}
         </ul>
-        <div id="page-part">
-            <ul class="pagination">
-                <li class="disabled"><a href="#">&laquo;</a></li>
-                <li class="active"><a href="#">1<span class="sr-only">(current)</span></a></li>
-                <li><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-                <li><a href="#">4</a></li>
-                <li><a href="#">5</a></li>
-                <li><a href="#">&raquo;</a></li>
-            </ul>
-        </div>
+{% if page.show.length!=0 %}
+<div id="page-part">
+    <ul class="pagination">
+    {% if page.before<page.show[0] %}
+        <li class="disabled"><a href="#">&laquo;</a></li>
+        {% else %}
+        <li><a href="{{'?p='+page.before}}">&laquo;</a></li>
+    {% endif %}
+        {% for i in page.show %}
+            {% if i==page.now %}                
+                <li class="active"><a href="#">{{i}} <span class="sr-only">(current)</span></a></li>
+            {% else%}
+            <li><a href="{{'?p='+i}}">{{i}}</a></li>
+            {% endif %}
+        {% endfor %}
+    {% if page.after>page.show[page.show.length-1] %}
+        <li class="disabled"><a href="#">&raquo;</a></li>
+        {% else %}
+        <li><a href="{{'?p='+page.after}}">&raquo;</a></li>
+    {% endif %}
+    </ul>
+</div>
+{% endif %}
     </div>
 </div>
 </div>

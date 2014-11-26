@@ -19,7 +19,7 @@ var mongoose = require('mongoose'),
 exports.renderMain = function(req,res,Package){
     var channelId = req.params['channelId'];
     //每页显示的数量
-    var limit=1;
+    var limit=10;
     var p=req.query.p||1;
     async.waterfall([
         function(callback){
@@ -73,7 +73,7 @@ exports.renderMain = function(req,res,Package){
             if(!channel) return res.redirect('/');
             var channel = channel;
             var list = list;
-            var page = tool.skipPage(p,pageLength);console.log(page);
+            var page = tool.skipPage(p,pageLength);
             channel.userType =type;
             Package.render('index', {
                 channel:channel,
@@ -114,13 +114,15 @@ exports.sub = function(req,res){
 exports.renderFollower = function(req,res,Package){
     var channelId = req.params['channelId'];
     var page = req.body.page;
+    var p=req.query.p||1;
+    var limit=30;
     async.parallel({
             userType:function(callback){
                 var type = 'not';
                 if(req.user){
                     Channel2User.findOne({channelId: channelId,userId:req.user._id}, function (err, doc) {
                         if (doc) {
-                            console.log(doc);
+                            //console.log(doc);
                             if (doc.type == 'admin' || doc.type == 'creator') {
                                 type = 'admin';
                             } else if (doc.type == 'follower') {
@@ -156,15 +158,31 @@ exports.renderFollower = function(req,res,Package){
                             });
                         },
                         function(creatorId,adminsId,callback){
-                            var followerNum = 40 - adminsId.length - 1;
-                            Channel2User.find({channelId: channelId,type:'follower'}).sort({followerTime:-1}).limit(followerNum).exec(function (err, followers) {
+                            //关注着数量（不包含创建者和管理员）
+                            var creator=1;
+                            var count = User.count({channelId:channelId,type:'follower'},function(err,count){
+                                
+                                var pageLength=Math.ceil((count+creator+adminsId.length)/limit);
+                                callback(null,creatorId,adminsId,pageLength);
+                            });             
+                        },
+                        function(creatorId,adminsId,pageLength,callback){
+                            var creator=1;
+                            var followerNum=limit;
+                            var minPage;
+                            //防止大于翻页上限
+                            if(p>pageLength&&pageLength>0) minPage=pageLength;
+                            else minPage=p;
+                            //防止超过下限
+                            if (minPage<1){minPage=1;followerNum=limit-creator-adminsId.length}
+                            Channel2User.find({channelId: channelId,type:'follower'}).sort({followerTime:-1}).skip(limit*(pageLength-1)-creatorId.length-adminsId.length).limit(followerNum).exec(function (err, followers) {
                                 var followersId = followers.map(function(item){
                                     return item['userId'];
                                 });
-                                callback(null,creatorId,adminsId,followersId);
+                                callback(null,creatorId,adminsId,pageLength,followersId);
                             });
                         }
-                    ],function(err,creatorId,adminsId,followersId){
+                    ],function(err,creatorId,adminsId,pageLength,followersId){
                         if(err) return console.log(err);
                         async.parallel({
                                 creator: function(callback){
@@ -179,21 +197,22 @@ exports.renderFollower = function(req,res,Package){
                                         callback(null,admins);
                                     });
                                 },
-                                followers: function(callback){
-                                    User.find({_id:{$in:followersId}},function(err,followers){
-                                        if(err) console.log(err);
-                                        callback(null,followers);
-                                    });
-                                }
+                                 followers: function(callback){
+                                     User.find({_id:{$in:followersId}},function(err,followers){
+                                         if(err) console.log(err);
+                                         callback(null,followers);
+                                     });
+                                 },
+                                 pageLength:function(callback){
+                                    callback(null,pageLength);
+                                 }
                         },
                         function(err, results) {
                             if(err) console.log(err);
                             callback(null,results);
                         });
                     });
-                }else{
-
-                }
+                }else{}
             }
         },
         function(err,results){
@@ -201,9 +220,11 @@ exports.renderFollower = function(req,res,Package){
             var channel = results.channel;
             channel.userType = results.userType;
             var users = results.users;
+            var page=tool.skipPage(p,results.users.pageLength);console.log(p);
             Package.render('follower', {
                 channel:channel,
-                users:users
+                users:users,
+                page:page
             }, function(err, html) {
                 if(err) console.log(err);
                 res.send(html);
@@ -220,7 +241,7 @@ exports.renderCheck = function(req,res,Package){
                 if(req.user){
                     Channel2User.findOne({channelId: channelId,userId:req.user._id}, function (err, doc) {
                         if (doc) {
-                            console.log(doc);
+                            //console.log(doc);
                             if (doc.type == 'admin' || doc.type == 'creator') {
                                 type = 'admin';
                             } else if (doc.type == 'follower') {
