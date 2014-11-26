@@ -178,3 +178,31 @@ function getTags(str){
     });
     return tags;
 }
+
+//ajax加载发现页面内容
+exports.discover = function(req,res){
+    if(!req.user) return res.redirect('/');
+    //number为请求次数 limit为每次返回的数量
+    var number=req.body.number,limit=20;
+    async.waterfall([
+            function(callback1){
+                Channels.find().sort({subNum:1}).skip((number-1)*limit).limit(limit).exec(function(err,subChannels){
+                    if(err) return console.log(err);
+                    async.map(subChannels,function(item,callback2){
+                        Bookmarks.count({channelId:item.channelId,postTime:{$gte:item.lastTime}},function(err,count){
+                            item['news'] = count;
+                            callback2(null,item);
+                        });
+                    },function(err,results){
+                        results.sort(function(a,b){
+                            return a.news < b.news ? 1 : -1;
+                        });
+                        callback1(null,results);
+                    });
+                });
+            }],
+            function(err, results) {
+                res.send({list:results})
+                //渲染home页面
+            });
+}

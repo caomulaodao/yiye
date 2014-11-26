@@ -27,4 +27,6 @@ module.exports = function(Home, app, auth, database) {
     //获取历史记录
     app.route('/api/history/:num')
         .get(home.history);
-};
+    app.route('/api/home/discover')
+        .post(home.discover);
+}
