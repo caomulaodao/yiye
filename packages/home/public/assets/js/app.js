@@ -6,6 +6,7 @@
 
 //app
 $(function(){
+    var cdnUrl = "http://yiye.qiniudn.com/";
 
     //新频道model
     var NewChannel = Backbone.Model.extend({
@@ -159,9 +160,9 @@ $(function(){
                     },
                     'FileUploaded': function(up, file, info) {
                         var info  = JSON.parse(info);
-                        var logo = "http://yiye.qiniudn.com/"+info.key;
+                        var logo = info.key;
                         that.channel.set({logo : logo});
-                        $('#channel-logo').attr('src',logo);
+                        $('#channel-logo').attr('src',cdnUrl+logo);
                         $('#channel-create-logo').removeClass('upLoading');
                     },
                     'Error': function(up, err, errTip) {
@@ -179,7 +180,7 @@ $(function(){
             this.channel.set({description : $('#channel-create-description>textarea').val()});
             this.channel.set({tags : $('#channel-create-tags>input').val()});
             this.channel.set({type: $("input[name='type']:checked").val()});
-            this.channel.set({banner: '/channels/assets/img/background/cBg0' + (Math.ceil(Math.random()*10)) + '.png'});
+            this.channel.set({banner: 'channels/assets/img/background/cBg0' + (Math.ceil(Math.random()*10)) + '.png'});
             this.channel.save(null,{error: function(model, response){
                 console.log('error'+response);
             },success: function(model, response){
@@ -242,8 +243,8 @@ $(function(){
                     },
                     'FileUploaded': function(up, file, info) {
                         var info  = JSON.parse(info);
-                        var logo = "http://yiye.qiniudn.com/"+info.key;
-                        $('#user-change-logo').attr('src',logo);
+                        var logo = info.key;
+                        $('#user-change-logo').attr('src',cdnUrl+logo);
                         $('#user-info-logo').removeClass('upLoading');
                     },
                     'Error': function(up, err, errTip) {
@@ -257,7 +258,7 @@ $(function(){
 
         upUserInfo: function(){
             var user = {};
-            user.avatar = $('#user-change-logo').attr('src').split(".com")[1];
+            user.avatar = $('#user-change-logo').attr('src').split(".com/")[1];
             user.intro = $('#user-info-intro>textarea').val();
             var that = this;
             if(!that.lock.info){
