@@ -5,6 +5,7 @@
 var mongoose = require('mongoose'),
     async = require('async'),
     moment = require('moment'),
+    tool = require('../../../../config/tools/tool')
     User = mongoose.model('User'),
     Bookmarks = mongoose.model('Bookmarks'),
     Channels = mongoose.model('Channels'),
@@ -13,58 +14,78 @@ var mongoose = require('mongoose'),
     BookmarkHate = mongoose.model('BookmarkHate');
 
 //展示频道中的书签
+
+
 exports.renderMain = function(req,res,Package){
     var channelId = req.params['channelId'];
-    async.parallel({
-        userType:function(callback){
-                var type = 'not';
-                //判断访问者是否登录
-                if(req.user){
-                    Channel2User.findOne({channelId: channelId,userId:req.user._id}, function (err, doc) {
-                        if (doc) {
-                            console.log(doc);
-                            if (doc.type == 'admin' || doc.type == 'creator') {
-                                type = 'admin';
-                            } else if (doc.type == 'follower') {
-                                type = 'follower';
-                            }
+    //每页显示的数量
+    var limit=1;
+    var p=req.query.p||1;
+    async.waterfall([
+        function(callback){
+            var type = 'not';
+            //判断访问者是否登录
+            if(req.user){
+                Channel2User.findOne({channelId: channelId,userId:req.user._id}, function (err, doc) {
+                    if (doc) {
+                        //console.log(doc);
+                        if (doc.type == 'admin' || doc.type == 'creator') {
+                            type = 'admin';
+                        } else if (doc.type == 'follower') {
+                            type = 'follower';
                         }
-                        callback(null,type);
-                    });
-                }else{
+                    }
                     callback(null,type);
-                }
+                });
+            }else{
+                callback(null,type);//拜访者类型
+            }
         },
-        channel:function (callback) {
+        //对应的频道
+        function (type,callback) {
             Channels.findOne({_id: channelId}, function (err, channel) {
-                callback(null,channel);
+                callback(null,type,channel);
             });
         },
-        list:function(callback){
-            Bookmarks.find({channelId:channelId,checked:{$in:[3,5]}}).sort({postTime:-1}).limit(10).exec(function (err, doc) {
+        //书签总数
+        function(type,channel,callback){
+            Bookmarks.count({channelId:channelId,checked:{$in:[1,3,5]}},function(err,count){
+                if (err) return console.log(err);
+                var pageLength=Math.ceil(count/limit);
+                callback(null,type,channel,pageLength);
+            })
+        },
+        //对应频道的书签
+        function(type,channel,pageLength,callback){
+            var minPage;
+            //防止大于翻页上限
+            if(p>pageLength&&pageLength>0) minPage=pageLength;
+            else minPage=p;
+            //防止超过下限
+            if (minPage<1){minPage=1;}
+            Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]}}).sort({postTime:-1}).skip((minPage-1)*limit).limit(limit).exec(function (err, doc) {
                 if(err) console.log(err);
                 if(doc.length === 0) return callback(null,[]);
-                callback(null,listToArray(doc));
+                callback(null,type,channel,pageLength,listToArray(doc));
             });
-        }
-    },
-    function(err,results){
-        if(!results.channel) return res.redirect('/');
-        var channel = results.channel;
-        var list = results.list;
-        channel.userType = results.userType;
-        Package.render('index', {
-            channel:channel,
-            list:list
-        }, function(err, html) {
-            if(err) console.log(err);
-            res.send(html);
+        }],
+        function(err,type,channel,pageLength,list){
+            if(!channel) return res.redirect('/');
+            var channel = channel;
+            var list = list;
+            var page = tool.skipPage(p,pageLength);console.log(page);
+            channel.userType =type;
+            Package.render('index', {
+                channel:channel,
+                list:list,
+                page:page
+            }, function(err, html) {
+                if(err) console.log(err);
+                res.send(html);
+            });
         });
-    });
-
 
 }
-
 //频道订阅
 exports.sub = function(req,res){
     var channelId = req.params['channelId'];

@@ -51,7 +51,13 @@ exports.explore = function(req, res,Package){
         })
     }],function(err,count){
         var pageLength=Math.ceil(count/limit),page=tool.skipPage(p,pageLength);
-        Channels.find().sort({subNum:1}).skip(limit*(p-1)).limit(limit).exec(function (err, channels) {
+        var minPage;
+        //防止大于翻页上限
+        if(p>pageLength&&pageLength>0) minPage=pageLength;
+        else minPage=p;
+        //防止超过下限
+        if (minPage<1){minPage=1;}
+        Channels.find().sort({subNum:1}).skip(limit*(minPage-1)).limit(limit).exec(function (err, channels) {
             if(err) return console.log(err);
             Package.render('explore', {
                 channels:channels,user:req.user,page:page
@@ -88,15 +94,15 @@ exports.query = function(req,res,Package){
     ],function(err,count){
         if (err) console.log(err);
         var pageLength=Math.ceil(count/limit);
-        if(!req.query.p) searchPage=1;
-        else{
-            searchPage=req.query.p;
-            if(searchPage>=pageLength) searchPage=pageLength
-            if(searchPage<1) searchPage=1;
-        }
-        //
-        Channels.find({name:new RegExp(search,'i')}).sort({subNum:1}).skip(limit*(searchPage-1)).limit(limit).exec(function(err,channels){
-            var page=tool.skipPage(searchPage,pageLength);
+        var searchPage=req.query.p||1;
+        var minPage;
+        //防止大于翻页上限
+        if(searchPage>pageLength&&pageLength>0) minPage=pageLength;
+        else minPage=searchPage;
+        //防止超过下限
+        if (minPage<1){minPage=1;}
+        Channels.find({name:new RegExp(search,'i')}).sort({subNum:1}).skip(limit*(minPage-1)).limit(limit).exec(function(err,channels){
+            var page=tool.skipPage(minPage,pageLength);
             if (err) return console.log(err);
             Package.render('query',{channels:channels,query:search,page:page,user:req.user},function(err,html){
                 if (err) console.log(err);

@@ -9,6 +9,7 @@ var mongoose = require('mongoose'),
     User = mongoose.model('User'),
     Bookmarks = mongoose.model('Bookmarks'),
     Channels = mongoose.model('Channels'),
+    Channel2User=mongoose.model('Channel2User'),
     Channel2User = mongoose.model('Channel2User'),
     BookmarkLike = mongoose.model('BookmarkLike'),
     BookmarkHate = mongoose.model('BookmarkHate');
@@ -19,30 +20,31 @@ exports.renderPost = function(req,res,Package){
     var userId = req.params['userId'];
     var p=req.query.p||1;
     var limit=1;//每页显示的数量
-    async.parallel({
-            user:function (callback) {
+    async.waterfall([
+                function (callback) {
                 User.findOne({_id:userId}, function (err, user) {
                     callback(null,user);
-                });
-            },
-            list:function(callback){
-                Bookmarks.find({checked:6,"postUser.userId":req.user._id}).sort({postTime:-1}).skip(limit*(p-1)).limit(limit).exec(function (err, doc) {
-                    if(err) console.log(err);
-                    if(doc.length === 0) return callback(null,[]);
-                    callback(null,listToArray(doc));
-                });
-            },
-            count:function(callback){
+                });},
+                function(user,callback){
                 Bookmarks.count({checked:6,'postUser.userId':req.user._id},function(err,count){
                     if(err) return console.log(err);
-                    callback(err,count)
-                })
-            }
-        },
-        function(err,results){
-            var user = results.user;
-            var list = results.list;
-            var count=results.count,pageLength=Math.ceil(count/limit);
+                    var pageLength=Math.ceil(count/limit);
+                    callback(err,user,pageLength);
+                });},
+                function(user,pageLength,callback){
+                    var minPage;
+                    //防止大于翻页上限
+                    if(p>pageLength&&pageLength>0) minPage=pageLength;
+                    else minPage=p;
+                    //防止超过下限
+                    if (minPage<1){minPage=1;}
+                Bookmarks.find({checked:6,"postUser.userId":req.user._id}).sort({postTime:-1}).skip(limit*(minPage-1)).limit(limit).exec(function (err, doc) {
+                    if(err) console.log(err);
+                    if(doc.length === 0) return callback(null,user,pageLength,[]);
+                    callback(null,user,pageLength,listToArray(doc));
+                });}
+                ],
+        function(err,user,pageLength,list){
             var page=tool.skipPage(p,pageLength);
             Package.render('index', {
                 user:user,
@@ -58,68 +60,122 @@ exports.renderPost = function(req,res,Package){
 //展示用户创建的的频道
 exports.renderCreate = function(req,res,Package){
     var userId = req.params['userId'];
-    async.parallel({
-            user:function (callback) {
-                User.findOne({_id:userId}, function (err, user) {
-                    callback(null,user);
-                });
-            },
-            list:function(callback){
-                Channels.find({"creator.userId":userId}).sort({time:-1}).limit(10).exec(function (err, doc) {
-                    if(err) console.log(err);
-                    if(doc.length === 0) return callback(null,[]);
-                    callback(null,doc);
-                });
-            }
-        },
-        function(err,results){
-            var user = results.user;
-            var list = results.list;
+    var p=req.query.p||1;
+    var limit=1;//每页显示的数量
+    async.waterfall([
+        function (callback) {
+        User.findOne({_id:userId}, function (err, user) {
+            callback(null,user);
+        });},
+        function(user,callback){
+        Channels.count({'creator.userId':req.user._id},function(err,count){
+            if(err) return console.log(err);
+            var pageLength=Math.ceil(count/limit);
+            callback(err,user,pageLength);
+        });},
+        function(user,pageLength,callback){
+            var minPage;
+            //防止大于翻页上限
+            if(p>pageLength&&pageLength>0) minPage=pageLength;
+            else minPage=p;
+            //防止超过下限
+            if (minPage<1){minPage=1;}
+        Channels.find({"creator.userId":req.user._id}).sort({postTime:-1}).skip(limit*(minPage-1)).limit(limit).exec(function (err, doc) {
+            if(err) console.log(err);
+            if(doc.length === 0) return callback(null,user,pageLength,[]);
+            callback(null,user,pageLength,doc);
+        });}
+        ],
+        function(err,user,pageLength,channels){
+            var page=tool.skipPage(p,pageLength);console.log(channels);
             Package.render('create', {
                 user:user,
-                list:list
+                list:channels,
+                page:page
             }, function(err, html) {
                 if(err) console.log(err);
                 res.send(html);
             });
-        });
+    })
 }
 
 //展示用户关注的频道
 exports.renderWatch = function(req,res,Package){
     var userId = req.params['userId'];
-    async.parallel({
-            user:function (callback) {
-                User.findOne({_id:userId}, function (err, user) {
-                    callback(null,user);
-                });
-            },
-            list:function(callback){
-                Channel2User.find({userId:userId},{ _id: 0, channelId: 1 },function(err,doc){
-                    if(err) console.log(err);
-                    var channelIds = []
-                    doc.forEach(function(item){
-                        channelIds.push(item.channelId);
-                    });
-                    Channels.find({_id:{$in:channelIds}}).sort({time:-1}).limit(10).exec(function (err, doc) {
-                        if(err) console.log(err);
-                        if(doc.length === 0) return callback(null,[]);
-                        callback(null,doc);
-                    });
-                });
-            }
-        },
-        function(err,results){
-            var user = results.user;
-            var list = results.list;
+    var p=req.query.p||1;
+    var limit=1;//每页显示的数量
+    async.waterfall([
+        function (callback) {
+        User.findOne({_id:userId}, function (err, user) {
+            callback(null,user);
+        });},
+        function(user,callback){
+        Channel2User.count({'userId':req.user._id},function(err,count){
+            if(err) return console.log(err);
+            var pageLength=Math.ceil(count/limit);
+            callback(err,user,pageLength);
+        });},
+        function(user,pageLength,callback){
+            var minPage;
+            //防止大于翻页上限
+            if(p>pageLength&&pageLength>0) minPage=pageLength;
+            else minPage=p;
+            //防止超过下限
+            if (minPage<1){minPage=1;}
+        Channel2User.find({"userId":req.user._id}).sort({lastTime:-1}).skip(limit*(minPage-1)).limit(limit).exec(function (err, doc) {
+            if(err) console.log(err);
+            if(doc.length === 0) return callback(null,user,pageLength,[]);
+            callback(null,user,pageLength,doc);
+        });}
+        ],
+        function(err,user,pageLength,channels){
+            var page=tool.skipPage(p,pageLength);console.log(channels);
             Package.render('watch', {
                 user:user,
-                list:list
+                list:channels,
+                page:page
             }, function(err, html) {
                 if(err) console.log(err);
                 res.send(html);
             });
-        });
+    })
+
+
+
+    // var userId = req.params['userId'];
+    // var limit=10;
+    // async.parallel({
+    //         user:function (callback) {
+    //             User.findOne({_id:userId}, function (err, user) {
+    //                 callback(null,user);
+    //             });
+    //         },
+    //         list:function(callback){
+    //             Channel2User.find({userId:userId},{ _id: 0, channelId: 1 },function(err,doc){
+    //                 if(err) console.log(err);
+    //                 var channelIds = []
+    //                 doc.forEach(function(item){
+    //                     channelIds.push(item.channelId);
+    //                 });
+    //                 Channels.find({_id:{$in:channelIds}}).sort({time:-1}).limit(limit).exec(function (err, doc) {
+    //                     if(err) console.log(err);
+    //                     if(doc.length === 0) return callback(null,[]);
+    //                     callback(null,doc);
+    //                 });
+    //             });
+    //         }
+    //     },
+    //     function(err,results){
+    //         var user = results.user;
+    //         var list = results.list;
+    //         Package.render('watch', {
+    //             user:user,
+    //             list:list
+    //         }, function(err, html) {
+    //             if(err) console.log(err);
+    //             res.send(html);
+    //         });
+    //     });
 }
 
 
@@ -153,3 +209,13 @@ function listToArray(list){
     });
     return result;
 }
+
+
+
+
+
+
+
+
+
+
