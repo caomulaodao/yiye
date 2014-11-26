@@ -732,20 +732,26 @@ button:focus {outline:0;}
 .single-link-button {
     float: left;
 }
-.up {
+
+.single-link-button button {
     width: 45px;
-    height: 40px;
     display: block;
     border-radius: 5px;
     border-width: 0;
-    background-color: #eef8f7;
+    color: #37A2E4;
+    background-color: #DDE7ED;
 }
-.up:hover {
+.up {height: 40px;}
 
+.down {
+    height: 25px;
+    margin-top: 5px;
 }
-/*.up:hover>i {
-	border-color: transparent transparent #fff transparent;
-}*/
+
+.single-link-button button:hover {
+    background-color: #37A2E4;
+    color: #fff;
+}
 
 .vote-up {
     width: 0;
@@ -754,35 +760,27 @@ button:focus {outline:0;}
     border-width: 7px;
     display: block;
     border-style: dashed dashed solid dashed;
-    border-color: transparent transparent #6dc1b1 transparent;
+    border-color: transparent transparent #37A2E4; transparent;
 }
-.count {
-    color: #6dc1b1;
-    font-size: 1.5em;
-}
-.down {
-    width: 45px;
-    height: 25px;
-    margin-top: 5px;
-    border-radius: 5px;
-    border-width: 0;
-    background-color: #eef8f7;
-}
-.down:hover {
-    background-color: #eef8f7;
-}
-/*.down:hover>i {
-	border-color: #fff transparent transparent transparent;
-}*/
+
 .vote-down {
     width: 0;
     height: 0;
     display: inline-block;
     border-width: 7px;
     border-style: solid dashed dashed dashed;
-    border-color: #6dc1b1 transparent transparent transparent;
-    margin-top: 10px;
+    border-color: #37A2E4 transparent transparent transparent;
+    margin-top: 7px;
+    margin-left: 1px;
 }
+
+.up:hover .vote-up {border-color: transparent transparent #fff transparent;}
+
+.down:hover .vote-down{border-color: #fff transparent transparent transparent}
+
+.count {font-size: 1.5em;}
+
+
 .link-part-content {
     padding-left: 65px;
     width: 100%;
@@ -825,43 +823,50 @@ button:focus {outline:0;}
 
 
 /****  check page ****/
-#channel-manage-tab{
-    margin: 20px 20px;
+#channel-manage-tab {margin: 20px 20px;}
+
+#channel-manage-tab>li.active a {
+    background-color: #f3f3f3;
+    border-color: #ccc #ccc transparent #ccc;
 }
+.nav-tabs>li:hover a {
+    background-color: #e4e4e4;
+    border-bottom: transparent;
+}
+.nav-tabs {border-bottom: 1px solid #ccc;}
+
 #post-list{
     height: 100%;
     padding-left: 25px;
     padding-top: 5px;
 }
-#post-list ul{
-    list-style-type: none;
-}
+#post-list ul{list-style-type: none;}
+
 .post-item{
     margin-bottom: 15px;
     margin-right: 40px;
 }
-.post-item .link-part-content{
-    padding-left:0px;
-}
+
+.post-item .link-part-content{padding-left:0px;}
+
 #delete-result-box.error{
     border-color: #843534;
     -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;
     box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 6px #ce8483;
 }
-.description b{
-    font-weight: normal;
-}
-#profile{
-    padding: 20px 40px;
-}
+
+.description b{font-weight: normal;}
+
+#profile{padding: 20px 40px;}
+
 .channel-info-item-main{
     display: inline-block;
-    width: 800px;
+    width: 500px;
     min-width: 500px;
 }
-.channel-info-item{
-    margin-bottom: 20px;
-}
+
+.channel-info-item{margin-bottom: 20px;}
+
 .channel-info-item label{
     width: 80px;
     font-weight: bolder;
@@ -869,26 +874,30 @@ button:focus {outline:0;}
     font-size: 15px;
     vertical-align: top;
 }
+
 #channel-info-name{
     display: inline-block;
     width: 400px;
 }
-#channel-info-name-info{
-    display: inline-block;
-}
+
+#channel-info-name-info{display: inline-block;}
+
 #channel-info-logo{
     display: inline-block;
     width: 100px;
 }
+
 #channel-info-logo img{
     width: 100px;
     height: 100px;
 }
+
 #channel-info-logo-info{
     display: inline-block;
     min-width: 250px;
     padding-left: 20px;
 }
+
 #channel-info-logo-info button{
     color: #ffffff;
     background-color: #00C995;
