@@ -78,7 +78,9 @@ $(function(){
         render: function(channelId){
             var list = new bkListInit;
             var that = this;
-            list.fetch({url:'/api/bookmarks/init/'+channelId,success:function(model,response){
+            list.fetch({
+                url:'/api/bookmarks/init/'+channelId,
+                success:function(model,response){
                 that.$el.html(that.initTemplate(response));
             }})
         },
@@ -372,12 +374,27 @@ $(function(){
 
     });
 
+    //用户发现页面加载频道内容
+    var discoverChannel = Backbone.Model.extend({
+        url: "/api/home/discover",
+
+        initialize: function() {
+
+        },
+
+        defaults: {number: 0}  //ajax 加载次数
+
+    });
+
     //用户发现页面
     var ExploreView = Backbone.View.extend({
+        url: "/api/home/discover",
 
         el: $('.content-page'),
 
         initTemplate: _.template($('#tp-channel-explore').html()),
+
+        addTemplate: _.template($('#tp-channel-explore-ul').html()),
 
         events: {
         },
@@ -388,7 +405,7 @@ $(function(){
         render: function(){
             var channels = new channelShowcase();
             var that = this;
-            channels.fetch({url:'/api/channels/top/0',success:function(model,response){
+            channels.fetch({url:'/api/home/discover',success:function(model,response){
                 that.$el.html(that.initTemplate(response));
                 that.renderAfter();
             }})
@@ -396,21 +413,34 @@ $(function(){
 
         renderAfter: function(){
             var that = this;
+            that.scrollAjax.bScroll = true; //许可Ajax加载
             $("#channel-explore").scroll(function(){
                 that.scrollAjax();
             });
         },
+
+        //Ajax加载频道内容
         scrollAjax: function() {
-            console.log("s");
+            var that = this;
             var nClientH = $(window).height();
             var nScrollTop = $('#channel-explore').scrollTop();
             var nChannelH = $('#channel-explore ul').height();
-            if(nClientH + nScrollTop - 80 >= nChannelH) {
-                window.alert('a');
-
+            if((nClientH + nScrollTop - 80 >= nChannelH) && (that.scrollAjax.bScroll == true)) {
+                that.scrollAjax.bScroll = false;   //禁止Ajax加载
+                var cList = new discoverChannel;
+                cList.fetch({
+                    url: "api/home/discover",
+                    success: function(model, response){
+                        $('#channel-explore ul').append(that.addTemplate(response));
+                        that.scrollAjax.bScroll = true;     //许可Ajax加载
+                    },
+                    error: function() {
+                        console.log('scrollAjaxError');
+                        that.scrollAjax.bScroll = true;     //许可Ajax加载
+                    }
+                });
             }
         }
-
     });
 
     //主视图

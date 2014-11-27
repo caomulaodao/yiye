@@ -337,99 +337,47 @@
         <h1 id="channel-explore-title">发现频道</h1>
         <p id="channel-explore-description">发现网路之美</p>
         <ul>
-            <% for(var i = 0;i < channels.length; i++){ %>
+            <% for(var i = 0;i < list.length; i++){ %>
                 <li class="channel-showcase">
                     <div class="channel-logo">
-                        <img src="http://yiye.qiniudn.com/<%= channels[i]['logo'] %>"/>
+                        <img src="<%= list[i]['logo'] %>"/>
                     </div>
                     <div class="channel-main">
                         <div class="channel-showcase-head">
-                            <a href="/channel/<%= channels[i]['_id'] %>" target="_blank"><%= channels[i]['name']  %></a>
+                            <a href="/channel/<%= list[i]['_id'] %>" target="_blank"><%= list[i]['name']  %></a>
                             <span><a href="#">+关注</a></span>
                         </div>
-                        <p class="channel-showcase-description"><%= channels[i]['description']  %></p>
+                        <p class="channel-showcase-description"><%= list[i]['description']  %></p>
                         <div class="channel-showcase-footer">
-                            <span><%=channels[i]['bmkNum']%>书签</span><span><%= channels[i]['subNum']%>关注者</span>
-                            <a href="/u/<%= channels[i]['creator']['userId'] %>" target="_blank"><img src="http://yiye.qiniudn.com<%= channels[i]['creator']['userLogo']  %>"/></a>
+                            <span><%=list[i]['bmkNum']%>书签</span><span><%= list[i]['subNum']%>关注者</span>
+                            <a href="/u/<%= list[i]['creator']['userId'] %>" target="_blank"><img src="http://yiye.qiniudn.com<%= list[i]['creator']['userLogo']  %>"/></a>
                         </div>
                     </div>
                 </li>
             <% } %>
-            <% for(var i = 0;i < channels.length; i++){ %>
-            <li class="channel-showcase">
-                <div class="channel-logo">
-                    <img src="<%= channels[i]['logo'] %>"/>
-                </div>
-                <div class="channel-main">
-                    <div class="channel-showcase-head">
-                        <a href="/channel/<%= channels[i]['_id'] %>" target="_blank"><%= channels[i]['name']  %></a>
-                        <span><a href="#">+关注</a></span>
-                    </div>
-                    <p class="channel-showcase-description"><%= channels[i]['description']  %></p>
-                    <div class="channel-showcase-footer">
-                        <span><%=channels[i]['bmkNum']%>书签</span><span><%= channels[i]['subNum']%>关注者</span>
-                        <a href="/u/<%= channels[i]['creator']['userId'] %>" target="_blank"><img src="http://yiye.qiniudn.com<%= channels[i]['creator']['userLogo']  %>"/></a>
-                    </div>
-                </div>
-            </li>
-            <% } %>
-            <% for(var i = 0;i < channels.length; i++){ %>
-            <li class="channel-showcase">
-                <div class="channel-logo">
-                    <img src="<%= channels[i]['logo'] %>"/>
-                </div>
-                <div class="channel-main">
-                    <div class="channel-showcase-head">
-                        <a href="/channel/<%= channels[i]['_id'] %>" target="_blank"><%= channels[i]['name']  %></a>
-                        <span><a href="#">+关注</a></span>
-                    </div>
-                    <p class="channel-showcase-description"><%= channels[i]['description']  %></p>
-                    <div class="channel-showcase-footer">
-                        <span><%=channels[i]['bmkNum']%>书签</span><span><%= channels[i]['subNum']%>关注者</span>
-                        <a href="/u/<%= channels[i]['creator']['userId'] %>" target="_blank"><img src="http://yiye.qiniudn.com<%= channels[i]['creator']['userLogo']  %>"/></a>
-                    </div>
-                </div>
-            </li>
-            <% } %>
-            <% for(var i = 0;i < channels.length; i++){ %>
-            <li class="channel-showcase">
-                <div class="channel-logo">
-                    <img src="<%= channels[i]['logo'] %>"/>
-                </div>
-                <div class="channel-main">
-                    <div class="channel-showcase-head">
-                        <a href="/channel/<%= channels[i]['_id'] %>" target="_blank"><%= channels[i]['name']  %></a>
-                        <span><a href="#">+关注</a></span>
-                    </div>
-                    <p class="channel-showcase-description"><%= channels[i]['description']  %></p>
-                    <div class="channel-showcase-footer">
-                        <span><%=channels[i]['bmkNum']%>书签</span><span><%= channels[i]['subNum']%>关注者</span>
-                        <a href="/u/<%= channels[i]['creator']['userId'] %>" target="_blank"><img src="http://yiye.qiniudn.com<%= channels[i]['creator']['userLogo']  %>"/></a>
-                    </div>
-                </div>
-            </li>
-            <% } %>
-            <% for(var i = 0;i < channels.length; i++){ %>
-            <li class="channel-showcase">
-                <div class="channel-logo">
-                    <img src="<%= channels[i]['logo'] %>"/>
-                </div>
-                <div class="channel-main">
-                    <div class="channel-showcase-head">
-                        <a href="/channel/<%= channels[i]['_id'] %>" target="_blank"><%= channels[i]['name']  %></a>
-                        <span><a href="#">+关注</a></span>
-                    </div>
-                    <p class="channel-showcase-description"><%= channels[i]['description']  %></p>
-                    <div class="channel-showcase-footer">
-                        <span><%=channels[i]['bmkNum']%>书签</span><span><%= channels[i]['subNum']%>关注者</span>
-                        <a href="/u/<%= channels[i]['creator']['userId'] %>" target="_blank"><img src="http://yiye.qiniudn.com<%= channels[i]['creator']['userLogo']  %>"/></a>
-                    </div>
-                </div>
-            </li>
-            <% } %>
         </ul>
     </div>
 </script>
+<script type="text/x-handlebars-template" id="tp-channel-explore-ul">
+    <% for(var i = 0;i < list.length; i++){ %>
+    <li class="channel-showcase">
+        <div class="channel-logo">
+            <img src="<%= list[i]['logo'] %>"/>
+        </div>
+        <div class="channel-main">
+            <div class="channel-showcase-head">
+                <a href="/channel/<%= list[i]['_id'] %>" target="_blank"><%= list[i]['name']  %></a>
+                <span><a href="#">+关注</a></span>
+            </div>
+            <p class="channel-showcase-description"><%= list[i]['description']  %></p>
+            <div class="channel-showcase-footer">
+                <span><%=list[i]['bmkNum']%>书签</span><span><%= list[i]['subNum']%>关注者</span>
+                <a href="/u/<%= list[i]['creator']['userId'] %>" target="_blank"><img src="http://yiye.qiniudn.com<%= list[i]['creator']['userLogo']  %>"/></a>
+            </div>
+        </div>
+    </li>
+    <% } %>
+</script >
 <script type="text/x-handlebars-template" id="tp-user-history">
     <ul class="user-history-list">
     <% for(var i = 0;i < historys.length; i++){ %>

@@ -28,7 +28,7 @@ module.exports = function(Home, app, auth, database) {
     app.route('/api/history/:num')
         .get(home.history);
     app.route('/api/home/discover')
-        .post(home.discover);
+        .get(home.discover);
     app.route('/api/home/channel/discover')
         .post(home.channelDiscover)
 }

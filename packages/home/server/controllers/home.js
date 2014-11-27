@@ -184,7 +184,7 @@ function getTags(str){
 exports.discover = function(req,res){
     if(!req.user) return res.redirect('/');
     //number为请求次数 limit为每次返回的数量
-    var number=req.body.number,limit=20;
+    var number=req.query.number,limit=20;
     async.waterfall([
             function(callback1){
                 Channels.find().sort({subNum:1}).skip((number-1)*limit).limit(limit).exec(function(err,subChannels){
