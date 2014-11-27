@@ -16,7 +16,10 @@ module.exports = function(System, app, auth, database) {
   });
   app.get('/explore/query',function(req,res,next){
     index.query(req,res,System);
-  })
+  });
+
+  app.route('/api/discovery')
+    .get(index.web_api_discovery);
 
   app.route('/signup')
       .get(user.signup);

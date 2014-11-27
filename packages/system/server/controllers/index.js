@@ -102,7 +102,6 @@ exports.query = function(req,res,Package){
         //防止超过下限
         if (minPage<1){minPage=1;}
         Channels.find({name:new RegExp(search,'i')}).sort({subNum:1}).skip(limit*(minPage-1)).limit(limit).exec(function(err,channels){
-            console.log('debug',channels);
             var page=tool.skipPage(minPage,pageLength);
             if (err) return console.log(err);
             Package.render('query',{channels:channels,query:search,page:page,user:req.user},function(err,html){
@@ -111,8 +110,21 @@ exports.query = function(req,res,Package){
             });       
         })
     })
+};
 
-}
+exports.web_api_discovery = function(req, res) {
+  var searchMax = 15;
+  var keyword = req.query.keyword;
+  if(keyword.length >= searchMax) {
+    keyword = keyword.substr(0, searchMax);
+  }
+  Channels.find({name: new RegExp(keyword, 'i')}).sort({subNum: 1}).exec(function(err, channels) {
+    if (channels.length > 0)
+      res.json({message: 'ok', data: channels})
+    else
+      res.json({message: '未找到'})
+  });
+};
 
 
 
