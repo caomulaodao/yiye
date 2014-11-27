@@ -102,6 +102,7 @@ exports.query = function(req,res,Package){
         //防止超过下限
         if (minPage<1){minPage=1;}
         Channels.find({name:new RegExp(search,'i')}).sort({subNum:1}).skip(limit*(minPage-1)).limit(limit).exec(function(err,channels){
+            console.log('debug',channels);
             var page=tool.skipPage(minPage,pageLength);
             if (err) return console.log(err);
             Package.render('query',{channels:channels,query:search,page:page,user:req.user},function(err,html){
