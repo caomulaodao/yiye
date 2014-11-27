@@ -257,7 +257,7 @@ exports.newNews = function(res,req){
     var number = req.body.number||0;
     Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[1,2]}}).sort({postTime:-1}).skip(number).limit(limit).exec(function(err,list){
         if (err) {console.log(err);req.json({error:true,news:[]})}
-        req.json(news:list)
+        req.json({news:list})
     })
 }
 
