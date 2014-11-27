@@ -121,6 +121,7 @@ exports.init  =  function(req,res){
         }
     },function(err,results){
         //更新频道最后访问时间并返回数据
+        console.log(results);
         Channel2User.update({channelId:channelId,userId:req.user._id},{lastTime:Date.now()},function(err){
             if(err) return console.log(err);
             res.json(results);

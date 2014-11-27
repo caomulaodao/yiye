@@ -10,8 +10,8 @@ var mongoose = require('mongoose'),
     Channels = mongoose.model('Channels'),
     Bookmarks = mongoose.model('Bookmarks');
 
-//获取channel数据
-exports.getInitChannels = function(req,res,Home){
+//渲染Home页面
+exports.initHome = function(req,res,Home){
     if(!req.user) return res.redirect('/');
     async.parallel({
             user: function(callback){
@@ -207,7 +207,7 @@ exports.discover = function(req,res){
             });
 }
 
-
+//ajax加载发现channels
 exports.channelDiscover=function(req,res){
     if(!req.user) return res.status(401).json({info:'请先注册或登录'});
     var number=req.body.number||0,limit=20;//next返回给前端保存  下次请求的时候发起      
@@ -248,4 +248,15 @@ exports.channelDiscover=function(req,res){
             res.json({result:results,number:number+results.length});
         });
     });
+}
+
+
+exports.newNews = function(res,req){
+    if(!req.user) return res.status(401).json({info:'请先注册或登录'});
+    var limit=10;
+    var number = req.body.number||0;
+    Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[1,2]}}).sort(postTime:-1).skip(number).limit(limit).exec(function(err,list){
+        if (err) {console.log(err);req.json({error:true,news:[]})}
+        req.json(news:list)
+    })
 }

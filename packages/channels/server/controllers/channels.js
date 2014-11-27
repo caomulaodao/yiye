@@ -289,7 +289,7 @@ exports.renderCheck = function(req,res,Package){
             if(!channel) return res.redirect('/');
             var channel = channel;
             var list = doc;
-            var page=tool.skipPage(p,pageLength);console.log(page);console.log("!!!!!");
+            var page=tool.skipPage(p,pageLength);
             channel.userType = type;
             Package.render('manage', {
                 channel:channel,

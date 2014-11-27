@@ -6,7 +6,7 @@ module.exports = function(Home, app, auth, database) {
     var home = require('../controllers/home.js');
     app.get('/home',function (req,res,next){
         if(!req.user) res.redirect('/');
-        home.getInitChannels(req,res,Home);
+        home.initHome(req,res,Home);
     });
 
     //创建频道
@@ -29,4 +29,6 @@ module.exports = function(Home, app, auth, database) {
         .get(home.history);
     app.route('/api/home/discover')
         .post(home.discover);
+    app.route('/api/home/channel/discover')
+        .post(home.channelDiscover)
 }

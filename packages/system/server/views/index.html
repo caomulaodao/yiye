@@ -36,7 +36,7 @@
         <p>点击播放</p>
     </div>
     <div id="signup">
-        <button type="button" class="btn btn-lg  btn-block" onclick = "window.open('/signup')">我的主页</button>
+        <button type="button" class="btn btn-lg  btn-block" onclick = "window.open('/signup')">{% if user%}我的主页{% else %}立即注册{% endif %}</button>
     </div>
 </div>
 <div id="down-wrapper">
