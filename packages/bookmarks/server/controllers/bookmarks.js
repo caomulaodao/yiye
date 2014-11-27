@@ -87,6 +87,7 @@ exports.receive = function(req,res){
     });
 }
 
+//第一次获取书签
 exports.init  =  function(req,res){
     if(!req.user) return res.status(401).json({info:'请先注册或登录'});
     var channelId = req.params['channelId'];
@@ -99,20 +100,20 @@ exports.init  =  function(req,res){
         },
         list: function(callback){
             //
-            Bookmarks.find({channelId:channelId,checked:{$in:[3,5]}}).sort({postTime:-1}).limit(100).exec(function (err, doc) {
+            Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]}}).sort({postTime:-1}).limit(100).exec(function (err, doc) {
                 if(err) console.log(err);
                 if(doc.length === 0) return callback(null,[]);
                 var lastTime = doc[0]['postTime'];
                 var targetTime = doc[doc.length -1]['postTime'];
                 if(!moment(lastTime).isSame(targetTime, 'day')){
                     var startDay = moment(doc[doc.length -1]['postTime']).startOf('day').toDate();
-                    Bookmarks.find({channelId:channelId,checked:{$in:[3,5]},postTime:{$gte:startDay}}).sort({postTime:-1}).exec(function(err,list){
+                    Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]},postTime:{$gte:startDay}}).sort({postTime:-1}).exec(function(err,list){
                         if(err) console.log(err);
                         callback(null,listToArray(list));
                     });
                 }else{
                     var lastDay = moment(doc[0]['postTime']).startOf('day').toDate();
-                    Bookmarks.find({channelId:channelId,checked:{$in:[3,5]},postTime:{$gte:lastDay}}).sort({postTime:-1}).exec(function(err,list){
+                    Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]},postTime:{$gte:lastDay}}).sort({postTime:-1}).exec(function(err,list){
                         if(err) console.log(err);
                         callback(null,listToArray(list));
                     });

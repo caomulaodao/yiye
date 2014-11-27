@@ -76,6 +76,9 @@ function initialize() {
         $('.shadow').show();
         $('.setting-channel').show();
     });
+    $(".content-page").scroll(function(){
+        console.log(1);
+    });
 }
 
 

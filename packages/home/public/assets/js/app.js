@@ -395,6 +395,7 @@ $(function(){
         },
 
         scrollAjax: function() {
+            console.log("s");
             var nClientH = $(window).height();
             var nScrollTop = $('#channel-explore').scrollTop();
             var nChannelH = $('#channel-explore ul').height();

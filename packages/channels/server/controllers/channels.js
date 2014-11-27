@@ -44,6 +44,7 @@ exports.renderMain = function(req,res,Package){
         //对应的频道
         function (type,callback) {
             Channels.findOne({_id: channelId}, function (err, channel) {
+                console.log(channel);
                 callback(null,type,channel);
             });
         },
@@ -52,6 +53,7 @@ exports.renderMain = function(req,res,Package){
             Bookmarks.count({channelId:channelId,checked:{$in:[1,3,5]}},function(err,count){
                 if (err) return console.log(err);
                 var pageLength=Math.ceil(count/limit);
+                console.log(channel);
                 callback(null,type,channel,pageLength);
             })
         },
@@ -65,11 +67,13 @@ exports.renderMain = function(req,res,Package){
             if (minPage<1){minPage=1;}
             Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]}}).sort({postTime:-1}).skip((minPage-1)*limit).limit(limit).exec(function (err, doc) {
                 if(err) console.log(err);
-                if(doc.length === 0) return callback(null,[]);
+                if(doc.length === 0) return callback(null,type,channel,pageLength,[]);
                 callback(null,type,channel,pageLength,listToArray(doc));
             });
         }],
         function(err,type,channel,pageLength,list){
+            console.log(type);
+            console.log(channel);
             if(!channel) return res.redirect('/');
             var channel = channel;
             var list = list;
