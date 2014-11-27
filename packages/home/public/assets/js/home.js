@@ -4,6 +4,7 @@
 $(window).load(function(){
     initialize();
     commentClick();
+
 });
 
 //initialization
@@ -75,12 +76,9 @@ function initialize() {
         $('.shadow').show();
         $('.setting-channel').show();
     });
-
 }
 
-function dateSrollEffect() {
 
-}
 
 function commentClick() {
     $('.comment').on('click', function(){
@@ -105,6 +103,18 @@ function commentClick() {
     });
 }
 
+
+function scrollAjax() {
+    var bScroll = false;
+    $('#channel-explore').on('scroll', function() {
+        var nClientH = $(window).height();
+        var nScrollTop = $('#channel-explore').scrollTop();
+        var nChannelH = $('#channel-explore ul').height();
+        if(nClientH + nScrollTop - 80 >= nChannelH) {
+
+        }
+    });
+}
 
 
 

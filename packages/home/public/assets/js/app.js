@@ -33,7 +33,7 @@ $(function(){
     //bookmarkLike
     var bkLike = Backbone.Model.extend({
 
-    })
+    });
 
     //bookmarkHate
     var bkHate = Backbone.Model.extend({
@@ -380,7 +380,7 @@ $(function(){
         initTemplate: _.template($('#tp-channel-explore').html()),
 
         events: {
-
+            "scroll #channel-explore" : "scrollAjax"
         },
 
         initialize: function() {
@@ -392,8 +392,17 @@ $(function(){
             channels.fetch({url:'/api/channels/top/0',success:function(model,response){
                 that.$el.html(that.initTemplate(response));
             }})
-        }
+        },
 
+        scrollAjax: function() {
+            var nClientH = $(window).height();
+            var nScrollTop = $('#channel-explore').scrollTop();
+            var nChannelH = $('#channel-explore ul').height();
+            if(nClientH + nScrollTop - 80 >= nChannelH) {
+                window.alert('a');
+
+            }
+        }
 
     });
 
