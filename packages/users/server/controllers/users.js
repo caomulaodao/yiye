@@ -43,12 +43,12 @@ exports.web_api_logout = function(req, res) {
   if (req.isAuthenticated()) {
     req.logout();
     if (req.isUnauthenticated())
-      res.json({result: 'ok'});
+      res.json({message: 'ok'});
     else
-      res.json({result: '注销失败'});
+      res.status('401').json({message: '注销失败'});
   }
   else
-    res.json({result: '未登录'});
+    res.status('401').json({message: '未登录'});
 
 
 };
