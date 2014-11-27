@@ -86,7 +86,7 @@ exports.receive = function(req,res){
         return res.json(channels);
     });
 }
-
+//初始化获取标签
 exports.init  =  function(req,res){
     if(!req.user) return res.status(401).json({info:'请先注册或登录'});
     var channelId = req.params['channelId'];
@@ -99,20 +99,20 @@ exports.init  =  function(req,res){
         },
         list: function(callback){
             //
-            Bookmarks.find({channelId:channelId,checked:{$in:[3,5]}}).sort({postTime:-1}).limit(100).exec(function (err, doc) {
+            Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]}}).sort({postTime:-1}).limit(100).exec(function (err, doc) {
                 if(err) console.log(err);
                 if(doc.length === 0) return callback(null,[]);
                 var lastTime = doc[0]['postTime'];
                 var targetTime = doc[doc.length -1]['postTime'];
                 if(!moment(lastTime).isSame(targetTime, 'day')){
                     var startDay = moment(doc[doc.length -1]['postTime']).startOf('day').toDate();
-                    Bookmarks.find({channelId:channelId,checked:{$in:[3,5]},postTime:{$gte:startDay}}).sort({postTime:-1}).exec(function(err,list){
+                    Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]},postTime:{$gte:startDay}}).sort({postTime:-1}).exec(function(err,list){
                         if(err) console.log(err);
                         callback(null,listToArray(list));
                     });
                 }else{
                     var lastDay = moment(doc[0]['postTime']).startOf('day').toDate();
-                    Bookmarks.find({channelId:channelId,checked:{$in:[3,5]},postTime:{$gte:lastDay}}).sort({postTime:-1}).exec(function(err,list){
+                    Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]},postTime:{$gte:lastDay}}).sort({postTime:-1}).exec(function(err,list){
                         if(err) console.log(err);
                         callback(null,listToArray(list));
                     });
@@ -198,18 +198,19 @@ exports.hate = function(req,res){
 exports.oneDay = function(req,res){
     var channelId = req.params['channelId'];
     var day = req.body['day'];
+    var limit=1;
     //如果没有获取到天数，则默认为最接近的一天
     if(!day){
         async.waterfall([
             function(callback){
-                Bookmarks.find({channelId:channelId,checked:{$in:[3,5]}}).sort({postTime:-1}).limit(1).exec(function (err, doc) {
+                Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]}}).sort({postTime:-1}).limit(1).exec(function (err, doc) {
                     if(err) return console.log(err);
                     var day =  moment(doc[0]['postTime']).startOf('day').toDate();
                     callback(null,day);
                 });
             },
             function(day,callback){
-                Bookmarks.find({channelId:channelId,checked:{$in:[3,5]},postTime:{$lt:day}}).sort({postTime:-1}).limit(1).exec(function (err, doc) {
+                Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]},postTime:{$lt:day}}).sort({postTime:-1}).limit(1).exec(function (err, doc) {
                     if(err) return console.log(err);
                     if(doc.length == 0){
                         var nextDay = null;
@@ -225,7 +226,7 @@ exports.oneDay = function(req,res){
             dayResult.nextDay = results.nextDay;
             var startDay = moment(day,"YYYY-MM-DD").startOf('day').toDate();
             var endDay = moment().add('days',1).toDate();
-            Bookmarks.find({channelId:channelId,checked:{$in:[3,5]},postTime:{$gte:startDay,$lt:endDay}}).sort({postTime:-1}).exec(function(err,list){
+            Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]},postTime:{$gte:startDay,$lt:endDay}}).sort({postTime:-1}).exec(function(err,list){
                 if(err) console.log(err);
                 list.sort(function(a,b){
                     var aRank = a['likeNum'] - a['hateNum'];
@@ -239,7 +240,7 @@ exports.oneDay = function(req,res){
     }else{
         var startDay = moment(day,"YYYY-MM-DD").startOf('day').toDate();
         var endDay = moment(day,"YYYY-MM-DD").add('days',1).toDate();
-        Bookmarks.find({channelId:channelId,checked:{$in:[3,5]},postTime:{$lt:startDay}}).sort({postTime:-1}).limit(1).exec(function (err, doc) {
+        Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]},postTime:{$lt:startDay}}).sort({postTime:-1}).limit(1).exec(function (err, doc) {
             if(err) return console.log(err);
             if(doc.length == 0){
                 var nextDay = null;
@@ -249,7 +250,7 @@ exports.oneDay = function(req,res){
             var dayResult = {};
             dayResult.day = day;
             dayResult.nextDay = nextDay;
-            Bookmarks.find({channelId:channelId,checked:{$in:[3,5]},postTime:{$gte:startDay,$lt:endDay}}).sort({postTime:-1}).exec(function(err,list){
+            Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]},postTime:{$gte:startDay,$lt:endDay}}).sort({postTime:-1}).exec(function(err,list){
                 if(err) console.log(err);
                 list.sort(function(a,b){
                     var aRank = a['likeNum'] - a['hateNum'];

@@ -4,6 +4,7 @@
 
 var mongoose = require('mongoose'),
     async = require('async'),
+    bookmarks = require('../../../bookmarks/server/controllers/bookmarks'),
     User = mongoose.model('User'),
     Channel2User = mongoose.model('Channel2User'),
     Channels = mongoose.model('Channels'),
@@ -202,7 +203,49 @@ exports.discover = function(req,res){
                 });
             }],
             function(err, results) {
-                res.send({list:results})
-                //渲染home页面
+                res.json({list:results});
             });
+}
+
+
+exports.channelDiscover=function(req,res){
+    if(!req.user) return res.status(401).json({info:'请先注册或登录'});
+    var number=req.body.number||0,limit=20;//next返回给前端保存  下次请求的时候发起      
+    var channelId = req.body['channelId'];
+    async.parallel({
+        info: function(callback){//获取频道的信息
+            Channels.findOne({_id:channelId},function(err,doc){
+                if(err) console.log(err);
+                callback(null,doc);
+            });
+        },
+        list: function(callback){
+            //获取对应频道的书签
+            Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]}}).sort({postTime:-1}).skip(number).limit(limit).exec(function (err, doc) {
+                if(err) console.log(err);
+                if(doc.length === 0) return callback(null,[]);
+                var lastTime = doc[0]['postTime'];//最后一天的时间
+                var targetTime = doc[doc.length -1]['postTime'];
+                if(!moment(lastTime).isSame(targetTime, 'day')){//如果返回的limit条数中第一条和最后一条的时间一致则返回这天的所有书签
+                    var startDay = moment(doc[doc.length -1]['postTime']).startOf('day').toDate();
+                    Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]},postTime:{$gte:startDay}}).sort({postTime:-1}).exec(function(err,list){
+                        if(err) console.log(err);
+                        callback(null,listToArray(list));
+                    });
+                }else{//否则返回包含最后一条书签的时间之前的所有书签
+                    var lastDay = moment(doc[0]['postTime']).startOf('day').toDate();
+                    Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]},postTime:{$gte:lastDay}}).sort({postTime:-1}).exec(function(err,list){
+                        if(err) console.log(err);
+                        callback(null,listToArray(list));
+                    });
+                }
+            })
+        }
+    },function(err,results){
+        //更新频道最后访问时间并返回数据
+        Channel2User.update({channelId:channelId,userId:req.user._id},{lastTime:Date.now()},function(err){
+            if(err) return console.log(err);
+            res.json({result:results,number:number+results.length});
+        });
+    });
 }
