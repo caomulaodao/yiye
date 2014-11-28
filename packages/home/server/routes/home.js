@@ -29,6 +29,6 @@ module.exports = function(Home, app, auth, database) {
         .get(home.history);
     app.route('/api/home/discover')
         .get(home.discover);
-    app.route('/api/home/channel/discover')
-        .post(home.channelDiscover)
+    app.route('/api/home/bookmark/')
+        .get(home.ajaxBookmarks)
 }

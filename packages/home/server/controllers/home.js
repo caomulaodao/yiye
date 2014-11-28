@@ -180,11 +180,11 @@ function getTags(str){
     return tags;
 }
 
-//ajax加载发现页面内容
+//ajax加载'发现'页面内容
 exports.discover = function(req,res){
     if(!req.user) return res.redirect('/');
     //number为请求次数 limit为每次返回的数量
-    var number=req.query.number,limit=20;
+    var number=req.query.number,limit=1;
     async.waterfall([
             function(callback1){
                 Channels.find().sort({subNum:1}).skip((number-1)*limit).limit(limit).exec(function(err,subChannels){
@@ -201,51 +201,68 @@ exports.discover = function(req,res){
                         callback1(null,results);
                     });
                 });
+            },
+            function(results,callback){
+                Channels.find().sort({subNum:1}).limit(1).exec(function(err,doc){
+                    if (err) return console.log(err);
+                    if(doc.length===0) {callback(null,results,[]);}
+                    else{
+                        callback(null,results,doc[0]);
+                    }
+                })
             }],
-            function(err, results) {
-                res.json({list:results});
+            function(err, results,doc) {
+                var isHave=true;
+                if(results.length==0) {isHave=false;}
+                else{console.log(results[results.length-1]['time']);
+                console.log(doc['time']);
+                    if (results[results.length-1]['time']+''==doc['time']+''){
+                        isHave=false;
+                    }
+                }
+                res.json({list:results,isHave:isHave});
             });
 }
 
-//ajax加载发现channels
-exports.channelDiscover=function(req,res){
+//ajax加载'发现'页面channels
+exports.ajaxBookmarks = function(req,res){
     if(!req.user) return res.status(401).json({info:'请先注册或登录'});
-    var number=req.body.number||0,limit=20;//next返回给前端保存  下次请求的时候发起      
-    var channelId = req.body['channelId'];
+    var date=req.get.date,limit=20;//date为前端当前展示的时间      
+    var channelId = req.get['channelId'];
     async.parallel({
-        info: function(callback){//获取频道的信息
-            Channels.findOne({_id:channelId},function(err,doc){
-                if(err) console.log(err);
-                callback(null,doc);
-            });
-        },
         list: function(callback){
             //获取对应频道的书签
-            Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]}}).sort({postTime:-1}).skip(number).limit(limit).exec(function (err, doc) {
+            Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]},postTime:{$gt:date}}).sort({postTime:-1}).limit(limit).exec(function (err, doc) {
                 if(err) console.log(err);
                 if(doc.length === 0) return callback(null,[]);
-                var lastTime = doc[0]['postTime'];//最后一天的时间
-                var targetTime = doc[doc.length -1]['postTime'];
-                if(!moment(lastTime).isSame(targetTime, 'day')){//如果返回的limit条数中第一条和最后一条的时间一致则返回这天的所有书签
-                    var startDay = moment(doc[doc.length -1]['postTime']).startOf('day').toDate();
-                    Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]},postTime:{$gte:startDay}}).sort({postTime:-1}).exec(function(err,list){
-                        if(err) console.log(err);
-                        callback(null,listToArray(list));
-                    });
-                }else{//否则返回包含最后一条书签的时间之前的所有书签
-                    var lastDay = moment(doc[0]['postTime']).startOf('day').toDate();
-                    Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]},postTime:{$gte:lastDay}}).sort({postTime:-1}).exec(function(err,list){
-                        if(err) console.log(err);
-                        callback(null,listToArray(list));
-                    });
-                }
+                var targetTime = doc[doc.length -1]['postTime'];//取出来的最后一天的时间
+                var startDay = moment(doc[doc.length -1]['postTime']).startOf('day').toDate();
+                Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]},postTime:{$gt:startDay,$lte:date}}).sort({postTime:-1}).exec(function(err,list){
+                    if(err) console.log(err);
+                    callback(null,listToArray(list));
+                });
+            })
+        },
+        endbookmarkId: function(callback){
+            Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]}}).limit(1).sort({postTime:1}).exec(function(err,doc){
+                if(err) return console.log(err);
+                callback(null,doc)
             })
         }
     },function(err,results){
+        results.isHave=true;//下次是否还进行ajax请求
+        results.nextTime=null;//请求加载的书签的时间
+        if(results.endbookmarkId.lenght===0) results.isHave=false;
+        else{
+            results.nextTime=results.list[results.list.length-1]['postTime'];
+            if(results.list[results.list.length-1]['_id']==results.endbookmarkId[0]['_id']){
+                results.isHave=false;
+            }
+        }
         //更新频道最后访问时间并返回数据
         Channel2User.update({channelId:channelId,userId:req.user._id},{lastTime:Date.now()},function(err){
             if(err) return console.log(err);
-            res.json({result:results,number:number+results.length});
+            res.json(results);
         });
     });
 }

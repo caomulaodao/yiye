@@ -15,7 +15,7 @@ module.exports = function(Bookmarks, app, auth, database) {
     //   .post(bookmarks.);
 
     //获取某个频道的初始化列表
-    app.route('/api/bookmarks/init/:channelId')
+    app.route('/api/bookmarks/init')
         .get(bookmarks.init);
 
     //用户支持书签

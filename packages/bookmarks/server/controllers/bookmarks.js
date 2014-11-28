@@ -86,10 +86,11 @@ exports.receive = function(req,res){
         return res.json(channels);
     });
 }
-//初始化获取标签
+//初始化获取书签
 exports.init  =  function(req,res){
+    var limit=1;
     if(!req.user) return res.status(401).json({info:'请先注册或登录'});
-    var channelId = req.params['channelId'];
+    var channelId = req.query['channelId'];
     async.parallel({
         info: function(callback){
             Channels.findOne({_id:channelId},function(err,doc){
@@ -98,8 +99,8 @@ exports.init  =  function(req,res){
             });
         },
         list: function(callback){
-            //
-            Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]}}).sort({postTime:-1}).limit(100).exec(function (err, doc) {
+            //频道的书签数
+            Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]}}).sort({postTime:-1}).limit(limit).exec(function (err, doc) {
                 if(err) console.log(err);
                 if(doc.length === 0) return callback(null,[]);
                 var lastTime = doc[0]['postTime'];
@@ -118,16 +119,33 @@ exports.init  =  function(req,res){
                     });
                 }
             })
+        },
+        endbookmarkId: function(callback){//数据库中对应频道中最后一条书签的Id
+            Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]}}).sort({postTime:1}).limit(1).exec(function(err,list){
+                if (err) return console.log(err);
+                if(list.length===0) return callback(null,null);
+                var lastbmId = list[0]['_id'];
+                callback(null,lastbmId);
+            })
         }
     },function(err,results){
         //更新频道最后访问时间并返回数据
-        console.log(results);
+        results.isHave=true;//下次是否进行ajax请求
+        results.nextTime=null;//请求加载对应时间的书签
+        //数据库里对应频道一条书签也没有的情况
+        if (results.endbookmarkId==null) {results.isHave=false;}
+        //取出来书签的最后一条的ID和数据库里最后一条ID相等的时候则isHave为false
+        else{
+            results.nextTime=results.list[results.list.length-1].day;//返回给前端下次请求的书签的时间
+            console.log(results);
+            var lastbmId = results.list[results.list.length-1]['_id'];
+            if (lastbmId==results.endbookmarkId) {results.isHave=fasle;}
         Channel2User.update({channelId:channelId,userId:req.user._id},{lastTime:Date.now()},function(err){
             if(err) return console.log(err);
             res.json(results);
         });
-    });
-
+    }}
+    )
 }
 
 //对某个书签点赞
