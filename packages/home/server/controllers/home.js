@@ -187,7 +187,7 @@ exports.discover = function(req,res){
     var number=req.query.number,limit=1;
     async.waterfall([
             function(callback1){
-                Channels.find().sort({subNum:1}).skip((number-1)*limit).limit(limit).exec(function(err,subChannels){
+                Channels.find().sort({subNum:-1,time:-1}).skip((number-1)*limit).limit(limit).exec(function(err,subChannels){
                     if(err) return console.log(err);
                     async.map(subChannels,function(item,callback2){
                         Bookmarks.count({channelId:item.channelId,postTime:{$gte:item.lastTime}},function(err,count){
@@ -203,7 +203,7 @@ exports.discover = function(req,res){
                 });
             },
             function(results,callback){
-                Channels.find().sort({subNum:1}).limit(1).exec(function(err,doc){
+                Channels.find().sort({subNum:1,time:1}).limit(1).exec(function(err,doc){
                     if (err) return console.log(err);
                     if(doc.length===0) {callback(null,results,[]);}
                     else{
@@ -214,9 +214,8 @@ exports.discover = function(req,res){
             function(err, results,doc) {
                 var isHave=true;
                 if(results.length==0) {isHave=false;}
-                else{console.log(results[results.length-1]['time']);
-                console.log(doc['time']);
-                    if (results[results.length-1]['time']+''==doc['time']+''){
+                else{
+                    if (results[0]['time']+''==doc['time']+''){
                         isHave=false;
                     }
                 }
