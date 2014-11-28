@@ -1540,3 +1540,9 @@ a.header-channel-name , a.header-channel-name:hover{
     background-color: #00C995;
     float: right;
 }
+
+.no-news {
+    color: #ccc;
+    margin: 30px auto;
+    font-size: 1.8em;
+}

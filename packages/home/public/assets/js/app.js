@@ -48,7 +48,7 @@ $(function(){
 
     //channel top list model
     var channelShowcase = Backbone.Model.extend({
-
+        defaults: {number: 1}    //Ajax加载次数
     });
 
     //home页频道书签加载
@@ -412,18 +412,6 @@ $(function(){
 
     });
 
-    //用户发现页面加载频道内容
-    var discoverChannel = Backbone.Model.extend({
-        url: "/api/home/discover",
-
-        initialize: function() {
-
-        },
-
-        defaults: {number: 0}  //ajax 加载次数
-
-    });
-
     //用户发现页面
     var ExploreView = Backbone.View.extend({
         url: "/api/home/discover",
@@ -445,6 +433,7 @@ $(function(){
             var that = this;
             channels.fetch({url:'/api/home/discover',success:function(model,response){
                 that.$el.html(that.initTemplate(response));
+                channels.defaults.number++;
                 that.renderAfter();
             }})
         },
@@ -465,14 +454,17 @@ $(function(){
             var nChannelH = $('#channel-explore ul').height();
             if((nClientH + nScrollTop - 80 >= nChannelH) && (that.scrollAjax.bScroll == true)) {
                 that.scrollAjax.bScroll = false;   //禁止Ajax加载
-                var cList = new discoverChannel;
+                var cList = new channelShowcase;
+                var nNum = cList.defaults.number;
                 cList.fetch({
-                    url: "api/home/discover",
+                    data: {number: nNum},
+                    url: "/api/home/discover",
                     success: function(model, response){
                         $('#channel-explore ul').append(that.addTemplate(response));
                         if(!response.isHave){
                             $('#channel-explore ul').append("<p>无新内容了</p>");
                         }else{
+                            cList.defaults.number++;
                             that.scrollAjax.bScroll = true;     //许可Ajax加载
                         }
                     },
