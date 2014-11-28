@@ -218,17 +218,22 @@ exports.oneDay = function(req,res){
     var channelId = req.params['channelId'];
     var day = req.body['day'];
     var limit=1;
-    //如果没有获取到天数，则默认为最接近的一天
+    //如果没有获取到天数，则默认为最接近的一天  需改bug1(增加频道不存在书签的情况)
     if(!day){
         async.waterfall([
             function(callback){
                 Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]}}).sort({postTime:-1}).limit(1).exec(function (err, doc) {
                     if(err) return console.log(err);
-                    var day =  moment(doc[0]['postTime']).startOf('day').toDate();
+                    if(doc.length == 0){
+                        var day = null;
+                    }else{
+                        var day =  moment(doc[0]['postTime']).startOf('day').toDate();
+                    }
                     callback(null,day);
                 });
             },
             function(day,callback){
+                if(!day) return   callback(null,{day:null,nextDay:null});
                 Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]},postTime:{$lt:day}}).sort({postTime:-1}).limit(1).exec(function (err, doc) {
                     if(err) return console.log(err);
                     if(doc.length == 0){
@@ -240,6 +245,7 @@ exports.oneDay = function(req,res){
                 });
             }
         ],function(err,results){
+            if(!day) return res.json({day:null,nextDay:null,list:[]});
             var dayResult = {};
             dayResult.day = results.day;
             dayResult.nextDay = results.nextDay;
@@ -252,7 +258,7 @@ exports.oneDay = function(req,res){
                     var bRank = b['likeNum'] - b['hateNum'];
                     return aRank > bRank ? -1 : 1;
                 });
-                dayResult.list = list
+                dayResult.list = list;
                 res.json(dayResult);
             });
         });

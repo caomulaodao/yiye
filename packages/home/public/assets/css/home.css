@@ -745,6 +745,8 @@ button:focus {outline:0;}
 .content-page-content {
     height: 100%;
     position: relative;
+    overflow-x: hidden;
+    overflow-y: scroll;
 }
 
 /*******header*******/
@@ -809,7 +811,9 @@ a.header-channel-name , a.header-channel-name:hover{
 
 
 
-.content-body {height: 100%;}
+.content-body {
+
+}
 
 .single-list {
     height: 100px;

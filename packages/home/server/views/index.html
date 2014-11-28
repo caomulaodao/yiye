@@ -239,33 +239,10 @@
             </div>
             <div role="tabpanel" class="tab-pane" id="news">
                 <ul class="user-news-list">
-                    {% for item in news %}
-                        <li id="news-{{ loop.index }}">
-                            {% if item.checked == 1%}
-                                <div class="status pass">
-                                    通过
-                                </div>
-                            {% endif %}
-                            {% if item.checked == 2%}
-                                <div class="status fail">
-                                    失败
-                                </div>
-                            {% endif %}
-                            <div class="main">
-                                <div class="user-news-bookmarks" ><a href="#">{{ item.title }}</a> <div class="user-news-info"><span>频道:<a href="#">{{ item.channelInfo.channelName }}</a></span><span>审核:<a href="#">{{ item.checkUser.username }}</a></span></div></div>
-                                {% if item.checked == 2%}
-                                    <div class="user-news-fail-result">
-                                        <span>原因：</span>{{ item.deleteInfo }}
-                                    </div>
-                                {% endif %}
-                                <div class="user-news-footer"><span>时间：</span>{{  ''+item.postTime|date('Y-m-d H:m:s') }}  <a href="#" class="sure" data-bookmarkid="{{ ''+item._id }}" data-index="{{ loop.index }}">确定</a></div>
-                            </div>
-                        </li>
-                    {% endfor %}
                 </ul>
             </div>
             <div role="tabpanel" class="tab-pane" id="history">
-                暂无历史记录
+                <ul></ul>
             </div>
         </div>
 
@@ -328,9 +305,45 @@
                     <% } %>
                 <% } %>
             </ul>
-            <div style="height:200px"></div>
+            <div style="height:100px"></div>
         </div>
     </div>
+</script>
+<script type="text/x-handlebars-template" id="tp-bookmarks-oneday">
+        <% for(var i = 0;i< list.length; i++){ %>
+        <div class="date-divide">
+            <div><%= list[i]['day']%></div>
+        </div>
+        <% for(var j = 0;j < list[i]['dList'].length; j++){%>
+        <li>
+            <div class="single-link">
+                <div class="single-link-button">
+                    <button class="up" title="赞同" data-bookmarkid="<%= list[i]['dList'][j]['_id']%>">
+                        <i class="vote-up"></i>
+                        <!-- <span class="lable">赞同</span> -->
+                        <span class="count"><%= list[i]['dList'][j]['likeNum'] %></span>
+                    </button>
+                    <button class="down" title="反对" data-bookmarkid="<%= list[i]['dList'][j]['_id']%>">
+                        <i class="vote-down"></i>
+                    </button>
+                </div>
+                <div class="link-part-content">
+                    <div id="bookmark-pic"><img src="http://yiye.qiniudn.com/<%= list[i]['dList'][j]['image'] %>"/></div>
+                    <a class="link" target="_blank" href="<%= list[i]['dList'][j]['url'] %>"><%= list[i]['dList'][j]['title'] %></a>
+                    <div class="description">
+                        <span>描述：</span><%= list[i]['dList'][j]['description'] %>
+                    </div>
+                    <div class="footer-part">
+                        <span class="submit-time">提交于:<%= moment(''+list[i]['dList'][j]['postTime']).format('H:mm:ss') %></span>
+                        <span>by <a href="#" data-userId="<%= list[i]['dList'][j]['postUser']['userId']%>"><%= list[i]['dList'][j]['postUser']['username'] %></a></a></span>
+                        <!-- <span><i class="glyphicon glyphicon-star"></i><a class="collect" href="#">收藏</a></span>  -->
+                    </div>
+                </div>
+
+            </div>
+        </li>
+        <% } %>
+        <% } %>
 </script>
 <script type="text/x-handlebars-template" id="tp-channel-explore">
     <div id="channel-explore">
@@ -379,31 +392,54 @@
     <% } %>
 </script >
 <script type="text/x-handlebars-template" id="tp-user-history">
-    <ul class="user-history-list">
     <% for(var i = 0;i < historys.length; i++){ %>
-        <li>
-            <% if(historys[i].checked == 3){ %>
+    <li>
+        <% if(historys[i].checked == 3){ %>
+        <div class="status pass">
+            通过
+        </div>
+        <% } %>
+        <% if(historys[i].checked == 4){ %>
+        <div class="status fail">
+            失败
+        </div>
+        <% } %>
+        <div class="main">
+            <div class="user-history-bookmarks" ><a href="#"><%= historys[i].title %></a> <div class="user-history-info"><span>频道:<a href="#"><%= historys[i].channelInfo.channelName %></a></span><span>审核:<a href="#"><%= historys[i].checkUser.username %></a></span></div></div>
+            <% if(historys[i].checked == 4){%>
+            <div class="user-history-fail-result">
+                <span>原因：</span><%= historys[i].deleteInfo %>
+            </div>
+            <% } %>
+            <div class="user-history-footer"><span>时间：</span><%=  ''+historys[i].postTime %></div>
+        </div>
+    </li>
+    <% } %>
+</script>
+<script type="text/x-handlebars-template" id="tp-user-news">
+    <% for(var i = 0;i < news.length; i++){ %>
+    <li id="news-<%= i %>">
+        <% if(news[i]["checked"] == 1){%>
             <div class="status pass">
                 通过
             </div>
-            <% } %>
-            <% if(historys[i].checked == 4){ %>
+        <% } %>
+        <% if(news[i]["checked"] == 2%){ %>
             <div class="status fail">
                 失败
             </div>
-            <% } %>
-            <div class="main">
-                <div class="user-history-bookmarks" ><a href="#"><%= historys[i].title %></a> <div class="user-history-info"><span>频道:<a href="#"><%= historys[i].channelInfo.channelName %></a></span><span>审核:<a href="#"><%= historys[i].checkUser.username %></a></span></div></div>
-                <% if(historys[i].checked == 4){%>
-                <div class="user-history-fail-result">
-                    <span>原因：</span><%= historys[i].deleteInfo %>
-                </div>
-                <% } %>
-                <div class="user-history-footer"><span>时间：</span><%=  ''+historys[i].postTime %></div>
+        <% } %>
+        <div class="main">
+            <div class="user-news-bookmarks" ><a href="#"><%= news[i]["title"] %></a> <div class="user-news-info"><span>频道:<a href="#"><%= news[i]["channelInfo"]["channelName"] %></a></span><span>审核:<a href="#"><%= news[i]["checkUser"]["username"] %></a></span></div></div>
+            <% if(news[i]["checked"] == 2){ %>
+            <div class="user-news-fail-result">
+                <span>原因：</span><%= news[i]["deleteInfo"] %>
             </div>
-        </li>
+            <% } %>
+            <div class="user-news-footer"><span>时间：</span><%=  ''+news[i]["postTime"] %>  <a href="#" class="sure" data-bookmarkid="<%= ''+news[i]["_id"] %>" data-index="<%= i %>">确定</a></div>
+        </div>
+    </li>
     <% } %>
-    </ul>
 </script>
 <script rel="script" src="/bower_components/jquery/dist/jquery.js"></script>
 <script rel="script" src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>

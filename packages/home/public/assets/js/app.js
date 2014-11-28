@@ -51,6 +51,11 @@ $(function(){
 
     });
 
+    //home页频道书签加载
+    var newBookmarkModel = Backbone.Model.extend({
+
+    });
+
     //历史记录视图
     var historyModel = Backbone.Model.extend({
 
@@ -67,12 +72,12 @@ $(function(){
             bkDown:false
         },
 
-        initialize: function() {
+        initialize: function(){
         },
 
         events:{
-            "click .up" :"bkUp",
-            "click .down":"bkDown"
+            "click .up" : "bkUp",
+            "click .down": "bkDown"
         },
 
         render: function(channelId){
@@ -82,7 +87,40 @@ $(function(){
                 url:'/api/bookmarks/init/'+channelId,
                 success:function(model,response){
                 that.$el.html(that.initTemplate(response));
+                that.renderAfter();
             }})
+        },
+
+        renderAfter : function(){
+            var that = this;
+            that.scrollAjax.bScroll = true; //许可Ajax加载
+            $(".content-page-content").scroll(function(){
+                that.scrollAjax();
+            });
+        },
+
+        //Ajax加载频道内容
+        scrollAjax: function(){
+            var that = this;
+            var nClientH = $(window).height();
+            var nScrollTop = $('.content-page-content').scrollTop();
+            var nListH = $('.content-body').height();
+            if((nClientH + nScrollTop - 80 >= nListH) && (that.scrollAjax.bScroll == true)) {
+                that.scrollAjax.bScroll = false;   //禁止Ajax加载
+                var bookmarkList = new newBookmarkModel;
+                console.log(123);
+                /*bookmarkList.fetch({
+                    url: "api/home/discover",
+                    success: function(model, response){
+                        $('#channel-explore ul').append(that.addTemplate(response));
+                        that.scrollAjax.bScroll = true;     //许可Ajax加载
+                    },
+                    error: function() {
+                        console.log('scrollAjaxError');
+                        that.scrollAjax.bScroll = true;     //许可Ajax加载
+                    }
+                });*/
+            }
         },
 
         bkUp: function(event){
@@ -203,7 +241,6 @@ $(function(){
             info:false,
             password:false,
             viewed:false
-
         },
 
         layerShadow: $('.shadow'),
@@ -432,7 +469,11 @@ $(function(){
                     url: "api/home/discover",
                     success: function(model, response){
                         $('#channel-explore ul').append(that.addTemplate(response));
-                        that.scrollAjax.bScroll = true;     //许可Ajax加载
+                        if(!response.isHave){
+                            $('#channel-explore ul').append("<p>无新内容了</p>");
+                        }else{
+                            that.scrollAjax.bScroll = true;     //许可Ajax加载
+                        }
                     },
                     error: function() {
                         console.log('scrollAjaxError');
