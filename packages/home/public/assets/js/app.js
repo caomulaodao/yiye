@@ -462,7 +462,7 @@ $(function(){
                     success: function(model, response){
                         $('#channel-explore ul').append(that.addTemplate(response));
                         if(!response.isHave){
-                            $('#channel-explore ul').append("<p>无新内容了</p>");
+                            $('#channel-explore ul').append("<p class='no-news'>无新内容了</p>");
                         }else{
                             cList.defaults.number++;
                             that.scrollAjax.bScroll = true;     //许可Ajax加载
