@@ -33,5 +33,5 @@ module.exports = function(Home, app, auth, database) {
         .get(home.newNews);
     //获取历史记录
     app.route('/api/home/hismes')
-        .get(home.history)
+        .get(home.history);
 }

@@ -154,18 +154,6 @@ exports.getChannelsTop = function(req,res){
     });
 }
 
-// //Ajax获取历史消息记录
-// exports.history = function(req,res){
-//     if(!req.user) return res.status(401).send({info:'请先登录或注册'});
-//     var num = req.params['num'];
-//     var limit = 20;
-//     Bookmarks.find({"postUser.userId" : req.user._id,checked:{$in:[3,4]}}).skip(num).limit(limit).exec(function(err,doc){
-//         if(err) console.log(err);
-//         res.status(200).json({historys:doc});
-//     });
-
-// }
-
 function getTags(str){
     if(!str) return [];
     str = str.toString();
@@ -295,7 +283,7 @@ exports.newNews = function(req,res){
     )
 }
 //ajax返回历史消息
-exports.newNews = function(req,res){
+exports.history = function(req,res){
     if(!req.user) return res.status(401).json({info:'请先注册或登录'});
     var limit=1;
     var number = req.query.number||1;
