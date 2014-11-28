@@ -154,17 +154,17 @@ exports.getChannelsTop = function(req,res){
     });
 }
 
-//Ajax获取历史消息记录
-exports.history = function(req,res){
-    if(!req.user) return res.status(401).send({info:'请先登录或注册'});
-    var num = req.params['num'];
-    var limit = 20;
-    Bookmarks.find({"postUser.userId" : req.user._id,checked:{$in:[3,4]}}).skip(num).limit(limit).exec(function(err,doc){
-        if(err) console.log(err);
-        res.status(200).json({historys:doc});
-    });
+// //Ajax获取历史消息记录
+// exports.history = function(req,res){
+//     if(!req.user) return res.status(401).send({info:'请先登录或注册'});
+//     var num = req.params['num'];
+//     var limit = 20;
+//     Bookmarks.find({"postUser.userId" : req.user._id,checked:{$in:[3,4]}}).skip(num).limit(limit).exec(function(err,doc){
+//         if(err) console.log(err);
+//         res.status(200).json({historys:doc});
+//     });
 
-}
+// }
 
 function getTags(str){
     if(!str) return [];
@@ -267,14 +267,58 @@ exports.ajaxBookmarks = function(req,res){
 }
 
 //ajax返回新消息
-exports.newNews = function(res,req){
+exports.newNews = function(req,res){
     if(!req.user) return res.status(401).json({info:'请先注册或登录'});
-    var limit=10;
-    var number = req.body.number||0;
-    Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[1,2]}}).sort({postTime:-1}).skip(number).limit(limit).exec(function(err,list){
-        if (err) {console.log(err);req.json({error:true,news:[]})}
-        req.json({news:list})
-    })
+    var limit=1;
+    var number = req.query.number||1;
+    async.waterfall([
+        function(callback){console.log(req.user._id);
+            Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[1,2]}}).sort({postTime:1}).limit(1)
+            .exec(function(err,doc){console.log(doc+"!!!!");callback(err,doc)});
+        },
+        function(doc,callback){
+            Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[1,2]}}).sort({postTime:-1}).skip((number-1)*limit).limit(limit).exec(function(err,list){
+                if (err) {return console.log(err);}
+                var isHave=true;
+                if(list.length==0) {isHave=false;}
+                else{
+                    if(doc[0]['postTime']+''==list[list.length-1]['postTime']+''){
+                        isHave=false;
+                    }
+                }
+                callback(err,list,isHave);
+            })
+        }],
+        function(err,list,isHave){
+            res.json({news:list,isHave:isHave});
+        }
+    )
 }
-
-//
+//ajax返回历史消息
+exports.newNews = function(req,res){
+    if(!req.user) return res.status(401).json({info:'请先注册或登录'});
+    var limit=1;
+    var number = req.query.number||1;
+    async.waterfall([
+        function(callback){console.log(req.user._id);
+            Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[3,4]}}).sort({postTime:1}).limit(1)
+            .exec(function(err,doc){console.log(doc+"!!!!");callback(err,doc)});
+        },
+        function(doc,callback){
+            Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[3,4]}}).sort({postTime:-1}).skip((number-1)*limit).limit(limit).exec(function(err,list){
+                if (err) {return console.log(err);}
+                var isHave=true;
+                if(list.length==0) {isHave=false;}
+                else{
+                    if(doc[0]['postTime']+''==list[list.length-1]['postTime']+''){
+                        isHave=false;
+                    }
+                }
+                callback(err,list,isHave);
+            })
+        }],
+        function(err,list,isHave){
+            res.json({news:list,isHave:isHave});
+        }
+    )
+}

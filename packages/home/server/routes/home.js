@@ -24,11 +24,14 @@ module.exports = function(Home, app, auth, database) {
     app.route('/api/channels/top/:num')
         .get(home.getChannelsTop);
 
-    //获取历史记录
-    app.route('/api/history/:num')
-        .get(home.history);
+    
     app.route('/api/home/discover')
         .get(home.discover);
     app.route('/api/home/bookmark/')
-        .get(home.ajaxBookmarks)
+        .get(home.ajaxBookmarks);
+    app.route('/api/home/newmes')
+        .get(home.newNews);
+    //获取历史记录
+    app.route('/api/home/hismes')
+        .get(home.history)
 }
