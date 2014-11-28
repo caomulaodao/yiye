@@ -137,14 +137,14 @@ exports.init  =  function(req,res){
         //取出来书签的最后一条的ID和数据库里最后一条ID相等的时候则isHave为false
         else{
             results.nextTime=results.list[results.list.length-1].day;//返回给前端下次请求的书签的时间
-            console.log(results);
             var lastbmId = results.list[results.list.length-1]['_id'];
             if (lastbmId==results.endbookmarkId) {results.isHave=fasle;}
+        }
         Channel2User.update({channelId:channelId,userId:req.user._id},{lastTime:Date.now()},function(err){
             if(err) return console.log(err);
             res.json(results);
         });
-    }}
+    }
     )
 }
 
@@ -217,12 +217,12 @@ exports.hate = function(req,res){
 exports.oneDay = function(req,res){
     var channelId = req.params['channelId'];
     var day = req.body['day'];
-    var limit=1;
-    //如果没有获取到天数，则默认为最接近的一天  需改bug1(增加频道不存在书签的情况)
+    var limit=20;
+    //如果没有获取到天数，则默认为最接近的一天  修改bug1(增加频道不存在书签的情况)
     if(!day){
         async.waterfall([
             function(callback){
-                Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]}}).sort({postTime:-1}).limit(1).exec(function (err, doc) {
+                Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]}}).sort({postTime:-1}).limit(limit).exec(function (err, doc) {
                     if(err) return console.log(err);
                     if(doc.length == 0){
                         var day = null;
@@ -233,8 +233,8 @@ exports.oneDay = function(req,res){
                 });
             },
             function(day,callback){
-                if(!day) return   callback(null,{day:null,nextDay:null});
-                Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]},postTime:{$lt:day}}).sort({postTime:-1}).limit(1).exec(function (err, doc) {
+                if(!day) return callback(null,{day:null,nextDay:null});
+                Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]},postTime:{$lt:day}}).sort({postTime:-1}).limit(limit).exec(function (err, doc) {
                     if(err) return console.log(err);
                     if(doc.length == 0){
                         var nextDay = null;
@@ -245,7 +245,7 @@ exports.oneDay = function(req,res){
                 });
             }
         ],function(err,results){
-            if(!day) return res.json({day:null,nextDay:null,list:[]});
+            if(!results.day) return res.json({day:null,nextDay:null,list:[]});
             var dayResult = {};
             dayResult.day = results.day;
             dayResult.nextDay = results.nextDay;

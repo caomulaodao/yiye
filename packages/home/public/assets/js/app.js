@@ -84,11 +84,12 @@ $(function(){
             var list = new bkListInit;
             var that = this;
             list.fetch({
-                url:'/api/bookmarks/init/'+channelId,
+                url:'/api/bookmarks/init?channelId='+channelId,
                 success:function(model,response){
-                that.$el.html(that.initTemplate(response));
-                that.renderAfter();
-            }})
+                    that.$el.html(that.initTemplate(response));
+                    that.renderAfter();
+                }
+            })
         },
 
         renderAfter : function(){
