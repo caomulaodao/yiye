@@ -31,7 +31,7 @@
                     {% for channel in subChannelList %}
                     <li data-id="{{ ''+channel.channelId }}">
                         <div class="channel-img">
-                            <img src="{{ channel.logo }}">
+                            <img src="http://yiye.qiniudn.com/{{ channel.logo }}">
                         </div>
                         <span class="channel-name">{{ channel.name }}</span>
                         <span class="links-num">{{ channel.news }}</span>
@@ -46,7 +46,7 @@
                     {% for channel in admChannelList %}
                         <li data-id="{{ ''+channel.channelId }}">
                             <div class="channel-img">
-                                <img src="{{ channel.logo }}">
+                                <img src="http://yiye.qiniudn.com/{{ channel.logo }}">
                             </div>
                             <span class="channel-name">{{ channel.name }}</span>
                             <span class="links-num">{{ channel.news }}</span>
@@ -253,7 +253,7 @@
         <div class="content-header">
             <div class="content-channel">
                 <div class="header-channel-img">
-                    <a href="javascript:;"><img src="<%= info.logo %>"></a>
+                    <a href="javascript:;"><img src="http://yiye.qiniudn.com/<%= info.logo %>"></a>
                 </div>
                 <a class="header-channel-name" target="_blank" href="/channel/<%= info._id %>"><%= info.name %></a>
             </div>
@@ -353,7 +353,7 @@
             <% for(var i = 0;i < list.length; i++){ %>
                 <li class="channel-showcase">
                     <div class="channel-logo">
-                        <img src="<%= list[i]['logo'] %>"/>
+                        <img src="http://yiye.qiniudn.com/<%= list[i]['logo'] %>"/>
                     </div>
                     <div class="channel-main">
                         <div class="channel-showcase-head">
