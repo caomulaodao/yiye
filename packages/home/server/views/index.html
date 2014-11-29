@@ -260,11 +260,11 @@
             <div class="header-component">
                 <div class="channel-info-iten">
                     <strong>书签</strong>
-                    <a href="#"><%= info.bmkNum %></a>
+                    <a href="/channel/<%= info._id %>" target="_blank"><%= info.bmkNum %></a>
                 </div>
                 <div class="channel-info-iten">
                     <strong>订阅者</strong>
-                    <a href="#"><%= info.subNum %></a>
+                    <a href="/channel/<%= info._id %>/follower" target="_blank"><%= info.subNum %></a>
                 </div>
             </div>
         </div>
