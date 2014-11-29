@@ -172,7 +172,7 @@ function getTags(str){
 exports.discover = function(req,res){
     if(!req.user) return res.redirect('/');
     //number为请求次数 limit为每次返回的数量
-    var number=req.query.number,limit=1;
+    var number=req.query.number,limit=10;
     async.waterfall([
             function(callback1){
                 Channels.find().sort({subNum:-1,time:-1}).skip((number-1)*limit).limit(limit).exec(function(err,subChannels){
@@ -200,7 +200,7 @@ exports.discover = function(req,res){
                 })
             },
             function(results,doc,callback){
-                Channel2User.find({userId:req.user_id},function(err,channel2user){
+                Channel2User.find({userId:req.user._id},function(err,channel2user){
                     if (err) return console.log(err);
                     var channel2userId=[];
                     channel2user.forEach(function(item){
