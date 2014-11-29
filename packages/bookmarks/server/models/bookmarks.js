@@ -70,7 +70,8 @@ var bookmarksSchema = Schema({
     },
     checkUser:{
         userId:Schema.ObjectId,
-        username:String
+        username:String,
+        avatar:String
     }
 });
 

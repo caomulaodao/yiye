@@ -306,7 +306,7 @@ exports.pass = function(req,res){
     var bookmarkId = req.params['bookmarkId'];
     Channel2User.findOne({channelId:channelId,userId:req.user._id,type:{$in:['creator','admin']}},function(err,doc){
         if(doc){
-            var checkUser = {userId:req.user._id,username:req.user.username};
+            var checkUser = {userId:req.user._id,username:req.user.username,avatar:req.user.avatar};
             Bookmarks.update({_id:bookmarkId},{checked:1,checkUser:checkUser},function(err,doc){
                 if(err) return console.log(err);
                 res.status(200).json({success:true,info:'书签已通过'});
@@ -327,7 +327,7 @@ exports.edit = function(req,res){
     var description = req.body.description;
     Channel2User.findOne({channelId:channelId,userId:req.user._id,type:{$in:['creator','admin']}},function(err,doc){
         if(doc){
-            var checkUser = {userId:req.user._id,username:req.user.username};
+            var checkUser = {userId:req.user._id,username:req.user.username,avatar:req.user.avatar};
             if(title && description){
                 Bookmarks.update({_id:bookmarkId},{checked:1,title:title,description:description,checkUser:checkUser},function(err,doc){
                     if(err) return console.log(err);
@@ -355,7 +355,7 @@ exports.delete = function(req,res){
     var reason = req.body.reason;
     Channel2User.findOne({channelId:channelId,userId:req.user._id,type:{$in:['creator','admin']}},function(err,doc){
         if(doc){
-            var checkUser = {userId:req.user._id,username:req.user.username};
+            var checkUser = {userId:req.user._id,username:req.user.username,avatar:req.user.avatar};
             Bookmarks.update({_id:bookmarkId},{checked:2,deleteInfo:reason,checkUser:checkUser},function(err,doc){
                 if(err) return console.log(err);
                 res.status(200).json({success:true,info:'书签已经被筛除'});
