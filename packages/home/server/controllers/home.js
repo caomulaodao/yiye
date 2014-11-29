@@ -325,7 +325,7 @@ exports.history = function(req,res){
             })
         }],
         function(err,list,isHave){
-            res.json({news:list,isHave:isHave});
+            res.json({hismes:list,isHave:isHave});
         }
     )
 }
