@@ -49,7 +49,9 @@ exports.explore = function(req, res,Package){
             if (err) return console.log(err);
             cb(err,count);
         })
-    }],function(err,count){
+    },
+    //所有热门频道 按关注度排行
+    function(count,callback){
         var pageLength=Math.ceil(count/limit),page=tool.skipPage(p,pageLength);
         var minPage;
         //防止大于翻页上限
@@ -57,8 +59,30 @@ exports.explore = function(req, res,Package){
         else minPage=p;
         //防止超过下限
         if (minPage<1){minPage=1;}
-        Channels.find().sort({subNum:1}).skip(limit*(minPage-1)).limit(limit).exec(function (err, channels) {
+        Channels.find().sort({subNum:-1,bmkNum:-1}).skip(limit*(minPage-1)).limit(limit).exec(function (err, channels) {
             if(err) return console.log(err);
+            callback(err,channels,page);
+        });
+    },
+    //用户关注的频道
+    function(channels,page,callback){
+        if (!req.user) return callback(null,channels,page,[]);
+        Channel2User.find({'userId':req.user._id},function(err,channel2user){
+            if (err) return console.log(err);
+            var channel2userId=[];
+            channel2user.forEach(function(item){
+                channel2userId.push(item.channelId+'');
+            });
+            callback(err,channels,page,channel2userId);
+        })
+    }
+    ],function(err,channels,page,channel2userId){
+        if (err) return console.log(err);
+        channels.forEach(function(item,index,array){
+            if (channel2userId.indexOf(item._id+'')>-1){
+                array[index].isAttention=true;//已经关注
+            }
+        })
             Package.render('explore', {
                 channels:channels,user:req.user,page:page
             }, function(err, html) {
@@ -66,12 +90,10 @@ exports.explore = function(req, res,Package){
                 res.send(html);
             });
         });
-    })
-
 }
+
 //查询处理
 exports.query = function(req,res,Package){
-        console.log(req.query.q+"-----------");
     if(!req.query.q){
         res.redirect('/explore');
     }
@@ -90,25 +112,44 @@ exports.query = function(req,res,Package){
                 if (err) console.log(err);
                 cb(err,count);
             });
-        }
-    ],function(err,count){
-        if (err) console.log(err);
-        var pageLength=Math.ceil(count/limit);
-        var searchPage=req.query.p||1;
-        var minPage;
-        //防止大于翻页上限
-        if(searchPage>pageLength&&pageLength>0) minPage=pageLength;
-        else minPage=searchPage;
-        //防止超过下限
-        if (minPage<1){minPage=1;}
-        Channels.find({name:new RegExp(search,'i')}).sort({subNum:1}).skip(limit*(minPage-1)).limit(limit).exec(function(err,channels){
-            var page=tool.skipPage(minPage,pageLength);
+        },
+        function(count,callback){
+            var pageLength=Math.ceil(count/limit);
+            var searchPage=req.query.p||1;
+            var minPage;
+            //防止大于翻页上限
+            if(searchPage>pageLength&&pageLength>0) minPage=pageLength;
+            else minPage=searchPage;
+            //防止超过下限
+            if (minPage<1){minPage=1;}
+            Channels.find({name:new RegExp(search,'i')}).sort({subNum:1}).skip(limit*(minPage-1)).limit(limit).exec(function(err,channels){
+                var page=tool.skipPage(minPage,pageLength);
+                if (err) return console.log(err);
+                callback(err,page,channels);
+            });
+        },
+        function(page,channels,callback){
+            if (!req.user) return callback(null,channels,page,[]);
+            Channel2User.find({'userId':req.user._id},function(err,channel2user){
+                if (err) return console.log(err);
+                var channel2userId=[];
+                channel2user.forEach(function(item){
+                    channel2userId.push(item.channelId+'');
+                });
+                callback(err,page,channels,channel2userId);
+            })
+        }],
+        function(err,page,channels,channel2userId){
             if (err) return console.log(err);
-            Package.render('query',{channels:channels,query:search,page:page,user:req.user},function(err,html){
-                if (err) console.log(err);
-                res.send(html);
-            });       
-        })
+            channels.forEach(function(item,index,array){
+                if (channel2userId.indexOf(item._id+'')>-1){
+                    array[index].isAttention=true;//已经关注
+                }
+            });
+        Package.render('query',{channels:channels,query:search,page:page,user:req.user},function(err,html){
+            if (err) console.log(err);
+            res.send(html);
+        });       
     })
 };
 

@@ -288,7 +288,7 @@ exports.history = function(req,res){
     var limit=1;
     var number = req.query.number||1;
     async.waterfall([
-        function(callback){console.log(req.user._id);
+        function(callback){
             Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[3,4]}}).sort({postTime:1}).limit(1)
             .exec(function(err,doc){console.log(doc+"!!!!");callback(err,doc)});
         },
