@@ -79,7 +79,7 @@
                         <div class="channel-main">
                             <div class="channel-showcase-head">
                                 <a href="#">{{ channel.name }}</a>
-                                <span><a href="#">+关注</a></span>
+                                <span><a href="#">{% if channel.isAttention %}已关注{% else %}+关注{% endif %}</a></span>
                             </div>
                             <p class="channel-showcase-description">{{ channel.description }}</p>
                             <div class="channel-showcase-footer">

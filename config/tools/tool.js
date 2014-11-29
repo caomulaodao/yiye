@@ -7,7 +7,7 @@ function skipPage(searchPage,listLength){
     var show=[],i;
     var number=0;//计数
     //快到底页了
-    if(searchPage+2>listLength){console.log('!!'+searchPage+listLength);
+    if(searchPage+2>listLength){
         for(i=listLength,number=0;i>0;i--,number++){
             show.push(i);
             if(number==4) break;

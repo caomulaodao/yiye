@@ -92,7 +92,7 @@ exports.renderCreate = function(req,res,Package){
                     var channel2userId=[];
                     channel2user.forEach(function(item){
                         channel2userId.push(item.channelId+'');
-                    });console.log(channel2userId);console.log(channel2userId);
+                    });
                     callback(null,user,pageLength,doc,channel2userId);
                 })
             }
@@ -117,7 +117,7 @@ exports.renderCreate = function(req,res,Package){
 }
 
 //展示用户关注的频道
-exports.renderWatch = function(req,res,Package){
+ exports.renderWatch = function(req,res,Package){
     var userId = req.params['userId'];
     var p=req.query.p||1;
     var limit=1;//每页显示的数量
@@ -127,7 +127,7 @@ exports.renderWatch = function(req,res,Package){
             callback(null,user);
         });},
         function(user,callback){
-        Channel2User.count({'userId':req.user._id},function(err,count){
+        Channel2User.count({'userId':userId,type:{$in:['follower','admin']}},function(err,count){
             if(err) return console.log(err);
             var pageLength=Math.ceil(count/limit);
             callback(err,user,pageLength);
@@ -139,14 +139,45 @@ exports.renderWatch = function(req,res,Package){
             else minPage=p;
             //防止超过下限
             if (minPage<1){minPage=1;}
-        Channel2User.find({"userId":req.user._id}).sort({lastTime:-1}).skip(limit*(minPage-1)).limit(limit).exec(function (err, doc) {
-            if(err) console.log(err);
-            if(doc.length === 0) return callback(null,user,pageLength,[]);
-            callback(null,user,pageLength,doc);
-        });}
+            //对应用户找到频道
+            Channel2User.find({"userId":userId,type:{$in:['follower','admin']}}).sort({lastTime:-1}).skip(limit*(minPage-1)).limit(limit).exec(function (err, doc) {
+                if(err) console.log(err);
+                if(doc.length === 0) return callback(null,user,pageLength,[]);
+                var docIdArry=[];
+                doc.forEach(function(item){
+                    docIdArry.push(item.channelId+'');
+                })
+                callback(null,user,pageLength,docIdArry);
+            });},
+            //找到channels中详细信息
+        function(user,pageLength,docIdArry,callback){
+            Channels.find({'_id':{$in:docIdArry}},function(err,channels){
+                if (err) return console.log(err);
+                callback(err,user,pageLength,channels);
+            })
+        },
+        //观察者所关注的频道
+        function(user,pageLength,channels,callback){
+            if (!req.user) return callback(null,user,pageLength,channels,[]);
+            Channel2User.find({'userId':req.user._id},function(err,channel2user){
+                if (err) return console.log(err);
+                var channel2userId=[];
+                channel2user.forEach(function(item){
+                    channel2userId.push(item.channelId+'');
+                });
+                callback(err,user,pageLength,channels,channel2userId);
+            })
+        }
         ],
-        function(err,user,pageLength,channels){
-            var page=tool.skipPage(p,pageLength);console.log(channels);
+        function(err,user,pageLength,channels,channel2userId){
+            if (err) return console.log(err);
+            var  channels = JSON.parse(JSON.stringify(channels)); 
+            channels.forEach(function(item,index,array){               
+                if (channel2userId.indexOf(item._id+'')>-1){
+                    array[index].isAttention=true;//已经关注
+                }
+            });
+            var page=tool.skipPage(p,pageLength);
             Package.render('watch', {
                 user:user,
                 list:channels,
@@ -157,42 +188,6 @@ exports.renderWatch = function(req,res,Package){
             });
     })
 
-
-
-    // var userId = req.params['userId'];
-    // var limit=10;
-    // async.parallel({
-    //         user:function (callback) {
-    //             User.findOne({_id:userId}, function (err, user) {
-    //                 callback(null,user);
-    //             });
-    //         },
-    //         list:function(callback){
-    //             Channel2User.find({userId:userId},{ _id: 0, channelId: 1 },function(err,doc){
-    //                 if(err) console.log(err);
-    //                 var channelIds = []
-    //                 doc.forEach(function(item){
-    //                     channelIds.push(item.channelId);
-    //                 });
-    //                 Channels.find({_id:{$in:channelIds}}).sort({time:-1}).limit(limit).exec(function (err, doc) {
-    //                     if(err) console.log(err);
-    //                     if(doc.length === 0) return callback(null,[]);
-    //                     callback(null,doc);
-    //                 });
-    //             });
-    //         }
-    //     },
-    //     function(err,results){
-    //         var user = results.user;
-    //         var list = results.list;
-    //         Package.render('watch', {
-    //             user:user,
-    //             list:list
-    //         }, function(err, html) {
-    //             if(err) console.log(err);
-    //             res.send(html);
-    //         });
-    //     });
 }
 
 
