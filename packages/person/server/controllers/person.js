@@ -68,7 +68,7 @@ exports.renderCreate = function(req,res,Package){
             callback(null,user);
         });},
         function(user,callback){
-        Channels.count({'creator.userId':req.user._id},function(err,count){
+        Channels.count({'creator.userId':userId},function(err,count){
             if(err) return console.log(err);
             var pageLength=Math.ceil(count/limit);
             callback(err,user,pageLength);
@@ -80,7 +80,7 @@ exports.renderCreate = function(req,res,Package){
             else minPage=p;
             //防止超过下限
             if (minPage<1){minPage=1;}
-            Channels.find({"creator.userId":req.user._id}).sort({postTime:-1}).skip(limit*(minPage-1)).limit(limit).exec(function (err, doc) {
+            Channels.find({"creator.userId":userId}).sort({postTime:-1}).skip(limit*(minPage-1)).limit(limit).exec(function (err, doc) {
                 if(err) console.log(err);
                 if(doc.length === 0) return callback(null,user,pageLength,[]);
                 callback(null,user,pageLength,doc);
@@ -92,14 +92,14 @@ exports.renderCreate = function(req,res,Package){
                     var channel2userId=[];
                     channel2user.forEach(function(item){
                         channel2userId.push(item.channelId+'');
-                    });
-                    callback(null,pageLength,doc,channel2userId);
+                    });console.log(channel2userId);console.log(channel2userId);
+                    callback(null,user,pageLength,doc,channel2userId);
                 })
             }
         ],
         function(err,user,pageLength,channels,channel2userId){
-            channels.forEach(function(item,index,array){
-                array[index].isAttention=false;
+            var  channels = JSON.parse(JSON.stringify(channels)); 
+            channels.forEach(function(item,index,array){               
                 if (channel2userId.indexOf(item._id+'')>-1){
                     array[index].isAttention=true;//已经关注
                 }
