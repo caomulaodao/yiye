@@ -40,7 +40,6 @@ $(function(){
 
     });
 
-
     //bookmarkList bookmodel
     var bkListInit = Backbone.Model.extend({
         //url:"/api/bookmarks/list"
@@ -51,15 +50,26 @@ $(function(){
         defaults: {number: 1}    //Ajax加载次数
     });
 
+    //新消息model
+    var newMessage = Backbone.Model.extend({
+        defaults: {number: 1}    //Ajax加载次数
+    });
+
+    //历史消息model
+    var hisMessage = Backbone.Model.extend({
+        defaults: {number: 1}    //Ajax加载次数
+    });
+
+    var channelList = Backbone.Model.extend({
+        defaults: {number: 1}    //Ajax加载次数
+    });
+
     //home页频道书签加载
     var newBookmarkModel = Backbone.Model.extend({
 
     });
 
-    //历史记录视图
-    var historyModel = Backbone.Model.extend({
 
-    });
 
     //书签列表视图
     var listView = Backbone.View.extend({
@@ -94,35 +104,38 @@ $(function(){
 
         renderAfter : function(){
             var that = this;
-            that.scrollAjax.bScroll = true; //许可Ajax加载
+            that.linksList = new channelList;
+            that.channelAjax.bScroll = true; //许可Ajax加载
             $(".content-page-content").scroll(function(){
-                that.scrollAjax();
+                that.channelAjax();
             });
         },
 
-        //Ajax加载频道内容
-        scrollAjax: function(){
+        channelAjax: function() {
             var that = this;
             var nClientH = $(window).height();
-            var nScrollTop = $('.content-page-content').scrollTop();
-            var nListH = $('.content-body').height();
-            if((nClientH + nScrollTop - 80 >= nListH) && (that.scrollAjax.bScroll == true)) {
-                that.scrollAjax.bScroll = false;   //禁止Ajax加载
-                var bookmarkList = new newBookmarkModel;
-                console.log(123);
-                /*bookmarkList.fetch({
-                    url: "api/home/discover",
+            var nScrollTop = $('.content-body').scrollTop();
+            var nChannelH = $('.content-body').height();
+            if((nClientH + nScrollTop - 80 >= nChannelH) && (that.channelAjax.bScroll == true)) {
+                that.channelAjax.bScroll = false;   //禁止Ajax加载
+                var nNum = that.linksList.get('number');
+                that.linksList.fetch({
+                    data: {number: nNum},
+    //bug                url: "/api/home/discover",
                     success: function(model, response){
-                        $('#channel-explore ul').append(that.addTemplate(response));
-                        that.scrollAjax.bScroll = true;     //许可Ajax加载
-                    },
-                    error: function() {
-                        console.log('scrollAjaxError');
-                        that.scrollAjax.bScroll = true;     //许可Ajax加载
+                        $('.content-body').append(that.channelTemplate(response));
+                        if(!response.isHave){
+                            $('.content-body').append("<p class='no-news'>无新内容了</p>");
+                        } else {
+                            that.linksList.set("number",++nNum);
+                            that.exploreAjax.bScroll = true;     //许可Ajax加载
+                        }
                     }
-                });*/
+                });
             }
         },
+
+        channelTemplate: _.template($('#tp-bookmarks-oneday').html()),
 
         bkUp: function(event){
             if(this.lock.bkUp) return false;
@@ -239,34 +252,40 @@ $(function(){
         layer: $('#home-popup-layer'),
 
         lock: {
-            info:false,
-            password:false,
-            viewed:false
+            info: false,
+            password: false,
+            viewed: false
         },
 
         layerShadow: $('.shadow'),
 
         //向主视图绑定事件
         events: {
-            'click #user-info-button' : "upUserInfo",
-            'click #password-change-button' : "changePassword",
-            'click .sure' : "viewed",
-            'click #history-tab' : "history"
+            'click #user-info-button': "upUserInfo",
+            'click #password-change-button': "changePassword",
+            'click .sure': "viewed",
+            'click #news-tab': 'newMessage',
+            'click #history-tab': "history"
         },
 
-        initialize: function() {
+        initialize: function () {
         },
 
-        render: function(){
+        render: function () {
             return this;
         },
 
-        renderAfter: function(){
+        newMesTemplate: _.template($('#tp-user-news').html()),
+
+        historyTemplate: _.template($('#tp-user-history').html()),
+
+
+        renderAfter: function () {
             //频道logo上传
             var that = this;
             var cgChLogoUploader = Qiniu.uploader({
                 runtimes: 'html5,flash,html4',
-                browse_button : 'change-user-logo',
+                browse_button: 'change-user-logo',
                 max_file_size: '2mb',
                 flash_swf_url: '/bower_components/js/plupload/Moxie.swf',
                 dragdrop: true,
@@ -275,46 +294,45 @@ $(function(){
                 domain: "http://yiye.qiniudn.com/",
                 auto_start: true,
                 init: {
-                    'Key': function(up,file,info){
-                        return  "avatar/"+(md5(Math.floor(Math.random()*10000))).slice(0,16)+(md5(file.name+Date.now())).slice(0,16)+".png";
+                    'Key': function (up, file, info) {
+                        return  "avatar/" + (md5(Math.floor(Math.random() * 10000))).slice(0, 16) + (md5(file.name + Date.now())).slice(0, 16) + ".png";
                     },
-                    'FilesAdded': function(){
+                    'FilesAdded': function () {
                         $('#user-info-logo').addClass('upLoading');
                     },
-                    'FileUploaded': function(up, file, info) {
-                        var info  = JSON.parse(info);
+                    'FileUploaded': function (up, file, info) {
+                        var info = JSON.parse(info);
                         var logo = info.key;
-                        $('#user-change-logo').attr('src',cdnUrl+logo);
+                        $('#user-change-logo').attr('src', cdnUrl + logo);
                         $('#user-info-logo').removeClass('upLoading');
                     },
-                    'Error': function(up, err, errTip) {
+                    'Error': function (up, err, errTip) {
                         console.log(err);
                     }
                 }
             });
-
         },
 
 
-        upUserInfo: function(){
+        upUserInfo: function () {
             var user = {};
             user.avatar = $('#user-change-logo').attr('src').split(".com/")[1];
             user.intro = $('#user-info-intro>textarea').val();
             var that = this;
-            if(!that.lock.info){
+            if (!that.lock.info) {
                 that.lock.info = true;
                 $.ajax({
                     url: '/api/account/update',
-                    type:'post',
-                    data:user,
+                    type: 'post',
+                    data: user,
                     statusCode: {
-                        401: function() {
+                        401: function () {
                             //结果提示
                             popup("个人信息更新失败");
 
-                            that.lock.info  = false;
+                            that.lock.info = false;
                         },
-                        200: function(){
+                        200: function () {
                             //结果提示
                             popup("个人信息更新成功");
 
@@ -325,38 +343,38 @@ $(function(){
             }
         },
 
-        changePassword:function(){
-            if(!$('#user-current-password').val()){
+        changePassword: function () {
+            if (!$('#user-current-password').val()) {
                 return $('#User-Change-Error').text('请先填写当前密码').show();
             }
-            if(!$('#user-new-password').val()){
+            if (!$('#user-new-password').val()) {
                 return $('#User-Change-Error').text('请填写新密码').show();
             }
-            if(!$('#user-repeat-password').val()){
+            if (!$('#user-repeat-password').val()) {
                 return $('#User-Change-Error').text('请填写确认密码密码').show();
             }
-            if($('#user-repeat-password').val() !== $('#user-new-password').val()){
+            if ($('#user-repeat-password').val() !== $('#user-new-password').val()) {
                 return $('#User-Change-Error').text('新的密码与确认密码不同').show();
             }
-            var password =  {};
+            var password = {};
             password.new = $('#user-new-password').val();
             password.old = $('#user-current-password').val();
             var that = this;
-            if(!that.lock.password){
+            if (!that.lock.password) {
                 that.lock.password = true;
                 $.ajax({
                     url: '/api/account/changePassword',
-                    type:'post',
-                    data:password,
+                    type: 'post',
+                    data: password,
                     statusCode: {
-                        401: function(jq) {
+                        401: function (jq) {
                             //结果提示
                             console.log(jq);
                             $('#User-Change-Error').text(jq.responseJSON.info).show();
 
-                            that.lock.password  = false;
+                            that.lock.password = false;
                         },
-                        200: function(){
+                        200: function () {
                             //结果提示
                             popup("密码修改成功");
 
@@ -368,26 +386,26 @@ $(function(){
 
         },
 
-        viewed:function(event){
+        viewed: function (event) {
             var bookmarkId = $(event.target).data('bookmarkid');
             var index = $(event.target).data('index');
             var that = this;
-            if(!that.lock.viewed){
+            if (!that.lock.viewed) {
                 that.lock.viewed = true;
                 $.ajax({
                     url: '/api/news/viewed',
-                    type:'post',
-                    data:{bookmarkId:bookmarkId},
+                    type: 'post',
+                    data: {bookmarkId: bookmarkId},
                     statusCode: {
-                        200: function(){
+                        200: function () {
                             //结果提示
                             var num = $("#news-tab").data('num') - 1;
-                            $('#news-'+index).remove();
-                            if(num>0){
-                                $("#news-tab").data('num',num)
-                                $("#news-tab").text("新消息("+num+")");
+                            $('#news-' + index).remove();
+                            if (num > 0) {
+                                $("#news-tab").data('num', num)
+                                $("#news-tab").text("新消息(" + num + ")");
                                 $("#news-popup-num").text(num);
-                            }else{
+                            } else {
                                 $("#news-tab").text("新消息");
                                 $("#news-popup-num").remove();
                             }
@@ -396,20 +414,97 @@ $(function(){
                     }
                 });
             }
+        },
+
+        newMessage: function () {
+            var that = this;
+            that.newMes = new newMessage;
+            that.newMes.fetch({
+                url: 'api/home/newmes',
+                data: {'number': 1},
+                success: function (model, response) {
+                    $('#news').html(that.newMesTemplate(response));
+                    that.newMes.set('number', 2);
+                }
+            });
+
+            that.newMesAjax.bScroll = true; //许可Ajax加载
+            $('#news-tab').scroll(function () {
+                that.newMesAjax();
+            });
+        },
+
+        history: function () {
+            var history = new hisMessage;
+
+            history.fetch({url: '/api/home/hismes',
+                success: function (model, response) {
+                    $('#history').html(that.historyTemplate(response));
+                }
+            });
+
+            that.hisMesAjax.bSroll = true;
+            $('#history-tab').scroll(function () {
+                that.hisMesAjax();
+            });
 
         },
 
-        history:function(){
-            var history = new historyModel;
-            var historyTemplate =  _.template($('#tp-user-history').html());
+        newMesAjax: function () {
+            var that = this;
+            var nClientH = $(window).height();
+            var nScrollTop = $('#news-tab').scrollTop();
+            var nChannelH = $('#news-tab li').height();
+            if ((nClientH + nScrollTop - 8 >= nChannelH) && (that.newMesAjax.bScroll == true)) {
+                that.newMesAjax.bScroll = false;   //禁止Ajax加载
+                var nNum = that.newMes.get("number");
+                that.newMes.fetch({
+                    data: {number: nNum},
+                    url: "/api/home/newmes",
+                    success: function (model, response) {
+                        $('#news').append(that.newMesTemplate(response));
+                        if (!response.isHave) {
+                            $('#news').append("<p class='no-news'>无新内容了</p>");
+                        } else {
+                            that.newMes.set("number", ++nNum);
+                            that.newMesAjax.bScroll = true;     //许可Ajax加载
+                        }
+                    },
+                    error: function () {
+                        console.log('newMesAjaxError');
+                        that.newMesAjax.bScroll = true;     //许可Ajax加载
+                    }
+                });
+            }
+        },
 
-            history.fetch({url:'/api/history/0',success:function(model,response){
-                $('#history').html(historyTemplate(response));
-            }});
-
+        hisMesAjax: function () {
+            var that = this;
+            var nClientH = $(window).height();
+            var nScrollTop = $('#history-tab').scrollTop();
+            var nChannelH = $('#history').height();
+            if ((nClientH + nScrollTop - 8 >= nChannelH) && (that.hisMesAjax.bScroll == true)) {
+                that.hisMesAjax.bScroll = false;   //禁止Ajax加载
+                var nNum = that.history.get('number');
+                that.history.fetch({
+                    data: {number: nNum},
+                    url: "/api/home/hismes",
+                    success: function (model, response) {
+                        $('#history-tab').append(that.historyTemplate(response));
+                        if (!response.isHave) {
+                            $('#history-tab').append("<p class='no-news'>无新内容了</p>");
+                        } else {
+                            that.history.set("number", ++nNum);
+                            that.hisMesAjax.bScroll = true;     //许可Ajax加载
+                        }
+                    },
+                    error: function () {
+                        console.log('hisMesAjaxError');
+                        that.hisMesAjax.bScroll = true;     //许可Ajax加载
+                    }
+                });
+            }
         }
-
-
     });
 
     //用户发现页面
@@ -429,48 +524,47 @@ $(function(){
         },
 
         render: function(){
-            var channels = new channelShowcase();
             var that = this;
-            channels.fetch({url:'/api/home/discover',success:function(model,response){
+            that.cList = new channelShowcase;
+            that.cList.fetch({url:'/api/home/discover',success:function(model,response){
                 that.$el.html(that.initTemplate(response));
-                channels.defaults.number++;
+                that.cList.set("number", 2);
                 that.renderAfter();
             }})
         },
 
         renderAfter: function(){
             var that = this;
-            that.scrollAjax.bScroll = true; //许可Ajax加载
+            that.exploreAjax.bScroll = true; //许可Ajax加载
             $("#channel-explore").scroll(function(){
-                that.scrollAjax();
+                that.exploreAjax();
             });
         },
 
         //Ajax加载频道内容
-        scrollAjax: function() {
+        exploreAjax: function() {
             var that = this;
             var nClientH = $(window).height();
             var nScrollTop = $('#channel-explore').scrollTop();
             var nChannelH = $('#channel-explore ul').height();
-            if((nClientH + nScrollTop - 80 >= nChannelH) && (that.scrollAjax.bScroll == true)) {
-                that.scrollAjax.bScroll = false;   //禁止Ajax加载
-                var cList = new channelShowcase;
-                var nNum = cList.defaults.number;
-                cList.fetch({
+            if((nClientH + nScrollTop - 80 >= nChannelH) && (that.exploreAjax.bScroll == true)) {
+                that.exploreAjax.bScroll = false;   //禁止Ajax加载
+                var nNum = that.cList.get('number');
+                that.cList.fetch({
                     data: {number: nNum},
                     url: "/api/home/discover",
                     success: function(model, response){
                         $('#channel-explore ul').append(that.addTemplate(response));
                         if(!response.isHave){
                             $('#channel-explore ul').append("<p class='no-news'>无新内容了</p>");
-                        }else{
-                            cList.defaults.number++;
-                            that.scrollAjax.bScroll = true;     //许可Ajax加载
+                        } else {
+                            that.cList.set("number",++nNum);
+                            that.exploreAjax.bScroll = true;     //许可Ajax加载
                         }
                     },
                     error: function() {
-                        console.log('scrollAjaxError');
-                        that.scrollAjax.bScroll = true;     //许可Ajax加载
+                        console.log('exploreAjaxError');
+                        that.exploreAjax.bScroll = true;     //许可Ajax加载
                     }
                 });
             }
@@ -524,6 +618,8 @@ $(function(){
             var channelId = $(event.currentTarget).data('id');
             var list = new listView;
             list.render(channelId);
+
+
         },
 
         //展示发现页面

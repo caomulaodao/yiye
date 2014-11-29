@@ -276,7 +276,7 @@ exports.ajaxBookmarks = function(req,res){
 //ajax返回新消息
 exports.newNews = function(req,res){
     if(!req.user) return res.status(401).json({info:'请先注册或登录'});
-    var limit=1;
+    var limit=2;
     var number = req.query.number||1;
     async.waterfall([
         function(callback){console.log(req.user._id);
