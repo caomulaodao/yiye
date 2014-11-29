@@ -24,7 +24,7 @@
                 <ul id="channel-menu">
                     <li id="links-btn"><a href="/channel/{{ ''+channel._id }}" >书签</a></li>
                     <li id="members-btn"><a href="/channel/{{ ''+channel._id }}/follower" >关注者</a></li>
-                    {% if channel.userType == 'follower' %} <li id="cancel-sub"><a href="#">取消订阅</a></li>  {% endif %}
+                    {% if channel.userType == 'follower' %} <li id="cancel-sub"><a href="/channel/{{''+channel._id}}/nowatch">取消订阅</a></li>  {% endif %}
                 </ul>
             </div>
         </div>

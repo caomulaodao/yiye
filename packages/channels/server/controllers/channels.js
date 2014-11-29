@@ -94,23 +94,30 @@ exports.renderMain = function(req,res,Package){
 exports.sub = function(req,res){
     var channelId = req.params['channelId'];
     if(!req.user) return res.send({err:true,info:'请先登陆或注册'});
-    Channel2User.findOne({channelId:channelId},function(err,doc){
+    Channel2User.findOne({channelId:channelId,userId:req.user._id},function(err,doc){
         if(err) return console.log(err);
-        if(doc.userId == req.user._id) return  res.send({err:true,info:'你已经订阅或是创建该频道'});
-        var follower = Channel2User({
-            channelId : channelId,
-            userId : req.user._id,
-            type : 'follower',
-            name : doc.name,
-            logo : doc.logo
-        });
-        follower.save(function(err){
-            if(err) return console.log(err);
-            Channels.update({_id:channelId},{$inc:{subNum:1}},{},function(err,doc){
-                if(err) console.log(err);
-                res.send({success:true,info:'订阅成功'});
+        if(doc) return  res.send({err:true,info:'你已经订阅或是创建该频道'});
+
+        //查询频道信息
+        Channels.findOne({_id:channelId},function(err,doc){
+            var follower = Channel2User({
+                channelId : channelId,
+                userId : req.user._id,
+                type : 'follower',
+                name : doc.name,
+                logo : doc.logo
             });
+            follower.save(function(err){
+                if(err) return console.log(err);
+                //更新频道订阅数
+                Channels.update({_id:channelId},{$inc:{subNum:1}},{},function(err,num){
+                    if(err) console.log(err);
+                    res.send({success:true,info:'订阅成功'});
+                });
+            });
+
         });
+
     });
 };
 
@@ -371,6 +378,22 @@ exports.update = function(req,res){
 
 }
 
+//取消订阅某个频道
+exports.noWatch = function(req,res){
+    var channelId = req.params['channelId'];
+    if(!req.user) return res.redirect('/');
+    Channel2User.remove({channelId:channelId,userId:req.user._id},function(err,num){
+        if(err) return console.log(err);
+        if(num>0){
+            Channels.update({_id:channelId},{$inc:{subNum:-1}},{},function(err,doc){
+                if(err) console.log(err);
+                res.redirect('/channel/'+channelId);
+            });
+        }else{
+            res.redirect('/channel/'+channelId);
+        }
+    });
+}
 
 //将一个bookmarks列表格式化为按时间集合排序的数组。
 function listToArray(list){

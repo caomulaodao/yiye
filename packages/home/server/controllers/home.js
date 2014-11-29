@@ -58,9 +58,9 @@ exports.initHome = function(req,res,Home){
                 });
             },
             news: function(callback){
-                Bookmarks.find({"postUser.userId" : req.user._id,checked:{$in:[1,2]}},function(err,doc){
+                Bookmarks.count({"postUser.userId" : req.user._id,checked:{$in:[1,2]}},function(err,news){
                     if(err) console.log(err);
-                    callback(null,doc);
+                    callback(null,news);
                 });
             }
         },

@@ -193,8 +193,6 @@ exports.hate = function(req,res){
     var bookmarkId = req.params['bookmarkId'];
     BookmarkLike.remove({bookmarkId:bookmarkId,userId:req.user._id},function(err,doc){
         if(err) return console.log(err);
-        console.log('-------------');
-        console.log(doc);
         if(doc > 0){
             Bookmarks.update({_id:bookmarkId},{$inc:{likeNum:-1}},function(err,doc){
                 if(err) console.log(err);

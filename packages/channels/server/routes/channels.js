@@ -22,7 +22,8 @@ module.exports = function(Channels, app, auth, database) {
 
     //更新频道信息
     app.post('/channel/:channelId/update',channels.update);
-    //
-    // app.get('/channel/discover',)
+
+    //取消订阅某个频道
+    app.get('/channel/:channelId/nowatch',channels.noWatch);
 
 };

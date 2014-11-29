@@ -14,7 +14,7 @@
         <div class="control-header" >
             <a class="avatar" id="user-center">
                 <img src="http://yiye.qiniudn.com{{ user.avatar }}">
-                {% if news.length > 0 %} <div class="red-point" id="news-popup-num">{{ news.length }}</div> {% endif %}
+                {% if news > 0 %} <div class="red-point" id="news-popup-num">{{ news }}</div> {% endif %}
             </a>
             <img src="/home/assets/img/brand_name_green.png" onclick="window.open('/')">
             <span class="glyphicon glyphicon-th-large" id="explore"></span>
@@ -295,7 +295,7 @@
                                     </div>
                                     <div class="footer-part">
                                         <span class="submit-time">提交于:<%= moment(''+list[i]['dList'][j]['postTime']).format('H:mm:ss') %></span>
-                                        <span>by <a href="#" data-userId="<%= list[i]['dList'][j]['postUser']['userId']%>"><%= list[i]['dList'][j]['postUser']['username'] %></a></a></span>
+                                        <span>by <a href="/u/<%= list[i]['dList'][j]['postUser']['userId']%>" data-userId="<%= list[i]['dList'][j]['postUser']['userId']%>"><%= list[i]['dList'][j]['postUser']['username'] %></a></a></span>
                                         <!-- <span><i class="glyphicon glyphicon-star"></i><a class="collect" href="#">收藏</a></span>  -->
                                     </div>
                                 </div>
