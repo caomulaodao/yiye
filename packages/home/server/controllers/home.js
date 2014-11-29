@@ -233,7 +233,7 @@ exports.discover = function(req,res){
 //ajax加载加载bookmarks
 exports.ajaxBookmarks = function(req,res){
     if(!req.user) return res.status(401).json({info:'请先注册或登录'});
-    var date=req.get.date,limit=20;//date为前端当前展示的时间      
+    var date=req.get.date, limit = 2;//date为前端当前展示的时间
     var channelId = req.get['channelId'];
     async.parallel({
         list: function(callback){

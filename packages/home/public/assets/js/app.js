@@ -61,7 +61,6 @@ $(function(){
     });
 
     var channelList = Backbone.Model.extend({
-        defaults: {number: 1}    //Ajax加载次数
     });
 
     //home页频道书签加载
@@ -91,20 +90,22 @@ $(function(){
         },
 
         render: function(channelId){
-            var list = new bkListInit;
             var that = this;
-            list.fetch({
+            that.list = new bkListInit;
+            that.list.fetch({
                 url:'/api/bookmarks/init?channelId='+channelId,
                 success:function(model,response){
                     that.$el.html(that.initTemplate(response));
+                    that.list.date = response.nextTime;
+                    that.list.channelId =  response.info._id;
                     that.renderAfter();
+
                 }
             })
         },
 
         renderAfter : function(){
             var that = this;
-            that.linksList = new channelList;
             that.channelAjax.bScroll = true; //许可Ajax加载
             $(".content-page-content").scroll(function(){
                 that.channelAjax();
@@ -114,21 +115,23 @@ $(function(){
         channelAjax: function() {
             var that = this;
             var nClientH = $(window).height();
-            var nScrollTop = $('.content-body').scrollTop();
+            var nScrollTop = $('.content-page-content').scrollTop();
             var nChannelH = $('.content-body').height();
-            if((nClientH + nScrollTop - 80 >= nChannelH) && (that.channelAjax.bScroll == true)) {
+            if((nClientH + nScrollTop + 100 >= nChannelH) && (that.channelAjax.bScroll == true)) {
                 that.channelAjax.bScroll = false;   //禁止Ajax加载
-                var nNum = that.linksList.get('number');
-                that.linksList.fetch({
-                    data: {number: nNum},
-    //bug                url: "/api/home/discover",
+                var sDate = that.list.date;
+                var sChannelId = that.list.channelId;
+                that.list.fetch({
+                    data: {date: sDate, channelId: sChannelId},
+                    url: "/api/home/bookmark",
                     success: function(model, response){
-                        $('.content-body').append(that.channelTemplate(response));
+                        var nextDate = response.info.nextTime;   //将下次日期赋值给nextDate变量
+                        $('.content-body>ul').append(that.channelTemplate(response));
                         if(!response.isHave){
-                            $('.content-body').append("<p class='no-news'>无新内容了</p>");
+                            $('.content-body>ul').append("<p class='no-news'>无新内容了</p>");
                         } else {
-                            that.linksList.set("number",++nNum);
-                            that.exploreAjax.bScroll = true;     //许可Ajax加载
+                            that.list.set("date", nextDate);     //记录下次Ajax日期
+                            that.channelAjax.bScroll = true;     //许可Ajax加载
                         }
                     }
                 });
@@ -610,8 +613,6 @@ $(function(){
             var channelId = $(event.currentTarget).data('id');
             var list = new listView;
             list.render(channelId);
-
-
         },
 
         //展示发现页面
