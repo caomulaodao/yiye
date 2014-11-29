@@ -211,17 +211,21 @@ exports.discover = function(req,res){
             }],
             function(err, results,doc,channel2userId) {
                 var isHave=true;
+                var  results = JSON.parse(JSON.stringify(results));
                 results.forEach(function(item,index,array){
                     if (channel2userId.indexOf(item._id+'')>-1){
-                        array[index].isAttention=true;//已经关注
+                        results[index]['isAttention'] = true;//已经关注
+                        console.log(results[index]["isAttention"]);
+
                     }
                 });
+                console.log(results);
                 if(results.length==0) {isHave=false;}
                 else{
                     if (results[0]['time']+''==doc['time']+''){
                         isHave=false;
                     }
-                }
+                }//console.log(results);
                 res.json({list:results,isHave:isHave});
             });
 }

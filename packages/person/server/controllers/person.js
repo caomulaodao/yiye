@@ -80,14 +80,31 @@ exports.renderCreate = function(req,res,Package){
             else minPage=p;
             //防止超过下限
             if (minPage<1){minPage=1;}
-        Channels.find({"creator.userId":req.user._id}).sort({postTime:-1}).skip(limit*(minPage-1)).limit(limit).exec(function (err, doc) {
-            if(err) console.log(err);
-            if(doc.length === 0) return callback(null,user,pageLength,[]);
-            callback(null,user,pageLength,doc);
-        });}
+            Channels.find({"creator.userId":req.user._id}).sort({postTime:-1}).skip(limit*(minPage-1)).limit(limit).exec(function (err, doc) {
+                if(err) console.log(err);
+                if(doc.length === 0) return callback(null,user,pageLength,[]);
+                callback(null,user,pageLength,doc);
+            });},
+            function(user,pageLength,doc,callback){
+                if (!req.user) return callback(null,user,pageLength,doc,[]);
+                Channel2User.find({'userId':req.user._id},function(err,channel2user){
+                    if (err) return console.log(err);
+                    var channel2userId=[];
+                    channel2user.forEach(function(item){
+                        channel2userId.push(item.channelId+'');
+                    });
+                    callback(null,pageLength,doc,channel2userId);
+                })
+            }
         ],
-        function(err,user,pageLength,channels){
-            var page=tool.skipPage(p,pageLength);console.log(channels);
+        function(err,user,pageLength,channels,channel2userId){
+            channels.forEach(function(item,index,array){
+                array[index].isAttention=false;
+                if (channel2userId.indexOf(item._id+'')>-1){
+                    array[index].isAttention=true;//已经关注
+                }
+            });
+            var page=tool.skipPage(p,pageLength);
             Package.render('create', {
                 user:user,
                 list:channels,

@@ -142,6 +142,7 @@ exports.query = function(req,res,Package){
         function(err,page,channels,channel2userId){
             if (err) return console.log(err);
             channels.forEach(function(item,index,array){
+                arry[index].isAttention=false;
                 if (channel2userId.indexOf(item._id+'')>-1){
                     array[index].isAttention=true;//已经关注
                 }
