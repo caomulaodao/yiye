@@ -24,7 +24,7 @@ exports.initHome = function(req,res,Home){
                 Channel2User.find({userId:req.user._id,type:{$in:['creator','admin']}},'channelId name logo type lastTime news',function(err,admChannels){
                     if(err) return console.log(err);
                     async.map(admChannels,function(item,callback2){
-                        Bookmarks.count({channelId:item.channelId,postTime:{$gte:item.lastTime}},function(err,count){
+                        Bookmarks.count({channelId:item.channelId,checked:{$in:[1,3,5]},postTime:{$gte:item.lastTime}},function(err,count){
                             item['news'] = count;
                             callback2(null,item);
                         });
@@ -40,7 +40,7 @@ exports.initHome = function(req,res,Home){
                 Channel2User.find({userId:req.user._id,type:'follower'},'channelId name logo type lastTime news',function(err,subChannels){
                     if(err) return console.log(err);
                     async.map(subChannels,function(item,callback2){
-                        Bookmarks.count({channelId:item.channelId,postTime:{$gte:item.lastTime}},function(err,count){
+                        Bookmarks.count({channelId:item.channelId,checked:{$in:[1,3,5]},postTime:{$gte:item.lastTime}},function(err,count){
                             item['news'] = count;
                             callback2(null,item);
                         });
