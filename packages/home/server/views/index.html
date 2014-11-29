@@ -242,7 +242,7 @@
                 </ul>
             </div>
             <div role="tabpanel" class="tab-pane" id="history">
-                <ul></ul>
+                <ul class="user-history-list"></ul>
             </div>
         </div>
 
@@ -406,26 +406,26 @@
     <% } %>
 </script >
 <script type="text/x-handlebars-template" id="tp-user-history">
-    <% for(var i = 0;i < historys.length; i++){ %>
+    <% for(var i = 0;i < hismes.length; i++){ %>
     <li>
-        <% if(historys[i].checked == 3){ %>
+        <% if(hismes[i].checked == 3){ %>
         <div class="status pass">
             通过
         </div>
         <% } %>
-        <% if(historys[i].checked == 4){ %>
+        <% if(hismes[i].checked == 4){ %>
         <div class="status fail">
             失败
         </div>
         <% } %>
         <div class="main">
-            <div class="user-history-bookmarks" ><a href="#"><%= historys[i].title %></a> <div class="user-history-info"><span>频道:<a href="#"><%= historys[i].channelInfo.channelName %></a></span><span>审核:<a href="#"><%= historys[i].checkUser.username %></a></span></div></div>
-            <% if(historys[i].checked == 4){%>
+            <div class="user-history-bookmarks" ><a href="#"><%= hismes[i].title %></a> <div class="user-history-info"><span>频道:<a href="#"><%= hismes[i].channelInfo.channelName %></a></span><span>审核:<a href="#"><%= hismes[i].checkUser.username %></a></span></div></div>
+            <% if(hismes[i].checked == 4){%>
             <div class="user-history-fail-result">
-                <span>原因：</span><%= historys[i].deleteInfo %>
+                <span>原因：</span><%= hismes[i].deleteInfo %>
             </div>
             <% } %>
-            <div class="user-history-footer"><span>时间：</span><%=  ''+historys[i].postTime %></div>
+            <div class="user-history-footer"><span>时间：</span><%=  ''+hismes[i].postTime %></div>
         </div>
     </li>
     <% } %>

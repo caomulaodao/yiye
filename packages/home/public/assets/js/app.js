@@ -423,56 +423,52 @@ $(function(){
                 url: 'api/home/newmes',
                 data: {'number': 1},
                 success: function (model, response) {
-                    $('#news').html(that.newMesTemplate(response));
+                    $('.user-news-list').html(that.newMesTemplate(response));
                     that.newMes.set('number', 2);
                 }
             });
 
-            that.newMesAjax.bScroll = true; //许可Ajax加载
-            $('#news-tab').scroll(function () {
+            that.newMesAjax.bScroll = true;   //许可Ajax加载
+            $('.content-page').scroll(function () {
                 that.newMesAjax();
             });
         },
 
         history: function () {
-            var history = new hisMessage;
-
-            history.fetch({url: '/api/home/hismes',
+            var that = this;
+            that.hisMes = new hisMessage;
+            that.hisMes.fetch({url: '/api/home/hismes',
                 success: function (model, response) {
-                    $('#history').html(that.historyTemplate(response));
+                    $('.user-history-list').html(that.historyTemplate(response));
+                    that.hisMes.set('number', 2);
                 }
             });
 
-            that.hisMesAjax.bSroll = true;
-            $('#history-tab').scroll(function () {
+            that.hisMesAjax.bScroll = true;    //许可Ajax加载
+            $('.content-page').scroll(function () {
                 that.hisMesAjax();
             });
-
         },
 
         newMesAjax: function () {
             var that = this;
             var nClientH = $(window).height();
-            var nScrollTop = $('#news-tab').scrollTop();
-            var nChannelH = $('#news-tab li').height();
-            if ((nClientH + nScrollTop - 8 >= nChannelH) && (that.newMesAjax.bScroll == true)) {
+            var nScrollTop = $('.content-page').scrollTop();
+            var nChannelH = $('.personal-center').height();
+            if ((nClientH + nScrollTop >= nChannelH) && (that.newMesAjax.bScroll == true)) {
                 that.newMesAjax.bScroll = false;   //禁止Ajax加载
                 var nNum = that.newMes.get("number");
                 that.newMes.fetch({
                     data: {number: nNum},
                     url: "/api/home/newmes",
                     success: function (model, response) {
-                        $('#news').append(that.newMesTemplate(response));
+                        $('.user-news-list').append(that.newMesTemplate(response));
                         if (!response.isHave) {
-                            $('#news').append("<p class='no-news'>无新内容了</p>");
+                            $('.user-news-list').append("<p class='no-news'>无新内容了</p>");
                         } else {
                             that.newMes.set("number", ++nNum);
                             that.newMesAjax.bScroll = true;     //许可Ajax加载
                         }
-                    },
-                    error: function () {
-                        console.log('newMesAjaxError');
-                        that.newMesAjax.bScroll = true;     //许可Ajax加载
                     }
                 });
             }
@@ -480,27 +476,23 @@ $(function(){
 
         hisMesAjax: function () {
             var that = this;
-            var nClientH = $(window).height();
-            var nScrollTop = $('#history-tab').scrollTop();
-            var nChannelH = $('#history').height();
-            if ((nClientH + nScrollTop - 8 >= nChannelH) && (that.hisMesAjax.bScroll == true)) {
-                that.hisMesAjax.bScroll = false;   //禁止Ajax加载
-                var nNum = that.history.get('number');
-                that.history.fetch({
+            var nClientH = $(window).height();                  console.log(nClientH);
+            var nScrollTop = $('.content-page').scrollTop();    console.log(nScrollTop);
+            var nChannelH = $('.personal-center').height();     console.log(nChannelH);
+            if ((nClientH + nScrollTop >= nChannelH) && (that.hisMesAjax.bScroll == true)) {
+                that.hisMesAjax.bScroll = false;     //禁止Ajax加载
+                var nNum = that.hisMes.get('number');console.log('function');
+                that.hisMes.fetch({
                     data: {number: nNum},
                     url: "/api/home/hismes",
                     success: function (model, response) {
-                        $('#history-tab').append(that.historyTemplate(response));
+                        $('.user-history-list').append(that.historyTemplate(response));
                         if (!response.isHave) {
-                            $('#history-tab').append("<p class='no-news'>无新内容了</p>");
+                            $('.user-history-list').append("<p class='no-news'>无新内容了</p>");
                         } else {
-                            that.history.set("number", ++nNum);
+                            that.hisMes.set("number", ++nNum);
                             that.hisMesAjax.bScroll = true;     //许可Ajax加载
                         }
-                    },
-                    error: function () {
-                        console.log('hisMesAjaxError');
-                        that.hisMesAjax.bScroll = true;     //许可Ajax加载
                     }
                 });
             }

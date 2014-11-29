@@ -1543,6 +1543,8 @@ a.header-channel-name , a.header-channel-name:hover{
 
 .no-news {
     color: #ccc;
+    width:150px;
+    text-align: center;
     margin: 30px auto;
     font-size: 1.8em;
 }
