@@ -51,10 +51,19 @@ exports.receive = function(req,res){
     bookmarks.channels = undefined;
     channels.forEach(function(item){
         //查看用户是否是管理员？
-        Channel2User.findOne({channelId:item,userId:req.user._id,type:{$in:['creator','admin']}},function(err,user){
+        Channel2User.findOne({channelId:item,userId:req.user._id},function(err,doc){
+            if(err) console.log(err);
             var bookmark = Bookmarks(bookmarks);
-            //如果是管理员，则直接审核通过
-            if(user){
+
+            //向书签中加入所在频道的信息
+            bookmark.channelInfo.channelId = doc.channelId;
+            bookmark.channelInfo.channelName = doc.name;
+            bookmark.channelInfo.channelLogo = doc.logo;
+
+            var pass = false;
+            //如果是管理员或创始人，则直接审核通过
+            if(doc.type == "creator" || doc.type == "admin"){
+                pass = true;
                 bookmark.checked = 5;
             }
             bookmark.channelId = item;
@@ -64,7 +73,7 @@ exports.receive = function(req,res){
                 Channels.update({_id:item},{$inc:{bmkNum:1}},function(err,doc){
                     if(err) console.log(err);
                 });
-                if(user){
+                if(pass){
                     User.update({_id:req.user._id},{$inc:{postNum:1}},function(err,doc){
                         if(err) console.log(err);
                     })

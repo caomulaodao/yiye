@@ -47,7 +47,8 @@ var bookmarksSchema = Schema({
     },
     channelInfo: {
         channelId:Schema.ObjectId,
-        channelName:String
+        channelName:String,
+        channelLogo:String
     },
     comments: {
         type: Array
