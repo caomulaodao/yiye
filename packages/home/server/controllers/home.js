@@ -198,9 +198,24 @@ exports.discover = function(req,res){
                         callback(null,results,doc[0]);
                     }
                 })
+            },
+            function(results,doc,callback){
+                Channel2User.find({userId:req.user_id},function(err,channel2user){
+                    if (err) return console.log(err);
+                    var channel2userId=[];
+                    channel2user.forEach(function(item){
+                        channel2userId.push(item.channelId+'');
+                    });
+                    callback(err,results,doc,channel2userId);
+                })
             }],
-            function(err, results,doc) {
+            function(err, results,doc,channel2userId) {
                 var isHave=true;
+                results.forEach(function(item,index,array){
+                    if (channel2userId.indexOf(item._id+'')>-1){
+                        array[index].isAttention=true;//已经关注
+                    }
+                });
                 if(results.length==0) {isHave=false;}
                 else{
                     if (results[0]['time']+''==doc['time']+''){
@@ -211,7 +226,7 @@ exports.discover = function(req,res){
             });
 }
 
-//ajax加载'发现'页面channels
+//ajax加载加载bookmarks
 exports.ajaxBookmarks = function(req,res){
     if(!req.user) return res.status(401).json({info:'请先注册或登录'});
     var date=req.get.date,limit=20;//date为前端当前展示的时间      
