@@ -39,7 +39,6 @@ var mongoose = require('mongoose'),
     Channel2User = mongoose.model('Channel2User'),
     BookmarkLike = mongoose.model('BookmarkLike'),
     BookmarkHate = mongoose.model('BookmarkHate');
-
 //接受新提交的书签
 exports.receive = function(req,res){
     if(!req.user) return res.status(401).json({info:'请先注册或登录'});
@@ -49,51 +48,70 @@ exports.receive = function(req,res){
     bookmarks.tags = getTags(bookmarks.tags);
     var channels = req.body.channels.unique();
     bookmarks.channels = undefined;
-    channels.forEach(function(item){
-        //查看用户是否是管理员？
-        Channel2User.findOne({channelId:item,userId:req.user._id},function(err,doc){
-            if(err) console.log(err);
+
+    async.parallel([
+        function(callback){
+            async.map(channels,function(item,callback){
+                //查看用户是否是管理员？
+                Channel2User.findOne({channelId:item,userId:req.user._id},function(err,doc){
+                    if(err) console.log(err);
+                    var bookmark = Bookmarks(bookmarks);
+
+                    //向书签中加入所在频道的信息
+                    bookmark.channelInfo.channelId = doc.channelId;
+                    bookmark.channelInfo.channelName = doc.name;
+                    bookmark.channelInfo.channelLogo = doc.logo;
+
+                    var pass = false;
+                    //如果是管理员或创始人，则直接审核通过
+                    if(doc.type == "creator" || doc.type == "admin"){
+                        pass = true;
+                        bookmark.checked = 5;
+                    }
+                    bookmark.channelId = item;
+                    bookmark.postUser = {userId:req.user._id,username:req.user.username};
+                    bookmark.save(function(err){
+                        if(err) console.log(err);
+                        if(pass){
+                            Channels.update({_id:item},{$inc:{bmkNum:1}},function(err,doc){
+                                if(err) console.log(err);
+                                callback(null,true);
+                            });
+                        }else{
+                            callback(null,true);
+                        }
+                    });
+                });
+            }, function(err, results){
+                if(err) console.log(err);
+                callback(null,true);
+            });
+        },
+        function(callback){
+            // 添加用户自己留底的书签记录
             var bookmark = Bookmarks(bookmarks);
-
-            //向书签中加入所在频道的信息
-            bookmark.channelInfo.channelId = doc.channelId;
-            bookmark.channelInfo.channelName = doc.name;
-            bookmark.channelInfo.channelLogo = doc.logo;
-
-            var pass = false;
-            //如果是管理员或创始人，则直接审核通过
-            if(doc.type == "creator" || doc.type == "admin"){
-                pass = true;
-                bookmark.checked = 5;
-            }
-            bookmark.channelId = item;
+            bookmark.checked = 6;
+            bookmark.channelId =  undefined;
             bookmark.postUser = {userId:req.user._id,username:req.user.username};
             bookmark.save(function(err){
                 if(err) console.log(err);
-                Channels.update({_id:item},{$inc:{bmkNum:1}},function(err,doc){
+                User.update({_id:req.user._id},{$inc:{postNum:1}},function(err,doc){
                     if(err) console.log(err);
-                });
-                if(pass){
-                    User.update({_id:req.user._id},{$inc:{postNum:1}},function(err,doc){
-                        if(err) console.log(err);
-                    })
-                };
+                    callback(null,true);
+                })
             });
+        }
+    ]
+    ,function(err,results){
+        //返回频道信息
+        Channel2User.find({userId:req.user._id,channelId:{$in:channels}},'channelId name logo type',function(err,channels){
+            if(err) return res.send({info:"err"});
+            return res.json(channels);
         });
     });
-    // 添加用户自己留底的书签记录
-    var bookmark = Bookmarks(bookmarks);
-        bookmark.checked = 6;
-        bookmark.channelId =  undefined;
-        bookmark.postUser = {userId:req.user._id,username:req.user.username};
-        bookmark.save(function(err){
-            if(err) console.log(err);
-        });
-    //返回频道信息
-    Channel2User.find({userId:req.user._id,channelId:{$in:channels}},'channelId name logo type',function(err,channels){
-        if(err) return res.send({info:"err"});
-        return res.json(channels);
-    });
+
+
+
 }
 //初始化获取书签
 exports.init  =  function(req,res){

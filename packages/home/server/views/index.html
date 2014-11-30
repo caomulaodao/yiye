@@ -170,7 +170,7 @@
         <ul class="nav nav-tabs" role="tablist" id="channel-manage-tab">
             <li role="presentation" class="active"><a href="#new" role="tab" data-toggle="tab">账号</a></li>
             <li role="presentation"><a href="#profile" role="tab" data-toggle="tab">密码</a></li>
-            <li role="news"><a href="#news" role="tab" data-toggle="tab" id="news-tab" data-num="{{ news.length }}">新消息{% if news.length > 0 %}({{ news.length }}){% endif %}</a></li>
+            <li role="news"><a href="#news" role="tab" data-toggle="tab" id="news-tab" data-num="{{ news.length }}">新消息{% if news > 0 %}({{ news }}){% endif %}</a></li>
             <li role="news"><a href="#history" role="tab" data-toggle="tab" id="history-tab">历史消息</a></li>
             <button class="btn" id="gotoPerson" onclick="window.open('/u/{{ ''+user._id}}')">我的主页</button>
         </ul>
