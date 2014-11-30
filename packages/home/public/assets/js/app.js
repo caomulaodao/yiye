@@ -129,13 +129,13 @@ $(function(){
                     data: {date: sDate, channelId: sChannelId},
                     url: "/api/home/bookmark",
                     success: function(model, response){
-                        var nextDate = response.info.nextTime;   //将下次日期赋值给nextDate变量
                         $('.content-body>ul').append(that.channelTemplate(response));
                         if(!response.isHave){
                             $('.content-body>ul').append("<p class='no-news'>无新内容了</p>");
                         } else {
-                            that.list.set("date", nextDate);     //记录下次Ajax日期
-                            that.channelAjax.bScroll = true;     //许可Ajax加载
+                            var nextDate = response.info.nextTime;   //将下次日期赋值给nextDate变量
+                            that.list.set("date", nextDate);         //记录下次Ajax日期
+                            that.channelAjax.bScroll = true;         //许可Ajax加载
                         }
                     }
                 });
