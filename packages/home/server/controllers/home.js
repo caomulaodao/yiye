@@ -5,6 +5,7 @@
 var mongoose = require('mongoose'),
     async = require('async'),
     bookmarks = require('../../../bookmarks/server/controllers/bookmarks'),
+    moment = require('moment');
     User = mongoose.model('User'),
     Channel2User = mongoose.model('Channel2User'),
     Channels = mongoose.model('Channels'),
@@ -234,6 +235,7 @@ exports.discover = function(req,res){
 exports.ajaxBookmarks = function(req,res){
     if(!req.user) return res.status(401).json({info:'请先注册或登录'});
     var date=req.get.date, limit = 2;//date为前端当前展示的时间
+    date=moment(date).toDate();
     var channelId = req.get['channelId'];
     async.parallel({
         list: function(callback){
