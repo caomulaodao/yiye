@@ -65,6 +65,11 @@
             <div role="tabpanel" class="tab-pane active" id="new">
                 <div id="post-list">
                     <ul>
+                        {% if list.length == 0%}
+                        <div class="no-inf">
+                            <img src="/system/assets/img/no-message.png">
+                        </div>
+                        {% endif %}
                         {% for bookmark in list %}
                         <li class="post-item item-{{ loop.index }}">
                             <div class="link-part-content">

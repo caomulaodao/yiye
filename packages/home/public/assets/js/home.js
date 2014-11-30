@@ -4,7 +4,6 @@
 $(window).load(function(){
     initialize();
     commentClick();
-
 });
 
 //initialization

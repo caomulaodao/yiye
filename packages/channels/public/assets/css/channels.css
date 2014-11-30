@@ -286,6 +286,7 @@ button:focus {outline:0;}
     height: 100%;
     background-color: #f3f3f3;
     margin-left: 26%;
+    position: relative;
 }
 
 #content-page-content {
@@ -294,6 +295,21 @@ button:focus {outline:0;}
     overflow: auto;
 }
 
+.no-inf {
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%,-50%);
+    -moz-transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+    -o-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+}
+.no-inf>img {
+    width: 200px;
+}
 
 
 /* date-divide */
