@@ -10,7 +10,7 @@ $(window).on('load', function(){
 function subChannelAjax() {
     $('.to-sub').on('click', function(event){
         var that = this;
-        var channelId = $(event.currentTarget).data('id');
+        var channelId = $(that).attr('data-id');
         $.ajax({
             type: "get",
             url: '/channel/sub/' + channelId
