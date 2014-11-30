@@ -7,6 +7,7 @@ var mongoose = require('mongoose'),
     bookmarks = require('../../../bookmarks/server/controllers/bookmarks'),
     moment = require('moment');
     User = mongoose.model('User'),
+    tool = require('../../../../config/tools/tool');
     Channel2User = mongoose.model('Channel2User'),
     Channels = mongoose.model('Channels'),
     Bookmarks = mongoose.model('Bookmarks');
@@ -234,10 +235,9 @@ exports.discover = function(req,res){
 //ajax加载加载bookmarks
 exports.ajaxBookmarks = function(req,res){
     if(!req.user) return res.status(401).json({info:'请先注册或登录'});
-    var date=req.query.date, limit = 2;//date为前端当前展示的时间
+    var date=req.query.date, limit = 1;//date为前端当前展示的时间
     date=moment(date).toDate();
-    console.log(date);console.log('!!!!');
-    var channelId = req.get['channelId'];
+    var channelId = req.query['channelId'];
     async.parallel({
         list: function(callback){
             //获取对应频道的书签
@@ -245,10 +245,10 @@ exports.ajaxBookmarks = function(req,res){
                 if(err) console.log(err);console.log(doc.length);
                 if(doc.length === 0) return callback(null,[]);
                 var targetTime = doc[doc.length -1]['postTime'];//取出来的最后一天的时间
-                var startDay = moment(doc[doc.length -1]['postTime']).startOf('day').toDate();
-                Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]},postTime:{$gt:startDay,$lte:date}}).sort({postTime:-1}).exec(function(err,list){
+                var startDay = moment(doc[doc.length -1]['postTime']).startOf('day').toDate();console.log(targetTime);
+                Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]},postTime:{$gte:startDay,$lt:date}}).sort({postTime:-1}).exec(function(err,list){
                     if(err) console.log(err);
-                    callback(null,listToArray(list));
+                    callback(null,list);//after为转换后的对象数组,before为转换前的对象数组
                 });
             })
         },
@@ -258,20 +258,22 @@ exports.ajaxBookmarks = function(req,res){
                 callback(null,doc)
             })
         }
-    },function(err,results){console.log(results);
+    },function(err,results){
         results.isHave=true;//下次是否还进行ajax请求
         results.nextTime=null;//请求加载的书签的时间
         if(results.endbookmarkId.lenght===0) results.isHave=false;
         if(results.list.length===0) results.isHave=false;
-        else{console.log()
-            results.nextTime=results.list[results.list.length-1]['postTime'];
+        else{
             if(results.list[results.list.length-1]['_id']==results.endbookmarkId[0]['_id']){
+                results.nexttime=moment(results.list[results.list.length-1]['postTime']).format('YYYY-MM-DD');
                 results.isHave=false;
+            }         
             }
-        }
+        results.list=tool.listToArray(results.list);console.log(results.list);
         //更新频道最后访问时间并返回数据
         Channel2User.update({channelId:channelId,userId:req.user._id},{lastTime:Date.now()},function(err){
             if(err) return console.log(err);
+            console.log(results.list[0]);console.log('啦啦');
             res.json(results);
         });
     });

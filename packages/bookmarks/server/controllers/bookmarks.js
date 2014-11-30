@@ -115,7 +115,7 @@ exports.receive = function(req,res){
 }
 //初始化获取书签
 exports.init  =  function(req,res){
-    var limit=20;
+    var limit=1;
     if(!req.user) return res.status(401).json({info:'请先注册或登录'});
     var channelId = req.query['channelId'];
     async.parallel({
@@ -169,6 +169,7 @@ exports.init  =  function(req,res){
         }
         Channel2User.update({channelId:channelId,userId:req.user._id},{lastTime:Date.now()},function(err){
             if(err) return console.log(err);
+            console.log(results);console.log('啦啦');
             res.json(results);
         });
     }

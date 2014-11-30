@@ -1,4 +1,5 @@
 //分页 searchPage查询的页数 listLength为总页数,limit每页限制数 返回一个包含当前页数和该显示页数的对象
+var moment = require('moment');
 function skipPage(searchPage,listLength){
     searchPage=+searchPage;
     if(isNaN(searchPage)) searchPage=1;
@@ -39,6 +40,7 @@ function skipPage(searchPage,listLength){
 
 //将一个bookmarks列表格式化为按时间集合排序的数组。
 function listToArray(list){
+    if(list.length==0) return [];
     var result = [];
     var lastTime = list[0]['postTime'];
     var index = 0;
