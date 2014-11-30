@@ -262,6 +262,7 @@ exports.ajaxBookmarks = function(req,res){
         results.isHave=true;//下次是否还进行ajax请求
         results.nextTime=null;//请求加载的书签的时间
         if(results.endbookmarkId.lenght===0) results.isHave=false;
+        if(results.list.length===0) results.isHave=false;
         else{console.log()
             results.nextTime=results.list[results.list.length-1]['postTime'];
             if(results.list[results.list.length-1]['_id']==results.endbookmarkId[0]['_id']){
