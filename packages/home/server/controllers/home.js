@@ -83,26 +83,47 @@ exports.addAdmChannel = function(){
 
 //新建一个频道
 exports.createChannel = function(req,res){
+    if(!req.user) return res.status(401).send({info:'请先登录或注册'});
+    var allCount = 5;
     var channels = new Channels(req.body);
     channels.tags = getTags(channels.tags);
     channels.creator = {userId:req.user._id,userName:req.user.username,userLogo:req.user.avatar};
-    channels.save(function(err,doc){
-        if(err){
-            return res.send({info:err});
-        }
-        var admChannel = new Channel2User({
-            userId:req.user._id,
-            channelId:doc._id,
-            name: channels.name,
-            type: "creator",
-            logo: channels.logo
-        });
-        admChannel.save(function(err){
-            if(err){
-                return res.send({info:err});
+    async.waterfall([
+        function(callback){
+            Channel2User.count({userId:req.user._id,type:'creator'},function(err,count){
+                if(count>=allCount){
+                    callback(null,false);
+                }else{
+                    callback(null,true);
+                }
+            });
+        },
+        function(isCreate,callback){
+            if(isCreate){
+                channels.save(function(err,doc){
+                    if(err) console.log(err);
+                    var admChannel = new Channel2User({
+                        userId:req.user._id,
+                        channelId:doc._id,
+                        name: channels.name,
+                        type: "creator",
+                        logo: channels.logo
+                    });
+                    admChannel.save(function(err){
+                        if(err) console.log(err);
+                        callback(null,isCreate);
+                    });
+                });
+            }else{
+                callback(null,isCreate);
             }
-            res.send({info:"success"});
-        });
+        }
+    ],function(err,isCreate){
+           if(isCreate){
+                res.status(200).send({info:"success"});
+           }else{
+               res.status(401).send({info:"创建数量已达上限，无法创建新频道。"});
+           }
     });
 };
 

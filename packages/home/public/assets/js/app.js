@@ -243,9 +243,12 @@ $(function(){
             this.channel.set({type: $("input[name='type']:checked").val()});
             this.channel.set({banner: 'channels/assets/img/background/cBg0' + (Math.ceil(Math.random()*10)) + '.png'});
             this.channel.save(null,{error: function(model, response){
-                console.log('error'+response);
+                $('#Channel-Create-Error').text(response.responseJSON.info).show();
             },success: function(model, response){
-                location.href = '/home';
+                popup("频道创建成功 ！");
+                setTimeout(function(){
+                    location.href = '/home';
+                },1000);
             }});
         }
 
