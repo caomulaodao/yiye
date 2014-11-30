@@ -63,6 +63,10 @@ $(function(){
     var channelList = Backbone.Model.extend({
     });
 
+    //订阅频道model
+    var subChannelModel= Backbone.Model.extend({
+    });
+
     //home页频道书签加载
     var newBookmarkModel = Backbone.Model.extend({
 
@@ -513,6 +517,7 @@ $(function(){
         addTemplate: _.template($('#tp-channel-explore-ul').html()),
 
         events: {
+            'click .to-sub': "subChannelAjax"
         },
 
         initialize: function() {
@@ -563,6 +568,20 @@ $(function(){
                     }
                 });
             }
+        },
+
+        //Ajax点击链接订阅频道
+        subChannelAjax: function(event) {
+            var that = this;
+            var channelId = $(event.currentTarget).data('id');
+            var subChannel = new subChannelModel;
+            subChannel.fetch({
+                url: "/channel/sub/"+ channelId,
+                success: function(model, response) {
+                    $(event.currentTarget).html('已订阅');
+                    $(event.currentTarget).addClass('have-subed').removeClass('to-sub');
+                }
+            });
         }
     });
 
