@@ -151,7 +151,7 @@ $(function(){
             var bookmarkId = $(event.currentTarget).data('bookmarkid');
             var that = this;
             like.fetch({url:'/api/bookmarks/like/'+bookmarkId,success:function(model,response){
-                if(response.success){
+                if(response.results.isLiked == false){
                     var count = $(event.currentTarget).find('span');
                     count.text(+count.text()+1);
                 }
@@ -166,8 +166,9 @@ $(function(){
             var bookmarkId = $(event.currentTarget).data('bookmarkid');
             var that = this;
             hate.fetch({url:'/api/bookmarks/hate/'+bookmarkId,success:function(model,response){
-                if(response.success){
-
+                if(response.results.isLiked == true && response.results.isHated == false){
+                    var count = $(event.currentTarget).parent().find('span');
+                    count.text(+count.text()-1);
                 }
                 that.lock.bkDown = false;
             }})

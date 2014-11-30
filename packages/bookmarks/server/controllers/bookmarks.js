@@ -178,65 +178,96 @@ exports.init  =  function(req,res){
 
 //对某个书签点赞
 exports.like = function(req,res){
+
+    if(!req.user) return res.status(401).json({info:'请先注册或登录'});
+
     var bookmarkId = req.params['bookmarkId'];
-    BookmarkHate.remove({bookmarkId:bookmarkId,userId:req.user._id},function(err,doc){
-        if(err) return console.log(err);
-        if(doc > 0){
-            Bookmarks.update({_id:bookmarkId},{$inc:{hateNum:-1}},function(err,doc){
-                if(err) console.log(err);
+
+    async.parallel({
+        isHated:function(callback){
+            BookmarkHate.remove({bookmarkId: bookmarkId, userId: req.user._id}, function (err, doc) {
+                if (err) return console.log(err);
+                if (doc > 0) {
+                    Bookmarks.update({_id: bookmarkId}, {$inc: {hateNum: -1}}, function (err, doc) {
+                        if (err) console.log(err);
+                        callback(null, true);
+                    });
+                } else {
+                    callback(null, false);
+                }
+            });
+        },
+        isLiked:function (callback) {
+            BookmarkLike.find({bookmarkId: bookmarkId, userId: req.user._id}, function (err, doc) {
+                if (err) return console.log(err);
+                if (doc.length > 0) {
+                    callback(null, true);
+                }else{
+                    var like = BookmarkLike({});
+                    like.bookmarkId = bookmarkId;
+                    like.userId = req.user._id;
+                    like.username = req.user.username;
+                    like.save(function (err) {
+                        if (err) return console.log(err);
+                        Bookmarks.update({_id: bookmarkId}, {$inc: {likeNum: 1}}, function (err, doc) {
+                            if (err) console.log(err);
+                            callback(null,false);
+                        });
+                    });
+                }
             });
         }
-    });
-    BookmarkLike.find({bookmarkId:bookmarkId,userId:req.user._id},function(err,doc){
-        if(err) return console.log(err);
-        if(doc.length > 0){
-           return res.json({err:true,info:"已经点赞"})
-        }else{
-            var like = BookmarkLike({});
-            like.bookmarkId = bookmarkId;
-            like.userId = req.user._id;
-            like.username = req.user.username;
-            like.save(function(err){
-                if(err) return console.log(err);
-                Bookmarks.update({_id:bookmarkId},{$inc:{likeNum:1}},function(err,doc){
-                    if(err) console.log(err);
-                });
-                return res.json({success:true,info:"已经点赞"})
-            });
-        }
+    },function(err,results){
+        if(err) console.log(err);
+        return res.json({success:true,info:"已经点赞",results:results});
     });
 }
 
 //对某个书签反对
 exports.hate = function(req,res){
-    var bookmarkId = req.params['bookmarkId'];
-    BookmarkLike.remove({bookmarkId:bookmarkId,userId:req.user._id},function(err,doc){
-        if(err) return console.log(err);
-        if(doc > 0){
-            Bookmarks.update({_id:bookmarkId},{$inc:{likeNum:-1}},function(err,doc){
-                if(err) console.log(err);
-            });
-        }
-    });
-    BookmarkHate.find({bookmarkId:bookmarkId,userId:req.user._id},function(err,doc){
-        if(err) return console.log(err);
-        if(doc.length > 0){
-            return res.json({err:true,info:"已经反对"})
-        }else{
-            var hate = BookmarkHate({});
-            hate.bookmarkId = bookmarkId;
-            hate.userId = req.user._id;
-            hate.username = req.user.username;
-            hate.save(function(err){
-                if(err) return console.log(err);
-                Bookmarks.update({_id:bookmarkId},{$inc:{hateNum:1}},function(err,doc){
-                    if(err) console.log(err);
-                });
-                return res.json({success:true,info:"已经反对"})
-            });
-        }
-    });
 
+    if(!req.user) return res.status(401).json({info:'请先注册或登录'});
+
+    var bookmarkId = req.params['bookmarkId'];
+
+    async.parallel({
+        isLiked:function(callback){
+            BookmarkLike.remove({bookmarkId:bookmarkId,userId:req.user._id},function(err,doc){
+                if(err) return console.log(err);
+                if(doc > 0){
+                    Bookmarks.update({_id:bookmarkId},{$inc:{likeNum:-1}},function(err,doc){
+                        if(err) console.log(err);
+                        callback(null,true);
+                    });
+                }else{
+                    callback(null,false);
+                }
+            });
+        },
+        isHated:function(callback){
+            BookmarkHate.find({bookmarkId:bookmarkId,userId:req.user._id},function(err,doc){
+                if(err) return console.log(err);
+                if(doc.length > 0){
+                    callback(null,true);
+                }else{
+                    var hate = BookmarkHate({});
+                    hate.bookmarkId = bookmarkId;
+                    hate.userId = req.user._id;
+                    hate.username = req.user.username;
+                    hate.save(function(err){
+                        if(err) return console.log(err);
+                        Bookmarks.update({_id:bookmarkId},{$inc:{hateNum:1}},function(err,doc){
+                            if(err) console.log(err);
+                            callback(null,false);
+                        });
+                    });
+                }
+            });
+        }
+    },function(err,results){
+        if(err) console.log(err);
+        return res.json({success:true,info:"已经反对",results:results});
+    });
 }
 
 //获取某天的书签
