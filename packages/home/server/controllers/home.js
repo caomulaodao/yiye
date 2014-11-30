@@ -234,14 +234,15 @@ exports.discover = function(req,res){
 //ajax加载加载bookmarks
 exports.ajaxBookmarks = function(req,res){
     if(!req.user) return res.status(401).json({info:'请先注册或登录'});
-    var date=req.get.date, limit = 2;//date为前端当前展示的时间
+    var date=req.query.date, limit = 2;//date为前端当前展示的时间
     date=moment(date).toDate();
+    console.log(date);console.log('!!!!');
     var channelId = req.get['channelId'];
     async.parallel({
         list: function(callback){
             //获取对应频道的书签
-            Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]},postTime:{$gt:date}}).sort({postTime:-1}).limit(limit).exec(function (err, doc) {
-                if(err) console.log(err);
+            Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]},postTime:{$gt:date}}).sort({postTime:-1}).limit(limit).exec(function (err, doc) {console.log(doc);console.log('doc');
+                if(err) console.log(err);console.log(doc.length);
                 if(doc.length === 0) return callback(null,[]);
                 var targetTime = doc[doc.length -1]['postTime'];//取出来的最后一天的时间
                 var startDay = moment(doc[doc.length -1]['postTime']).startOf('day').toDate();
@@ -257,11 +258,11 @@ exports.ajaxBookmarks = function(req,res){
                 callback(null,doc)
             })
         }
-    },function(err,results){
+    },function(err,results){console.log(results);
         results.isHave=true;//下次是否还进行ajax请求
         results.nextTime=null;//请求加载的书签的时间
         if(results.endbookmarkId.lenght===0) results.isHave=false;
-        else{
+        else{console.log()
             results.nextTime=results.list[results.list.length-1]['postTime'];
             if(results.list[results.list.length-1]['_id']==results.endbookmarkId[0]['_id']){
                 results.isHave=false;
