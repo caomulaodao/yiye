@@ -22,7 +22,7 @@
             <a href="javascript:;" class="yiye-logo">
                 <img src="/person/assets/img/logo_white2.png">
             </a>
-            <i href="javascript:;"title="我的主页" class="glyphicon glyphicon-home"></i>
+            <a href="javascript:;"title="我的主页" class="glyphicon glyphicon-home"></a>
         </div>
         <div class="control-body" >
             <div class="user-part">
@@ -71,6 +71,11 @@
                     <h3>关注的频道</h3>
                 </div>
                 <ul class="part-ul" id="watch-channel-list">
+                    {% if channel==[] %}
+                    <div class="no-inf">
+                        <img src="/system/assets/img/no-channel.png">
+                    </div>
+                    {% endif %}
                     {% for channel  in list %}
                     <li class="channel-showcase">
                         <div class="channel-logo">

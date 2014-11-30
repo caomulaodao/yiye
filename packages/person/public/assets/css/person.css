@@ -199,7 +199,7 @@ button:focus {outline:0;}
 
 #content-page {
     height: 100%;
-    background-color: #fff;
+    background-color: #f3f3f3;
     margin-left: 30%;
 }
 
@@ -212,6 +212,16 @@ button:focus {outline:0;}
 /* ======================================================================================
     content page
     ===================================================================================== */
+
+/* 无信息图片 */
+.no-inf {
+    width: 200px;
+    height: 150px;
+    margin: 200px auto;
+}
+.no-inf>img {
+    width: 200px;
+}
 
 .part-wrapper{
     width: 100%;
