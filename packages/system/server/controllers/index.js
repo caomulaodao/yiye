@@ -42,7 +42,7 @@ exports.render = function(req, res,Package) {
 
 //渲染发现页面
 exports.explore = function(req, res,Package){
-    var limit = 2;//每页限制显示数
+    var limit = 20;//每页限制显示数
     var p=req.query.p||1;
     async.waterfall([function(cb){
         Channels.count({},function(err,count){
@@ -142,7 +142,7 @@ exports.query = function(req,res,Package){
         function(err,page,channels,channel2userId){
             if (err) return console.log(err);
             channels.forEach(function(item,index,array){
-                arry[index].isAttention=false;
+                array[index].isAttention=false;
                 if (channel2userId.indexOf(item._id+'')>-1){
                     array[index].isAttention=true;//已经关注
                 }

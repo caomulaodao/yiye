@@ -862,7 +862,7 @@ a.header-channel-name , a.header-channel-name:hover{
     border-width: 7px;
     display: block;
     border-style: dashed dashed solid dashed;
-    border-color: transparent transparent #37A2E4; transparent;
+    border-color: transparent transparent #37A2E4 transparent;
 }
 .vote-down {
     width: 0;
