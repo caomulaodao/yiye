@@ -3,6 +3,9 @@
  */
 
 $(window).on('load', function() {
-
+    $('')
 });
 
+function subChannelAjax(event) {
+    console.log(event);
+}

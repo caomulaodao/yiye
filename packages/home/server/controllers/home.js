@@ -264,16 +264,15 @@ exports.ajaxBookmarks = function(req,res){
         if(results.endbookmarkId.lenght===0) results.isHave=false;
         if(results.list.length===0) results.isHave=false;
         else{
-            if(results.list[results.list.length-1]['_id']==results.endbookmarkId[0]['_id']){
+            if(results.list[results.list.length-1]['_id']+''==results.endbookmarkId[0]['_id']+''){
                 results.nexttime=moment(results.list[results.list.length-1]['postTime']).format('YYYY-MM-DD');
                 results.isHave=false;
             }         
             }
-        results.list=tool.listToArray(results.list);console.log(results.list);
+        results.list=tool.listToArray(results.list);
         //更新频道最后访问时间并返回数据
         Channel2User.update({channelId:channelId,userId:req.user._id},{lastTime:Date.now()},function(err){
             if(err) return console.log(err);
-            console.log(results.list[0]);console.log('啦啦');
             res.json(results);
         });
     });
