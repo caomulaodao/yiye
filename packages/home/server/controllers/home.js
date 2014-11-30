@@ -10,6 +10,7 @@ var mongoose = require('mongoose'),
     tool = require('../../../../config/tools/tool');
     Channel2User = mongoose.model('Channel2User'),
     Channels = mongoose.model('Channels'),
+    tool = require('../../../../config/tools/tool');
     Bookmarks = mongoose.model('Bookmarks');
 
 //渲染Home页面
@@ -262,7 +263,7 @@ exports.ajaxBookmarks = function(req,res){
     async.parallel({
         list: function(callback){
             //获取对应频道的书签
-            Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]},postTime:{$lt:date}}).sort({postTime:-1}).limit(limit).exec(function (err, doc) {console.log(doc);console.log('doc');
+            Bookmarks.find({channelId:channelId,postTime:{$gt:date}}).sort({postTime:-1}).limit(2).exec(function (err, doc) {console.log(doc);console.log('doc');
                 if(err) console.log(err);console.log(doc.length);
                 if(doc.length === 0) return callback(null,[]);
                 var targetTime = doc[doc.length -1]['postTime'];//取出来的最后一天的时间
@@ -270,16 +271,18 @@ exports.ajaxBookmarks = function(req,res){
                 Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]},postTime:{$gte:startDay,$lt:date}}).sort({postTime:-1}).exec(function(err,list){
                     if(err) console.log(err);
                     callback(null,list);//after为转换后的对象数组,before为转换前的对象数组
+
                 });
             })
         },
         endbookmarkId: function(callback){
-            Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]}}).limit(1).sort({postTime:1}).exec(function(err,doc){
+            Bookmarks.find({channelId:channelId,checked:{$in:[5,3,0,2,4,1]}}).limit(1).sort({postTime:1}).exec(function(err,doc){
                 if(err) return console.log(err);
                 callback(null,doc)
             })
         }
     },function(err,results){
+
         results.isHave=true;//下次是否还进行ajax请求
         results.nextTime=null;//请求加载的书签的时间
         if(results.endbookmarkId.lenght===0) results.isHave=false;
