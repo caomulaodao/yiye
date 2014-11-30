@@ -28,7 +28,6 @@ exports.renderMain = function(req,res,Package){
             if(req.user){
                 Channel2User.findOne({channelId: channelId,userId:req.user._id}, function (err, doc) {
                     if (doc) {
-                        //console.log(doc);
                         if (doc.type == 'admin' || doc.type == 'creator') {
                             type = 'admin';
                         } else if (doc.type == 'follower') {
@@ -44,7 +43,6 @@ exports.renderMain = function(req,res,Package){
         //对应的频道
         function (type,callback) {
             Channels.findOne({_id: channelId}, function (err, channel) {
-                console.log(channel);
                 callback(null,type,channel);
             });
         },
@@ -53,7 +51,6 @@ exports.renderMain = function(req,res,Package){
             Bookmarks.count({channelId:channelId,checked:{$in:[1,3,5]}},function(err,count){
                 if (err) return console.log(err);
                 var pageLength=Math.ceil(count/limit);
-                console.log(channel);
                 callback(null,type,channel,pageLength);
             })
         },
@@ -72,8 +69,6 @@ exports.renderMain = function(req,res,Package){
             });
         }],
         function(err,type,channel,pageLength,list){
-            console.log(type);
-            console.log(channel);
             if(!channel) return res.redirect('/');
             var channel = channel;
             var list = list;
@@ -133,7 +128,6 @@ exports.renderFollower = function(req,res,Package){
                 if(req.user){
                     Channel2User.findOne({channelId: channelId,userId:req.user._id}, function (err, doc) {
                         if (doc) {
-                            //console.log(doc);
                             if (doc.type == 'admin' || doc.type == 'creator') {
                                 type = 'admin';
                             } else if (doc.type == 'follower') {
@@ -254,7 +248,6 @@ exports.renderCheck = function(req,res,Package){
                 if(req.user){
                     Channel2User.findOne({channelId: channelId,userId:req.user._id}, function (err, doc) {
                         if (doc) {
-                            //console.log(doc);
                             if (doc.type == 'admin' || doc.type == 'creator') {
                                 type = 'admin';
                             } else if (doc.type == 'follower') {
@@ -307,56 +300,6 @@ exports.renderCheck = function(req,res,Package){
                 res.send(html);
             });
         });
-
-
-
-
-    // async.parallel({
-    //         userType:function(callback){
-    //             var type = 'not';
-    //             if(req.user){
-    //                 Channel2User.findOne({channelId: channelId,userId:req.user._id}, function (err, doc) {
-    //                     if (doc) {
-    //                         //console.log(doc);
-    //                         if (doc.type == 'admin' || doc.type == 'creator') {
-    //                             type = 'admin';
-    //                         } else if (doc.type == 'follower') {
-    //                             type = 'follower';
-    //                         }
-    //                     }
-    //                     callback(null,type);
-    //                 });
-    //             }else{
-    //                 callback(null,type);
-    //             }
-    //         },
-    //         channel:function (callback) {
-    //             Channels.findOne({_id: channelId}, function (err, channel) {
-    //                 callback(null,channel);
-    //             });
-    //         },
-    //         list:function(callback){
-    //             Bookmarks.find({channelId:channelId,checked:0}).sort({postTime:-1}).limit(10).exec(function (err, doc) {
-    //                 if(err) console.log(err);
-    //                 if(doc.length === 0) return callback(null,[]);
-    //                 callback(null,doc);
-    //             });
-    //         }
-    //     },
-    //     function(err,results){
-    //         if(!results.channel) return res.redirect('/');
-    //         var channel = results.channel;
-    //         var list = results.list;
-    //         channel.userType = results.userType;
-    //         Package.render('manage', {
-    //             channel:channel,
-    //             list:list
-    //         }, function(err, html) {
-    //             if(err) console.log(err);
-    //             res.send(html);
-    //         });
-    //     });
-
 };
 
 //更新频道信息
@@ -372,10 +315,7 @@ exports.update = function(req,res){
     Channels.update({_id:channelId},update,function(err,doc){
         if(err) return console.log(err);
         res.status(200).send({success:true,info:'修改信息成功'});
-
     });
-
-
 }
 
 //取消订阅某个频道

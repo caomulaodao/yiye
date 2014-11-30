@@ -82,7 +82,7 @@ exports.explore = function(req, res,Package){
             if (channel2userId.indexOf(item._id+'')>-1){
                 array[index].isAttention=true;//已经关注
             }
-        })
+        });console.log(channels);
             Package.render('explore', {
                 channels:channels,user:req.user,page:page
             }, function(err, html) {
