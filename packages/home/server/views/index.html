@@ -406,6 +406,11 @@
     <% } %>
 </script >
 <script type="text/x-handlebars-template" id="tp-user-history">
+    <% if(news == 0){%>
+    <div class="no-inf">
+        <img src="/system/assets/img/no-message.png">
+    </div>
+    <% } %>
     <% for(var i = 0;i < hismes.length; i++){ %>
     <li>
         <% if(hismes[i].checked == 3){ %>
@@ -431,6 +436,11 @@
     <% } %>
 </script>
 <script type="text/x-handlebars-template" id="tp-user-news">
+    <% if(news == 0){%>
+    <div class="no-inf">
+        <img src="/system/assets/img/no-message.png">
+    </div>
+    <% } %>
     <% for(var i = 0;i < news.length; i++){ %>
     <li id="news-<%= i %>">
         <% if(news[i]["checked"] == 1){%>
