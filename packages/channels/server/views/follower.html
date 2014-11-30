@@ -65,18 +65,18 @@
         <ul id="members-ul">
             {% if users.creator %}
             <li class="member founder-icon">
-                <a href="javascript:;">
+                <a href="/u/{{''+users.creator._id}}">
                     <img src="http://yiye.qiniudn.com/{{ users.creator.avatar }}">
                 </a>
                 <div class="member-inf">
-                    <a class="member-name" href="javascript:;">{{ users.creator.username }}</a><br>
+                    <a class="member-name" href="/u/{{''+users.creator._id}}">{{ users.creator.username }}</a><br>
                     <div class="channel-inf">
-                        <a href="javascript:;">创建：{{ users.creator.createNum }}&nbsp</a><br>
-                        <a href="javascript:;">订阅：{{ users.creator.subNum }}&nbsp</a>
+                        <a href="/u/{{''+users.creator._id}}/create">创建：{{ users.creator.createNum }}&nbsp</a><br>
+                        <a href="/u/{{''+users.creator._id}}/watch">订阅：{{ users.creator.subNum }}&nbsp</a>
                     </div>
                     <div class="links-inf">
                         <a href="javascript:;">收藏：{{ users.creator.collectNum }}&nbsp</a><br>
-                        <a href="javascript:;">提交：{{ users.creator.postNum }}&nbsp</a>
+                        <a href="/u/{{''+users.creator._id}}">提交：{{ users.creator.postNum }}&nbsp</a>
                     </div>
                 </div>
             </li>
@@ -84,18 +84,18 @@
             {% if users.admins %}
                 {% for admin in users.admins %}
                     <li class="member admin-icon">
-                        <a href="javascript:;">
+                        <a href="/u/{{''+admin._id}}">
                             <img src="http://yiye.qiniudn.com/{{ admin.avatar }}">
                         </a>
                         <div class="member-inf">
-                            <a class="member-name" href="javascript:;">{{ admin.username }}</a><br>
+                            <a class="member-name" href="/u/{{''+admin._id}}">{{ admin.username }}</a><br>
                             <div class="channel-inf">
-                                <a href="javascript:;">创建：{{ admin.createNum }}&nbsp</a><br>
-                                <a href="javascript:;">订阅：{{ admin.subNum }}&nbsp</a>
+                                <a href="/u/{{''+admin._id}}/create">创建：{{ admin.createNum }}&nbsp</a><br>
+                                <a href="/u/{{''+admin._id}}/watch">订阅：{{ admin.subNum }}&nbsp</a>
                             </div>
                             <div class="links-inf">
                                 <a href="javascript:;">收藏：{{ admin.collectNum }}&nbsp</a><br>
-                                <a href="javascript:;">提交：{{ admin.postNum }}&nbsp</a>
+                                <a href="/u/{{''+admin._id}}">提交：{{ admin.postNum }}&nbsp</a>
                             </div>
                         </div>
                     </li>
@@ -104,18 +104,18 @@
             {% if users.followers %}
                 {% for follower in users.followers %}
                     <li class="member">
-                        <a href="javascript:;">
+                        <a href="/u/{{''+follower._id}}">
                             <img src="http://yiye.qiniudn.com/{{ follower.avatar }}">
                         </a>
                         <div class="member-inf">
-                            <a class="member-name" href="javascript:;">{{ follower.username }}</a><br>
+                            <a class="member-name" href="/u/{{''+follower._id}}">{{ follower.username }}</a><br>
                             <div class="channel-inf">
-                                <a href="javascript:;">创建：{{ follower.createNum }}&nbsp</a><br>
-                                <a href="javascript:;">订阅：{{ follower.subNum }}&nbsp</a>
+                                <a href="/u/{{''+follower._id}}/create">创建：{{ follower.createNum }}&nbsp</a><br>
+                                <a href="/u/{{''+follower._id}}/watch">订阅：{{ follower.subNum }}&nbsp</a>
                             </div>
                             <div class="links-inf">
                                 <a href="javascript:;">收藏：{{ follower.collectNum }}&nbsp</a><br>
-                                <a href="javascript:;">提交：{{ follower.postNum }}&nbsp</a>
+                                <a href="/u/{{''+follower._id}}">提交：{{ follower.postNum }}&nbsp</a>
                             </div>
                         </div>
                     </li>
