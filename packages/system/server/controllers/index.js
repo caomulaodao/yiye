@@ -94,8 +94,8 @@ exports.explore = function(req, res,Package){
 
 //查询处理
 exports.query = function(req,res,Package){
-    if(!req.query.q){
-        res.redirect('/explore');
+    if(!req.query.q||req.query.q==null){
+        return res.redirect('/explore');
     }
     //查询最大字数 searchMax
     var searchMax=15;
@@ -105,6 +105,7 @@ exports.query = function(req,res,Package){
     if(search.length>=searchMax){
         search=search.substr(0,searchMax);
     }
+    search=tool.stripscript(search);
     async.waterfall([
         //返回频道总数count
         function(cb){
