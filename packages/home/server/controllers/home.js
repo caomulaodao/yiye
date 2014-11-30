@@ -241,7 +241,7 @@ exports.ajaxBookmarks = function(req,res){
     async.parallel({
         list: function(callback){
             //获取对应频道的书签
-            Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]},postTime:{$gt:date}}).sort({postTime:-1}).limit(limit).exec(function (err, doc) {console.log(doc);console.log('doc');
+            Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]},postTime:{$lt:date}}).sort({postTime:-1}).limit(limit).exec(function (err, doc) {console.log(doc);console.log('doc');
                 if(err) console.log(err);console.log(doc.length);
                 if(doc.length === 0) return callback(null,[]);
                 var targetTime = doc[doc.length -1]['postTime'];//取出来的最后一天的时间
