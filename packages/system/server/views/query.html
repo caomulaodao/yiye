@@ -19,7 +19,7 @@
         </div>
         <div class="collapse navbar-collapse" >
             <ul class="nav navbar-nav navbar-right right-links" >
-                <li><a href="download">下载</a></li>
+                <li><a href="/">首页</a></li>
                 <li><a href="#">帮助</a></li>
                 {% if user%}
                 <li><a href="/home">{{user.username}}</a></li>
@@ -59,7 +59,7 @@
             <p class="channel-showcase-description">{{ channel.description }}</p>
             <div class="channel-showcase-footer">
               <span>{{ channel.bmkNum}}书签</span><span>{{ channel.subNum}}关注者</span>
-              <img src="http://yiye.qiniudn.com/{{ channel.creator }}"/>
+              <a href="/u/{{ ''+channel.creator.userId }}" target="_blank"><img src="http://yiye.qiniudn.com/{{ channel.creator.userLogo }}"/></a>
             </div>
         </div>
     </li>
