@@ -55,6 +55,7 @@ button:focus {outline:0;}
 /* personal-center */
 .personal-center {
     margin: 20px 20px;
+    min-width: 450px;
 }
 
 #channel-manage-tab>li.active a {
@@ -646,7 +647,7 @@ button:focus {outline:0;}
 
 .channel-list ul li:not(.active):hover {
     cursor: pointer;
-    background-color: #ddd;
+    background-color: #eee;
     color: #333;
 }
 .channel-img {

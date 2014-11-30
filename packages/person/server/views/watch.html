@@ -84,7 +84,10 @@
                         <div class="channel-main">
                             <div class="channel-showcase-head">
                                 <a href="#">{{ channel.name }}</a>
-                                <span><a href="#">{% if channel.isAttention %}已关注{% else %}+关注{% endif %}</a></span>
+                                <span>
+                                    <a class="have-subed" href="javascript:;">{% if channel.isAttention %}已订阅{% else %}</a>
+                                    <a class="to-sub" data-id= {{ channel.id }} href="javascript:;">+订阅{% endif %}</a>
+                                </span>
                             </div>
                             <p class="channel-showcase-description">{{ channel.description }}</p>
                             <div class="channel-showcase-footer">
@@ -122,5 +125,6 @@
         </div>
     </div>
 </div>
+<script type="text/javascript"  src="/preson/assets/js/create.js"></script>
 </body>
 </html>

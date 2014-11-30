@@ -15,7 +15,7 @@
 <div id="explore-navbar" role="navigation">
     <div id="explore-navbar-container" class="container">
         <div class="navbar-header">
-            <a id="logo" href="/"><img src="/system/assets/img/logo_white.png"/></a>
+            <a id="logo"><img src="/system/assets/img/logo_white.png"/></a>
         </div>
         <div class="collapse navbar-collapse" >
             <ul class="nav navbar-nav navbar-right right-links" >
@@ -25,7 +25,7 @@
                 <li><a href="/home">{{user.username}}</a></li>
                 {% else %}
                 <li><a href="signup" target="_blank">注册</a></li>
-                <li><button type="button" class="btn btn-default navbar-btn" onclick="window.open('./signin')">登录</button></li>          
+                <li><button type="button" class="btn btn-default navbar-btn" onclick="window.open('./signin')">登录</button></li>
                 {% endif %}
 
             </ul>
@@ -46,32 +46,31 @@
 </div>
 <h1 id="index-top-title"><div class="glyphicon glyphicon-fire"></div>热门频道</h1>
 <!--water fall-->
-<ul id="water-fall-main">
-    {% for channel in channels %}
-    <li class="channel-showcase">
-        <div class="channel-logo">
-            <img src="http://yiye.qiniudn.com/{{ channel.logo }}"/>
-        </div>
-        <div class="channel-main">
-            <div class="channel-showcase-head">
-                <a href="#">{{ channel.name }}</a>
-                <span><a class="have-subed" href="#">
-                          {% if channel.isAttention %}已订阅{% else %}
-                      </a>
-                      <a class="to-sub" href="#">
-                          +订阅{% endif %}
-                      </a>
-                </span>
+<div id="water-fall">
+    <ul id="water-fall-main">
+        {% for channel in channels %}
+        <li class="channel-showcase">
+            <div class="channel-logo">
+                <img src="http://yiye.qiniudn.com/{{ channel.logo }}"/>
             </div>
-            <p class="channel-showcase-description">{{ channel.description }}</p>
-            <div class="channel-showcase-footer">
-              <span>{{ channel.bmkNum}}书签</span><span>{{ channel.subNum}}关注者</span>
-              <a href="/u/{{ ''+channel.creator.userId }}" target="_blank"><img src="http://yiye.qiniudn.com/{{ channel.creator.userLogo }}"/></a>
+            <div class="channel-main">
+                <div class="channel-showcase-head">
+                    <a href="/channel/{{ channel.id }}">{{ channel.name }}</a>
+                    <span>
+                        <a class="have-subed" href="javascript:;">{% if channel.isAttention %}已订阅{% else %}</a>
+                        <a class="to-sub" data-id= {{ channel.id }} href="javascript:;">+订阅{% endif %}</a>
+                    </span>
+                </div>
+                <p class="channel-showcase-description">{{ channel.description }}</p>
+                <div class="channel-showcase-footer">
+                  <span>{{ channel.bmkNum}}书签</span><span>{{ channel.subNum}}关注者</span>
+                  <a href="/u/{{ ''+channel.creator.userId }}" target="_blank"><img src="http://yiye.qiniudn.com/{{ channel.creator.userLogo }}"/></a>
+                </div>
             </div>
-        </div>
-    </li>
-    {% endfor %}
-</ul>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
 {% if page.show.length!=0 %}
 <div id="pagination-part">
     <ul class="pagination">
