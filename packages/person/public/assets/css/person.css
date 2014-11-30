@@ -3,6 +3,7 @@ html,body {
     height: 100%;
     font-family: "微软雅黑";
     overflow-y: hidden;
+    min-width: 890px;
 }
 ul {
     padding-left: 0;
@@ -201,6 +202,7 @@ button:focus {outline:0;}
     height: 100%;
     background-color: #f3f3f3;
     margin-left: 30%;
+    position: relative;
 }
 
 #content-page-content {
@@ -216,8 +218,15 @@ button:focus {outline:0;}
 /* 无信息图片 */
 .no-inf {
     width: 200px;
-    height: 150px;
-    margin: 200px auto;
+    height: 200px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%,-50%);;
+    -moz-transform: translate(-50%,-50%);;
+    -ms-transform: translate(-50%,-50%);;
+    -o-transform: translate(-50%,-50%);;
+    transform: translate(-50%,-50%);;
 }
 .no-inf>img {
     width: 200px;

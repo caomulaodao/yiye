@@ -42,7 +42,7 @@ exports.render = function(req, res,Package) {
 
 //渲染发现页面
 exports.explore = function(req, res,Package){
-    var limit = 20;//每页限制显示数
+    var limit = 2;//每页限制显示数
     var p=req.query.p||1;
     async.waterfall([function(cb){
         Channels.count({},function(err,count){
