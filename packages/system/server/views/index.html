@@ -35,6 +35,12 @@
         <a id="watch-video"></a>
         <p>点击播放</p>
     </div>
+    <div class="video-modal" style="display: none;">
+        <a href="#" class="video-modal-close"></a>
+        <video controls="" preload="">
+            <source src="http://pic1.zhimg.com/ce6737297f485410e8fed649377bf549.mp4" type="video/mp4">
+        </video>
+    </div>
     <div id="signup">
         <button type="button" class="btn btn-lg  btn-block" onclick = "window.open('/signup')">{% if user%}我的主页{% else %}立即注册{% endif %}</button>
     </div>
@@ -108,5 +114,7 @@
     <div id="about-us"><a href="our/team" target="_blank">关于我们</a><a href='our/team/#b' target="_blank">加入我们</a><a href="our/team/#d" target="_blank">联系我们</a><a href="#">意见反馈</a></div>
 </div>
 </div>
+<script rel="script" src="/bower_components/jquery/dist/jquery.js"></script>
+<script rel="script" src="/system/assets/js/system.index.js"></script>
 </body>
 </html>
