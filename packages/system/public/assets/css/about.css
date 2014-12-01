@@ -61,6 +61,8 @@ hr{
 }
 .slogan{
     margin: 50px 0px 0px 0px;
+    font-size: 1.5em;
+    font-weight: 100;
 }
 .navigation{
     
@@ -393,7 +395,7 @@ hr{
 }
 @media(max-width:500px){
     .head{
-    background: url('morning.jpeg') -300px -300px no-repeat;
+    background: url('../img/morning.jpeg') -300px -300px no-repeat;
     background-attachment:fixed;
     }
 }
@@ -426,4 +428,37 @@ hr{
 }
 .guest-img img:hover{
     cursor: pointer;
+}
+.guest{
+    width: 15%;
+    margin: 2.5%;
+    margin-top: 0;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    float: left;
+    background-color: rgba(255,255,255,0.3);
+    box-sizing: border-box;
+}
+.guest:hover{
+    cursor: pointer;
+    border:1px solid #eee;
+
+}
+.details{
+    color:black;
+    font-size: 16px;
+    font-weight: 100;
+    box-sizing: border-box;
+    padding: 20px;
+    text-align: left;
+}
+.details li{
+    list-style: circle inside;
+}
+.details p{
+    text-align: center;
+    color:black;
+    font-size: 16px;
+    font-weight: 100;
 }

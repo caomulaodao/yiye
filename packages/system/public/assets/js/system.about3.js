@@ -57,11 +57,15 @@ $(function () {
 
         }
     });//下拉
-    $('.guest img').click(function(){
-        $('.lsl').add('.details').fadeIn(500);
+    var $happy=null;
+    $('.guest').click(function(){
+        $('.lsl').fadeIn(500);
+        $(this).find('.details').fadeIn(500);
+        $happy=$(this);
     });
     $('.lsl').click(function(){
-        $('.lsl').add('.details').fadeOut(500);
+         $('.lsl').fadeOut(500);
+        $happy.find('.details').fadeOut(500);
     })
     
 });

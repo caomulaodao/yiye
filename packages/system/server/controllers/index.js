@@ -130,7 +130,7 @@ exports.query = function(req,res,Package){
             });
         },
         function(page,channels,callback){
-            if (!req.user) return callback(null,channels,page,[]);
+            if (!req.user) return callback(null,pege,channels,[]);
             Channel2User.find({'userId':req.user._id},function(err,channel2user){
                 if (err) return console.log(err);
                 var channel2userId=[];
