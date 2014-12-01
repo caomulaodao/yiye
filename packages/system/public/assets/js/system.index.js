@@ -6,7 +6,7 @@ $(function(){
         $(".video-modal").show();
 
     });
-    $("#video-modal-close").click(function(){
+    $(".video-modal-close").click(function(){
         $(".video-modal").hide();
     });
 });
