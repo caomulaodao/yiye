@@ -260,7 +260,15 @@ body {background: #f3f3f3;}
     width: 100%;
 }
 
+<<<<<<< Updated upstream
 #water-fall-main {margin: 0 auto;}
+=======
+#water-fall-main {
+    margin: 0 auto;
+    padding-left: 30px;
+}
+
+>>>>>>> Stashed changes
 
 .icon-rss {margin-right: 1px;}
 

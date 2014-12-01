@@ -360,10 +360,10 @@
                             <a href="/channel/<%= list[i]['_id'] %>" target="_blank"><%= list[i]['name']  %></a>
                             <span>
                                 <% if(!list[i]["isAttention"]){%>
-                                    <a class="to-sub" data-id= <%= list[i]['_id'] %> href="#">+订阅</a>
+                                    <a class="to-sub" data-id= <%= list[i]['_id'] %> href="javascript:;">+订阅</a>
                                 <% } %>
                                 <% if(list[i]["isAttention"]){ %>
-                                    <a class="have-subed" data-id= <%= list[i]['_id'] %> href="#">已订阅</a>
+                                    <a class="have-subed" data-id= <%= list[i]['_id'] %> href="javascript:;">已订阅</a>
                                 <% } %>
                             </span>
                         </div>
