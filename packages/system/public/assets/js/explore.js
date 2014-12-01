@@ -25,17 +25,10 @@ function subChannelAjax() {
 
 function goCenter() {
     var nClientW = $(window).width();
-<<<<<<< Updated upstream
     var nChannelW = $('.channel-showcase').width()+30;
     var cols = Math.floor(nClientW / nChannelW);  //求出频道列数
     var nContentW = cols * 365;             //求出water-fall-main的宽度
-=======
-    var nChannelW = $('.channel-showcase').width()+30;console.log(nChannelW);
 
-    var cols = Math.floor(nClientW / nChannelW);  //求出频道列数
-    var nContentW = cols * 365;             //求出water-fall-main的宽度
-    console.log(cols);
->>>>>>> Stashed changes
 
     $('#water-fall-main').width(nContentW);
 }
