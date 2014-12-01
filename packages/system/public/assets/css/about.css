@@ -15,19 +15,22 @@
 }
 @font-face {
     font-family: 'iconfont';
-    src: url('../icons/fonts/iconfont.eot'); /* IE9*/
-    src: url('../icons/fonts/iconfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-    url('../icons/fonts/iconfont.woff') format('woff'), /* chrome、firefox */
-    url('../icons/fonts/iconfont.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
-    url('../icons/fonts/iconfont.svg#uxiconfont') format('svg'); /* iOS 4.1- */
+    src: url('../icons/fonts/iconfont.eot');
+    src: url('../icons/fonts/iconfont.eot?#iefix') format('embedded-opentype'), 
+    url('../icons/fonts/iconfont.woff') format('woff'), 
+    url('../icons/fonts/iconfont.ttf') format('truetype'), 
+    url('../icons/fonts/iconfont.svg#uxiconfont') format('svg'); 
 }
 .iconfont{
     font-family:"iconfont" !important;
-    font-size:40px;font-style:normal;
+    font-size:60px;font-style:normal;
     -webkit-font-smoothing: antialiased;
     -webkit-text-stroke-width: 0.2px;
     -moz-osx-font-smoothing: grayscale;
-    color:black;
+    color:rgba(23,20,15,1);
+}
+.iconfont:hover{
+    color:rgba(128,76,28,0.68);
 }
 .head{
     text-align: center;
@@ -311,10 +314,7 @@ hr{
     float: left;
     width: 10%;
     margin: 5%;
-}
-.friend-img img{
-   width: 100%;
-    height: auto;
+    margin-bottom: 2%;
 }
 .friend-name{
     text-align: center;
