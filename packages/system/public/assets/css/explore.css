@@ -258,6 +258,7 @@ body {background: #f3f3f3;}
    ======================================================================== */
 #water-fall {
     width: 100%;
+    min-height: 400px;
 }
 
 #water-fall-main {margin: 0 auto;}
