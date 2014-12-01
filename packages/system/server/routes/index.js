@@ -43,5 +43,8 @@ module.exports = function(System, app, auth, database) {
   app.get('/uptoken',user.upToken);
   app.get('/please/use/chrome',function(req,res){
     res.render('useChrome');
+  });
+  app.get('/our/team',function(req,res){
+    res.render('about');
   })
 };

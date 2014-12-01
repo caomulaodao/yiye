@@ -360,10 +360,10 @@
                             <a href="/channel/<%= list[i]['_id'] %>" target="_blank"><%= list[i]['name']  %></a>
                             <span>
                                 <% if(!list[i]["isAttention"]){%>
-                                    <a class="to-sub" data-id= <%= list[i]['_id'] %> href="#">+订阅</a>
+                                    <a class="to-sub" data-id= <%= list[i]['_id'] %> href="javascript:;">+订阅</a>
                                 <% } %>
                                 <% if(list[i]["isAttention"]){ %>
-                                    <a class="have-subed" data-id= <%= list[i]['_id'] %> href="#">已订阅</a>
+                                    <a class="have-subed" data-id= <%= list[i]['_id'] %> href="javascript:;">已订阅</a>
                                 <% } %>
                             </span>
                         </div>
@@ -406,6 +406,11 @@
     <% } %>
 </script >
 <script type="text/x-handlebars-template" id="tp-user-history">
+    <% if(news == 0){%>
+    <div class="no-inf">
+        <img src="/system/assets/img/no-message.png">
+    </div>
+    <% } %>
     <% for(var i = 0;i < hismes.length; i++){ %>
     <li>
         <% if(hismes[i].checked == 3){ %>
@@ -431,6 +436,11 @@
     <% } %>
 </script>
 <script type="text/x-handlebars-template" id="tp-user-news">
+    <% if(news == 0){%>
+    <div class="no-inf">
+        <img src="/system/assets/img/no-message.png">
+    </div>
+    <% } %>
     <% for(var i = 0;i < news.length; i++){ %>
     <li id="news-<%= i %>">
         <% if(news[i]["checked"] == 1){%>

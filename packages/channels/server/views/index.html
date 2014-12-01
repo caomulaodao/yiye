@@ -59,6 +59,11 @@
 <!-- links-part -->
 <div id="links-part" class="open">
     <ul id="sub-channel-list">
+        {% if list.length == 0%}
+        <div class="no-inf">
+            <img src="/system/assets/img/no-bookmark.png">
+        </div>
+        {% endif %}
         {% for box  in list %}
         <div class="date-divide">
             <div>{{ box['day'] }}</div>
