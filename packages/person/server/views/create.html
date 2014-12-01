@@ -14,7 +14,7 @@
 
 <div class="control-page">
     <div class="bg-style">
-        <div class="bg-img" style="background: url(http://yiye.qiniudn.com{{ user.avatar }}) no-repeat;background-size: cover;"></div>
+        <div class="bg-img" {% if user.avatar !== 'avatar/83e8ef518174e1eb016d71d414509845.png' %} style="background: url(http://yiye.qiniudn.com/{{ user.avatar }}) no-repeat;background-size: cover;" {% endif %} ></div>
         <div class="bg-opacity"></div>
     </div>
     <div class="control-page-content">
