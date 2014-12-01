@@ -47,7 +47,23 @@ module.exports = function(app, passport, db) {
 
   // set .html as the default extension
   app.set('view engine', 'html');
-
+  //浏览器头部检测中间件
+  app.use(function(req,res,next){
+    var header=req.headers['user-agent'];
+    var staticFile1 = new RegExp('/.*?/assets/.*');
+    var staticFile2 = new RegExp('/bower_components/.*')
+    function isChrome(str){
+       if (str.indexOf('WebKit')>-1) return true;
+       else return false;
+    }
+    if (req.url=='/please/use/chrome'||staticFile1.test(req.url)||staticFile2.test(req.url)){
+      next();
+    }
+    else{
+      if(isChrome(header)) next();
+      else{res.redirect('/please/use/chrome');}
+    }
+  })
   // The cookieParser should be above session
   app.use(cookieParser());
 

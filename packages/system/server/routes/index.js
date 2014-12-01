@@ -41,4 +41,7 @@ module.exports = function(System, app, auth, database) {
 
   //获取七牛云存储上传token
   app.get('/uptoken',user.upToken);
+  app.get('/please/use/chrome',function(req,res){
+    res.render('useChrome');
+  })
 };
