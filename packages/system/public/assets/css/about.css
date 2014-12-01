@@ -9,6 +9,10 @@
     -webkit-user-select: none;  
     -ms-user-select: none;  
 }
+.clear{
+    clear: both;
+    zoom:1;
+}
 @font-face {
     font-family: 'iconfont';
     src: url('../icons/fonts/iconfont.eot'); /* IE9*/
