@@ -447,6 +447,8 @@ body {background: #f3f3f3;}
 #pagination-part {
     margin-top: 20px;
     text-align: center;
+    border-bottom: 1px solid #ccc;
+    box-shadow: 0 1px 0px #fff;
 }
 
 /* ----------------------------------------------------
@@ -486,10 +488,10 @@ body {background: #f3f3f3;}
 #explore-footer {
     width: 100%;
     height: 100px;
-    margin: 0 auto;
+    margin: 2px auto;
     padding-top: 30px;
-    color: #ccc;
-    background-color: #888;
+    color: #bbb;
+    background-color: #f3f3f3;
 }
 
 #explore-footer div:first-child {
