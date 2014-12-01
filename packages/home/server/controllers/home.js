@@ -91,6 +91,7 @@ exports.createChannel = function(req,res){
     channels.creator = {userId:req.user._id,userName:req.user.username,userLogo:req.user.avatar};
     async.waterfall([
         function(callback){
+            //判断是否还可以创建频道，等于5则不可以
             Channel2User.count({userId:req.user._id,type:'creator'},function(err,count){
                 if(count>=allCount){
                     callback(null,false);
@@ -101,6 +102,7 @@ exports.createChannel = function(req,res){
         },
         function(isCreate,callback){
             if(isCreate){
+                //
                 channels.save(function(err,doc){
                     if(err) console.log(err);
                     var admChannel = new Channel2User({
@@ -112,7 +114,10 @@ exports.createChannel = function(req,res){
                     });
                     admChannel.save(function(err){
                         if(err) console.log(err);
-                        callback(null,isCreate);
+                        User.update({_id:req.user._id},{$inc:{createNum:1}},function(err,num){
+                            if(err) console.log(err);
+                            callback(null,isCreate);
+                        });
                     });
                 });
             }else{

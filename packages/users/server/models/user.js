@@ -62,7 +62,7 @@ var UserSchema = new Schema({
   },
   avatar:{
       type:String,
-      default:'cLogo/4079016d940210b418b50a78ad576c51.png'
+      default:'avatar/83e8ef518174e1eb016d71d414509845.png'
   },
   provider: {
       type: String,
