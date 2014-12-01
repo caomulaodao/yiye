@@ -130,7 +130,7 @@ exports.query = function(req,res,Package){
             });
         },
         function(page,channels,callback){
-            if (!req.user) return callback(null,pege,channels,[]);
+            if (!req.user) return callback(null,page,channels,[]);
             Channel2User.find({'userId':req.user._id},function(err,channel2user){
                 if (err) return console.log(err);
                 var channel2userId=[];
@@ -141,7 +141,7 @@ exports.query = function(req,res,Package){
             })
         }],
         function(err,page,channels,channel2userId){
-            if (err) return console.log(err);
+            if (err) return console.log(err);//bug
             channels.forEach(function(item,index,array){
                 array[index].isAttention=false;
                 if (channel2userId.indexOf(item._id+'')>-1){
