@@ -23,33 +23,23 @@ ul {
 button:focus {outline:0;}
 
 
-/* =========================================================================================
+/* ==========================================================
     webkit-scroll-style
-   ========================================================================================= */
-
+   ========================================================== */
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
 }
 
-::-webkit-scrollbar-track-piece {
-    background-color: #267C7B;
-    -webkit-border-radius: 6px;
-}
-
 ::-webkit-scrollbar-thumb:vertical {
-    height: 5px;
-    background-color: #aaa;
+    background-color: #bbb;
     -webkit-border-radius: 6px;
 }
 
 ::-webkit-scrollbar-thumb:horizontal {
-    width: 5px;
-    background-color: #ccc;
+    background-color: #bbb;
     -webkit-border-radius: 6px;
 }
-
-
 /* =========================================================================================
    control page
    ========================================================================================= */

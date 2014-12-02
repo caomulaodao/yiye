@@ -8,28 +8,21 @@ html,body {
 
 button:focus {outline:0;}
 
-/* ===============================================================
+/* ==========================================================
     webkit-scroll-style
-   =============================================================== */
--webkit-scrollbar {
+   ========================================================== */
+::-webkit-scrollbar {
     width: 6px;
     height: 6px;
 }
 
--webkit-scrollbar-track-piece {
-    background-color: #267C7B;
+::-webkit-scrollbar-thumb:vertical {
+    background-color: #bbb;
     -webkit-border-radius: 6px;
 }
 
--webkit-scrollbar-thumb:vertical {
-    height: 5px;
-    background-color: #aaa;
-    -webkit-border-radius: 6px;
-}
-
--webkit-scrollbar-thumb:horizontal {
-    width: 5px;
-    background-color: #CCCCCC;
+::-webkit-scrollbar-thumb:horizontal {
+    background-color: #bbb;
     -webkit-border-radius: 6px;
 }
 
@@ -626,13 +619,9 @@ button:focus {outline:0;}
     width: 100%;
     height: 100%;
     margin-top: 20px;
-    direction:rtl;
     color: #111;
     font-size: 1.5em;
     overflow-y: auto;
-}
-.channel-list ul{
-    direction:ltr;
 }
 
 .channel-img {
@@ -673,7 +662,7 @@ button:focus {outline:0;}
     padding-right: 20px;
     list-style-type: none;
     margin-top: 5px;
-    border-left: 5px solid transparent;
+    border-left: 3px solid transparent;
 }
 
 .channel-item.active {

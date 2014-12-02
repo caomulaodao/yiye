@@ -10,6 +10,24 @@
 
 *{margin:0;padding:0;}
 
+/* ==========================================================
+    webkit-scroll-style
+   ========================================================== */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-thumb:vertical {
+    background-color: #bbb;
+    -webkit-border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+    background-color: #bbb;
+    -webkit-border-radius: 6px;
+}
+
 body {background: #f3f3f3;}
 
 #explore-navbar {
