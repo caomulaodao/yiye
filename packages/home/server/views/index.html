@@ -34,7 +34,9 @@
                             <img src="http://yiye.qiniudn.com/{{ channel.logo }}">
                         </div>
                         <span class="channel-name">{{ channel.name }}</span>
+                        {% if news > 0 %}
                         <span class="links-num">{{ channel.news }}</span>
+                        {% endif %}
                     </li>
                     {% endfor %}
                 </ul>
@@ -49,7 +51,9 @@
                             <img src="http://yiye.qiniudn.com/{{ channel.logo }}">
                         </div>
                         <span class="channel-name">{{ channel.name }}</span>
+                        {% if news > 0 %}
                         <span class="links-num">{{ channel.news }}</span>
+                        {% endif %}
                     </li>
                     {% endfor %}
                     <div class="create-channel">

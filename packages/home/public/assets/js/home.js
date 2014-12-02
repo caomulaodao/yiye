@@ -20,7 +20,7 @@ function initialize() {
 
     $('.channel-item').on('click touch', function(){
         $('.channel-item').removeClass('active');
-        $(this).addClass('active');
+        $(this).addClass('active').children('.links-num').remove();
     });
 }
 
