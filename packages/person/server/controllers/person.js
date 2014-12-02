@@ -19,7 +19,7 @@ var mongoose = require('mongoose'),
 exports.renderPost = function(req,res,Package){
     var userId = req.params['userId'];//被访问者id
     var p=req.query.p||1;
-    var limit=1;//每页显示的数量
+    var limit=20;//每页显示的数量
     async.waterfall([//被访问者的信息
                 function (callback) {
                 User.findOne({_id:userId}, function (err, user) {
@@ -61,7 +61,7 @@ exports.renderPost = function(req,res,Package){
 exports.renderCreate = function(req,res,Package){
     var userId = req.params['userId'];
     var p=req.query.p||1;
-    var limit=1;//每页显示的数量
+    var limit=24;//每页显示的数量
     async.waterfall([
         function (callback) {
         User.findOne({_id:userId}, function (err, user) {
@@ -116,11 +116,11 @@ exports.renderCreate = function(req,res,Package){
     })
 }
 
-//展示用户关注的频道
+//展示用户订阅的频道
  exports.renderWatch = function(req,res,Package){
     var userId = req.params['userId'];
     var p=req.query.p||1;
-    var limit=1;//每页显示的数量
+    var limit=24;//每页显示的数量
     async.waterfall([
         function (callback) {
         User.findOne({_id:userId}, function (err, user) {

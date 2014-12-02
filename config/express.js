@@ -50,6 +50,7 @@ module.exports = function(app, passport, db) {
   //浏览器头部检测中间件
   app.use(function(req,res,next){
     var header=req.headers['user-agent'];
+    if(typeof header !='string') header='';//如果获取的头部不包含user-agent;
     var staticFile1 = new RegExp('/.*?/assets/.*');
     var staticFile2 = new RegExp('/bower_components/.*')
     function isChrome(str){
