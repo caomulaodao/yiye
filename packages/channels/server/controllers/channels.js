@@ -5,7 +5,7 @@
 var mongoose = require('mongoose'),
     async = require('async'),
     moment = require('moment'),
-    tool = require('../../../../config/tools/tool')
+    tool = require('../../../../config/tools/tool'),
     User = mongoose.model('User'),
     Bookmarks = mongoose.model('Bookmarks'),
     Channels = mongoose.model('Channels'),
@@ -87,31 +87,59 @@ exports.renderMain = function(req,res,Package){
 }
 //频道订阅
 exports.sub = function(req,res){
-    var channelId = req.params['channelId'];
     if(!req.user) return res.send({err:true,info:'请先登陆或注册'});
-    Channel2User.findOne({channelId:channelId,userId:req.user._id},function(err,doc){
-        if(err) return console.log(err);
-        if(doc) return  res.send({err:true,info:'你已经订阅或是创建该频道'});
+    var channelId = req.params['channelId'];
 
-        //查询频道信息
-        Channels.findOne({_id:channelId},function(err,doc){
-            var follower = Channel2User({
-                channelId : channelId,
-                userId : req.user._id,
-                type : 'follower',
-                name : doc.name,
-                logo : doc.logo
+    //判断是否已经订阅
+    Channel2User.findOne({channelId:channelId,userId:req.user._id},function(err,doc) {
+        if (err) return console.log(err);
+        if(doc){
+            console.log('已经订阅');
+            //如果已经订阅，则返回信息。
+            return  res.send({err: true, info: '你已经订阅或是创建该频道'});
+        }else{
+            //如果没有订阅，则开始订阅流程
+            async.waterfall([
+                function(callback){
+                    //查找频道信息
+                    Channels.findOne({_id:channelId},function(err,doc){
+                        callback(null,doc);
+                    });
+                },
+                function(channel,callback){
+                    //添加关注者与频道对应表
+                    var follower = Channel2User({
+                        channelId : channelId,
+                        userId : req.user._id,
+                        type : 'follower',
+                        name : channel.name,
+                        logo : channel.logo
+                    });
+                    follower.save(function(err){
+                        if(err) return console.log(err);
+                        //更新频道订阅数
+                        callback(null);
+                    });
+                },
+                function(callback){
+                    //更新频道关注数量
+                    Channels.update({_id:channelId},{$inc:{subNum:1}},{},function(err,num){
+                        if(err) console.log(err);
+                        callback(null);
+                    });
+                },
+                function(callback){
+                    //更新用户关注数量
+                    User.update({_id:req.user._id},{$inc:{subNum:1}},{},function(err,num){
+                        if(err) console.log(err);
+                        callback(null);
+                    });
+                }
+            ],function(err){
+                if(err) console.log(err);
+                res.send({success:true,info:'订阅成功'});
             });
-            follower.save(function(err){
-                if(err) return console.log(err);
-                //更新频道订阅数
-                Channels.update({_id:channelId},{$inc:{subNum:1}},{},function(err,num){
-                    if(err) console.log(err);
-                    res.send({success:true,info:'订阅成功'});
-                });
-            });
-
-        });
+        }
 
     });
 };
@@ -322,13 +350,26 @@ exports.update = function(req,res){
 exports.noWatch = function(req,res){
     var channelId = req.params['channelId'];
     if(!req.user) return res.redirect('/');
+    
+    //删除频道用户关系表
     Channel2User.remove({channelId:channelId,userId:req.user._id},function(err,num){
         if(err) return console.log(err);
         if(num>0){
+
+            //更新频道表中订阅者记录
             Channels.update({_id:channelId},{$inc:{subNum:-1}},{},function(err,doc){
                 if(err) console.log(err);
-                res.redirect('/channel/'+channelId);
+
+                //更新用户关注数量
+                User.update({_id:req.user._id},{$inc:{subNum:-1}},{},function(err,num){
+                    if(err) console.log(err);
+
+                    //刷新页面
+                    res.redirect('/channel/'+channelId);
+                });
+
             });
+
         }else{
             res.redirect('/channel/'+channelId);
         }
