@@ -17,28 +17,28 @@ var mongoose = require('mongoose'),
 
 //展示用户提交的书签
 exports.renderPost = function(req,res,Package){
-    var userId = req.params['userId'];
+    var userId = req.params['userId'];//被访问者id
     var p=req.query.p||1;
     var limit=1;//每页显示的数量
-    async.waterfall([
+    async.waterfall([//被访问者的信息
                 function (callback) {
                 User.findOne({_id:userId}, function (err, user) {
                     callback(null,user);
                 });},
-                function(user,callback){
-                Bookmarks.count({checked:6,'postUser.userId':req.user._id},function(err,count){
+                function(user,callback){//取出被访问者提交的书签总数
+                Bookmarks.count({checked:6,'postUser.userId':userId},function(err,count){
                     if(err) return console.log(err);
                     var pageLength=Math.ceil(count/limit);
                     callback(err,user,pageLength);
                 });},
-                function(user,pageLength,callback){
+                function(user,pageLength,callback){//分页
                     var minPage;
                     //防止大于翻页上限
                     if(p>pageLength&&pageLength>0) minPage=pageLength;
                     else minPage=p;
                     //防止超过下限
                     if (minPage<1){minPage=1;}
-                Bookmarks.find({checked:6,"postUser.userId":req.user._id}).sort({postTime:-1}).skip(limit*(minPage-1)).limit(limit).exec(function (err, doc) {
+                Bookmarks.find({checked:6,"postUser.userId":userId}).sort({postTime:-1}).skip(limit*(minPage-1)).limit(limit).exec(function (err, doc) {
                     if(err) console.log(err);
                     if(doc.length === 0) return callback(null,user,pageLength,[]);
                     callback(null,user,pageLength,listToArray(doc));
