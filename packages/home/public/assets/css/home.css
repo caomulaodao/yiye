@@ -8,28 +8,21 @@ html,body {
 
 button:focus {outline:0;}
 
-/* ===============================================================
+/* ==========================================================
     webkit-scroll-style
-   =============================================================== */
--webkit-scrollbar {
+   ========================================================== */
+::-webkit-scrollbar {
     width: 6px;
     height: 6px;
 }
 
--webkit-scrollbar-track-piece {
-    background-color: #267C7B;
+::-webkit-scrollbar-thumb:vertical {
+    background-color: #bbb;
     -webkit-border-radius: 6px;
 }
 
--webkit-scrollbar-thumb:vertical {
-    height: 5px;
-    background-color: #aaa;
-    -webkit-border-radius: 6px;
-}
-
--webkit-scrollbar-thumb:horizontal {
-    width: 5px;
-    background-color: #CCCCCC;
+::-webkit-scrollbar-thumb:horizontal {
+    background-color: #bbb;
     -webkit-border-radius: 6px;
 }
 
@@ -626,35 +619,16 @@ button:focus {outline:0;}
     width: 100%;
     height: 100%;
     margin-top: 20px;
-    direction:rtl;
     color: #111;
     font-size: 1.5em;
     overflow-y: auto;
 }
-.channel-list ul{
-    direction:ltr;
-}
 
-.channel-list ul li {
-    width: 100%;
-    height: 46px;
-    padding-right: 20px;
-    list-style-type: none;
-    margin-top: 5px;
-}
-
-.channel-list ul li.active {color: #40c192;}
-
-.channel-list ul li:not(.active):hover {
-    cursor: pointer;
-    background-color: #eee;
-    color: #333;
-}
 .channel-img {
     width: 38px;
     height: 38px;
     margin-top: 4px;
-    margin-left: 17px;
+    margin-left: 10px;
     vertical-align: middle;
     overflow: hidden;
     float: left;
@@ -678,6 +652,35 @@ button:focus {outline:0;}
     display: inline-block;
     margin-top: 12px;
     margin-right: 0;
+    padding: 0 5px;
+    height: 20px;
+    color: #FFF;
+    background: #E06A6A;
+    border-radius: 5px;
+    text-align: center;
+}
+
+/* channel-item */
+
+.channel-item {
+    width: 100%;
+    height: 46px;
+    padding-right: 20px;
+    list-style-type: none;
+    margin-top: 5px;
+    border-left: 3px solid transparent;
+}
+
+.channel-item.active {
+    color: #0091EA;
+    border-color: #0091ea;
+}
+
+.channel-item:not(.active):hover {
+    cursor: pointer;
+    background-color: #eee;
+    color: #333;
+    border-color: #0091ea;
 }
 
 /*******admin interface******/
@@ -691,24 +694,8 @@ button:focus {outline:0;}
     font-size: 1.5em;
     overflow-y: auto;
 }
-.admin-interface ul {
-    direction: ltr;
-}
-.admin-interface ul li {
-    width: 100%;
-    height: 46px;
-    padding-right: 20px;
-    list-style-type: none;
-    margin-top: 5px;
-}
 
-.admin-interface ul li.active {color: #40c192;}
-
-.admin-interface ul li:not(.active):hover {
-    cursor: pointer;
-    background-color: #eee;
-    color: #333;
-}
+.admin-interface ul {direction: ltr;}
 
 .channel-name {
     float: left;

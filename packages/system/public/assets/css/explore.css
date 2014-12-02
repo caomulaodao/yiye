@@ -10,6 +10,24 @@
 
 *{margin:0;padding:0;}
 
+/* ==========================================================
+    webkit-scroll-style
+   ========================================================== */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-thumb:vertical {
+    background-color: #bbb;
+    -webkit-border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+    background-color: #bbb;
+    -webkit-border-radius: 6px;
+}
+
 body {background: #f3f3f3;}
 
 #explore-navbar {
@@ -448,8 +466,6 @@ body {background: #f3f3f3;}
 #pagination-part {
     margin-top: 20px;
     text-align: center;
-    border-bottom: 1px solid #ccc;
-    box-shadow: 0 1px 0px #fff;
 }
 
 /* ----------------------------------------------------
@@ -483,15 +499,18 @@ body {background: #f3f3f3;}
     color: #fff;
 }
 
+hr {
+    border-bottom: 1px solid #ccc;
+    box-shadow: 0 1px 0 #fff;
+}
+
 /* -------------------------------------------------
 	footer
    ------------------------------------------------- */
 #explore-footer {
     width: 100%;
-    height: 100px;
+    height: 50px;
     margin: 2px auto;
-    padding-top: 30px;
-    color: #bbb;
     background-color: #f3f3f3;
 }
 
@@ -507,7 +526,8 @@ body {background: #f3f3f3;}
 }
 
 #explore-footer div:last-child a {
-    color: #ccc;
+    color: #bbb;
+    text-shadow: 0 1px 0 #fff;
     margin-left: 20px;
 }
 
@@ -606,7 +626,7 @@ body {background: #f3f3f3;}
     margin:5px 0px 5px 0px;
     width: 220px;
     height: 20px;
-    white-space: normal;
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     font-family: 'Helvetica Neue',Helvetica,Arial,Sans-serif;
