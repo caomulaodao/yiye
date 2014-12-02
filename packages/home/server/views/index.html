@@ -29,7 +29,7 @@
             <div class="channel-list">
                 <ul id="sub-channel-list">
                     {% for channel in subChannelList %}
-                    <li data-id="{{ ''+channel.channelId }}">
+                    <li class="channel-item" data-id="{{ ''+channel.channelId }}">
                         <div class="channel-img">
                             <img src="http://yiye.qiniudn.com/{{ channel.logo }}">
                         </div>
@@ -44,13 +44,13 @@
             <div class="admin-interface">
                 <ul id="admin-channel-list">
                     {% for channel in admChannelList %}
-                        <li data-id="{{ ''+channel.channelId }}">
-                            <div class="channel-img">
-                                <img src="http://yiye.qiniudn.com/{{ channel.logo }}">
-                            </div>
-                            <span class="channel-name">{{ channel.name }}</span>
-                            <span class="links-num">{{ channel.news }}</span>
-                        </li>
+                    <li class="channel-item" data-id="{{ ''+channel.channelId }}">
+                        <div class="channel-img">
+                            <img src="http://yiye.qiniudn.com/{{ channel.logo }}">
+                        </div>
+                        <span class="channel-name">{{ channel.name }}</span>
+                        <span class="links-num">{{ channel.news }}</span>
+                    </li>
                     {% endfor %}
                     <div class="create-channel">
                         <button>
