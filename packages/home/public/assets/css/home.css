@@ -668,7 +668,7 @@ button:focus {outline:0;}
     padding-right: 20px;
     list-style-type: none;
     margin-top: 5px;
-    border-left: 3px solid transparent;
+    border-left: 4px solid transparent;
 }
 
 .channel-item.active {
