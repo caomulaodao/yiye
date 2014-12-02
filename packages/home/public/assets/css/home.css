@@ -1441,7 +1441,6 @@ a.header-channel-name , a.header-channel-name:hover{
 .channel-showcase-footer img{
     height: 20px;
     width: 20px;
-    float: right;
     border-radius: 10px;
 }
 .channel-showcase-description{
@@ -1475,6 +1474,8 @@ a.header-channel-name , a.header-channel-name:hover{
     color: #666;
     margin-bottom: 20px;
 }
+
+a.ex-creator {float: right;}
 
 /** 用户历史记录 **/
 .user-history-list{

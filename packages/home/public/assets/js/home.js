@@ -22,6 +22,8 @@ function initialize() {
         $('.channel-item').removeClass('active');
         $(this).addClass('active').children('.links-num').remove();
     });
+
+    $('.channel-showcase-footer a').tooltip();
 }
 
 

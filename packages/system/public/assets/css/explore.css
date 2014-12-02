@@ -618,9 +618,9 @@ hr {
 .channel-showcase-footer img{
     height: 20px;
     width: 20px;
-    float: right;
     border-radius: 10px;
 }
+.ex-creator {float:right;}
 .channel-showcase-description{
     color: #666;
     margin:5px 0px 5px 0px;

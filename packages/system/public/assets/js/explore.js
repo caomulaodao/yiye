@@ -4,6 +4,7 @@
 $(function(){
     subChannelAjax();
     goCenter();
+    toolTipFun();
     $(window).on('resize', function(){
         goCenter();
     });
@@ -20,6 +21,10 @@ function subChannelAjax() {
                 $(that).addClass('have-subed').removeClass('to-sub').html('已订阅');
             });
     });
+}
+
+function toolTipFun() {
+    $('.ex-creator').tooltip();
 }
 
 function goCenter() {

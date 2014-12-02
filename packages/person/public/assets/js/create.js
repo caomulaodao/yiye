@@ -2,10 +2,14 @@
  * Created by zweipix on 14/11/30.
  */
 
-$(window).on('load', function(){
+$(function(){
     subChannelAjax();
+    toolTipFun();
 });
 
+function toolTipFun() {
+    $('.ex-creator').tooltip();
+}
 
 function subChannelAjax() {
     $('.to-sub').on('click', function(event){
