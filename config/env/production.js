@@ -30,9 +30,11 @@ module.exports = {
     clientSecret: 'SECRET_KEY',
     callbackURL: 'http://localhost:3000/auth/linkedin/callback'
   },
-  emailFrom: 'SENDER EMAIL ADDRESS', // sender address like ABC <abc@example.com>
+  emailFrom: '一叶书签  <noreply@yiye.me>', // sender address like ABC <abc@example.com>
   mailer: {
-    service: 'smtp.exmail.qq.com',
+    host:'smtp.exmail.qq.com',
+    secureConnection: true,
+    port:465,
     auth: {
         user: 'noreply@yiye.me',
         pass: 'huhua123456789'
