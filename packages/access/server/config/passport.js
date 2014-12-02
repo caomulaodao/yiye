@@ -44,7 +44,7 @@ module.exports = function(passport) {
             message: '此邮箱用户不存在'
           });
         }
-        if (user.verifyToken) {
+        if (user.verifyToken != 0) {
            return done(null, false, {
                   message: '此邮箱仍未验证，无法登录'
            });
