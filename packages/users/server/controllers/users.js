@@ -21,6 +21,7 @@ exports.authCallback = function(req, res) {
 /**
  * Show login form
  */
+ //注册界面
 exports.signin = function(req, res) {
   if (req.isAuthenticated()) {
     return res.redirect('/');
@@ -62,6 +63,7 @@ exports.session = function(req, res) {
 /**
  * Create user
  */
+ //创建用户
 exports.create = function(req, res, next) {
   var user = new User(req.body);
 
@@ -70,7 +72,7 @@ exports.create = function(req, res, next) {
   // because we set our user.provider to local our models/user.js validation will always be true
   req.assert('email', '请输入有效的邮箱地址').isEmail();
   req.assert('password', '密码长度为6到20位').len(6, 20);
-  req.assert('username', '用户名长度为1到20位').len(1, 20);
+  req.assert('username', '用户名长度为2到12位').len(2, 12);
 
   var errors = req.validationErrors();
   if (errors) {

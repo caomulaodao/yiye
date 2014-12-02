@@ -31,7 +31,7 @@ $('#YIYE_Signup').click(function(){
 function verificationForm(){
     var formArray = $('#YIYE_SignupForm').serializeArray();
     if(!verification.isEmail(formArray[0]['value']))  {showSignupError("请输入有效的邮箱地址");return false;}
-    if(!verification.len(formArray[1]['value'],1,20)) {showSignupError("用户名长度为1到20位");return false;}
+    if(!verification.len(formArray[1]['value'],2,12)) {showSignupError("用户名长度为2到12位");return false;}
     if(!verification.len(formArray[2]['value'],6,20)) {showSignupError("密码长度为6到20位");return false;}
     return true;
 }
