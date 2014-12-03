@@ -64,7 +64,7 @@
                 <p class="channel-showcase-description">{{ channel.description }}</p>
                 <div class="channel-showcase-footer">
                   <span>{{ channel.bmkNum}}书签</span><span>{{ channel.subNum}}关注者</span>
-                  <a href="/u/{{ ''+channel.creator.userId }}" target="_blank"><img src="http://yiye.qiniudn.com/{{ channel.creator.userLogo }}"/></a>
+                  <a class="ex-creator" href="/u/{{ ''+channel.creator.userId }}" data-toggle="tooltip" data-placement="left" title={{ channel.creator.userName}} target="_blank"><img src="http://yiye.qiniudn.com/{{ channel.creator.userLogo }}"/></a>
                 </div>
             </div>
         </li>
@@ -108,6 +108,7 @@
 
 <!--javascript-->
 <script rel="script" src="/bower_components/jquery/dist/jquery.js"></script>
+<script rel="script" src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
 <script type="text/javascript"  src="/system/assets/js/explore.js"></script>
 
 

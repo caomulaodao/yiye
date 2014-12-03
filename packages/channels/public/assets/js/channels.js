@@ -50,28 +50,6 @@ function initialize() {
 
 }
 
-function commentClick() {
-    $('.comment').on('click', function(){
-        var $comment = $(this).parent().parent().next();
-        $comment.hasClass('open')?
-            $comment.removeClass('open'):
-            $comment.addClass('open');
-    });
-
-    $('.reply-key').on('click', function(){
-        $(this).parent().next().show();
-    });
-    $('.reply-button a').on('click', function() {
-        $(this).parent().parent().hide();
-    });
-    $('.bottom-comment .reply-words').on('click', function(){
-        $(this).text("");
-        $(this).next().show();
-    });
-    $('.comment-button a').on('click', function(){
-        $(this).parent().hide();
-    });
-}
 
 //订阅频道
 function channelsSub(){
@@ -80,6 +58,7 @@ function channelsSub(){
         $.get('/channel/sub/'+channelId, function(data) {
             if(data.success){
                 $('#channel-sub').text('已订阅').attr("id","channel-subed");
+                $('#channel-menu').append("<li id='cancel-sub'><a href='/channel/"+ channelId +"/nowatch'>取消订阅</a></li>");
             }
         });
     });

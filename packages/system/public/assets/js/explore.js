@@ -4,6 +4,7 @@
 $(function(){
     subChannelAjax();
     goCenter();
+    toolTipFun();
     $(window).on('resize', function(){
         goCenter();
     });
@@ -22,12 +23,15 @@ function subChannelAjax() {
     });
 }
 
+function toolTipFun() {
+    $('.ex-creator').tooltip();
+}
+
 function goCenter() {
     var nClientW = $(window).width();
     var nChannelW = $('.channel-showcase').width()+30;
     var cols = Math.floor(nClientW / nChannelW);  //求出频道列数
-    var nContentW = cols * 365;             //求出water-fall-main的宽度
-
+    var nContentW = cols * 363;             //求出water-fall-main的宽度
 
     $('#water-fall-main').width(nContentW);
 }
