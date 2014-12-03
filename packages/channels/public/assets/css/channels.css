@@ -212,7 +212,13 @@ button:focus {outline:0;}
     font-size: 14px;
 }
 
-#founder a {color: #66d0fc;}
+#founder a {
+    color: #66d0fc;
+    max-width: 160px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
 #founder a:hover {text-decoration: underline;}
 
@@ -230,7 +236,9 @@ button:focus {outline:0;}
     display: inline-block;
     margin-bottom: 0;
 }
-
+#ctrl-description span {
+    word-break: break-all;
+}
 #subscribe {
     margin-top: 20px;
     text-align: center;
@@ -633,7 +641,7 @@ button:focus {outline:0;}
 .section-title h3 {font-size: 3.0em;}
 
 .member {
-    width: 230px;
+    width: 280px;
     height: 82px;
     position: relative;
     padding-top: 10px;
@@ -691,11 +699,15 @@ button:focus {outline:0;}
     margin-left: 70px;
 }
 
-.member-inf>a:first-child {
+.member-name {
     font-size: 1.5em;
-    font-weight: 700;
+    font-weight: bold;
     display: inline-block;
     margin-bottom: 0;
+    width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .member-inf>div>a {color: #aaa;}
