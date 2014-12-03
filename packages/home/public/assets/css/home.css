@@ -161,6 +161,7 @@ button:focus {outline:0;}
 #Channel-Create-Error{
     max-width: 800px;
 }
+
 /* body */
 .create-page .body {
     height: 350px;
@@ -273,7 +274,9 @@ button:focus {outline:0;}
 }
 
 
-/**************setting channel page********************/
+/* =====================================================
+    setting channel page
+   ===================================================== */
 .setting-channel {
     display: none;
     position: absolute;
@@ -500,7 +503,9 @@ button:focus {outline:0;}
 
 
 
-/********************control page*********************/
+/* ======================================================
+    control page
+   ====================================================== */
 .control-page {
     position: fixed;
     width: 330px;
@@ -517,7 +522,7 @@ button:focus {outline:0;}
 }
 
 
-/******header******/
+/* contorl-header */
 
 .control-header {
     height: 60px;
@@ -560,19 +565,74 @@ button:focus {outline:0;}
     margin-top: 16px;
     cursor: pointer;
 }
-.control-header span {
-    float: right;
+/*.control-header span {*/
+    /*float: right;*/
+    /*margin-top: 13px;*/
+    /*margin-right: -1px;*/
+    /*font-size: 3em;*/
+    /*color: #bbb;*/
+/*}*/
+
+/* explore-button */
+#explore {
+    width: 32px;
+    height: 32px;
     margin-top: 13px;
-    margin-right: -1px;
-    font-size: 3em;
-    color: #bbb;
+    margin-right: 1px;
+    position: relative;
+    float: right;
+}
+#explore>div {
+    width: 14px;
+    height: 14px;
+    position: absolute;
+    background-color: #ccc;
+    border-radius: 2px;
+}
+#explore:hover {cursor: pointer;}
+
+#explore:hover>#div2 {
+    -webkit-transform: rotate(180deg);
+    -webkit-transition: all 500ms;
+}
+#explore:hover #cube {
+    -webkit-transform: scale(1.0);
+    -webkit-transition: all 500ms;
+}
+#div1 {
+    left: 0;
+    top: 0
+}
+#div2 {
+    right: 0;
+    top: 0;
+    -webkit-transition: all 500ms;
+}
+#cube {
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    position: absolute;
+    background: #fff;
+    left: 3px;
+    top: 3px;
+    -webkit-transform: scale(0);
+    -webkit-transition: all 500ms;
+}
+#div3 {
+    bottom: 0;
+    left: 0;
+}
+#div4 {
+    bottom: 0;
+    right: 0;
 }
 .control-header span:hover{
     cursor: pointer;
     color: #40c192;
 }
 
-/******body******/
+/* control-body */
 
 .control-body {
     height: 100%;
@@ -683,7 +743,8 @@ button:focus {outline:0;}
     border-color: #0091ea;
 }
 
-/*******admin interface******/
+/* admin interface */
+
 .admin-interface {
     display: none;
     width: 100%;
@@ -721,14 +782,14 @@ button:focus {outline:0;}
     border: dashed 1px #40c192;
     color: #40c192;
 }
-/***************content page*****************/
+/* content page */
+
 .content-page {
     height: 100%;
     margin-left: 330px;
     background-color: #f3f3f3;
     position: relative;
     overflow-x: hidden;
-    overflow-y: scroll;
 }
 
 .content-page-content {
@@ -738,7 +799,7 @@ button:focus {outline:0;}
     overflow-y: scroll;
 }
 
-/*******header*******/
+/* header */
 .content-header {
     height: 60px;
     min-width: 500px;
@@ -799,10 +860,6 @@ a.header-channel-name , a.header-channel-name:hover{
 }
 
 
-
-.content-body {
-
-}
 
 .single-list {
     height: 100px;
@@ -906,7 +963,7 @@ a.header-channel-name , a.header-channel-name:hover{
 
 
 
-/*******date divide********/
+/* date divide */
 .date-divide {
     margin-top: 20px;
     margin-bottom: 10px;
@@ -922,7 +979,7 @@ a.header-channel-name , a.header-channel-name:hover{
     z-index: 9;
 }
 
-/*******bookmark********/
+/* bookmark */
 .bookmark-part {
     margin-top: 12px;
 }
@@ -1069,7 +1126,7 @@ a.header-channel-name , a.header-channel-name:hover{
 .comment-time {
     color: #999;
 }
-/******upvote button******/
+/* upvote button */
 .upvote-button {
     height: 23px;
     border-radius: 2px;
@@ -1108,7 +1165,7 @@ a.header-channel-name , a.header-channel-name:hover{
     display: block;
 }
 
-/*upvoted*/
+/* upvoted */
 
 .upvoted {
     border-color: #ccc;
@@ -1124,14 +1181,14 @@ a.header-channel-name , a.header-channel-name:hover{
 .upvoted .upvote-count {
     background-color: #7b7b7b;
 }
-/***downvote***/
+/* downvote */
 .downvote {
     color: #999;
 }
 .downvote:hover {
     color: #999;
 }
-/********reply********/
+/* reply */
 .reply-key {
     margin-left: 8px;
 }
@@ -1500,15 +1557,12 @@ a.ex-creator {float: right;}
     text-align: center;
     font-size: 13px;
 }
-.user-history-list li .status.pass{
-    background-color: #00C995;
-}
-.user-history-list li .status.fail{
-    background-color: #D8556E;
-}
-.user-history-list li .main{
-    margin-left: 50px;
-}
+.user-history-list li .status.pass{background-color: #00C995;}
+
+.user-history-list li .status.fail{background-color: #D8556E;}
+
+.user-history-list li .main{margin-left: 50px;}
+
 .user-history-bookmarks{
     height: 20px;
     line-height: 20px;
