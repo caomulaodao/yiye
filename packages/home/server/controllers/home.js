@@ -5,6 +5,7 @@
 var mongoose = require('mongoose'),
     async = require('async'),
     bookmarks = require('../../../bookmarks/server/controllers/bookmarks'),
+    xss =require('xss'),
     moment = require('moment');
     User = mongoose.model('User'),
     tool = require('../../../../config/tools/tool');
@@ -88,7 +89,23 @@ exports.addAdmChannel = function(){
 exports.createChannel = function(req,res){
     if(!req.user) return res.status(401).send({info:'请先登录或注册'});
     var allCount = 5;
-    var channels = new Channels(req.body);
+    if (typeof req.body.name!='string'
+        ||typeof req.body.logo!='string'
+        ||typeof req.body.description!='string'
+        ||typeof req.body.tags!='string'
+        ||typeof req.body.type!='string'
+        ||typeof req.body.banner!='string'){
+        return res.status(401).send({info:'请按规范填写频道资料'});}//频道资料不规范
+    var newchannel={
+        logo:xss(req.body.logo,{whiteList:{}}),
+        name:xss(req.body.name,{whiteList:{}}),
+        description:xss(req.body.tags,{whiteList:{}}),
+        type:xss(req.body.type,{whiteList:{}}),
+        tags:xss(req.body.tags,{whiteList:{}}),
+        banner:xss(req.body.banner,{whiteList:{}})
+    };//xss过滤
+
+    var channels = new Channels(newchannel);
     channels.tags = getTags(channels.tags);
     channels.creator = {userId:req.user._id,userName:req.user.username,userLogo:req.user.avatar};
     async.waterfall([
@@ -349,7 +366,7 @@ exports.history = function(req,res){
     async.waterfall([
         function(callback){
             Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[3,4]}}).sort({postTime:1}).limit(1)
-            .exec(function(err,doc){console.log(doc+"!!!!");callback(err,doc)});
+            .exec(function(err,doc){callback(err,doc)});
         },
         function(doc,callback){
             Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[3,4]}}).sort({postTime:-1}).skip((number-1)*limit).limit(limit).exec(function(err,list){

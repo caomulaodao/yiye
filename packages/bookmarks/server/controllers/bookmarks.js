@@ -19,9 +19,9 @@ function getTags(str){
     if(!str) return [];
     str = str.toString();
     var tags = [];
-    var array = str.split(/[,，]/);
+    var array = str.split(/[,，\s]/);
     array.forEach(function(item){
-        item = xss(item);//标签xss过滤
+        item = xss(item,{whiteList:{}});//标签xss过滤
         newItem = item.trim();
         if(newItem !== ''){
             tags.push(newItem);

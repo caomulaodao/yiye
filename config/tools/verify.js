@@ -1,7 +1,4 @@
-function verify(str){
-	var re= new RegExp();
-}
-
+var xss = require('xss');
 //用户注册页面非法字符检测
 function userVerify(str){
 	if(typeof str!='string') return false;
@@ -15,5 +12,20 @@ function idVerify(str){
     var re = /^[0-9a-zA-Z]{24}$/;//判断是否Id格式
     return re.test(str);
 }
+function xssVerify(str){
+	if (typeof str!='string') {var str='';}
+	var options={
+		whiteList:{},
+	};//定过滤规则
+	var myxss= new xss.FilterXSS(options);
+	return myxss.process;
+}
+// function xssEscape(str){
+// 	if typeof str!='string' return '';
+// 	var options={
+// 		whiteList:{},
+// 	}
+// }
 exports.userVerify = userVerify;
 exports.idVerify = idVerify;
+exports.xssVerify = xssVerify;
