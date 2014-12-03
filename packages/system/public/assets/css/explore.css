@@ -595,11 +595,16 @@ hr {
     height: 20px;
     line-height: 20px;
 }
-.channel-showcase-head a{
+.channel-name {
     color: #428bca;
+    width: 180px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    float: left;
     font-weight: bold;
 }
-.channel-showcase-head span{
+.channel-showcase-head>span{
     float: right;
 }
 .channel-showcase-head span a{
