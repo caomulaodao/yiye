@@ -20,7 +20,7 @@ exports.render = function(req, res,Package) {
             Channels.count({},function(err,channel_number){cb(err,channel_number)});
         },
         function(cb){
-            Bookmarks.count({},function(err,label_number){cb(err,label_number)});
+            Bookmarks.count({checked:{$in:[1,3,5]}},function(err,label_number){cb(err,label_number)});
         }],function(err,result){
             if(err){
                 console.log(err);
