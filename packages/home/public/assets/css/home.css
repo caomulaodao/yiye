@@ -1475,9 +1475,14 @@ a.header-channel-name , a.header-channel-name:hover{
     height: 20px;
     line-height: 20px;
 }
-.channel-showcase-head a{
+.channel-link {
     color: #428bca;
     font-weight: bold;
+    width: 180px;
+    display: inline-block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 .channel-showcase-head span{
     float: right;
@@ -1505,7 +1510,7 @@ a.header-channel-name , a.header-channel-name:hover{
     margin:5px 0px 5px 0px;
     width: 220px;
     height: 20px;
-    white-space: normal;
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     font-family: 'Helvetica Neue',Helvetica,Arial,Sans-serif;

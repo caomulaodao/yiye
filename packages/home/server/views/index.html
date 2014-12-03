@@ -363,7 +363,7 @@
                     </div>
                     <div class="channel-main">
                         <div class="channel-showcase-head">
-                            <a href="/channel/<%= list[i]['_id'] %>" target="_blank"><%= list[i]['name']  %></a>
+                            <a class="channel-link" href="/channel/<%= list[i]['_id'] %>" target="_blank"><%= list[i]['name']  %></a>
                             <span>
                                 <% if(!list[i]["isAttention"]){%>
                                     <a class="to-sub" data-id= <%= list[i]['_id'] %> href="javascript:;">+订阅</a>
