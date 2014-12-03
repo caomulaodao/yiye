@@ -35,6 +35,7 @@ var mongoose = require('mongoose'),
     async = require('async'),
     moment = require('moment'),
     xss =require('xss'),
+    verify =require('../../../../config/tools/verify')
     User = mongoose.model('User'),
     Bookmarks = mongoose.model('Bookmarks'),
     Channels = mongoose.model('Channels'),
@@ -44,11 +45,28 @@ var mongoose = require('mongoose'),
 //接受新提交的书签
 exports.receive = function(req,res){
     if(!req.user) return res.status(401).json({info:'请先注册或登录'});
+    if(!(
+        verify.isString(req.body.title)&&verify.isString(req.body.description)&&verify.isString(req.body.url)
+        &&verify.isString(req.body.image)&&verify.isString(req.body.tags)&&verify.isArray(req.body.channels)
+        )){ return res.status(401),json({info:'数据格式不对'})};//判断数据格式
     if(!(req.body.channels instanceof Array) || !(req.body.channels.length > 0))
         return res.status(401).send({info:"提交频道不能为空"});
-    var bookmarks = req.body;
+    var bookmarks ={
+        title:xss(req.body.title,{whiteList:{}}),
+        description:xss(req.body.description,{whiteList:{}}),
+        url:xss(req.body.url,{whiteList:{}}),
+        image:xss(req.body.image,{whiteList:{}}),
+        channels:req.body.channels,
+        tags:xss(req.body.tags,{whiteList:{}})
+    };
     bookmarks.tags = getTags(bookmarks.tags);
     var channels = req.body.channels.unique();
+    for(var i=0;i<channels.length;i++){
+        if (!verify.isString(channels[i])){
+            return res.status(401).json({info:'数据格式不对'})
+        }
+        channels[i] = xss(channels[i],{whiteList:{}});
+    }
     bookmarks.channels = undefined;
 
     async.parallel([
