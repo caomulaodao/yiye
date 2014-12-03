@@ -703,7 +703,7 @@ button:focus {outline:0;}
     margin-top: 12px;
     margin-left: 15px;
     white-space: nowrap;
-    max-width: 150px;
+    max-width: 190px;
     overflow: hidden;
     text-overflow: ellipsis;
 }
