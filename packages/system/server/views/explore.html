@@ -55,7 +55,7 @@
             </div>
             <div class="channel-main">
                 <div class="channel-showcase-head">
-                    <a href="/channel/{{ channel.id }}">{{ channel.name }}</a>
+                    <a class="channel-name" href="/channel/{{ channel.id }}">{{ channel.name }}</a>
                     <span>
                         <a class="have-subed" href="javascript:;">{% if channel.isAttention %}已订阅{% else %}</a>
                         <a class="to-sub" data-id= {{ channel.id }} href="javascript:;">+订阅{% endif %}</a>
