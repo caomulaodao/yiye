@@ -21,6 +21,7 @@ function getTags(str){
     var tags = [];
     var array = str.split(/[,，]/);
     array.forEach(function(item){
+        item = xss(item);//标签xss过滤
         newItem = item.trim();
         if(newItem !== ''){
             tags.push(newItem);
@@ -33,6 +34,7 @@ function getTags(str){
 var mongoose = require('mongoose'),
     async = require('async'),
     moment = require('moment'),
+    xss =require('xss'),
     User = mongoose.model('User'),
     Bookmarks = mongoose.model('Bookmarks'),
     Channels = mongoose.model('Channels'),
