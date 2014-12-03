@@ -10,6 +10,7 @@ var mongoose = require('mongoose'),
   crypto = require('crypto'),
   nodemailer = require('nodemailer'),
   templates = require('../template');
+  var myVerify=require('../../../../config/tools/verify');
 
 /**
  * Auth callback
@@ -65,8 +66,13 @@ exports.session = function(req, res) {
  */
  //创建用户
 exports.create = function(req, res, next) {
+  var username=req.body.username;
+  if(typeof username!='string') {return res.status(400).send([{msg:'含有非法字符'}]);}
+  //注册名字非法的时候
+  if (!myVerify.userVerify(username)){
+      return res.status(400).send([{msg:'含有非法字符'}]);
+  }
   var user = new User(req.body);
-
   user.provider = 'local';
   user.verifyToken = crypto.randomBytes(20).toString('hex') + crypto.createHash('md5').update(user.email).digest('hex').substr(0,16);
   // because we set our user.provider to local our models/user.js validation will always be true

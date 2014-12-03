@@ -36,13 +36,18 @@ module.exports = function(passport) {
       User.findOne({
         email: email
       }, function(err, user) {
-          if (err) {
+        if (err) {
           return done(err);
         }
         if (!user) {
           return done(null, false, {
             message: '此邮箱用户不存在'
           });
+        }
+        if (user.verifyToken != 0) {
+           return done(null, false, {
+                  message: '此邮箱仍未验证，无法登录'
+           });
         }
         if (!user.authenticate(password)) {
           return done(null, false, {
