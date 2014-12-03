@@ -12,6 +12,7 @@ var mongoose = require('mongoose'),
     Channels = mongoose.model('Channels'),
     tool = require('../../../../config/tools/tool');
     Bookmarks = mongoose.model('Bookmarks');
+    Myverify = require('../../../../config/tools/verify');
 
 //渲染Home页面
 exports.initHome = function(req,res,Home){
@@ -167,6 +168,7 @@ exports.check = function(req,res,Home){
 //
 exports.newsViewed = function(req,res){
     var bookmarkId = req.body.bookmarkId;
+    if (!Myverify.idVerify(bookmarkId)) return res.status(400).send({err:'请求错误参数'});//id验证
     Bookmarks.update({_id:bookmarkId},{$inc:{checked:2}},function(err,num){
         if(err) console.log(err);
         res.status(200).send({success:true,info:'此信息已经加入历史记录。'});
@@ -177,6 +179,8 @@ exports.newsViewed = function(req,res){
 //获取频道排行榜
 exports.getChannelsTop = function(req,res){
     var num = req.params['num'];
+    num = +num;//
+    if (isNaN(num)||num<0) return res.status(400).json({err:'请求参数非法'});//传入参数判断
     var limit = 20;
     Channels.find().sort({subNum:1}).skip(num).limit(limit).exec(function (err, channels) {
         if(err) return console.log(err);
@@ -188,7 +192,7 @@ function getTags(str){
     if(!str) return [];
     str = str.toString();
     var tags = [];
-    var array = str.split(/[,，]/);
+    var array = str.split(/[,，\s]/);
     array.forEach(function(item){
         newItem = item.trim();
         if(newItem !== ''){
@@ -202,7 +206,7 @@ function getTags(str){
 exports.discover = function(req,res){
     if(!req.user) return res.redirect('/');
     //number为请求次数 limit为每次返回的数量
-    var number=req.query.number,limit=10;
+    var number=req.query.number||1,limit=10;
     async.waterfall([
             function(callback1){
                 Channels.find().sort({subNum:-1,time:-1}).skip((number-1)*limit).limit(limit).exec(function(err,subChannels){
@@ -263,20 +267,21 @@ exports.discover = function(req,res){
 //ajax加载加载bookmarks
 exports.ajaxBookmarks = function(req,res){
     if(!req.user) return res.status(401).json({info:'请先注册或登录'});
-    var date=req.query.date, limit = 1;//date为前端当前展示的时间
+    var date=req.query.date, limit = 20;//date为前端当前展示的时间
     date=moment(date).toDate();
     var channelId = req.query['channelId'];
+    if (!Myverify.idVerify(channelId)) return res.stats(401).json({info:"参数非法"});
     async.parallel({
         list: function(callback){
             //获取对应频道的书签
              Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]},postTime:{$lt:date}}).sort({postTime:-1}).limit(limit).exec(function (err, doc) {
-                if(err) console.log(err);console.log(doc.length);
+                if(err) console.log(err);
                 if(doc.length === 0) return callback(null,[]);
                 var targetTime = doc[doc.length -1]['postTime'];//取出来的最后一天的时间
-                var startDay = moment(doc[doc.length -1]['postTime']).startOf('day').toDate();console.log(targetTime);
+                var startDay = moment(doc[doc.length -1]['postTime']).startOf('day').toDate();
                 Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]},postTime:{$gte:startDay,$lt:date}}).sort({postTime:-1}).exec(function(err,list){
                     if(err) console.log(err);
-                    callback(null,list);//after为转换后的对象数组,before为转换前的对象数组
+                    callback(null,list);
 
                 });
             })
@@ -339,7 +344,7 @@ exports.newNews = function(req,res){
 //ajax返回历史消息
 exports.history = function(req,res){
     if(!req.user) return res.status(401).json({info:'请先注册或登录'});
-    var limit=2;
+    var limit=10;
     var number = req.query.number||1;
     async.waterfall([
         function(callback){
