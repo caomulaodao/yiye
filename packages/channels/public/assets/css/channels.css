@@ -46,7 +46,7 @@ button:focus {outline:0;}
 
 #control-page {
     position: fixed;
-    width: 26%;
+    width: 27%;
     min-width: 275px;
     height: 100%;
     z-index: 4;
@@ -283,7 +283,7 @@ button:focus {outline:0;}
 #content-page {
     height: 100%;
     background-color: #f3f3f3;
-    margin-left: 26%;
+    margin-left: 27%;
     position: relative;
 }
 

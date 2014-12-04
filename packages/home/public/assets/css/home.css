@@ -1478,13 +1478,22 @@ a.header-channel-name , a.header-channel-name:hover{
     text-overflow: ellipsis;
     overflow: hidden;
 }
+
 .channel-showcase-head span{
     float: right;
 }
-.channel-showcase-head span a{
+a.to-sub {
     font-size: 1.4em;
     color: #698ebf;
     font-weight:normal;
+}
+a.have-subed {
+    text-decoration: none;
+    font-size: 1.4em;
+    color: #ccc;
+}
+a.have-subed:hover {
+    cursor: default;
 }
 .channel-showcase-footer{
     font-size: 12px;

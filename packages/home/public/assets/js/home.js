@@ -1,7 +1,7 @@
 /**
  * Created by laodao on 14-10-10.
  */
-$(window).load(function(){
+$(function(){
     initialize();
 });
 
@@ -22,8 +22,6 @@ function initialize() {
         $('.channel-item').removeClass('active');
         $(this).addClass('active').children('.links-num').remove();
     });
-
-    $('.ex-creator').tooltip();
 }
 
 
