@@ -66,7 +66,7 @@ exports.session = function(req, res) {
  */
  //创建用户
 exports.create = function(req, res, next) {
-  var username=req.body.username;
+  var username=req.body.username;console.log(req.body);
   if(typeof username!='string') {return res.status(400).send([{msg:'含有非法字符'}]);}
   //注册名字非法的时候
   if (!myVerify.userVerify(username)){

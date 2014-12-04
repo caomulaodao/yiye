@@ -11,7 +11,6 @@ var mongoose = require('mongoose'),
     tool = require('../../../../config/tools/tool');
     Channel2User = mongoose.model('Channel2User'),
     Channels = mongoose.model('Channels'),
-    tool = require('../../../../config/tools/tool');
     Bookmarks = mongoose.model('Bookmarks');
     Myverify = require('../../../../config/tools/verify');
 
@@ -223,7 +222,10 @@ function getTags(str){
 exports.discover = function(req,res){
     if(!req.user) return res.redirect('/');
     //number为请求次数 limit为每次返回的数量
-    var number=req.query.number||1,limit=10;
+    var number=req.query.number||1;
+    var limit=12;
+    if (!Myverify.isNumber(number)){return res.status(400).json({error:'错误参数'})}//传入参数格式进行判断
+    if (number==1){limit=24}
     async.waterfall([
             function(callback1){
                 Channels.find().sort({subNum:-1,time:-1}).skip((number-1)*limit).limit(limit).exec(function(err,subChannels){
@@ -333,12 +335,13 @@ exports.ajaxBookmarks = function(req,res){
 //ajax返回新消息
 exports.newNews = function(req,res){
     if(!req.user) return res.status(401).json({info:'请先注册或登录'});
-    var limit=2;
+    var limit=10;//一次ajax请求返回的数量
     var number = req.query.number||1;
+    if(!Myverify.isNumber(number)) {return res.status(400).json({info:'参数非法'})}
     async.waterfall([
-        function(callback){console.log(req.user._id);
+        function(callback){
             Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[1,2]}}).sort({postTime:1}).limit(1)
-            .exec(function(err,doc){console.log(doc+"!!!!");callback(err,doc)});
+            .exec(function(err,doc){callback(err,doc)});
         },
         function(doc,callback){
             Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[1,2]}}).sort({postTime:-1}).skip((number-1)*limit).limit(limit).exec(function(err,list){
@@ -363,6 +366,7 @@ exports.history = function(req,res){
     if(!req.user) return res.status(401).json({info:'请先注册或登录'});
     var limit=10;
     var number = req.query.number||1;
+    if(!Myverify.isNumber(number)) {return res.status(400).json({info:'参数非法'})}
     async.waterfall([
         function(callback){
             Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[3,4]}}).sort({postTime:1}).limit(1)

@@ -33,7 +33,7 @@ $(function () {
             else {
                 $('.navigation-2').css({
                     position: 'relative',
-                    marginTop: '-41px',
+                    marginTop: '-49px',
                     top: '0px',
                     backgroundColor: 'rgba(255,255,255,0)',
                     color: '#fff'
