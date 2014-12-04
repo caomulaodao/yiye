@@ -7,6 +7,7 @@ var mongoose = require('mongoose'),
     moment = require('moment'),
     tool = require('../../../../config/tools/tool'),
     verify=require('../../../../config/tools/verify'),
+    xss =require('xss'),
     User = mongoose.model('User'),
     Bookmarks = mongoose.model('Bookmarks'),
     Channels = mongoose.model('Channels'),
@@ -356,18 +357,49 @@ exports.update = function(req,res){
     if (!req.body.description) return res.status(401).send({info:'频道描述不能为空'});
     if (!req.body.tags) return res.status(401).send({info:'标签不能为空'});
     if (!req.body.type) return res.status(401).send({info:'频道类型不能为空'});
-    var update={
-        logo:xss(req.body.logo,{whiteList:{}}),
-        name:xss(req.body.name,{whiteList:{}}),
-        description:xss(req.body.tags,{whiteList:{}}),
-        type:xss(req.body.type,{whiteList:{}}),
-        tags:xss(req.body.tags,{whiteList:{}}),
-    };//xss过滤    
 
-    Channels.update({_id:channelId},update,function(err,doc){
-        if(err) return console.log(err);
-        res.status(200).send({success:true,info:'修改信息成功!'});
+    //更新各处中的个人信息
+    async.parallel([
+        //更新频道表Channels中的用户信息
+        function(callback){
+            //xss过滤
+            var update = {
+                logo:xss(req.body.logo,{whiteList:{}}),
+                name:xss(req.body.name,{whiteList:{}}),
+                description:xss(req.body.tags,{whiteList:{}}),
+                type:xss(req.body.type,{whiteList:{}}),
+                tags:xss(req.body.tags,{whiteList:{}})
+            };
+            //Channels update
+            Channels.update({_id:channelId},update,function(err,doc){
+                if(err)  console.log(err);
+                callback(null);
+            });
+        },
+        //更新Channel2User表中的频道信息
+        function(callback){
+            //更新 name & logo
+            var update = {
+                logo:xss(req.body.logo,{whiteList:{}}),
+                name:xss(req.body.name,{whiteList:{}})
+            };
+            //Channel2User update
+            Channel2User.update({channelId:channelId},update,{ multi: true },function(err,doc){
+                if(err)  console.log(err);
+                callback(null);
+            });
+        }
+    ],
+    //返回信息
+    function(err, results){
+        if(err)  console.log(err);
+        //修改成功
+        return res.status(200).send({
+            info:'数据修改成功',
+            success:true
+        });
     });
+
 }
 
 //取消订阅某个频道
