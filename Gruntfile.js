@@ -134,19 +134,22 @@ module.exports = function(grunt) {
         replacements: [{
           from: /["']\/.+?\/assets\/img\/.+?\.(jpg|jpeg|gif|png|ico)["']/g,
           to: function (matchedWord, index, fullText, regexMatches) {
-            matchedWord = matchedWord.slice(1)
+            console.log(matchedWord);
+            matchedWord = matchedWord.slice(1);
             return qiniu_url+matchedWord;   //
           }
         },{
           from: /["']\/bower_components\/.+?\/.+?\.(css|js)["']/g,
           to: function (matchedWord, index, fullText, regexMatches) {
-            matchedWord = matchedWord.slice(1)
+            console.log(matchedWord);
+            matchedWord = matchedWord.slice(1);
             return qiniu_url+matchedWord;   //
           }
         },{
           from: /["']\/.+\/assets\/.+?\/.+?\.(css|js)["']/g,
           to: function (matchedWord, index, fullText, regexMatches) {
-            matchedWord = matchedWord.slice(1)
+            console.log(matchedWord);
+            matchedWord = matchedWord.slice(1);
             return qiniu_url+matchedWord;   //
           }
         }]
@@ -157,7 +160,8 @@ module.exports = function(grunt) {
         replacements: [{
           from: /["']\/.+?\/assets\/img\/.+?\.(jpg|jpeg|gif|png|ico)["']/g,
           to: function (matchedWord, index, fullText, regexMatches) {
-            matchedWord = matchedWord.slice(1)
+            console.log(matchedWord);
+            matchedWord = matchedWord.slice(1);
             return qiniu_url+matchedWord;   //
           }
         }]
