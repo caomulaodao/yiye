@@ -164,13 +164,18 @@ hr{
     font-size: 14px;
     margin-bottom: 20px;
 }
-
 .guest{
-    margin: 2% 0;
-    float: left;
-    width: 33%;
+    width: 15%;
+    margin: 2.5%;
+    margin-top: 0;
+    height: 40px;
+    line-height: 40px;
     text-align: center;
+    float: left;
+    background-color: rgba(255,255,255,0.3);
+    box-sizing: border-box;
 }
+
 .guest h4{
     font-weight: 100;
     line-height: 30px;    
@@ -326,8 +331,16 @@ hr{
 }
 @media(min-width:960px){
     .guest{
-        width: 25%;
-    }
+    width: 15%;
+    margin: 2.5%;
+    margin-top: 0;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    float: left;
+    background-color: rgba(255,255,255,0.3);
+    box-sizing: border-box;
+}
 }
 @media(max-width:800px){
     .show-img{
@@ -350,6 +363,9 @@ hr{
     .friend-name{
         font-size: 12px;
     }
+    .guest{
+        width: 20%;
+    }
 }
 @media(max-width:650px){
     .navigation{
@@ -369,7 +385,7 @@ hr{
 		box-shadow:1px 2px 5px #aaa;
     }
     .guest{
-        width: 50%;
+        width: 45%;
     }
     .guest-img{
         width:80%;
@@ -429,17 +445,7 @@ hr{
 .guest-img img:hover{
     cursor: pointer;
 }
-.guest{
-    width: 15%;
-    margin: 2.5%;
-    margin-top: 0;
-    height: 40px;
-    line-height: 40px;
-    text-align: center;
-    float: left;
-    background-color: rgba(255,255,255,0.3);
-    box-sizing: border-box;
-}
+
 .guest:hover{
     cursor: pointer;
     border:1px solid #eee;
