@@ -45,6 +45,7 @@ var mongoose = require('mongoose'),
 //接受新提交的书签
 exports.receive = function(req,res){
     if(!req.user) return res.status(401).json({info:'请先注册或登录'});
+    var titleLength=100,descriptionLength=200;//限制长度
     if(!(
         verify.isString(req.body.title)&&verify.isString(req.body.description)&&verify.isString(req.body.url)
         &&verify.isString(req.body.image)&&verify.isString(req.body.tags)&&verify.isArray(req.body.channels)
@@ -58,11 +59,13 @@ exports.receive = function(req,res){
         image:xss(req.body.image,{whiteList:{}}),
         channels:req.body.channels,
         tags:xss(req.body.tags,{whiteList:{}})
-    };
+    };console.log(bookmarks.title.length);
+    if(bookmarks.title.length>titleLength){bookmarks.title=bookmarks.title.substr(0,titleLength);}
+    if(bookmarks.description.length>descriptionLength){bookmarks.description=bookmarks.description.substr(0,descriptionLength);}
     bookmarks.tags = getTags(bookmarks.tags);
     var channels = req.body.channels.unique();
     for(var i=0;i<channels.length;i++){
-        if (!verify.isString(channels[i])){
+        if (!verify.idVerify(channels[i])){
             return res.status(401).json({info:'数据格式不对'})
         }
         channels[i] = xss(channels[i],{whiteList:{}});
@@ -138,6 +141,7 @@ exports.init  =  function(req,res){
     var limit=20;
     if(!req.user) return res.status(401).json({info:'请先注册或登录'});
     var channelId = req.query['channelId'];
+    if(!verify.idVerify(channelId)){return res.status(401).json({info:'参数错误'})}
     async.parallel({
         info: function(callback){
             Channels.findOne({_id:channelId},function(err,doc){
@@ -200,9 +204,8 @@ exports.init  =  function(req,res){
 exports.like = function(req,res){
 
     if(!req.user) return res.status(401).json({info:'请先注册或登录'});
-
     var bookmarkId = req.params['bookmarkId'];
-
+    if(!verify.idVerify(channelId)){return res.status(401).json({info:'参数错误'})}
     async.parallel({
         isHated:function(callback){
             BookmarkHate.remove({bookmarkId: bookmarkId, userId: req.user._id}, function (err, doc) {
@@ -249,7 +252,7 @@ exports.hate = function(req,res){
     if(!req.user) return res.status(401).json({info:'请先注册或登录'});
 
     var bookmarkId = req.params['bookmarkId'];
-
+    if(!verify.idVerify(channelId)){return res.status(401).json({info:'参数错误'})}
     async.parallel({
         isLiked:function(callback){
             BookmarkLike.remove({bookmarkId:bookmarkId,userId:req.user._id},function(err,doc){
@@ -293,7 +296,9 @@ exports.hate = function(req,res){
 //获取某天的书签
 exports.oneDay = function(req,res){
     var channelId = req.params['channelId'];
+    if(!verify.idVerify(channelId)){return res.status(401).json({info:'参数错误'})}
     var day = req.body['day'];
+    if (!verify.isString(day)) {return res.status(401).json({info:'参数错误'})}
     var limit=20;
     //如果没有获取到天数，则默认为最接近的一天  修改bug1(增加频道不存在书签的情况)
     if(!day){
@@ -372,6 +377,7 @@ exports.pass = function(req,res){
     if(!req.user) return res.status(401).json({info:'请先注册或登录'});
     var channelId = req.params['channelId'];
     var bookmarkId = req.params['bookmarkId'];
+    if(!verify.idVerify(channelId)||!verify.idVerify(bookmarkId)){return res.status(401).json({info:'参数错误'})}
     Channel2User.findOne({channelId:channelId,userId:req.user._id,type:{$in:['creator','admin']}},function(err,doc){
         if(doc){
             var checkUser = {userId:req.user._id,username:req.user.username,avatar:req.user.avatar};
@@ -393,6 +399,7 @@ exports.edit = function(req,res){
     var bookmarkId = req.params['bookmarkId'];
     var title = req.body.title;
     var description = req.body.description;
+    if(!verify.idVerify(channelId)||!verify.idVerify(bookmarkId)||!verify.isString(title)||!verify.isString(description)) {return res.status(401).json({info:'参数错误'})}
     Channel2User.findOne({channelId:channelId,userId:req.user._id,type:{$in:['creator','admin']}},function(err,doc){
         if(doc){
             var checkUser = {userId:req.user._id,username:req.user.username,avatar:req.user.avatar};
@@ -421,6 +428,7 @@ exports.delete = function(req,res){
     var channelId = req.params['channelId'];
     var bookmarkId = req.params['bookmarkId'];
     var reason = req.body.reason;
+    if(!verify.idVerify(channelId)||!verify.idVerify(bookmarkId)||!verify.isString(reason)) {return res.status(401).json({info:'参数错误'})}
     Channel2User.findOne({channelId:channelId,userId:req.user._id,type:{$in:['creator','admin']}},function(err,doc){
         if(doc){
             var checkUser = {userId:req.user._id,username:req.user.username,avatar:req.user.avatar};

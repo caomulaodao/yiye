@@ -6,6 +6,7 @@ var mongoose = require('mongoose'),
     async = require('async'),
     moment = require('moment'),
     tool = require('../../../../config/tools/tool'),
+    verify=require('../../../../config/tools/verify'),
     User = mongoose.model('User'),
     Bookmarks = mongoose.model('Bookmarks'),
     Channels = mongoose.model('Channels'),
@@ -18,6 +19,7 @@ var mongoose = require('mongoose'),
 
 exports.renderMain = function(req,res,Package){
     var channelId = req.params['channelId'];
+    if(!verify.idVerify(channelId)) {return res.status(401).send({info:'频道id错误'})}
     //每页显示的数量
     var limit=10;
     var p=req.query.p||1;
@@ -89,6 +91,8 @@ exports.renderMain = function(req,res,Package){
 exports.sub = function(req,res){
     if(!req.user) return res.send({err:true,info:'请先登陆或注册'});
     var channelId = req.params['channelId'];
+    if(!verify.idVerify(channelId)) {return res.status(401).send({info:'频道id错误'})}
+
 
     //判断是否已经订阅
     Channel2User.findOne({channelId:channelId,userId:req.user._id},function(err,doc) {
@@ -147,8 +151,11 @@ exports.sub = function(req,res){
 //展示订阅用户
 exports.renderFollower = function(req,res,Package){
     var channelId = req.params['channelId'];
+    if(!verify.idVerify(channelId)) {return res.status(401).send({info:'频道id错误'})}
     var page = req.body.page;
     var p=req.query.p||1;
+    if(!verify.isNumber(p)) {return res.status(401).send({info:'参数非法'})}
+    p=+p;
     var limit=30;
     async.parallel({
             userType:function(callback){
@@ -253,7 +260,7 @@ exports.renderFollower = function(req,res,Package){
             var channel = results.channel;
             channel.userType = results.userType;
             var users = results.users;
-            var page=tool.skipPage(p,results.users.pageLength);console.log(p);
+            var page=tool.skipPage(p,results.users.pageLength);
             Package.render('follower', {
                 channel:channel,
                 users:users,
@@ -268,8 +275,11 @@ exports.renderFollower = function(req,res,Package){
 //展示未审核内容
 exports.renderCheck = function(req,res,Package){
     var channelId = req.params['channelId'];
-    var limit=1;
+    if(!Myverify.idVerify(channelId)) {return res.status(400).json({info:'频道id错误'})}
+    var limit=6;
     var p=req.query.p||1;
+    if(!Myverify.isNumber(p)) {return res.status(400).json({info:'参数非法'})}
+    p=+p;
     async.waterfall([
             function(callback){
                 var type = 'not';
@@ -333,16 +343,29 @@ exports.renderCheck = function(req,res,Package){
 //更新频道信息
 exports.update = function(req,res){
     var channelId = req.params['channelId'];
-    var update = {};
-    if(req.body.name)  update.name = req.body.name;
-    if(req.body.logo)  update.logo = req.body.logo;
-    if(req.body.description) update.description = req.body.description;
-    if(req.body.type) update.type  = req.body.type;
-    if(req.body.tags) update.tags = req.body.tags;
-
+    if(!verify.idVerify(channelId)) {return res.status(401).send({info:'频道id错误'})}
+    var nameLength=15,descriptionLength=100;
+    if (typeof req.body.name!='string'
+        ||typeof req.body.logo!='string'
+        ||typeof req.body.description!='string'
+        ||typeof req.body.tags!='string'
+        ||typeof req.body.type!='string'){
+        return res.status(401).send({info:'数据格式错误'});}//频道资料不规范
+    if (!req.body.name) return res.status(401).send({info:'频道名称不能为空'});
+    if (!req.body.logo) return res.status(401).send({info:'logo不能为空'});
+    if (!req.body.description) return res.status(401).send({info:'频道描述不能为空'});
+    if (!req.body.tags) return res.status(401).send({info:'标签不能为空'});
+    if (!req.body.type) return res.status(401).send({info:'频道类型不能为空'});
+    var update = {
+        name:req.body.name,
+        logo:req.body.logo,
+        description:req.body.description,
+        type:req.body.description,
+        tags:req.body.tags
+    };
     Channels.update({_id:channelId},update,function(err,doc){
         if(err) return console.log(err);
-        res.status(200).send({success:true,info:'修改信息成功'});
+        res.status(200).send({success:true,info:'修改信息成功!'});
     });
 }
 

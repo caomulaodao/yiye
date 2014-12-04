@@ -88,13 +88,14 @@ exports.addAdmChannel = function(){
 exports.createChannel = function(req,res){
     if(!req.user) return res.status(401).send({info:'请先登录或注册'});
     var allCount = 5;
+    var nameLength=15,descriptionLength=100;
     if (typeof req.body.name!='string'
         ||typeof req.body.logo!='string'
         ||typeof req.body.description!='string'
         ||typeof req.body.tags!='string'
         ||typeof req.body.type!='string'
         ||typeof req.body.banner!='string'){
-        return res.status(401).send({info:'请按规范填写频道资料'});}//频道资料不规范
+        return res.status(401).send({info:'数据格式错误'});}//频道资料不规范
     var newchannel={
         logo:xss(req.body.logo,{whiteList:{}}),
         name:xss(req.body.name,{whiteList:{}}),
@@ -103,7 +104,8 @@ exports.createChannel = function(req,res){
         tags:xss(req.body.tags,{whiteList:{}}),
         banner:xss(req.body.banner,{whiteList:{}})
     };//xss过滤
-
+    if(newchannel.name.length>nameLength) {return res.status(401).send({info:'频道名限制15字'})}//频道名长度限制
+    if(newchannel.description.length>descriptionLength) {return res.status(401).send({info:'描述限制100字'})}//描述长度限制
     var channels = new Channels(newchannel);
     channels.tags = getTags(channels.tags);
     channels.creator = {userId:req.user._id,userName:req.user.username,userLogo:req.user.avatar};
@@ -268,11 +270,8 @@ exports.discover = function(req,res){
                 results.forEach(function(item,index,array){
                     if (channel2userId.indexOf(item._id+'')>-1){
                         results[index]['isAttention'] = true;//已经关注
-                        console.log(results[index]["isAttention"]);
-
                     }
                 });
-                console.log(results);
                 if(results.length==0) {isHave=false;}
                 else{
                     if (results[0]['time']+''==doc['time']+''){

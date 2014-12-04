@@ -47,8 +47,8 @@ function isArray(array){
 }
 //判断是否数字
 function isNumber(number){
-	var re = /^[0-9]*$/
-	return re.test(number);
+	var number = +number;
+	return !isNaN(number);
 }
 exports.userVerify = userVerify;
 exports.idVerify = idVerify;

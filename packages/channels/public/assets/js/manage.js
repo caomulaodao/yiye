@@ -184,10 +184,10 @@ function initialize() {
         var channel = {};
         channel.name = $('#channel-info-name>input').val();
         channel.logo = $('#channel-change-logo').attr('src').split(".com/")[1];
-        channel.description = $('#channel-info-description>textarea').text();
+        channel.description = $('#channel-info-description>textarea').val();
         channel.type = $("input[name='type']:checked").val();
         channel.tags = $("#channel-info-tags>input").val();
-
+        console.log(channel.description);
         if(!channel.name){
             return $("#Channel-Change-Error").text('频道名称不能为空。').show();
         }

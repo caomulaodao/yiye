@@ -8,7 +8,8 @@ var mongoose = require('mongoose'),
     Channel2User = mongoose.model('Channel2User'),
     Channels = mongoose.model('Channels'),
     Bookmarks = mongoose.model('Bookmarks'),
-    tool=require('../../../../config/tools/tool.js');
+    tool=require('../../../../config/tools/tool'),
+    myVerify=require('../../../../config/tools/verify');
 
 //渲染首页 注入用户数量,频道数量,标签数量
 exports.render = function(req, res,Package) {
@@ -44,6 +45,7 @@ exports.render = function(req, res,Package) {
 exports.explore = function(req, res,Package){
     var limit = 20;//每页限制显示数
     var p=req.query.p||1;
+    if (!myVerify.isNumber(p)){p=1;}//判断参数是否合法
     async.waterfall([function(cb){
         Channels.count({},function(err,count){
             if (err) return console.log(err);
@@ -105,7 +107,7 @@ exports.query = function(req,res,Package){
     if(search.length>=searchMax){
         search=search.substr(0,searchMax);
     }
-    search=tool.stripscript(search);//过滤非法字符 仅支持中文 数字 英文搜索
+    search=tool.stripscript(search);//过滤非法字符 仅支持中文 数字 英文下划线搜索
     async.waterfall([
         //返回频道总数count
         function(cb){
@@ -161,6 +163,7 @@ exports.web_api_discovery = function(req, res) {
   if(keyword.length >= searchMax) {
     keyword = keyword.substr(0, searchMax);
   }
+  keyword=tool.stripscript(keyword);//过滤非法字符
   Channels.find({name: new RegExp(keyword, 'i')}).sort({subNum: 1}).exec(function(err, channels) {
     if (channels.length > 0)
       res.json({message: 'ok', data: channels})
