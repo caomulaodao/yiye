@@ -388,20 +388,27 @@ button:focus {outline:0;}
 .channel-main{
     margin: 10px 10px 10px 60px;
 }
-.channel-showcase-head{
+.channel-showcase-head {
     margin-top: 5px;
     height: 20px;
     line-height: 20px;
 }
-.channel-showcase-head a{
+.channel-showcase-head>a {
     color: #428bca;
+    width: 180px;
+    font-size: 1.4em;
+    white-space: nowrap;
+    display: inline-block;
+    text-overflow: ellipsis;
+    overflow: hidden;
     font-weight: bold;
 }
-.channel-showcase-head span{
+.channel-showcase-head span {
     float: right;
 }
-.channel-showcase-head span a{
+.channel-showcase-head span a {
     color: #698ebf;
+    font-size: 1.4em;
     font-weight:normal;
 }
 .channel-showcase-footer{
