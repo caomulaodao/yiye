@@ -1,7 +1,7 @@
 /**
  * Created by laodao on 14-10-10.
  */
-$(window).load(function(){
+$(function(){
     initialize();
 });
 
