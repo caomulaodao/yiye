@@ -96,13 +96,15 @@ exports.explore = function(req, res,Package){
 
 //查询处理
 exports.query = function(req,res,Package){
-    if(!req.query.q||req.query.q==null){
+    if(!req.query.q){
         return res.redirect('/explore');
     }
     //查询最大字数 searchMax
     var searchMax=15;
     var search = req.query.q;
-    var searchPage;
+    var searchPage=req.query.p||1;
+    if (!myVerify.isNumber(searchPage)) {return res.status(400).send({info:'参数类型错误'})}
+    searchPage=+searchPage;
     var limit=30;//单页显示数
     if(search.length>=searchMax){
         search=search.substr(0,searchMax);
@@ -118,7 +120,6 @@ exports.query = function(req,res,Package){
         },
         function(count,callback){
             var pageLength=Math.ceil(count/limit);
-            var searchPage=req.query.p||1;
             var minPage;
             //防止大于翻页上限
             if(searchPage>pageLength&&pageLength>0) minPage=pageLength;
@@ -160,6 +161,7 @@ exports.query = function(req,res,Package){
 exports.web_api_discovery = function(req, res) {
   var searchMax = 15;
   var keyword = req.query.keyword;
+  if (!myVerify.isString(keyword)) {return res.status(400).send({info:'参数类型错误'})}
   if(keyword.length >= searchMax) {
     keyword = keyword.substr(0, searchMax);
   }

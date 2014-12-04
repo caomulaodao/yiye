@@ -5,7 +5,8 @@
 var mongoose = require('mongoose'),
     async = require('async'),
     moment = require('moment'),
-    tool=require('../../../../config/tools/tool');
+    tool=require('../../../../config/tools/tool'),
+    verify=require('../../../../config/tools/verify'),
     User = mongoose.model('User'),
     Bookmarks = mongoose.model('Bookmarks'),
     Channels = mongoose.model('Channels'),
@@ -18,7 +19,10 @@ var mongoose = require('mongoose'),
 //展示用户提交的书签
 exports.renderPost = function(req,res,Package){
     var userId = req.params['userId'];//被访问者id
+    if(!verify.idVerify(userId)) {return res.status(401).send({info:'用户id错误'})}
     var p=req.query.p||1;
+    if(!verify.isNumber(p)) {return res.status(401).send({info:'参数类型错误'})}
+    p=+p;
     var limit=20;//每页显示的数量
     async.waterfall([//被访问者的信息
                 function (callback) {
@@ -60,7 +64,10 @@ exports.renderPost = function(req,res,Package){
 //展示用户创建的的频道
 exports.renderCreate = function(req,res,Package){
     var userId = req.params['userId'];
+    if(!verify.idVerify(userId)) {return res.status(401).send({info:'用户id错误'})}
     var p=req.query.p||1;
+    if(!verify.isNumber(p)) {return res.status(401).send({info:'参数类型错误'})}
+    p=+p;
     var limit=24;//每页显示的数量
     async.waterfall([
         function (callback) {
@@ -119,7 +126,10 @@ exports.renderCreate = function(req,res,Package){
 //展示用户订阅的频道
  exports.renderWatch = function(req,res,Package){
     var userId = req.params['userId'];
+    if(!verify.idVerify(userId)) {return res.status(401).send({info:'用户id错误'})}
     var p=req.query.p||1;
+    if(!verify.isNumber(p)) {return res.status(401).send({info:'参数类型错误'})}
+    p=+p;
     var limit=24;//每页显示的数量
     async.waterfall([
         function (callback) {
