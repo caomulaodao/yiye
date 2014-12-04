@@ -123,8 +123,11 @@ module.exports = function(grunt) {
       }
     },
     shell: {
-      qrsync: {
-        command: 'tasks/qrsync tasks/conf.json'
+      qrsync_darwin: {
+        command: 'tasks/qrsync_darwin tasks/conf.json'
+      }
+      qrsync_linux: {
+        command: 'tasks/qrsync_linux task/conf.json'
       }
     },
     replace:{
@@ -181,5 +184,12 @@ module.exports = function(grunt) {
 
   //Test task.
   grunt.registerTask('test', ['env:test', 'mochaTest', 'karma:unit']);
-  grunt.registerTask('upload', ['shell:qrsync']);
+
+  //Upload static files task
+  if (process.platform === 'darwin') {
+    grunt.registerTask('upload_static', ['copy:static', 'shell:qrsync_darwin', 'replace']);
+  }
+  else if (process.platform === 'linux') {
+    grunt.registerTask('upload_static', ['copy:static', 'shell:qrsync_linux', 'replace']);
+  }
 };
