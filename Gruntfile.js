@@ -5,7 +5,7 @@ var paths = {
   html: ['packages/**/public/**/views/**', 'packages/**/server/views/**'],
   css: ['!bower_components/**', 'packages/**/public/**/css/*.css']
 };
-var qiniu_url = 'http://yiye-test.qiniudn.com'
+var qiniu_url = '"http://yiye-test.qiniudn.com'
 module.exports = function(grunt) {
 
   if (process.env.NODE_ENV !== 'production') {
@@ -134,17 +134,19 @@ module.exports = function(grunt) {
         replacements: [{
           from: /["']\/.+?\/assets\/img\/.+?\.(jpg|jpeg|gif|png|ico)["']/g,
           to: function (matchedWord, index, fullText, regexMatches) {
-            console.log(matchedWord);
+            matchedWord = matchedWord.slice(1)
             return qiniu_url+matchedWord;   //
           }
         },{
           from: /["']\/bower_components\/.+?\/.+?\.(css|js)["']/g,
           to: function (matchedWord, index, fullText, regexMatches) {
+            matchedWord = matchedWord.slice(1)
             return qiniu_url+matchedWord;   //
           }
         },{
           from: /["']\/.+\/assets\/.+?\/.+?\.(css|js)["']/g,
           to: function (matchedWord, index, fullText, regexMatches) {
+            matchedWord = matchedWord.slice(1)
             return qiniu_url+matchedWord;   //
           }
         }]
@@ -155,6 +157,7 @@ module.exports = function(grunt) {
         replacements: [{
           from: /["']\/.+?\/assets\/img\/.+?\.(jpg|jpeg|gif|png|ico)["']/g,
           to: function (matchedWord, index, fullText, regexMatches) {
+            matchedWord = matchedWord.slice(1)
             return qiniu_url+matchedWord;   //
           }
         }]
