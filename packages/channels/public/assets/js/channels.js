@@ -47,13 +47,14 @@ function initialize() {
             bkDown = false;
         });
     });
+    $('.')
 
 }
 
 
 //订阅频道
 function channelsSub(){
-    $('#channel-sub').click(function(event){
+    $('#subscribe-btn').click(function(event){
         var channelId = $('#control-body').data('channelid');
         $.get('/channel/sub/'+channelId, function(data) {
             if(data.success){
