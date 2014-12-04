@@ -88,7 +88,7 @@ exports.addAdmChannel = function(){
 exports.createChannel = function(req,res){
     if(!req.user) return res.status(401).send({info:'请先登录或注册'});
     var allCount = 5;
-    var nameLength=15,descriptionLength=100;
+    var nameLength=20,descriptionLength=100;
     if (typeof req.body.name!='string'
         ||typeof req.body.logo!='string'
         ||typeof req.body.description!='string'
@@ -96,6 +96,11 @@ exports.createChannel = function(req,res){
         ||typeof req.body.type!='string'
         ||typeof req.body.banner!='string'){
         return res.status(401).send({info:'数据格式错误'});}//频道资料不规范
+    if (!req.body.name) return res.status(401).send({info:'频道名称不能为空'});
+    if (!req.body.logo) return res.status(401).send({info:'logo不能为空'});
+    if (!req.body.description) return res.status(401).send({info:'频道描述不能为空'});
+    if (!req.body.tags) return res.status(401).send({info:'标签不能为空'});
+    if (!req.body.type) return res.status(401).send({info:'频道类型不能为空'});
     var newchannel={
         logo:xss(req.body.logo,{whiteList:{}}),
         name:xss(req.body.name,{whiteList:{}}),
@@ -277,7 +282,7 @@ exports.discover = function(req,res){
                     if (results[0]['time']+''==doc['time']+''){
                         isHave=false;
                     }
-                }//console.log(results);
+                }//
                 res.json({list:results,isHave:isHave});
             });
 }
@@ -311,7 +316,6 @@ exports.ajaxBookmarks = function(req,res){
             })
         }
     },function(err,results){
-
         results.isHave=true;//下次是否还进行ajax请求
         results.nextTime=null;//请求加载的书签的时间
         if(results.endbookmarkId.lenght===0) results.isHave=false;

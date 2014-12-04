@@ -303,6 +303,9 @@ exports.update = function(req,res){
     if(req.body.avatar && req.body.intro){
         update.avatar = req.body.avatar;
         update.intro = req.body.intro;
+        if (!myVerify.isString(update.avatar)||!myVerify.isString(update.intro)){ return res.send({err:true,info:'参数格式错误'})}
+        update.avatar=xss(update.avatar,{whiteList:{}});
+        update.intro =xss(update.intro,{whiteList:{}});
         User.update({_id:req.user._id},update,function(err,doc){
             if(err) return console.log(err);
             return res.status(200).send({
