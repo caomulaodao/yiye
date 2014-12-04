@@ -73,9 +73,7 @@ function listToArray(list){
 function stripscript(s) {
     var pattern = /[^0-9a-zA-Z\u4E00-\u9FA5_]/g;//过滤搜索的非法字符
         var rs = "";
-    for (var i = 0; i < s.length; i++) {
         rs = s.replace(pattern, '');
-    }
     return rs;
 }
 
