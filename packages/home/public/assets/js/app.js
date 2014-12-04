@@ -533,6 +533,7 @@ $(function(){
             that.cList.fetch({url:'/api/home/discover',success:function(model,response){
                 that.$el.html(that.initTemplate(response));
                 that.cList.set("number", 2);
+                $('.ex-creator').tooltip();    //创建者头像绑定tooltip
                 that.renderAfter();
             }})
         },
@@ -559,6 +560,7 @@ $(function(){
                     url: "/api/home/discover",
                     success: function(model, response){
                         $('#channel-explore ul').append(that.addTemplate(response));
+                        $('.ex-creator').tooltip();        //创建者头像绑定tooltip
                         if(!response.isHave){
                             $('#channel-explore ul').append("<p class='no-news'>无新内容了</p>");
                         } else {

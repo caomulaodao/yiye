@@ -22,8 +22,6 @@ function initialize() {
         $('.channel-item').removeClass('active');
         $(this).addClass('active').children('.links-num').remove();
     });
-
-    $('.ex-creator').tooltip();
 }
 
 
