@@ -174,14 +174,14 @@
 <script type="text/x-handlebars-template" id="tp-personal-center">
     <div class="personal-center">
         <ul class="nav nav-tabs" role="tablist" id="channel-manage-tab">
-            <li role="presentation" class="active"><a href="#new" role="tab" data-toggle="tab">账号</a></li>
-            <li role="presentation"><a href="#profile" role="tab" data-toggle="tab">密码</a></li>
-            <li role="news"><a href="#news" role="tab" data-toggle="tab" id="news-tab" data-num="{{ news.length }}">新消息{% if news > 0 %}({{ news }}){% endif %}</a></li>
+            <li role="news" class="active"><a href="#news" role="tab" data-toggle="tab" id="news-tab" data-num="{{ news.length }}">新消息{% if news > 0 %}({{ news }}){% endif %}</a></li>
             <li role="news"><a href="#history" role="tab" data-toggle="tab" id="history-tab">历史消息</a></li>
+            <li role="presentation"><a href="#profile" role="tab" data-toggle="tab">密码</a></li>
+            <li role="presentation"><a href="#new" role="tab" data-toggle="tab">账号</a></li>
             <button class="btn" id="gotoPerson" onclick="window.open('/u/{{ ''+user._id}}')">我的主页</button>
         </ul>
         <div class="tab-content">
-            <div role="tabpanel" class="tab-pane active" id="new">
+            <div role="tabpanel" class="tab-pane" id="new">
                 <div class="user-info-item">
                     <label>用户名:</label>
                     <div class="user-info-item-main">
@@ -243,7 +243,7 @@
                     <button class="btn" id="password-change-button">修改</button>
                 </div>
             </div>
-            <div role="tabpanel" class="tab-pane" id="news">
+            <div role="tabpanel" class="tab-pane active" id="news">
                 <ul class="user-news-list">
                 </ul>
             </div>
