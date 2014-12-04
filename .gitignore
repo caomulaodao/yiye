@@ -13,3 +13,4 @@ modules/public/
 modules/views/
 /public/build/
 /nbproject/private/
+static_files/
