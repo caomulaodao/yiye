@@ -344,7 +344,7 @@ exports.renderCheck = function(req,res,Package){
 exports.update = function(req,res){
     var channelId = req.params['channelId'];
     if(!verify.idVerify(channelId)) {return res.status(401).send({info:'频道id错误'})}
-    var nameLength=15,descriptionLength=100;
+    var nameLength=20,descriptionLength=100;
     if (typeof req.body.name!='string'
         ||typeof req.body.logo!='string'
         ||typeof req.body.description!='string'
@@ -356,13 +356,14 @@ exports.update = function(req,res){
     if (!req.body.description) return res.status(401).send({info:'频道描述不能为空'});
     if (!req.body.tags) return res.status(401).send({info:'标签不能为空'});
     if (!req.body.type) return res.status(401).send({info:'频道类型不能为空'});
-    var update = {
-        name:req.body.name,
-        logo:req.body.logo,
-        description:req.body.description,
-        type:req.body.description,
-        tags:req.body.tags
-    };
+    var update={
+        logo:xss(req.body.logo,{whiteList:{}}),
+        name:xss(req.body.name,{whiteList:{}}),
+        description:xss(req.body.tags,{whiteList:{}}),
+        type:xss(req.body.type,{whiteList:{}}),
+        tags:xss(req.body.tags,{whiteList:{}}),
+    };//xss过滤    
+
     Channels.update({_id:channelId},update,function(err,doc){
         if(err) return console.log(err);
         res.status(200).send({success:true,info:'修改信息成功!'});
@@ -372,6 +373,7 @@ exports.update = function(req,res){
 //取消订阅某个频道
 exports.noWatch = function(req,res){
     var channelId = req.params['channelId'];
+    if(!verify.idVerify(channelId)) {return res.status(401).send({info:'频道id错误'})}
     if(!req.user) return res.redirect('/');
     
     //删除频道用户关系表
