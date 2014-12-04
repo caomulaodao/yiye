@@ -23,7 +23,7 @@ function initialize() {
         $(this).addClass('active').children('.links-num').remove();
     });
 
-    $('.channel-showcase-footer a').tooltip();
+    $('.ex-creator').tooltip();
 }
 
 
