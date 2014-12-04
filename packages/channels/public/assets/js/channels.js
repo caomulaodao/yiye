@@ -47,7 +47,6 @@ function initialize() {
             bkDown = false;
         });
     });
-    $('.')
 
 }
 
