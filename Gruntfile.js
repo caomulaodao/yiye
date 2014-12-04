@@ -5,7 +5,7 @@ var paths = {
   html: ['packages/**/public/**/views/**', 'packages/**/server/views/**'],
   css: ['!bower_components/**', 'packages/**/public/**/css/*.css']
 };
-var qiniu_url = '"http://yiye-test.qiniudn.com'
+var qiniu_url = '"http://yiye-test.qiniudn.com';
 module.exports = function(grunt) {
 
   if (process.env.NODE_ENV !== 'production') {
@@ -125,7 +125,7 @@ module.exports = function(grunt) {
     shell: {
       qrsync_darwin: {
         command: 'tasks/qrsync_darwin tasks/conf.json'
-      }
+      },
       qrsync_linux: {
         command: 'tasks/qrsync_linux task/conf.json'
       }
