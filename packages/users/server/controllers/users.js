@@ -321,8 +321,9 @@ exports.update = function(req,res){
     }
 }
 
-/*
+/**
  * 修改密码
+ *
  */
 exports.changePassword = function(req,res){
     if(!req.user) return res.send({err:true,info:'请先登陆或注册'});
