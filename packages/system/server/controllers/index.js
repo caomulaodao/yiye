@@ -105,7 +105,7 @@ exports.query = function(req,res,Package){
     if(search.length>=searchMax){
         search=search.substr(0,searchMax);
     }
-    search=tool.stripscript(search);
+    search=tool.stripscript(search);//过滤非法字符 仅支持中文 数字 英文搜索
     async.waterfall([
         //返回频道总数count
         function(cb){

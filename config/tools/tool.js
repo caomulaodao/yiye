@@ -71,10 +71,10 @@ function listToArray(list){
 }
 //过滤非法字符
 function stripscript(s) {
-    var pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）&mdash;—|{}【】‘；：”“'。，、？]")
+    var pattern = /[^0-9a-zA-Z\u4E00-\u9FA5_]/g;//过滤搜索的非法字符
         var rs = "";
     for (var i = 0; i < s.length; i++) {
-        rs = rs + s.substr(i, 1).replace(pattern, '');
+        rs = s.replace(pattern, '');
     }
     return rs;
 }
