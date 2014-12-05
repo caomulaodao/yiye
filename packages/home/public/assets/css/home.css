@@ -826,7 +826,6 @@ a.header-channel-name , a.header-channel-name:hover{
     letter-spacing: 1px;
     font-size: 2.3em;
     color: #2a6496;
-    text-decoration: none;
     cursor: pointer;
 }
 .header-component {

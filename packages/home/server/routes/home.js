@@ -21,10 +21,6 @@ module.exports = function(Home, app, auth, database) {
     app.route('/api/news/viewed')
         .post(home.newsViewed);
 
-    //获取频道排行榜
-    app.route('/api/channels/top/:num')
-        .get(home.getChannelsTop);
-
     //home中发现频道api
     app.route('/api/home/discover')
         .get(home.discover);

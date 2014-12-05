@@ -244,12 +244,17 @@ $(function(){
             this.channel.set({type: $("input[name='type']:checked").val()});
             this.channel.set({banner: 'channels/assets/img/background/cBg0' + (Math.ceil(Math.random()*10)) + '.png'});
             this.channel.save(null,{error: function(model, response){
-                $('#Channel-Create-Error').text(response.responseJSON.info).show();
+                    $('#Channel-Create-Error').text('创建失败').show();
             },success: function(model, response){
-                popup("频道创建成功 ！");
-                setTimeout(function(){
-                    location.href = '/home';
-                },1000);
+                if(response.code == 0) {
+                    popup("频道创建成功 ！");
+                    setTimeout(function(){
+                        location.href = '/home';
+                    },1000);
+                } else {
+                    $('#Channel-Create-Error').text(response.msg).show();
+                }              
+                
             }});
         }
 
@@ -450,7 +455,7 @@ $(function(){
             that.hisMes = new hisMessage;
             that.hisMes.fetch({url: '/api/home/hismes',
                 success: function (model, response) {
-                    $('.user-history-list').html(that.historyTemplate(response));
+                    $('.user-history-list').html(that.historyTemplate(response.data));
                     that.hisMes.set('number', 2);
                 }
             });

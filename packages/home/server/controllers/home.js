@@ -86,21 +86,21 @@ exports.addAdmChannel = function(){
 
 //新建一个频道
 exports.createChannel = function(req,res){
-    if(!req.user) return res.status(401).send({info:'请先登录或注册'});
+    if(!req.user) return res.sendResult('请先登录或注册',1000,null);
     var allCount = 5;
     var nameLength=20,descriptionLength=100;
+    if (!req.body.name) return res.sendResult('频道名称不能为空',2001,null);
+    if (!req.body.logo) return res.sendResult('logo不能为空',2002,null);
+    if (!req.body.description) return res.sendResult('频道描述不能为空',2003,null);
+    if (!req.body.tags) return res.sendResult('标签不能为空',2004,null);
+    if (!req.body.type) return res.sendResult('频道类型不能为空',2005,null);  
     if (typeof req.body.name!='string'
         ||typeof req.body.logo!='string'
         ||typeof req.body.description!='string'
         ||typeof req.body.tags!='string'
         ||typeof req.body.type!='string'
         ||typeof req.body.banner!='string'){
-        return res.status(401).send({info:'数据格式错误'});}//频道资料不规范
-    if (!req.body.name) return res.status(401).send({info:'频道名称不能为空'});
-    if (!req.body.logo) return res.status(401).send({info:'logo不能为空'});
-    if (!req.body.description) return res.status(401).send({info:'频道描述不能为空'});
-    if (!req.body.tags) return res.status(401).send({info:'标签不能为空'});
-    if (!req.body.type) return res.status(401).send({info:'频道类型不能为空'});
+        return res.sendResult('数据类型错误',2000,null);}//频道资料不规范
     var newchannel={
         logo:xss(req.body.logo,{whiteList:{}}),
         name:xss(req.body.name,{whiteList:{}}),
@@ -109,8 +109,8 @@ exports.createChannel = function(req,res){
         tags:xss(req.body.tags,{whiteList:{}}),
         banner:xss(req.body.banner,{whiteList:{}})
     };//xss过滤
-    if(newchannel.name.length>nameLength) {return res.status(401).send({info:'频道名限制15字'})}//频道名长度限制
-    if(newchannel.description.length>descriptionLength) {return res.status(401).send({info:'描述限制100字'})}//描述长度限制
+    if(newchannel.name.length>nameLength) {return res.sendResult('频道名限制15字',2006,null)}//频道名长度限制
+    if(newchannel.description.length>descriptionLength) {return res.sendResult('描述限制100字',2007,null)}//描述长度限制
     var channels = new Channels(newchannel);
     channels.tags = getTags(channels.tags);
     channels.creator = {userId:req.user._id,userName:req.user.username,userLogo:req.user.avatar};
@@ -128,7 +128,7 @@ exports.createChannel = function(req,res){
         function(isCreate,callback){
             if(isCreate){
                 channels.save(function(err,doc){
-                    if(err) console.log(err);
+                    if(err) {console.log(err);return res.sendResult('服务器内部问题',5000,null)}
                     var admChannel = new Channel2User({
                         userId:req.user._id,
                         channelId:doc._id,
@@ -137,9 +137,9 @@ exports.createChannel = function(req,res){
                         logo: channels.logo
                     });
                     admChannel.save(function(err){
-                        if(err) console.log(err);
+                        if(err) {console.log(err);return res.sendResult('服务器内部问题',5000,null)}
                         User.update({_id:req.user._id},{$inc:{createNum:1}},function(err,num){
-                            if(err) console.log(err);
+                            if(err) {console.log(err);return res.sendResult('服务器内部问题',5000,null)}
                             callback(null,isCreate);
                         });
                     });
@@ -150,29 +150,29 @@ exports.createChannel = function(req,res){
         }
     ],function(err,isCreate){
            if(isCreate){
-                res.status(200).send({info:"success"});
+                res.sendResult("频道创建成功",0,null);
            }else{
-               res.status(401).send({info:"创建数量已达上限，无法创建新频道。"});
+               res.sendResult("创建数量已达上限，无法创建新频道。",3000,null);
            }
     });
 };
 
 //获取关注或是建立的频道
 exports.getChannelsList = function(req,res){
-    if(!req.user) return res.status(401).send({info:'请先登录或注册'});
+    if(!req.user) return res.sendResult('请先登录或注册',1000,null);
     Channel2User.find({userId:req.user._id},'channelId name logo type lastTime news',function(err,channels){
-        if(err) return console.log(err);
+        if(err){console.log(err);return res.sendResult('服务器内部问题',5000,null)}
         async.map(channels,function(item,callback){
             Bookmarks.count({channelId:item.channelId,postTime:{$gte:item.lastTime}},function(err,count){
                 item['news'] = count;
                 callback(null,item);
             });
         },function(err,results){
-            if(err) return console.log(err);
+            if(err){console.log(err);return res.sendResult('服务器内部问题',5000,null)}
             results.sort(function(a,b){
                 return a.news < b.news ? 1 : -1;
             });
-            res.json(results);
+            res.sendResult('返回成功',0,results);
         });
     });
 };
@@ -190,25 +190,13 @@ exports.check = function(req,res,Home){
 //
 exports.newsViewed = function(req,res){
     var bookmarkId = req.body.bookmarkId;
-    if (!Myverify.idVerify(bookmarkId)) return res.status(400).send({err:'请求错误参数'});//id验证
+    if (!Myverify.idVerify(bookmarkId)) return res.sendResult('请求参数错误',2000,null);//id验证
     Bookmarks.update({_id:bookmarkId},{$inc:{checked:2}},function(err,num){
-        if(err) console.log(err);
-        res.status(200).send({success:true,info:'此信息已经加入历史记录。'});
+        if(err) {console.log(err);return res.sendResult('服务器内部错误',5000,null)}
+        res.sendResult('此信息已经加入历史记录。',0,null);
     });
 }
 
-
-//获取频道排行榜
-exports.getChannelsTop = function(req,res){
-    var num = req.params['num'];
-    num = +num;//
-    if (isNaN(num)||num<0) return res.status(400).json({err:'请求参数非法'});//传入参数判断
-    var limit = 20;
-    Channels.find().sort({subNum:1}).skip(num).limit(limit).exec(function (err, channels) {
-        if(err) return console.log(err);
-        res.status(200).json({channels:channels});
-    });
-}
 
 function getTags(str){
     if(!str) return [];
@@ -230,38 +218,29 @@ exports.discover = function(req,res){
     //number为请求次数 limit为每次返回的数量
     var number=req.query.number||1;
     var limit=12;
-    if (!Myverify.isNumber(number)){return res.status(400).json({error:'错误参数'})}//传入参数格式进行判断
+    if (!Myverify.isNumber(number)){return res.sendResult('请求参数错误',2000,null)}//传入参数格式进行判断
     if (number==1){limit=24}
-    console.log(number);
     async.waterfall([
             function(callback1){
-                Channels.find().sort({subNum:-1,time:-1}).skip((number-1)*limit).limit(limit).exec(function(err,subChannels){
-                    if(err) return console.log(err);
-                    async.map(subChannels,function(item,callback2){
-                        Bookmarks.count({channelId:item.channelId,postTime:{$gte:item.lastTime}},function(err,count){
-                            item['news'] = count;
-                            callback2(null,item);
-                        });
-                    },function(err,results){
-                        results.sort(function(a,b){
-                            return a.news < b.news ? 1 : -1;
-                        });
-                        callback1(null,results);
-                    });
+                Channels.find().sort({'subNum':-1,'bmkNum':-1,'time':-1}).skip((number-1)*limit).limit(limit).exec(function(err,doc){
+                    if(err) {console.log(err);return res.sendResult('服务器内部错误',5000,null)}       
+                     callback1(null,doc);
                 });
             },
+            //获取最后一个频道
             function(results,callback){
                 Channels.find().sort({subNum:1,time:1}).limit(1).exec(function(err,doc){
-                    if (err) return console.log(err);
+                    if (err) { console.log(err);return res.sendResult('服务器内部错误',5000,null)}
                     if(doc.length===0) {callback(null,results,[]);}
                     else{
                         callback(null,results,doc[0]);
                     }
                 })
             },
+            //是否关注
             function(results,doc,callback){
                 Channel2User.find({userId:req.user._id},function(err,channel2user){
-                    if (err) return console.log(err);
+                    if (err) {console.log(err);return res.sendResult('服务器内部错误',5000,null)}
                     var channel2userId=[];
                     channel2user.forEach(function(item){
                         channel2userId.push(item.channelId+'');
@@ -270,6 +249,7 @@ exports.discover = function(req,res){
                 })
             }],
             function(err, results,doc,channel2userId) {
+                if (err) {console.log(err);return res.sendResult('服务器内部错误',5000,null)}
                 var isHave=true;
                 var  results = JSON.parse(JSON.stringify(results));
                 results.forEach(function(item,index,array){
@@ -283,17 +263,18 @@ exports.discover = function(req,res){
                         isHave=false;
                     }
                 }//
-                res.json({list:results,isHave:isHave});
+                console.log(results);
+                res.sendResult('加载成功',0,{list:results,isHave:isHave})
             });
 }
 
 //ajax加载加载bookmarks
 exports.ajaxBookmarks = function(req,res){
-    if(!req.user) return res.status(401).json({info:'请先注册或登录'});
+    if(!req.user) return res.sendResult('请先注册或登录',1000,null);
     var date=req.query.date, limit = 20;//date为前端当前展示的时间
     date=moment(date).toDate();
     var channelId = req.query['channelId'];
-    if (!Myverify.idVerify(channelId)) return res.stats(401).json({info:"参数非法"});
+    if (!Myverify.idVerify(channelId)) return res.sendResult("请求参数格式错误",2000,null);
     async.parallel({
         list: function(callback){
             //获取对应频道的书签
@@ -305,7 +286,6 @@ exports.ajaxBookmarks = function(req,res){
                 Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]},postTime:{$gte:startDay,$lt:date}}).sort({postTime:-1}).exec(function(err,list){
                     if(err) console.log(err);
                     callback(null,list);
-
                 });
             })
         },
@@ -322,15 +302,15 @@ exports.ajaxBookmarks = function(req,res){
         if(results.list.length===0) results.isHave=false;
         else{
             if(results.list[results.list.length-1]['_id']+''==results.endbookmarkId[0]['_id']+''){
-                results.nexttime=moment(results.list[results.list.length-1]['postTime']).format('YYYY-MM-DD');
+                results.nextTime=moment(results.list[results.list.length-1]['postTime']).format('YYYY-MM-DD');
                 results.isHave=false;
             }         
-            }
+        }
         results.list=tool.listToArray(results.list);
         //更新频道最后访问时间并返回数据
         Channel2User.update({channelId:channelId,userId:req.user._id},{lastTime:Date.now()},function(err){
-            if(err) return console.log(err);
-            res.json(results);
+            if(err) {console.log(err);return res.sendResult('服务器内部问题',5000,null);}
+            res.sendResult('加载成功',0,results);
         });
     });
 }
