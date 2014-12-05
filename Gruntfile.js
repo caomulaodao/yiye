@@ -127,7 +127,7 @@ module.exports = function(grunt) {
         command: 'tasks/qrsync_darwin tasks/conf.json'
       },
       qrsync_linux: {
-        command: 'tasks/qrsync_linux task/conf.json'
+        command: 'tasks/qrsync_linux tasks/conf.json'
       }
     },
     replace:{
