@@ -6,7 +6,7 @@ var paths = {
   css: ['!bower_components/**', 'packages/**/public/**/css/*.css']
 };
 var qiniu_url_1 = '"http://yiye-test.qiniudn.com';
-var qiniu_url_2 = '"'+'http://yiye-test.qiniudn.com';
+var qiniu_url_2 = '\'http://yiye-test.qiniudn.com';
 module.exports = function(grunt) {
 
   if (process.env.NODE_ENV !== 'production') {
