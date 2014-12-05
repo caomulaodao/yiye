@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{user.username}}的个人主页</title>
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/person/assets/css/person.css">
+</head>
+<body>
+<!--web_loading-->
+<div id="web-loading">
+    <div></div>
+</div>
+
+<div class="control-page">
+    <div class="bg-style">
+        <div class="bg-img" {% if user.avatar !== 'avatar/83e8ef518174e1eb016d71d414509845.png' %} style="background: url(http://yiye.qiniudn.com/{{ user.avatar }}) no-repeat;background-size: cover;" {% endif %} ></div>
+        <div class="bg-opacity"></div>
+    </div>
+    <div class="control-page-content">
+        <div class="control-header">
+            <a href="javascript:;" class="yiye-logo">
+                <img src="/person/assets/img/logo_white2.png">
+            </a>
+            <a  href="/home" title="我的主页" class="glyphicon glyphicon-home"></a>
+        </div>
+        <div class="control-body" >
+            <div class="user-part">
+                <div class="user-avatar">
+                    <img src="http://yiye.qiniudn.com/{{ user.avatar }}">
+                </div>
+                <div class="user-name">
+                    <p>{{ user.username }}</p>
+                </div>
+                <div class="user-intro">
+                    <span>{{ user.intro }}</span>
+                </div>
+            </div>
+            <div class="chose-item">
+                <ul>
+                    <li class="item-list">
+                        <a href="/u/{{''+user._id}}">
+                            <strong>{{ user.postNum }}</strong>
+                            <span>提交</span>
+                        </a>
+                    </li>
+                    <li class="item-list active">
+                        <a href="/u/{{''+user._id}}/create">
+                            <strong>{{ user.createNum }}</strong>
+                            <span>创建</span>
+                        </a>
+                    </li>
+                    <li class="item-list">
+                        <a href="/u/{{''+user._id}}/watch">
+                            <strong>{{ user.subNum }}</strong>
+                            <span>订阅</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- content page -->
+<div id="content-page">
+    <div id="content-page-content">
+        <div class="part-wrapper">
+            <div class="part-list">
+                <div id="part-title">
+                    <h3>创建的频道</h3>
+                </div>
+                <ul class="part-ul" id="create-channel-list">
+                    {% if list.length==0 %}
+                    <div class="no-inf">
+                        <img src="/system/assets/img/no-channel.png">
+                    </div>
+                    {% endif %}
+                    {% for channel  in list %}
+                    <li class="channel-showcase">
+                        <div class="channel-logo">
+                            <img src="http://yiye.qiniudn.com/{{ channel.logo }}"/>
+                        </div>
+                        <div class="channel-main">
+                            <div class="channel-showcase-head">
+                                <a href="/channel/{{ ''+channel._id }}">{{ channel.name }}</a>
+                                <span>
+                                    <a class="have-subed" data-id= {{ ''+channel._id }} href="javascript:;">{% if channel.isAttention %}已订阅{% else %}</a>
+                                    <a class="to-sub" data-id= {{ ''+channel._id }} href="javascript:;">+订阅{% endif %}</a>
+                                </span>
+                            </div>
+                            <p class="channel-showcase-description">{{ channel.description }}</p>
+                            <div class="channel-showcase-footer">
+                                <span>{{ channel.bmkNum}}书签</span><span>{{ channel.subNum}}关注者</span>
+                                <a class="ex-creator" target="_blank" href="/u/{{ channel.creator.userId }}" data-toggle="tooltip" data-placement="left" title={{ channel.creator.userName }}><img src="http://yiye.qiniudn.com/{{ channel.creator.userLogo }}"/></a>
+                            </div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% if page.show.length>1 %}
+                <div id="page-part">
+                    <ul class="pagination">
+                    {% if page.before<1 %}
+                        <li class="disabled"><a href="#">&laquo;</a></li>
+                        {% else %}
+                        <li><a href="{{'?p='+page.before}}">&laquo;</a></li>
+                    {% endif %}
+                        {% for i in page.show %}
+                            {% if i==page.now %}                
+                                <li class="active"><a href="#">{{i}} <span class="sr-only">(current)</span></a></li>
+                            {% else%}
+                            <li><a href="{{'?p='+i}}">{{i}}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                    {% if page.after>page.max %}
+                        <li class="disabled"><a href="#">&raquo;</a></li>
+                        {% else %}
+                        <li><a href="{{'?p='+page.after}}">&raquo;</a></li>
+                    {% endif %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+     </div>
+</div>
+<script rel="script" src="/bower_components/jquery/dist/jquery.js"></script>
+<script rel="script" src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<script type="text/javascript" src="/person/assets/js/create.js"></script>
+</body>
+</html>

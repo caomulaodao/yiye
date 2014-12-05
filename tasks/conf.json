@@ -1,0 +1,6 @@
+{
+    "src": "static_files/",
+    "dest": "qiniu:access_key=am7vuItIuMzgttsMSlp7JjmE2DUUprpMDbwyE9I1&secret_key=IYB9sMkirvxduK4TviDHREIiPNrzVyXUL9GiI_Q8&bucket=yiye-test&debug_level=0",
+    "deletable": 0,
+    "debug_level": 0
+}

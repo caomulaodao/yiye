@@ -1,0 +1,458 @@
+html,body {
+    font-size: 10px;
+    height: 100%;
+    font-family: "微软雅黑";
+    overflow-y: hidden;
+    min-width: 890px;
+}
+ul {
+    padding-left: 0;
+}
+
+button:focus {outline:0;}
+
+
+/* ==========================================================
+    webkit-scroll-style
+   ========================================================== */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-thumb:vertical {
+    background-color: #bbb;
+    -webkit-border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+    background-color: #bbb;
+    -webkit-border-radius: 6px;
+}
+
+
+/****************control page******************/
+.control-page {
+    position: fixed;
+    width: 30%;
+    min-width: 275px;
+    height: 100%;
+}
+.bg-style {
+
+}
+.bg-img {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background-color: #fff;
+    top: 0;
+    left: 0;
+    opacity: 1;
+    -webkit-filter: blur(2px);
+    filter: blur(2px);
+}
+.bg-opacity {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: #24282f;
+    opacity: 0.7;
+}
+.control-page-content {
+    width: 100%;
+    height: 100%;
+}
+
+
+/******header******/
+
+.control-header {
+    height: 60px;
+    padding-top: 5px;
+    padding-right: 20px;
+    width: 100%;
+    position: relative;
+}
+.yiye-logo {
+    width: 180px;
+    margin-left: 20px;
+    overflow: hidden;
+}
+.yiye-logo img {
+    width: 180px;
+}
+.control-header a:last-child {
+    float: right;
+    font-size: 2.5em;
+    margin-top: 20px;
+    text-decoration: none;
+    color: #eee;
+}
+.control-header a:last-child:hover {
+    color: #fff;
+}
+.menu-arrow {
+    position: absolute;
+    left: 48px;
+    top: -40px;
+    width: 0;
+    height: 0;
+    border-width: 10px;
+    border-color: transparent transparent #fff transparent;
+    border-style: dashed dashed solid dashed;
+}
+
+
+/******body******/
+
+.control-body {
+    height: 100%;
+    width: 100%;
+    position: relative;
+}
+.user-part {
+    width: 100%;
+    height: 200px;
+    margin-top: 100px;
+}
+.user-avatar {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto;
+    border-radius: 50%;
+    overflow: hidden;
+}
+.user-avatar img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+}
+.user-name {
+    text-align: center;
+    margin-top: 5px;
+    color:#fff;
+    font-size: 2em;
+}
+.user-intro {
+    height: 55px;
+    text-align: center;
+    margin-top: 5px;
+    color: #bbb;
+    font-size: 1.5em;
+    padding: 0 20px;
+    word-break: break-all;
+}
+.chose-item {
+    width: 100%;
+    margin-top: 35px;
+    text-align: center;
+}
+.chose-item ul {
+    width: 100%;
+    margin: 0 auto;
+    list-style-type: none;
+}
+.chose-item ul>li:nth-child(2) {
+    border-left: 1px solid rgba(255,255,255,0.1);
+    border-right: 1px solid rgba(255,255,255,0.1);
+}
+.item-list {
+    display: inline-block;
+    width: 30%;
+    height: 55px;
+    font-size: 1.8em;
+    padding-top: 4px;
+    color: #fff;
+}
+.item-list.active a {
+    color: #00E2FF;
+}
+.item-list a {
+    text-decoration: none;
+    color: #ccc;
+}
+.item-list a:hover {
+    color: #00E2FF;
+}
+.item-list a strong {
+    display: block;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+.item-list a span {
+    display: block;
+    font-weight: lighter;
+    font-size: 0.9em;
+}
+
+/* ======================================================================================
+    content page
+    ===================================================================================== */
+
+#content-page {
+    height: 100%;
+    background-color: #f3f3f3;
+    margin-left: 30%;
+    position: relative;
+}
+
+#content-page-content {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
+/* ======================================================================================
+    content page
+    ===================================================================================== */
+
+/* 无信息图片 */
+.no-inf {
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%,-50%);
+    -moz-transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+    -o-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+}
+.no-inf>img {
+    width: 200px;
+}
+
+.part-wrapper{
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.part-list{
+    height: 100%;
+    padding-left: 50px;
+    padding-top: 5px;
+}
+
+.part-ul{
+    display:table;
+    list-style-type: none;
+}
+
+.part-ul li{
+    float: left;
+    display: table-cell;
+    margin-right: 20px;
+    margin-bottom: 20px;
+}
+.part-title {
+    margin-bottom: 25px;
+}
+
+.part-title h3 {
+    font-size: 2.0em;
+}
+
+/* ======================================================================================
+    user post bookmark
+    ===================================================================================== */
+.channel-inf {
+    width:65px;
+    margin-top: 5px;
+    float: left;
+}
+
+.links-inf {
+    width: 65px;
+    margin-top: 5px;
+    float: right;
+}
+
+#page-part {
+    text-align: center;
+    padding-right: 50px;
+}
+
+
+.date-divide {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+.date-divide div {
+    font-size: 1.5em;
+    line-height: 55px;
+    color: #999;
+}
+
+.single-link {
+    margin-bottom: 15px;
+    margin-right: 40px;
+}
+
+.link-part-content {
+    width: 100%;
+    min-height: 100px;
+}
+.description {
+    margin-top: 10px;
+    font-size: 1.3em;
+    color: #666;
+}
+.description>span{
+    margin-right: 2px;
+    font-weight: bold;
+}
+.link {
+    font-size: 1.6em;
+    font-weight: bold;
+    color: #157CCC;
+}
+.link:hover {
+    color: #157ccc;
+}
+.bookmark-pic{
+    float: right;
+    margin-top: 27px;
+    margin-left: 35px;
+    height: 50px;
+    width: 100px;
+}
+.bookmark-pic img{
+    height: 50px;
+    width: 100px;
+}
+
+
+#sub-channel-list{
+    list-style-type: none;
+    padding-left: 40px;
+}
+.footer-part {
+    margin-top: 3px;
+    letter-spacing: 1px;
+}
+.footer-part span{
+    color: #999;
+    margin-right: 4px;
+}
+.footer-part a {
+    color: #999;
+}
+.footer-part i{
+    color: #999;
+    margin-right: 3px;
+}
+.footer-part a:hover {
+    color: #698EBF;
+}
+
+
+
+/* ======================================================================================
+    channel-showcase
+    ===================================================================================== */
+.channel-showcase{
+    position: relative;
+    display: inline-block;
+    width: 323px;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    transition: all 0.3s;
+    -webkit-transition: all 0.3s;
+    margin: 10px 15px;
+    border-radius: 4px;
+}
+.channel-showcase:hover{
+    background-color: #fff;
+    border-color: #40c192;
+    box-shadow: 0 0 3px #40c192 inset;
+    transition: all 0.3s;
+    -webkit-transition: all 0.3s;
+}
+.channel-logo{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 60px;
+}
+.channel-logo img{
+    width: 40px;
+    height: 40px;
+    margin: 10px;
+    border-radius: 3px;
+}
+.channel-main{
+    margin: 10px 10px 10px 60px;
+}
+.channel-showcase-head {
+    margin-top: 5px;
+    height: 20px;
+    line-height: 20px;
+}
+.channel-showcase-head>a {
+    color: #428bca;
+    width: 180px;
+    font-size: 1.4em;
+    white-space: nowrap;
+    display: inline-block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    font-weight: bold;
+}
+.channel-showcase-head span {
+    float: right;
+}
+a.to-sub {
+    font-size: 1.4em;
+    color: #698ebf;
+    font-weight:normal;
+}
+a.have-subed {
+    text-decoration: none;
+    font-size: 1.4em;
+    color: #ccc;
+}
+a.have-subed:hover {
+    cursor: default;
+}
+.channel-showcase-footer{
+    font-size: 12px;
+    height: 20px;
+    line-height: 20px;
+}
+.channel-showcase-footer span{
+    margin-right: 5px;
+    color: #999999;
+}
+.channel-showcase-footer img{
+    height: 20px;
+    width: 20px;
+    border-radius: 10px;
+}
+.ex-creator { float: right;}
+.channel-showcase-description{
+    color: #666;
+    margin:5px 0px 5px 0px;
+    width: 220px;
+    height: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: 'Helvetica Neue',Helvetica,Arial,Sans-serif;
+}
+
+#watch-channel-list{
+    margin-top: 20px;
+}
+#create-channel-list{
+    margin-top: 20px;
+}
+/*翻页条*/
+#pagination-part {
+    margin-top: 20px;
+    text-align: center;
+}

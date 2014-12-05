@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>一叶书签 | 发现网络之美</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/system/assets/css/style.css">
+</head>
+<body>
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <a id="logo" href="/"><img src="/system/assets/img/yiye_logo.png"/></a>
+        </div>
+        <div class="collapse navbar-collapse" >
+            <ul class="nav navbar-nav navbar-right right-links" id="index-navbar">
+                <li><a href="/explore">发现</a></li>
+                <li><a href="#">帮助</a></li>
+                {% if user%}
+                <li><a href="/home" id="avatar"><img src="http://yiye.qiniudn.com/{{user.avatar}}"/></a></li>
+                {%else%}
+                <li><a href="/signup" target="_blank">注册</a></li>
+                <li><button type="button" class="btn btn-default navbar-btn" onclick="window.open('/signin')">登录</button></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="green">
+    <h1 id="name"><img src="/system/assets/img/brand_name_white.png" style="width:200px;"></h1>
+    <p id="slogan"><span>发现网络之美</span></p>
+    <div id="video-button">
+        <a id="watch-video"></a>
+        <p>点击播放</p>
+    </div>
+    <div class="video-modal" style="display: none;">
+        <a href="#" class="video-modal-close"></a>
+        <video controls="" preload="">
+            <source src="http://yiye.qiniudn.com/pre.mp4" type="video/mp4">
+        </video>
+    </div>
+    <div id="signup">
+        <button type="button" class="btn btn-lg  btn-block" onclick = "window.open('/signup')">{% if user%}我的主页{% else %}立即注册{% endif %}</button>
+    </div>
+</div>
+<div id="down-wrapper">
+    <div class="container">
+        <h1>下载</h1>
+        <div class="row">
+            <div class="col-md-6">
+                <h2>浏览器插件</h2>
+                <p>帮助你快速将当前网页保存下来，并且选择需要提交的书签频道。此外，它还可以对当前网页截屏，打标签等。</p>
+                <div class="down-button" id="down-chrome"><a class="btn btn-lg" href="https://chrome.google.com/webstore/detail/%E4%B8%80%E5%8F%B6%E4%B9%A6%E7%AD%BE/hlahagafhhglgfefflokbaidlneedghl" target="_blank"><i></i>从chrome商店下载</a></div>
+            </div>
+            <div class="col-md-6">
+                <h2>手机客户端</h2>
+                <p>方便你随时随地通过手机访问你保存的网页，快速浏览你关注的书签频道的最新内容。</p>
+                <div class="down-button"  id="down-android" ><button type="button" class="btn btn-lg" data-toggle="tooltip" data-placement="right" title="对不起，即将上线"  ><i></i>下载android客户端</button></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="feature-wrapper">
+    <div class="container">
+        <div class="row">
+            <div class="info col-md-4">
+                <i class="icon icon-record"></i>
+                <h2>记录</h2>
+                <p>记录你看见的好的文章，内容或者一切感兴趣的事物。将它们保存在对应的书签频道里。</p>
+            </div>
+            <div class="info col-md-4">
+                <i class="icon icon-manage"></i>
+                <h2>发现</h2>
+                <p>发现你喜欢的书签频道，订阅它们，因为那里每天都有你感兴趣的内容产生，以及一群有趣的朋友。</p>
+            </div>
+            <div class="info col-md-4">
+                <i class="icon icon-share"></i>
+                <h2>分享</h2>
+                <p>分享到频道中的书签，会通过频道展示给那些对它感兴趣的人。你还可以将这些内容分享到社交账号中。</p>
+            </div>
+            <div class="info col-md-4">
+                <i class="icon icon-discover"></i>
+                <h2>同步</h2>
+                <p>你所保存的一切内容都会进行云端存储。并且可以随时随地在各种设备中快捷浏览。</p>
+            </div>
+            <div class="info col-md-4">
+                <i class="icon icon-read"></i>
+                <h2>管理</h2>
+                <p>管理你的频道和书签，选择那些你喜欢的书签，对它们进行分类整理，添加标签和类别。</p>
+            </div>
+            <div class="info col-md-4">
+                <i class="icon icon-sync"></i>
+                <h2>阅读</h2>
+                <p>一叶书签会将你保存下的网页进行优化排版，并且在移动设备离线存储。方便你随时阅读。</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="discover-wrapper">
+    <h1>我们拥有<span>{{user_number}}</span>名用户，他们创建了<span>{{channel_number}}</span>个书签频道，上面保存了<span>{{label_number}}</span>个书签。去发现你感兴趣的内容吧。</h1>
+    <div id="discover-button">
+        <a href="/explore" class="btn btn-lg">发现</a>
+    </div>
+</div>
+<div id="footer">
+    <div class="follow-us">
+        <a id="weibo-us"></a><a id="renren-us"></a><a id="weixin-us"></a><a id="douban-us"></a>
+    </div>
+    <h5>一叶书签<span>·</span>发现网络之美</h5>
+    <div id="about-us"><a href="our/team" target="_blank">关于我们</a><a href='our/team/#b' target="_blank">加入我们</a><a href="our/team/#d" target="_blank">联系我们</a><a href="#">意见反馈</a></div>
+</div>
+</div>
+<script rel="script" src="/bower_components/jquery/dist/jquery.js"></script>
+<script rel="script" src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<script rel="script" src="/system/assets/js/system.index.js"></script>
+</body>
+</html>

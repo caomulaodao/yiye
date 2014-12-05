@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>忘记密码 | 一叶书签</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/system/assets/css/common.css">
+</head>
+
+<body>
+<section class="content">
+    <div class="form-unit">
+        <a class="brand">
+            <img src="/system/assets/img/logo.png">
+        </a>
+        <h3>请输入你需要找回密码的邮箱</h3>
+        <form class="auth-form" id="YIYE_ForgotEmailForm" >
+            <div class="form-field">
+                <input type="email" placeholder="邮箱" name="email" value="" class="form-control" autofocus=""/>
+                <span class="glyphicon glyphicon-envelope"/>
+            </div>
+            <p class="bg-danger danger-info" id="YIYE_ErrorInfo"></p>
+            <button type="button" class="btn" id="YIYE_ConfirmEmail">确定</button>
+        </form>
+    </div>
+</section>
+<script rel="script" src="/bower_components/jquery/dist/jquery.js"></script>
+<script rel="script" src="/system/assets/js/system.forgot.js"></script>
+
+</body>

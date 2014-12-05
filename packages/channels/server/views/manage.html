@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{channel.name}}-频道管理</title>
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/channels/assets/css/channels.css">
+</head>
+
+<body>
+<!-- control page -->
+<div id="control-page">
+    <div>
+        <div id="bg-img" style="background: url(/{{ channel.banner }}) no-repeat;background-size: cover;"></div>
+        <div id="bg-opacity"></div>
+    </div>
+    <div id="control-page-content">
+        <div id="control-header">
+            <a href="/" id="yiye-logo">
+                <img src="/channels/assets/img/logo_white2.png">
+            </a>
+            <div id="menu-btn">
+                <i class="glyphicon glyphicon-align-justify"></i>
+                <ul id="channel-menu">
+                    <li id="links-btn"><a href="/channel/{{ ''+channel._id }}" >书签</a></li>
+                    <li id="members-btn"><a href="/channel/{{ ''+channel._id }}/follower" >关注者</a></li>
+                    {% if channel.userType == 'follower' %} <li id="cancel-sub"><a href="/channel/{{''+channel._id}}/nowatch">取消订阅</a></li>  {% endif %}
+                </ul>
+            </div>
+
+        </div>
+
+        <div id="control-body" data-channelid="{{ ''+channel._id }}">
+            <div id="channel-part">
+                <div id="channel-logo">
+                    <img src="http://yiye.qiniudn.com/{{ channel.logo }}">
+                </div>
+                <div id="channel-name">
+                    <p id="channel-title">{{ channel.name }}</p>
+                </div>
+                <div id="founder">
+                    <span>创建者:&nbsp </span><a href="/u/{{''+channel.creator.userId}}">{{ channel.creator.userName }}</a>
+                </div>
+                <div id="ctrl-description">
+                    <h5>描述：</h5>
+                    <span>{{ channel.description }}</span>
+                </div>
+            </div>
+            <div id="subscribe">
+                <button id="subscribe-btn">{% if channel.userType == 'not' %} <span id="channel-sub">订阅该频道</span> {% endif %} {% if channel.userType == 'admin' %} <span id="channel-manage"><a href="/channel/{{ ''+channel._id }}/check">管理</a></span> {% endif %} {% if channel.userType == 'follower' %} <span id="channel-subed">已订阅</span> {% endif %} <span>|</span><span class="icon-rss"></span>{{ channel.subNum }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- content page -->
+<div id="content-page">
+    <div id="content-page-content">
+        <ul class="nav nav-tabs" role="tablist" id="channel-manage-tab">
+            <li role="presentation" class="active"><a href="#new" role="tab" data-toggle="tab">新提交</a></li>
+            <li role="presentation"><a href="#profile" role="tab" data-toggle="tab">设置</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="new">
+                <div id="post-list">
+                    <ul>
+                        {% if list.length == 0%}
+                        <div class="no-inf">
+                            <img src="/system/assets/img/no-message.png">
+                        </div>
+                        {% endif %}
+                        {% for bookmark in list %}
+                        <li class="post-item item-{{ loop.index }}">
+                            <div class="link-part-content">
+                                <div class="bookmark-pic"><img src="http://yiye.qiniudn.com/{{ bookmark['image'] }}"/></div>
+                                <a class="link link-{{ loop.index }}" target="_blank" href="{{ bookmark['url'] }}">{{ bookmark['title'] }}</a>
+                                <div class="description">
+                                    <span>描述：</span><b class="description-{{ loop.index }}">{{ bookmark['description'] }}</b>
+                                </div>
+                                <div class="footer-part footer-{{ loop.index }}" data-bookmarkid="{{ ''+ bookmark['_id'] }}">
+                                    <span class="submit-time">提交于:{{ ''+bookmark['postTime']|date('Y-M-D H:m:s') }}</span>
+                                    <span>by <a href="#" data-userId="{{ ''+bookmark['postUser']['userId'] }}">{{ bookmark['postUser']['username'] }}</a></a></span>
+                                    <span><i class="glyphicon glyphicon-ok"></i><a class="passBookmark" href="#" data-index="{{ loop.index }}">通过</a></span>
+                                    <span><i class="glyphicon glyphicon-pencil"></i><a class="editBookmark" href="#" data-index="{{ loop.index }}">编辑</a></span>
+                                    <span><i class="glyphicon glyphicon-trash"></i><a class="deleteBookmark" href="#" data-index="{{ loop.index }}">筛除</a></span>
+                                </div>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% if page.show.length!=0 %}
+                <div id="page-part">
+                    <ul class="pagination">
+                    {% if page.before==0 %}
+                        <li class="disabled"><a href="#">&laquo;</a></li>
+                        {% else %}
+                        <li><a href="{{'?p='+page.before}}">&laquo;</a></li>
+                    {% endif %}
+                        {% for i in page.show %}
+                            {% if i==page.now %}                
+                                <li class="active"><a href="#">{{i}} <span class="sr-only">(current)</span></a></li>
+                            {% else%}
+                            <li><a href="{{'?p='+i}}">{{i}}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                    {% if page.after>page.max %}
+                        <li class="disabled"><a href="#">&raquo;</a></li>
+                        {% else %}
+                        <li><a href="{{'?p='+page.after}}">&raquo;</a></li>
+                    {% endif %}
+                    </ul>
+                </div>
+                {% endif %}             
+            </div>
+            <div role="tabpanel" class="tab-pane" id="profile">
+                    <div id="channel-set-wrapper">
+                            <div class="channel-info-item">
+                                <label>名称:</label>
+                                <div class="channel-info-item-main">
+                                    <div id="channel-info-name">
+                                        <input type="text" class="form-control" value="{{ channel.name }}">
+                                    </div>
+                                    <div id="channel-info-name-info">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="channel-info-item" id="channel-logo-box">
+                                <label  class="">logo:</label>
+                                <div class="channel-info-item-main">
+                                    <div id="channel-info-logo">
+                                        <img src="http://yiye.qiniudn.com/{{ channel.logo }}" id="channel-change-logo">
+                                    </div>
+                                    <div id="channel-info-logo-info">
+                                        <div><button class="btn" id="change-channel-logo">上传</button></div>
+                                        <p>支持 JPG、PNG、GIF 格式，不要超过 2M 。</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="channel-info-item">
+                                <label>描述:</label>
+                                <div class="channel-info-item-main">
+                                    <div id="channel-info-description">
+                                        <textarea rows="5" class="form-control">{{ channel.description }}</textarea>
+                                    </div>
+                                    <div id="channel-info-description-info">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="channel-info-item">
+                                <label>分类:</label>
+                                <div class="channel-info-item-main">
+                                    <form id="channel-info-type">
+                                        <label class="checkbox-inline">
+                                            <input type="radio" name="type" {% if channel.type == "life" %} checked  {% endif %} value="life" > 生活
+                                        </label>
+                                        <label class="checkbox-inline">
+                                            <input type="radio" name="type"  {% if channel.type == "technology" %} checked  {% endif %} value="technology" > 科技
+                                        </label>
+                                        <label class="checkbox-inline">
+                                            <input type="radio" name="type" {% if channel.type == "humanities" %} checked  {% endif %}  value="humanities" > 人文
+                                        </label>
+                                        <label class="checkbox-inline">
+                                            <input type="radio" name="type" {% if channel.type == "entertainment" %} checked  {% endif %}  value="entertainment" > 娱乐
+                                        </label>
+                                        <label class="checkbox-inline">
+                                            <input type="radio" name="type" {% if channel.type == "sports" %} checked  {% endif %}  value="sports" > 体育
+                                        </label>
+                                    </form>
+                                    <div id="channel-info-type-info">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="channel-info-item">
+                                <label>标签:</label>
+                                <div class="channel-info-item-main">
+                                    <div id="channel-info-tags">
+                                        <input type="email" class="form-control" value="{{channel.tags|join(',')}}" >
+                                    </div>
+                                    <div id="channel-info-tags-info">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <p class="bg-danger danger-info" id="Channel-Change-Error"></p>
+                    <div id="channel-info-button-box">
+                        <button class="btn" id="channel-info-button">修改</button>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 书签通过确认框  -->
+<div class="modal fade" id="pass-confirm-box">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">确认添加书签</h4>
+            </div>
+            <div class="modal-body">
+                <h5>你将向频道“<span id="pass-to-channel"></span>”中添加书签:</h5>
+                <p id="pass-bookmark-title" ></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="pass-confirm-ok">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 结果提示页面  -->
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="result-dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="mySmallModalLabel">提示</h4>
+            </div>
+            <div class="modal-body" id="result-dialog-content">
+                书签添加成功。
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 书签编辑框  -->
+<div class="modal fade" id="pass-edit-box">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">编辑并添加书签</h4>
+            </div>
+            <div class="modal-body">
+                <h5>标题</h5>
+                <input type="text" class="form-control" id="pass-edit-box-title">
+                <h5>描述</h5>
+                <textarea class="form-control" rows="3" id="pass-edit-box-description"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="pass-edit-ok">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 书签删除确认框  -->
+<div class="modal fade" id="delete-confirm-box">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">是否筛除书签</h4>
+            </div>
+            <div class="modal-body">
+                <h5>你将筛除向频道“<span id="delete-to-channel"></span>”中添加的书签:</h5>
+                <p id="delete-bookmark-title"></p>
+                <h5>请给出筛除原因(必须)：</h5>
+                <textarea class="form-control" rows="3" id="delete-result-box"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="delete-confirm-ok">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script rel="script" src="/bower_components/jquery/dist/jquery.js"></script>
+<script rel="script" src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<script rel="script" src="/bower_components/plupload/js/plupload.full.min.js"></script>
+<script rel="script" src="/home/assets/js/qiniu.js"></script>
+<script rel="script" src="/channels/assets/js/channels.js"></script>
+<script rel="script" src="/channels/assets/js/manage.js"></script>
+</body>
+</html>

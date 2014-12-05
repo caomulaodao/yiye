@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title> 注册 | 一叶书签账户</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/system/assets/css/common.css">
+</head>
+
+<body>
+<section class="content">
+    <div class="form-unit">
+        <a class="brand">
+            <img src="/system/assets/img/logo.png">
+        </a>
+        <h3>创建您的 一叶书签 账号</h3>
+        <form class="auth-form" id="YIYE_SignupForm" >
+            <div class="form-field">
+                <input type="email" placeholder="邮箱" name="email" value="" class="form-control" autofocus=""/>
+                <span class="glyphicon glyphicon-envelope"/>
+            </div>
+            <div class="form-field">
+                <input type="text" placeholder="用户名(2到16位字符)" name="username" class="form-control"/>
+                <span class="glyphicon glyphicon-user"/>
+            </div>
+            <div class="form-field">
+                <input type="password" placeholder="密码（字母，数字，至少6位）" name="password"  class="form-control"/>
+                <span class="glyphicon glyphicon-lock"/>
+            </div>
+            <p class="bg-danger danger-info" id="YIYE_ErrorInfo"></p>
+            <button type="button" class="btn" id="YIYE_Signup">注册</button>
+            <div class="action-wrapper">
+                <a href="/signin" class="signup">已有账号？</a>
+            </div>
+        </form>
+    </div>
+</section>
+<script rel="script" src="/bower_components/jquery/dist/jquery.js"></script>
+<script rel="script" src="/system/assets/js/system.signup.js"></script>
+</body>
+</html>

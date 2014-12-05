@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>一叶书签 | 发现</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/system/assets/css/common.css">
+    <link rel="stylesheet" href="/system/assets/css/explore.css">
+</head>
+
+<body>
+<!--navbar  -->
+<div id="explore-navbar" role="navigation">
+    <div id="explore-navbar-container" class="container">
+        <div class="navbar-header">
+            <a href="/" id="logo"><img src="/system/assets/img/logo_white.png"/></a>
+        </div>
+        <div class="collapse navbar-collapse" >
+            <ul class="nav navbar-nav navbar-right right-links" >
+                <li><a href="/">首页</a></li>
+                <li><a href="#">帮助</a></li>
+                {% if user%}
+                <li><a href="/home">{{user.username}}</a></li>
+                {% else %}
+                <li><a href="signup" target="_blank">注册</a></li>
+                <li><button type="button" class="btn btn-default navbar-btn" onclick="window.open('./signin')">登录</button></li>
+                {% endif %}
+
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!--explore header-->
+<div id="explore-header">
+    <div id="explore-header-middle">
+        <div class="slogan">发现网络之美</div>
+        <form action="/explore/query" method="get">
+            <input class="search-bar" type="search" name='q'/>
+            <input class="submit-btn" type="submit" style="display:none"/>
+        </form>
+        <i class="glyphicon glyphicon-search"></i>
+    </div>
+</div>
+<h1 id="index-top-title"><div class="glyphicon glyphicon-fire"></div>热门频道</h1>
+<!--water fall-->
+<div id="water-fall">
+    <ul id="water-fall-main">
+        {% for channel in channels %}
+        <li class="channel-showcase">
+            <div class="channel-logo">
+                <img src="http://yiye.qiniudn.com/{{ channel.logo }}"/>
+            </div>
+            <div class="channel-main">
+                <div class="channel-showcase-head">
+                    <a class="channel-name" href="/channel/{{ channel.id }}">{{ channel.name }}</a>
+                    <span>
+                        <a class="have-subed" href="javascript:;">{% if channel.isAttention %}已订阅{% else %}</a>
+                        <a class="to-sub" data-id= {{ channel.id }} href="javascript:;">+订阅{% endif %}</a>
+                    </span>
+                </div>
+                <p class="channel-showcase-description">{{ channel.description }}</p>
+                <div class="channel-showcase-footer">
+                  <span>{{ channel.bmkNum}}书签</span><span>{{ channel.subNum}}关注者</span>
+                  <a class="ex-creator" href="/u/{{ ''+channel.creator.userId }}" data-toggle="tooltip" data-placement="left" title={{ channel.creator.userName}} target="_blank"><img src="http://yiye.qiniudn.com/{{ channel.creator.userLogo }}"/></a>
+                </div>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% if page.show.length>1 %}
+<div id="pagination-part">
+    <ul class="pagination">
+    {% if page.before<page.show[0] %}
+        <li class="disabled"><a href="#">&laquo;</a></li>
+        {% else %}
+        <li><a href="{{'?p='+page.before}}">&laquo;</a></li>
+    {% endif %}
+        {% for i in page.show %}
+            {% if i==page.now %}                
+                <li class="active"><a href="#">{{i}} <span class="sr-only">(current)</span></a></li>
+            {% else%}
+            <li><a href="{{'?p='+i}}">{{i}}</a></li>
+            {% endif %}
+        {% endfor %}
+    {% if page.after>page.show[page.show.length-1] %}
+        <li class="disabled"><a href="#">&raquo;</a></li>
+        {% else %}
+        <li><a href="{{'?p='+page.after}}">&raquo;</a></li>
+    {% endif %}
+    </ul>
+</div>
+{% endif %}
+
+<hr/>
+<!--explore footer-->
+
+<div id="explore-footer">
+    <div>
+        <a href="javascript:;">关于我们</a>
+        <a href="javascript:;">加入我们</a>
+        <a href="javascript:;">帮助</a>
+    </div>
+</div>
+
+<!--javascript-->
+<script rel="script" src="/bower_components/jquery/dist/jquery.js"></script>
+<script rel="script" src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<script type="text/javascript"  src="/system/assets/js/explore.js"></script>
+
+
+</body>
+</html>

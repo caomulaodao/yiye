@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{channel.name}}-频道主页</title>
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/channels/assets/css/channels.css">
+</head>
+
+<body>
+<!-- control page -->
+<div id="control-page">
+    <div>
+        <div id="bg-img" style="background: url(/{{ channel.banner }}) no-repeat;background-size: cover;"></div>
+        <div id="bg-opacity"></div>
+    </div>
+    <div id="control-page-content">
+        <div id="control-header">
+            <a href="/" id="yiye-logo">
+                <img src="/channels/assets/img/logo_white2.png">
+            </a>
+            <div id="menu-btn">
+                <i class="glyphicon glyphicon-align-justify"></i>
+                <ul id="channel-menu">
+                    <li id="links-btn"><a href="/channel/{{ ''+channel._id }}" >书签</a></li>
+                    <li id="members-btn"><a href="/channel/{{ ''+channel._id }}/follower" >关注者</a></li>
+                    {% if channel.userType == 'follower' %} <li id="cancel-sub"><a href="/channel/{{''+channel._id}}/nowatch">取消订阅</a></li>  {% endif %}
+                </ul>
+            </div>
+        </div>
+
+        <div id="control-body" data-channelid="{{ ''+channel._id }}">
+            <div id="channel-part">
+                <div id="channel-logo">
+                    <img src="http://yiye.qiniudn.com/{{ channel.logo }}">
+                </div>
+                <div id="channel-name">
+                    <p id="channel-title">{{ channel.name }}</p>
+                </div>
+                <div id="founder">
+                    <span>创建者:&nbsp </span><a href="/u/{{''+channel.creator.userId}}">{{ channel.creator.userName }}</a>
+                </div>
+                <div id="ctrl-description">
+                    <h5>描述：</h5>
+                    <span>{{ channel.description }}</span>
+                </div>
+            </div>
+            <div id="subscribe">
+                <button id="subscribe-btn">{% if channel.userType == 'not' %} <span id="channel-sub">订阅该频道</span> {% endif %} {% if channel.userType == 'admin' %} <span id="channel-manage"><a href="/channel/{{ ''+channel._id }}/check">管理</a></span> {% endif %} {% if channel.userType == 'follower' %} <span id="channel-subed">已订阅</span> {% endif %} <span>|</span><span class="icon-rss"></span>{{ channel.subNum }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- content page -->
+<div id="content-page">
+<div id="content-page-content">
+
+<!-- links-part -->
+<div id="links-part" class="open">
+    <ul id="sub-channel-list">
+        {% if list.length == 0%}
+        <div class="no-inf">
+            <img src="/system/assets/img/no-bookmark.png">
+        </div>
+        {% endif %}
+        {% for box  in list %}
+        <div class="date-divide">
+            <div>{{ box['day'] }}</div>
+        </div>
+            {% for bookmark in box['dList'] %}
+            <li>
+                <div class="single-link">
+                    <div class="single-link-button">
+                        <button class="up" title="赞同" data-bookmarkid="{{ ''+bookmark['_id'] }}">
+                            <i class="vote-up"></i>
+                            <!-- <span class="lable">赞同</span> -->
+                            <span class="count">{{ bookmark['likeNum'] }}</span>
+                        </button>
+                        <button class="down" title="反对" data-bookmarkid="{{ ''+bookmark['_id'] }}">
+                            <i class="vote-down"></i>
+                        </button>
+                    </div>
+                    <div class="link-part-content">
+                        <div class="bookmark-pic"><img src="http://yiye.qiniudn.com/{{ bookmark['image'] }}"/></div>
+                        <a class="link" target="_blank" href="{{ bookmark['url'] }}">{{ bookmark['title'] }}</a>
+                        <div class="description">
+                            <span>描述：</span>{{ bookmark['description'] }}
+                        </div>
+                        <div class="footer-part">
+                            <span class="submit-time">提交于:{{ ''+bookmark['postTime']|date('H:m:s') }}</span>
+                            <span>by <a href="/u/{{ ''+bookmark['postUser']['userId']}}" data-userId="{{ bookmark['postUser']['userId'] }}">{{ bookmark['postUser']['username'] }}</a></a></span>
+                            <!-- <span><i class="glyphicon glyphicon-star"></i><a class="collect" href="#">收藏</a></span> -->
+                        </div>
+                    </div>
+
+                </div>
+            </li>
+            {% endfor %}
+        {% endfor %}
+    </ul>
+</div>
+{% if page.show.length>1 %}
+<div id="page-part">
+    <ul class="pagination">
+    {% if page.before<1 %}
+        <li class="disabled"><a href="#">&laquo;</a></li>
+        {% else %}
+        <li><a href="{{'?p='+page.before}}">&laquo;</a></li>
+    {% endif %}
+        {% for i in page.show %}
+            {% if i==page.now %}                
+                <li class="active"><a href="#">{{i}} <span class="sr-only">(current)</span></a></li>
+            {% else%}
+            <li><a href="{{'?p='+i}}">{{i}}</a></li>
+            {% endif %}
+        {% endfor %}
+    {% if page.after>page.max %}
+        <li class="disabled"><a href="#">&raquo;</a></li>
+        {% else %}
+        <li><a href="{{'?p='+page.after}}">&raquo;</a></li>
+    {% endif %}
+    </ul>
+</div>
+{% endif %}
+</div>
+</div>
+<script rel="script" src="/bower_components/jquery/dist/jquery.js"></script>
+<script rel="script" src="/channels/assets/js/channels.js"></script>
+</body>
+</html>

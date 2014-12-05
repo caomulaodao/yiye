@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{ user.username }}·一叶书签</title>
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/home/assets/css/home.css">
+</head>
+<body>
+
+<!-- 左部控制栏 -->
+<div class="control-page">
+    <div class="control-page-content">
+        <div class="control-header" >
+            <a class="avatar" id="user-center">
+                <img src="http://yiye.qiniudn.com/{{ user.avatar }}">
+                {% if news > 0 %} <div class="red-point" id="news-popup-num">{{ news }}</div> {% endif %}
+            </a>
+            <img src="/home/assets/img/brand_name_green.png" onclick="window.open('/')">
+            <div id="explore">
+                <div id="div1"></div><div id="div2"><div id="cube"></div></div><div id="div3"></div><div id="div4"></div>
+            </div>
+        </div>
+
+        <div class="control-body">
+            <div class="chose-button">
+                <button class="subscription active">订阅</button>
+                <button class="administration ">管理</button>
+            </div>
+
+            <div class="channel-list">
+                <ul id="sub-channel-list">
+                    {% for channel in subChannelList %}
+                    <li class="channel-item" data-id="{{ ''+channel.channelId }}">
+                        <div class="channel-img">
+                            <img src="http://yiye.qiniudn.com/{{ channel.logo }}">
+                        </div>
+                        <span class="channel-name">{{ channel.name }}</span>
+                        {% if news > 0 %}
+                        <span class="links-num">{{ channel.news }}</span>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+                <div style="height:180px"></div>
+            </div>
+
+            <div class="admin-interface">
+                <ul id="admin-channel-list">
+                    {% for channel in admChannelList %}
+                    <li class="channel-item" data-id="{{ ''+channel.channelId }}">
+                        <div class="channel-img">
+                            <img src="http://yiye.qiniudn.com/{{ channel.logo }}">
+                        </div>
+                        <span class="channel-name">{{ channel.name }}</span>
+                        {% if news > 0 %}
+                        <span class="links-num">{{ channel.news }}</span>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                    <div class="create-channel">
+                        <button>
+                            <span>新建频道({{ creatNum }}/5)</span>
+                        </button>
+                    </div>
+                </ul>
+                <div style="height:180px"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--content page-->
+<div class="content-page">
+</div>
+
+
+<!-- 结果提示页面  -->
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="result-dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="mySmallModalLabel">提示</h4>
+            </div>
+            <div class="modal-body" id="result-dialog-content">
+                书签添加成功。
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--create channel page-->
+<script type="text/template" id="tp-create-channels">
+    <div id="create-channel">
+        <h3 id="create-channel-title">创建频道</h3>
+        <div>
+            <div id="channel-info-wrapper">
+                <div class="channel-create-item">
+                    <label>名称:</label>
+                    <div class="channel-create-item-main">
+                        <div id="channel-create-name">
+                            <input type="text" class="form-control" placeholder="输入频道名称">
+                        </div>
+                        <div id="channel-create-name-info">
+                        </div>
+                    </div>
+                </div>
+                <div class="channel-create-item" id="channel-logo-box">
+                    <label  class="">logo:</label>
+                    <div class="channel-create-item-main">
+                        <div id="channel-create-logo">
+                            <img src="http://yiye.qiniudn.com/cLogo/4079016d940210b418b50a78ad576c51.png" id="channel-logo">
+                        </div>
+                        <div id="channel-create-logo-info">
+                            <div><button class="btn" id="change-channel-logo">上传</button></div>
+                            <p>支持 JPG、PNG、GIF 格式，不要超过 2M 。</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="channel-create-item">
+                    <label>描述:</label>
+                    <div class="channel-create-item-main">
+                        <div id="channel-create-description">
+                            <textarea rows="5" class="form-control" placeholder="请填写比较详细的描述信息"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="channel-create-item">
+                    <label>分类:</label>
+                    <div class="channel-create-item-main">
+                        <form id="channel-create-type">
+                                <label class="checkbox-inline">
+                                    <input type="radio" name="type"  value="life" > 生活
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="radio" name="type"  value="technology" > 科技
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="radio" name="type"  value="humanities" > 人文
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="radio" name="type"  value="entertainment" > 娱乐
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="radio" name="type"  value="sports" > 体育
+                                </label>
+                        </form>
+                        <div id="channel-create-type-info">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="channel-create-item">
+                    <label>标签:</label>
+                    <div class="channel-create-item-main">
+                        <div id="channel-create-tags">
+                            <input type="email" class="form-control" placeholder="标签（多个标签请用逗号隔开）">
+                        </div>
+                        <div id="channel-create-tags-info">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p class="bg-danger danger-info" id="Channel-Create-Error"></p>
+        <div id="channel-create-button-box">
+            <button class="btn" id="channel-create-button">创建</button>
+        </div>
+    </div>
+</script>
+<script type="text/x-handlebars-template" id="tp-personal-center">
+    <div class="personal-center">
+        <ul class="nav nav-tabs" role="tablist" id="channel-manage-tab">
+            <li role="news" class="active"><a href="#news" role="tab" data-toggle="tab" id="news-tab" data-num="{{ news.length }}">新消息{% if news > 0 %}({{ news }}){% endif %}</a></li>
+            <li role="news"><a href="#history" role="tab" data-toggle="tab" id="history-tab">历史消息</a></li>
+            <li role="presentation"><a href="#profile" role="tab" data-toggle="tab">密码</a></li>
+            <li role="presentation"><a href="#new" role="tab" data-toggle="tab">账号</a></li>
+            <button class="btn" id="gotoPerson" onclick="window.open('/u/{{ ''+user._id}}')">我的主页</button>
+        </ul>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane" id="new">
+                <div class="user-info-item">
+                    <label>用户名:</label>
+                    <div class="user-info-item-main">
+                        <div id="user-info-name">
+                            {{ user.username }}
+                        </div>
+                        <div id="channel-info-name-info">
+                        </div>
+                    </div>
+                </div>
+                <div class="user-info-item">
+                    <label  class="">头像:</label>
+                    <div class="user-info-item-main">
+                        <div id="user-info-logo">
+                            <img src="http://yiye.qiniudn.com/{{ user.avatar }}" id="user-change-logo">
+                        </div>
+                        <div id="user-info-logo-info">
+                            <div><button class="btn" id="change-user-logo">上传</button></div>
+                            <p>支持 JPG、PNG、GIF 格式，不要超过 2M 。</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="user-info-item">
+                    <label>签名:</label>
+                    <div class="user-info-item-main">
+                        <div id="user-info-intro">
+                            <textarea rows="5" class="form-control">{{ user.intro }}</textarea>
+                        </div>
+                        <div id="user-info-intro-info">
+                        </div>
+                    </div>
+                </div>
+                <p class="bg-danger danger-info" id="password-Change-Error"></p>
+                <div id="user-info-button-box">
+                    <button class="btn" id="user-info-button">更新</button> <button type="button" class="btn btn-link" id="user-quit-button" onclick="window.open('/logout')">账号退出</button>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="profile">
+                <div class="user-password-item">
+                    <label>当前密码:</label>
+                    <div class="user-password-item-main" >
+                        <input type="password"  id="user-current-password" class="form-control">
+                    </div>
+                </div>
+                <div class="user-password-item">
+                    <label>新的密码:</label>
+                    <div class="user-password-item-main" >
+                        <input type="password"  id="user-new-password" class="form-control">
+                    </div>
+                </div>
+                <div class="user-password-item">
+                    <label>确认密码:</label>
+                    <div class="user-password-item-main" >
+                        <input type="password"  id="user-repeat-password" class="form-control">
+                    </div>
+                </div>
+                <p class="bg-danger danger-info" id="User-Change-Error"></p>
+                <div id="password-change-button-box">
+                    <button class="btn" id="password-change-button">修改</button>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane active" id="news">
+                <ul class="user-news-list">
+                </ul>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="history">
+                <ul class="user-history-list"></ul>
+            </div>
+        </div>
+
+    </div>
+</script>
+<script type="text/x-handlebars-template" id="tp-channels-main">
+    <div class="content-page-content">
+        <div class="content-header">
+            <div class="content-channel">
+                <div class="header-channel-img">
+                    <a href="javascript:;"><img src="http://yiye.qiniudn.com/<%= info.logo %>"></a>
+                </div>
+                <a class="header-channel-name" target="_blank" href="/channel/<%= info._id %>"><%= info.name %></a>
+            </div>
+            <div class="header-component">
+                <div class="channel-info-iten">
+                    <strong>书签</strong>
+                    <a href="/channel/<%= info._id %>" target="_blank"><%= info.bmkNum %></a>
+                </div>
+                <div class="channel-info-iten">
+                    <strong>订阅者</strong>
+                    <a href="/channel/<%= info._id %>/follower" target="_blank"><%= info.subNum %></a>
+                </div>
+            </div>
+        </div>
+        <div class="content-body">
+            <ul>
+                <% for(var i = 0;i< list.length; i++){ %>
+                <div class="date-divide">
+                    <div><%= list[i]['day']%></div>
+                </div>
+                    <% for(var j = 0;j < list[i]['dList'].length; j++){%>
+                        <li>
+                            <div class="single-link">
+                                <div class="single-link-button">
+                                    <button class="up" title="赞同" data-bookmarkid="<%= list[i]['dList'][j]['_id']%>">
+                                        <i class="vote-up"></i>
+                                        <!-- <span class="lable">赞同</span> -->
+                                        <span class="count"><%= list[i]['dList'][j]['likeNum'] %></span>
+                                    </button>
+                                    <button class="down" title="反对" data-bookmarkid="<%= list[i]['dList'][j]['_id']%>">
+                                        <i class="vote-down"></i>
+                                    </button>
+                                </div>
+                                <div class="link-part-content">
+                                    <div id="bookmark-pic"><img src="http://yiye.qiniudn.com/<%= list[i]['dList'][j]['image'] %>"/></div>
+                                    <a class="link" target="_blank" href="<%= list[i]['dList'][j]['url'] %>"><%= list[i]['dList'][j]['title'] %></a>
+                                    <div class="description">
+                                        <span>描述：</span><%= list[i]['dList'][j]['description'] %>
+                                    </div>
+                                    <div class="footer-part">
+                                        <span class="submit-time">提交于:<%= moment(''+list[i]['dList'][j]['postTime']).format('H:mm:ss') %></span>
+                                        <span>by <a href="/u/<%= list[i]['dList'][j]['postUser']['userId']%>" data-userId="<%= list[i]['dList'][j]['postUser']['userId']%>"><%= list[i]['dList'][j]['postUser']['username'] %></a></a></span>
+                                        <!-- <span><i class="glyphicon glyphicon-star"></i><a class="collect" href="#">收藏</a></span>  -->
+                                    </div>
+                                </div>
+
+                            </div>
+                        </li>
+                    <% } %>
+                <% } %>
+            </ul>
+            <div style="height:100px"></div>
+        </div>
+    </div>
+</script>
+<script type="text/x-handlebars-template" id="tp-bookmarks-oneday">
+        <% for(var i = 0;i< list.length; i++){ %>
+        <div class="date-divide">
+            <div><%= list[i]['day']%></div>
+        </div>
+        <% for(var j = 0;j < list[i]['dList'].length; j++){%>
+        <li>
+            <div class="single-link">
+                <div class="single-link-button">
+                    <button class="up" title="赞同" data-bookmarkid="<%= list[i]['dList'][j]['_id']%>">
+                        <i class="vote-up"></i>
+                        <!-- <span class="lable">赞同</span> -->
+                        <span class="count"><%= list[i]['dList'][j]['likeNum'] %></span>
+                    </button>
+                    <button class="down" title="反对" data-bookmarkid="<%= list[i]['dList'][j]['_id']%>">
+                        <i class="vote-down"></i>
+                    </button>
+                </div>
+                <div class="link-part-content">
+                    <div id="bookmark-pic"><img src="http://yiye.qiniudn.com/<%= list[i]['dList'][j]['image'] %>"/></div>
+                    <a class="link" target="_blank" href="<%= list[i]['dList'][j]['url'] %>"><%= list[i]['dList'][j]['title'] %></a>
+                    <div class="description">
+                        <span>描述：</span><%= list[i]['dList'][j]['description'] %>
+                    </div>
+                    <div class="footer-part">
+                        <span class="submit-time">提交于:<%= moment(''+list[i]['dList'][j]['postTime']).format('H:mm:ss') %></span>
+                        <span>by <a href="#" data-userId="<%= list[i]['dList'][j]['postUser']['userId']%>"><%= list[i]['dList'][j]['postUser']['username'] %></a></a></span>
+                        <!-- <span><i class="glyphicon glyphicon-star"></i><a class="collect" href="#">收藏</a></span>  -->
+                    </div>
+                </div>
+
+            </div>
+        </li>
+        <% } %>
+        <% } %>
+</script>
+<script type="text/x-handlebars-template" id="tp-channel-explore">
+    <div id="channel-explore">
+        <h1 id="channel-explore-title">发现频道</h1>
+        <p id="channel-explore-description">发现网络之美</p>
+        <ul>
+            <% for(var i = 0;i < list.length; i++){ %>
+                <li class="channel-showcase">
+                    <div class="channel-logo">
+                        <img src="http://yiye.qiniudn.com/<%= list[i]['logo'] %>"/>
+                    </div>
+                    <div class="channel-main">
+                        <div class="channel-showcase-head">
+                            <a class="channel-link" href="/channel/<%= list[i]['_id'] %>" target="_blank"><%= list[i]['name']  %></a>
+                            <span>
+                                <% if(!list[i]["isAttention"]){%>
+                                    <a class="to-sub" data-id= <%= list[i]['_id'] %> href="javascript:;">+订阅</a>
+                                <% } %>
+                                <% if(list[i]["isAttention"]){ %>
+                                    <a class="have-subed" data-id= <%= list[i]['_id'] %> href="javascript:;">已订阅</a>
+                                <% } %>
+                            </span>
+                        </div>
+                        <p class="channel-showcase-description"><%= list[i]['description']  %></p>
+                        <div class="channel-showcase-footer">
+                            <span><%=list[i]['bmkNum']%>书签</span><span><%= list[i]['subNum']%>关注者</span>
+                            <a class="ex-creator" href="/u/<%= list[i]['creator']['userId'] %>" target="_blank" data-toggle="tooltip" data-placement="left" title=<%= list[i]['creator']['userName'] %> ><img src="http://yiye.qiniudn.com/<%= list[i]['creator']['userLogo']  %>"/></a>
+                        </div>
+                    </div>
+                </li>
+            <% } %>
+        </ul>
+    </div>
+</script>
+<script type="text/x-handlebars-template" id="tp-channel-explore-ul">
+    <% for(var i = 0;i < list.length; i++){ %>
+    <li class="channel-showcase">
+        <div class="channel-logo">
+            <img src="<%= list[i]['logo'] %>"/>
+        </div>
+        <div class="channel-main">
+            <div class="channel-showcase-head">
+                <a  class="channel-link" href="/channel/<%= list[i]['_id'] %>" target="_blank"><%= list[i]['name']  %></a>
+                <span>
+                    <% if(!list[i]["isAttention"]){%>
+                        <a class="to-sub" data-id= <%= list[i]['_id'] %> href="#">+订阅</a>
+                    <% } %>
+                    <% if(list[i]["isAttention"]){ %>
+                        <a class="have-subed" data-id= <%= list[i]['_id'] %>href="#">已订阅</a>
+                    <% } %>
+                </span>
+            </div>
+            <p class="channel-showcase-description"><%= list[i]['description']  %></p>
+            <div class="channel-showcase-footer">
+                <span><%=list[i]['bmkNum']%>书签</span><span><%= list[i]['subNum']%>关注者</span>
+                <a class="ex-creator" href="/u/<%= list[i]['creator']['userId'] %>" data-toggle="tooltip" data-placement="left" title=<%= list[i]['creator']['userName'] %>target="_blank"><img src="http://yiye.qiniudn.com<%= list[i]['creator']['userLogo']  %>"/></a>
+            </div>
+        </div>
+    </li>
+    <% } %>
+</script >
+<script type="text/x-handlebars-template" id="tp-user-history">
+    <% if(hismes.length == 0){%>
+    <div class="no-inf">
+        <img src="/system/assets/img/no-message.png">
+    </div>
+    <% } %>
+    <% for(var i = 0;i < hismes.length; i++){ %>
+    <li>
+        <% if(hismes[i].checked == 3){ %>
+        <div class="status pass">
+            通过
+        </div>
+        <% } %>
+        <% if(hismes[i].checked == 4){ %>
+        <div class="status fail">
+            失败
+        </div>
+        <% } %>
+        <div class="main">
+            <div class="user-history-bookmarks" ><a href="#"><%= hismes[i].title %></a> <div class="user-history-info"><span>频道:<a href="#"><%= hismes[i].channelInfo.channelName %></a></span><span>审核:<a href="#"><%= hismes[i].checkUser.username %></a></span></div></div>
+            <% if(hismes[i].checked == 4){%>
+            <div class="user-history-fail-result">
+                <span>原因：</span><%= hismes[i].deleteInfo %>
+            </div>
+            <% } %>
+            <div class="user-history-footer"><span>时间：</span><%=  ''+hismes[i].postTime %></div>
+        </div>
+    </li>
+    <% } %>
+</script>
+<script type="text/x-handlebars-template" id="tp-user-news">
+    <% if(news == 0){%>
+    <div class="no-inf">
+        <img src="/system/assets/img/no-message.png">
+    </div>
+    <% } %>
+    <% for(var i = 0;i < news.length; i++){ %>
+    <li id="news-<%= i %>">
+        <% if(news[i]["checked"] == 1){%>
+            <div class="status pass">
+                通过
+            </div>
+        <% } %>
+        <% if(news[i]["checked"] == 2){ %>
+            <div class="status fail">
+                失败
+            </div>
+        <% } %>
+        <div class="main">
+            <div class="user-news-bookmarks" ><a href="#"><%= news[i]["title"] %></a> <div class="user-news-info"><span>频道:<a href="#"><%= news[i]["channelInfo"]["channelName"] %></a></span><span>审核:<a href="#"><%= news[i]["checkUser"]["username"] %></a></span></div></div>
+            <% if(news[i]["checked"] == 2){ %>
+            <div class="user-news-fail-result">
+                <span>原因：</span><%= news[i]["deleteInfo"] %>
+            </div>
+            <% } %>
+            <div class="user-news-footer"><span>时间：</span><%=  ''+news[i]["postTime"] %>  <a href="#" class="sure" data-bookmarkid="<%= ''+news[i]["_id"] %>" data-index="<%= i %>">确定</a></div>
+        </div>
+    </li>
+    <% } %>
+</script>
+<script rel="script" src="/bower_components/jquery/dist/jquery.js"></script>
+<script rel="script" src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<script rel="script" src="/bower_components/moment/moment.js"></script>
+<script rel="script" src="/bower_components/underscore/underscore.js"></script>
+<script rel="script" src="/bower_components/backbone/backbone.js"></script>
+<script rel="script" src="/bower_components/plupload/js/plupload.full.min.js"></script>
+<script rel="script" src="/home/assets/js/qiniu.js"></script>
+<script rel="script" src="/home/assets/js/home.js"></script>
+<script rel="script" src="/home/assets/js/app.js"></script>
+</body>
+</html>
