@@ -127,7 +127,6 @@ exports.createChannel = function(req,res){
         },
         function(isCreate,callback){
             if(isCreate){
-                //
                 channels.save(function(err,doc){
                     if(err) console.log(err);
                     var admChannel = new Channel2User({
@@ -233,6 +232,7 @@ exports.discover = function(req,res){
     var limit=12;
     if (!Myverify.isNumber(number)){return res.status(400).json({error:'错误参数'})}//传入参数格式进行判断
     if (number==1){limit=24}
+    console.log(number);
     async.waterfall([
             function(callback1){
                 Channels.find().sort({subNum:-1,time:-1}).skip((number-1)*limit).limit(limit).exec(function(err,subChannels){
