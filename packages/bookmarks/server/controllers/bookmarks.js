@@ -55,7 +55,7 @@ exports.receive = function(req,res){
     var bookmarks ={
         title:xss(req.body.title,{whiteList:{}}),
         description:xss(req.body.description,{whiteList:{}}),
-        url:xss(req.body.url,{whiteList:{}}),
+        url:escape(xss(req.body.url,{whiteList:{}})),
         image:xss(req.body.image,{whiteList:{}}),
         channels:req.body.channels,
         tags:xss(req.body.tags,{whiteList:{}})
@@ -205,7 +205,7 @@ exports.like = function(req,res){
 
     if(!req.user) return res.status(401).json({info:'请先注册或登录'});
     var bookmarkId = req.params['bookmarkId'];
-    if(!verify.idVerify(channelId)){return res.status(401).json({info:'参数错误'})}
+    if(!verify.idVerify(bookmarkId)){return res.status(401).json({info:'参数错误'})}
     async.parallel({
         isHated:function(callback){
             BookmarkHate.remove({bookmarkId: bookmarkId, userId: req.user._id}, function (err, doc) {
@@ -252,7 +252,7 @@ exports.hate = function(req,res){
     if(!req.user) return res.status(401).json({info:'请先注册或登录'});
 
     var bookmarkId = req.params['bookmarkId'];
-    if(!verify.idVerify(channelId)){return res.status(401).json({info:'参数错误'})}
+    if(!verify.idVerify(bookmarkId)){return res.status(401).json({info:'参数错误'})}
     async.parallel({
         isLiked:function(callback){
             BookmarkLike.remove({bookmarkId:bookmarkId,userId:req.user._id},function(err,doc){
