@@ -5,7 +5,8 @@ var paths = {
   html: ['packages/**/public/**/views/**', 'packages/**/server/views/**'],
   css: ['!bower_components/**', 'packages/**/public/**/css/*.css']
 };
-var qiniu_url = '"http://yiye-test.qiniudn.com';
+var qiniu_url_1 = '"http://yiye-test.qiniudn.com';
+var qiniu_url_2 = "'http://yiye-test.qiniudn.com";
 module.exports = function(grunt) {
 
   if (process.env.NODE_ENV !== 'production') {
@@ -135,25 +136,34 @@ module.exports = function(grunt) {
         src:['packages/*/server/views/**/*.html'],
         overwrite: true,
         replacements: [{
-          from: /["]\/[^"]+?\/assets\/img\/.+?\.(jpg|jpeg|gif|png|ico)["]/g,
+          from: /["']\/[^"]+?\/assets\/img\/.+?\.(jpg|jpeg|gif|png|ico)["']/g,
           to: function (matchedWord, index, fullText, regexMatches) {
             console.log(matchedWord);
             matchedWord = matchedWord.slice(1);
-            return qiniu_url+matchedWord;   //
+            if (matchedWord.slice(-1) === '"')
+              return qiniu_url_1+matchedWord;
+            else
+              return qiniu_url_2+matchedWord;
           }
         },{
-          from: /["]\/bower_components\/.+?\/.+?\.(css|js)["]/g,
+          from: /["']\/bower_components\/.+?\/.+?\.(css|js)["']/g,
           to: function (matchedWord, index, fullText, regexMatches) {
             console.log(matchedWord);
             matchedWord = matchedWord.slice(1);
-            return qiniu_url+matchedWord;   //
+            if (matchedWord.slice(-1) === '"')
+              return qiniu_url_1+matchedWord;
+            else
+              return qiniu_url_2+matchedWord;
           }
         },{
-          from: /["]\/[^"]+?\/assets\/.+?\/.+?\.(css|js)["]/g,
+          from: /["']\/[^"]+?\/assets\/.+?\/.+?\.(css|js)["']/g,
           to: function (matchedWord, index, fullText, regexMatches) {
             console.log(matchedWord);
             matchedWord = matchedWord.slice(1);
-            return qiniu_url+matchedWord;   //
+            if (matchedWord.slice(-1) === '"')
+              return qiniu_url_1+matchedWord;
+            else
+              return qiniu_url_2+matchedWord;
           }
         }]
       },
@@ -161,11 +171,14 @@ module.exports = function(grunt) {
         src:['packages/*/public/assets/css/*.css'],
         overwrite: true,
         replacements: [{
-          from: /["]\/[^"]+?\/assets\/img\/.+?\.(jpg|jpeg|gif|png|ico)["]/g,
+          from: /["']\/[^"]+?\/assets\/img\/.+?\.(jpg|jpeg|gif|png|ico)["']/g,
           to: function (matchedWord, index, fullText, regexMatches) {
             console.log(matchedWord);
             matchedWord = matchedWord.slice(1);
-            return qiniu_url+matchedWord;   //
+            if (matchedWord.slice(-1) === '"')
+              return qiniu_url_1+matchedWord;
+            else
+              return qiniu_url_2+matchedWord;
           }
         }]
       }
