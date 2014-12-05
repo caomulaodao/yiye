@@ -135,21 +135,21 @@ module.exports = function(grunt) {
         src:['packages/*/server/views/**/*.html'],
         overwrite: true,
         replacements: [{
-          from: /["']\/.+?\/assets\/img\/.+?\.(jpg|jpeg|gif|png|ico)["']/g,
+          from: /["]\/[^"]+?\/assets\/img\/.+?\.(jpg|jpeg|gif|png|ico)["]/g,
           to: function (matchedWord, index, fullText, regexMatches) {
             console.log(matchedWord);
             matchedWord = matchedWord.slice(1);
             return qiniu_url+matchedWord;   //
           }
         },{
-          from: /["']\/bower_components\/.+?\/.+?\.(css|js)["']/g,
+          from: /["]\/bower_components\/.+?\/.+?\.(css|js)["]/g,
           to: function (matchedWord, index, fullText, regexMatches) {
             console.log(matchedWord);
             matchedWord = matchedWord.slice(1);
             return qiniu_url+matchedWord;   //
           }
         },{
-          from: /["']\/.+\/assets\/.+?\/.+?\.(css|js)["']/g,
+          from: /["]\/[^"]+?\/assets\/.+?\/.+?\.(css|js)["]/g,
           to: function (matchedWord, index, fullText, regexMatches) {
             console.log(matchedWord);
             matchedWord = matchedWord.slice(1);
@@ -161,7 +161,7 @@ module.exports = function(grunt) {
         src:['packages/*/public/assets/css/*.css'],
         overwrite: true,
         replacements: [{
-          from: /["']\/.+?\/assets\/img\/.+?\.(jpg|jpeg|gif|png|ico)["']/g,
+          from: /["]\/[^"]+?\/assets\/img\/.+?\.(jpg|jpeg|gif|png|ico)["]/g,
           to: function (matchedWord, index, fullText, regexMatches) {
             console.log(matchedWord);
             matchedWord = matchedWord.slice(1);
