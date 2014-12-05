@@ -5,9 +5,11 @@
  */
 var mongoose = require('mongoose'),
   User = mongoose.model('User'),
+  Channels = mongoose.model('Channels'),
   async = require('async'),
   config = require('meanio').loadConfig(),
   crypto = require('crypto'),
+  xss =require('xss'),
   nodemailer = require('nodemailer'),
   templates = require('../template');
   var myVerify=require('../../../../config/tools/verify');
@@ -299,17 +301,38 @@ exports.forgotpassword = function(req, res, next) {
  */
 exports.update = function(req,res){
     if(!req.user) return res.send({err:true,info:'请先登陆或注册'});
-    var update = {};
     if(req.body.avatar && req.body.intro){
-        update.avatar = req.body.avatar;
-        update.intro = req.body.intro;
-        if (!myVerify.isString(update.avatar)||!myVerify.isString(update.intro)){ return res.send({err:true,info:'参数格式错误'})}
-        update.avatar=xss(update.avatar,{whiteList:{}});
-        update.intro =xss(update.intro,{whiteList:{}});
-        User.update({_id:req.user._id},update,function(err,doc){
-            if(err) return console.log(err);
+        var avatar = req.body.avatar;
+        var intro = req.body.intro;
+        if (!myVerify.isString(avatar)||!myVerify.isString(intro)){ return res.send({err:true,info:'参数格式错误'})}
+        avatar = xss(avatar,{whiteList:{}});
+        intro = xss(intro,{whiteList:{}});
+
+        //更新各处中的个人信息
+        async.parallel([
+            //更新用表User中的用户信息
+            function(callback){
+                var update = {};
+                update.avatar = avatar;
+                update.intro = intro;
+                User.update({_id:req.user._id},update,function(err,doc){
+                    if(err)  console.log(err);
+                    callback(null);
+                });
+            },
+            //更新频道表channels中的创建者信息
+            function(callback){
+                Channels.update({'creator.userId':req.user._id},{"creator.userLogo":avatar},{ multi: true },function(err,doc){
+                    if(err)  console.log(err);
+                    callback(null);
+                });
+            }
+        ],
+        //返回信息
+        function(err, results){
+            //修改成功
             return res.status(200).send({
-                info:'个人信息修改成功',
+                info:'数据修改成功',
                 success:true
             });
         });
@@ -321,8 +344,9 @@ exports.update = function(req,res){
     }
 }
 
-/*
+/**
  * 修改密码
+ *
  */
 exports.changePassword = function(req,res){
     if(!req.user) return res.send({err:true,info:'请先登陆或注册'});
