@@ -136,7 +136,14 @@ exports.create = function(req, res, next) {
  * Send User
  */
 exports.me = function(req, res) {
-  res.json(req.user || null);
+  if(req.user){
+      //如果用户已经登录
+      res.sendResult("成功获取用户信息",0,req.user);
+  }else
+  {
+      //用户未登录
+      res.sendResult("用户未登录",100,null);
+  }
 };
 
 /**

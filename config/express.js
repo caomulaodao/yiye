@@ -64,7 +64,21 @@ module.exports = function(app, passport, db) {
       if(isChrome(header)) next();
       else{res.redirect('/please/use/chrome');}
     }
-  })
+  });
+
+  //向res中添加函数
+  app.use(function(req,res,next){
+      //返回格式定义
+      res.sendResult = function(msg,code,data){
+        res.json({
+            msg:msg,
+            code:code,
+            data:data
+        });
+      };
+      next();
+  });
+
   // The cookieParser should be above session
   app.use(cookieParser());
 
