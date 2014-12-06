@@ -25,7 +25,7 @@ function initialize() {
     $('#explore').on('click', function() {
         $(this).addClass('locked');
     });
-    $('#user-center, #sub-channel-list>li, .create-channel>button').on('click', function() {
+    $('#user-center, #sub-channel-list>li, #admin-channel-list>li, .create-channel>button').on('click', function() {
         $('#explore').removeClass('locked');
     });
 }
