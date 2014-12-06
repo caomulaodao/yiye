@@ -22,6 +22,12 @@ function initialize() {
         $('.channel-item').removeClass('active');
         $(this).addClass('active').children('.links-num').remove();
     });
+    $('#explore').on('click', function() {
+        $(this).addClass('locked');
+    });
+    $('#user-center, #sub-channel-list>li, .create-channel>button').on('click', function() {
+        $('#explore').removeClass('locked');
+    });
 }
 
 

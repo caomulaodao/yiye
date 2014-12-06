@@ -625,6 +625,16 @@ button:focus {outline:0;}
     color: #40c192;
 }
 
+#explore.locked>div {
+    background-color: #40c192;
+}
+#explore.locked>#div2 {
+    -webkit-transform: rotate(180deg);
+}
+#explore.locked #cube {
+    -webkit-transform: scale(1.0);
+}
+
 /* control-body */
 
 .control-body {
@@ -640,13 +650,13 @@ button:focus {outline:0;}
     width: 61px;
     height: 30px;
     letter-spacing: 2px;
-    border-width: 0;
+    border: 1px solid #37A2E4;
     font-size: 1.6em;
 }
 .subscription {
     color: #333;
     padding-left: 4px;
-    background-color: #cacaca;
+    background-color: #fff;
     -webkit-border-top-left-radius: 15px;
     -webkit-border-bottom-left-radius: 15px;
 }
@@ -655,7 +665,7 @@ button:focus {outline:0;}
     color: #333;
     padding-right: -2px;
     margin-left: -4px;
-    background-color: #cacaca;
+    background-color: #fff;
     -webkit-border-top-right-radius: 15px;
     -webkit-border-bottom-right-radius: 15px;
 }
@@ -664,7 +674,7 @@ button:focus {outline:0;}
     background-color: #37A2E4;
 }
 .chose-button>button:not(.active):hover {
-    background-color: #d3d3d3;
+    background-color: #f0f0f0;
     color: #000;
 }
 
@@ -819,14 +829,13 @@ button:focus {outline:0;}
     height: 40px;
     border-radius: 3px;
 }
-a.header-channel-name , a.header-channel-name:hover{
+a.header-channel-name, a.header-channel-name:hover{
     display: inline-block;
     margin-top: 15px;
     margin-left: 15px;
     letter-spacing: 1px;
     font-size: 2.3em;
     color: #2a6496;
-    text-decoration: none;
     cursor: pointer;
 }
 .header-component {
