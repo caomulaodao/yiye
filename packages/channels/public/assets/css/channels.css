@@ -156,8 +156,11 @@ button:focus {outline:0;}
 }
 
 #channel-menu li a{
+    width: 100%;
+    height: 100%;
     color: #000;
     text-decoration: none;
+    display: inline-block;
 }
 
 
