@@ -100,8 +100,8 @@ $(function(){
                 url:'/api/bookmarks/init?channelId='+channelId,
                 success:function(model,response){
                     that.$el.html(that.initTemplate(response.data));
-                    that.list.date = response.nextTime;
-                    that.list.channelId =  response.info._id;
+                    that.list.date = response.data.nextTime;
+                    that.list.channelId =  response.data._id;
                     that.renderAfter();
 
                 }
@@ -129,11 +129,11 @@ $(function(){
                     data: {date: sDate, channelId: sChannelId},
                     url: "/api/home/bookmark",
                     success: function(model, response){
-                        $('.content-body>ul').append(that.channelTemplate(response));
-                        if(!response.isHave){
+                        $('.content-body>ul').append(that.channelTemplate(response.data));
+                        if(!response.data.isHave){
                             $('.content-body>ul').append("<p class='no-news'>无新内容了</p>");
                         } else {
-                            var nextDate = response.info.nextTime;   //将下次日期赋值给nextDate变量
+                            var nextDate = response.data.nextTime;   //将下次日期赋值给nextDate变量
                             that.list.set("date", nextDate);         //记录下次Ajax日期
                             that.channelAjax.bScroll = true;         //许可Ajax加载
                         }
@@ -151,7 +151,7 @@ $(function(){
             var bookmarkId = $(event.currentTarget).data('bookmarkid');
             var that = this;
             like.fetch({url:'/api/bookmarks/like/'+bookmarkId,success:function(model,response){
-                if(response.results.isLiked == false){
+                if(response.data.isLiked == false){
                     var count = $(event.currentTarget).find('span');
                     count.text(+count.text()+1);
                 }
@@ -166,7 +166,7 @@ $(function(){
             var bookmarkId = $(event.currentTarget).data('bookmarkid');
             var that = this;
             hate.fetch({url:'/api/bookmarks/hate/'+bookmarkId,success:function(model,response){
-                if(response.results.isLiked == true && response.results.isHated == false){
+                if(response.data.isLiked == true && response.data.isHated == false){
                     var count = $(event.currentTarget).parent().find('span');
                     count.text(+count.text()-1);
                 }
@@ -438,7 +438,7 @@ $(function(){
                 url: 'api/home/newmes',
                 data: {'number': 1},
                 success: function (model, response) {
-                    $('.user-news-list').html(that.newMesTemplate(response));
+                    $('.user-news-list').html(that.newMesTemplate(response.data));
                     that.newMes.set('number', 2);
                 }
             });
@@ -454,7 +454,7 @@ $(function(){
             that.hisMes = new hisMessage;
             that.hisMes.fetch({url: '/api/home/hismes',
                 success: function (model, response) {
-                    $('.user-history-list').html(that.historyTemplate(response));
+                    $('.user-history-list').html(that.historyTemplate(response.data));
                     that.hisMes.set('number', 2);
                 }
             });
@@ -477,8 +477,8 @@ $(function(){
                     data: {number: nNum},
                     url: "/api/home/newmes",
                     success: function (model, response) {
-                        $('.user-news-list').append(that.newMesTemplate(response));
-                        if (!response.isHave) {
+                        $('.user-news-list').append(that.newMesTemplate(response.data));
+                        if (!response.data.isHave) {
                             $('.user-news-list').append("<p class='no-news'>无新内容了</p>");
                         } else {
                             that.newMes.set("number", ++nNum);
@@ -501,8 +501,8 @@ $(function(){
                     data: {number: nNum},
                     url: "/api/home/hismes",
                     success: function (model, response) {
-                        $('.user-history-list').append(that.historyTemplate(response));
-                        if (!response.isHave) {
+                        $('.user-history-list').append(that.historyTemplate(response.data));
+                        if (!response.data.isHave) {
                             $('.user-history-list').append("<p class='no-news'>无新内容了</p>");
                         } else {
                             that.hisMes.set("number", ++nNum);
