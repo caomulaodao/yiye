@@ -99,7 +99,7 @@ $(function(){
             that.list.fetch({
                 url:'/api/bookmarks/init?channelId='+channelId,
                 success:function(model,response){
-                    that.$el.html(that.initTemplate(response));
+                    that.$el.html(that.initTemplate(response.data));
                     that.list.date = response.nextTime;
                     that.list.channelId =  response.info._id;
                     that.renderAfter();
@@ -244,12 +244,16 @@ $(function(){
             this.channel.set({type: $("input[name='type']:checked").val()});
             this.channel.set({banner: 'channels/assets/img/background/cBg0' + (Math.ceil(Math.random()*10)) + '.png'});
             this.channel.save(null,{error: function(model, response){
-                $('#Channel-Create-Error').text(response.responseJSON.info).show();
+                $('#Channel-Create-Error').text('网络异常').show();
             },success: function(model, response){
-                popup("频道创建成功 ！");
-                setTimeout(function(){
-                    location.href = '/home';
-                },1000);
+                if(response.code == 0) {
+                    popup("频道创建成功 ！");
+                    setTimeout(function(){
+                        location.href = '/home';
+                    },1000);
+                } else {
+                    popup(response.msg);
+                }                
             }});
         }
 
@@ -531,7 +535,7 @@ $(function(){
             var that = this;
             that.cList = new channelShowcase;
             that.cList.fetch({url:'/api/home/discover',success:function(model,response){
-                that.$el.html(that.initTemplate(response));
+                that.$el.html(that.initTemplate(response.data));
                 that.cList.set("number", 2);
                 $('.ex-creator').tooltip();    //创建者头像绑定tooltip
                 that.renderAfter();
@@ -559,9 +563,9 @@ $(function(){
                     data: {number: nNum},
                     url: "/api/home/discover",
                     success: function(model, response){
-                        $('#channel-explore ul').append(that.addTemplate(response));
+                        $('#channel-explore ul').append(that.addTemplate(response.data));
                         $('.ex-creator').tooltip();        //创建者头像绑定tooltip
-                        if(!response.isHave){
+                        if(!response.data.isHave){
                             $('#channel-explore ul').append("<p class='no-news'>无新内容了</p>");
                         } else {
                             that.cList.set("number",++nNum);
