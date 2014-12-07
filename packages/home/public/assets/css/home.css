@@ -586,11 +586,11 @@ button:focus {outline:0;}
 
 #explore:hover>#div2 {
     -webkit-transform: rotate(180deg);
-    -webkit-transition: all 500ms;
+    -webkit-transition: all 200ms;
 }
 #explore:hover #cube {
     -webkit-transform: scale(1.0);
-    -webkit-transition: all 500ms;
+    -webkit-transition: all 200ms;
 }
 #div1 {
     left: 0;
@@ -599,7 +599,7 @@ button:focus {outline:0;}
 #div2 {
     right: 0;
     top: 0;
-    -webkit-transition: all 500ms;
+    -webkit-transition: all 200ms;
 }
 #cube {
     width: 8px;
@@ -610,7 +610,7 @@ button:focus {outline:0;}
     left: 3px;
     top: 3px;
     -webkit-transform: scale(0);
-    -webkit-transition: all 500ms;
+    -webkit-transition: all 200ms;
 }
 #div3 {
     bottom: 0;
