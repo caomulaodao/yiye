@@ -103,7 +103,6 @@ $(function(){
                     that.list.date = response.data.nextTime;
                     that.list.channelId =  response.data._id;
                     that.renderAfter();
-
                 }
             })
         },

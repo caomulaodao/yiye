@@ -28,6 +28,7 @@ function initialize() {
     $('#user-center, #sub-channel-list>li, #admin-channel-list>li, .create-channel>button').on('click', function() {
         $('#explore').removeClass('locked');
     });
+    $('#explore').tooltip();
 }
 
 
