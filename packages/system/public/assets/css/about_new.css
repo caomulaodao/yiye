@@ -1,0 +1,180 @@
+/*left items*/
+*{
+	  border: 0px;
+    margin: 0px;
+    padding: 0px;
+    text-decoration: none;
+    list-style: none;
+    font-family: sans-serif;
+    -moz-user-select: none;  
+    -webkit-user-select: none;  
+    -ms-user-select: none; 
+}
+.about-item{
+	width: 100%;
+}
+.about-item li{
+	/*background: #40c192;*/
+	width: 100%;
+	text-align: center;
+	line-height: 46px;
+}
+.about-item a{
+	text-decoration: none;
+	font-size: 16px;
+	width: 100%;
+	color:#40c192;
+	display: block;
+	border-left:4px solid transparent;
+}
+.about-item a:hover{
+	background: #ddd;
+	border-left:4px solid #40c192;
+}
+/*rights */
+.ab-center{
+	width:800px;
+	height: 400px;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	margin: auto; 
+	overflow: hidden;
+}
+.one-page{
+	height: 100vh;
+	position: relative;
+}
+.staff{
+	/*display: none;*/
+}
+.staff-gallery{
+	width: 400px;
+	display: inline-block;
+	float: left;
+}
+.staff-gallery img{
+	width: 90px;
+	height: 90px;
+}
+.staff-gallery a{
+	display: inline-block;
+	margin-top: 3px;
+}
+.staff-one{
+	display: inline-block;
+	padding: 15px;
+	width: 270px;
+	height: 300px;
+	margin: 30px 0 0 60px;
+	border:1px solid #ddd;
+	background: #fff;
+	box-shadow: 0 0 2px #eee;
+	border-radius: 3px;
+}
+.staff-avatar-wrapper{
+	position: relative;
+	margin: 0 auto;
+	margin-top: 15px;
+	width: 84px;
+	height: 84px;
+	border-radius: 50%;
+	overflow: hidden;
+	background: #eee;
+}
+.staff-avatar{
+	width: 76px;
+	height: 76px;
+	border-radius: 50%;
+	position: absolute;
+	top: 4px;
+	left: 4px;
+}
+
+.staff-name{
+	text-align: center;
+}
+.staff-position{
+	display: block;
+	text-align: center;
+}
+.staff-info-txt{
+	margin:43px 0;
+}
+.staff-info-txt:before{
+	content:"「";
+}
+.staff-info-txt:after{
+	content:"」";
+}
+/*join us*/
+.joinus h2{
+	margin: 0;
+	text-align: center;
+	line-height:400px;
+	/*display: none;*/
+}
+@font-face {
+    font-family: 'iconfont';
+    src: url('../icons/fonts/iconfont.eot');
+    src: url('../icons/fonts/iconfont.eot?#iefix') format('embedded-opentype'), 
+    url('../icons/fonts/iconfont.woff') format('woff'), 
+    url('../icons/fonts/iconfont.ttf') format('truetype'), 
+    url('../icons/fonts/iconfont.svg#uxiconfont') format('svg'); 
+}
+.iconfont{
+    font-family:"iconfont" !important;
+    font-size:60px;font-style:normal;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-stroke-width: 0.2px;
+    -moz-osx-font-smoothing: grayscale;
+    color:rgba(23,20,15,1);
+}
+.sponsor{
+    text-align: center;
+    width: 850px;
+}
+.sponsor h3{
+    line-height: 2em;
+    font-weight: 100;
+    font-size: 3em;
+    text-align: center;
+}
+.sponsor-friend{
+    float: left;
+    margin:  0 0 80px 150px;
+}
+.friend-name{
+    text-align: center;
+    font-size: 14px;
+    font-weight: 100;
+    line-height: 30px;
+}
+.iconfont:hover{
+    color:rgba(128,76,28,0.68);
+}
+.sponsor-friend{
+	display: inline-block;
+}
+/*bug reporter*/
+.bug-reporter{
+	/*display: none*/
+}
+.bug-reporter h2{
+	margin: 40px 0;
+	text-align: center;
+}
+.btn-bug-reporter{
+	display: block;
+	margin: 0 auto;
+}
+#content-manage{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100vh;
+}
+/*follow us */
