@@ -5,6 +5,7 @@
     <title>{{ user.username }}·一叶书签</title>
     <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" href="/home/assets/css/home.css">
+    <link rel="stylesheet" type="text/css" href="/system/assets/icons/ali_icons/iconfont.css">
 </head>
 <body>
 
@@ -14,12 +15,17 @@
         <div class="control-header" >
             <a class="avatar" id="user-center">
                 <img src="http://yiye.qiniudn.com/{{ user.avatar }}">
-                {% if news > 0 %} <div class="red-point" id="news-popup-num">{{ news }}</div> {% endif %}
             </a>
             <img src="/home/assets/img/brand_name_green.png" onclick="window.open('/')">
-            <div id="explore">
-                <div id="div1"></div><div id="div2"><div id="cube"></div></div><div id="div3"></div><div id="div4"></div>
-            </div>
+            <i id="rounded-arrow" class="iconfont">&#x3435</i>
+        </div>
+        <div id="function-module">
+            <ul id="function-module-ul">
+                <li><i class="iconfont">&#xf00b5</i><div>消息</div>{% if news >= 0 %} <div class="red-point" id="news-popup-num">{{ news }}</div> {% endif %}</li>
+                <li><i class="iconfont">&#xe684</i><div>发现</div></li>
+                <li><i class="iconfont">&#xf00b8</i><div>帮助</div></li>
+                <li><i class="iconfont">&#xf013e</i><div>设置</div></li>
+            </ul>
         </div>
 
         <div class="control-body">
