@@ -17,11 +17,22 @@
     padding: 5px 15px;
     margin: 15px;
 }
+
+#nav-btn {
+    margin-top: 14px;
+    margin-right: 23px;
+}
+
+@media (min-width: 768px) {
+    #cellphone-nav .navbar-nav{display: none;}
+}
+
 .green{
     margin-top: 60px;
-    background-image:url("../img/background.png");
+    background-image:url("../img/mba1.png");
     background-repeat: no-repeat;
-    background-position: top center;
+    background-position: bottom center;
+    background-size: cover;
     height: 550px;
     background-color: #77C39C;
 }
@@ -61,14 +72,43 @@
 }
 #signup{
     padding-top: 80px;
-    width: 200px;
+    width: 290px;
     margin: 0 auto;
 }
-#signup button{
+#signup button:first-child{
     color: #ffffff;
-    background-color: #43B27C;
-    border-color: #43B27C;
+    width: 150px;
+    background-color: #e74c3c;
+    float: left;
+    -webkit-transition: background-color 250ms;
+
 }
+#signup b {
+    font-weight: bold;
+    font-size: 30px;
+    margin-left: 10px;
+    color: #fff;
+}
+#signup button:last-child {
+    color: #fff;
+    width: 90px;
+    margin-top: 0;
+    background-color: #3498db;
+    float: right;
+    -webkit-transition: background-color 250ms;
+
+}
+#signup button:first-child:hover {
+    background-color: #ec7063;
+    -webkit-transition: background-color 250ms;
+
+}
+
+#signup button:last-child:hover {
+    background-color: #5dade2;
+    -webkit-transition: background-color 250ms;
+}
+
 #video-button{
     margin-top: 40px;
     text-align: center;
@@ -144,16 +184,19 @@
 .down-button{
     margin-top: 25px;
     margin-bottom: 35px;
+    position: relative;
 }
 .down-button .btn{
-    background-color: #75C29B;
+    background-color: #1abc9c;
     color: #ffffff;
-    border: solid 1px  #75C29B;
     position: relative;
     padding-left: 55px;
+    -webkit-transition: background-color 250ms;
 }
+
 .down-button .btn:hover {
-    background-color: #40C192;
+    background-color: #2fe2bf;
+    -webkit-transition: background-color 250ms;
 }
 #down-chrome .btn i{
     position: absolute;
@@ -172,6 +215,14 @@
     left: 10px;
     background: url("../img/icons.png");
     background-position: -50px -170px;
+}
+#two-dimension-code {
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    left: 130px;
+    top: 70px;
+    border: 1px solid #ccc;
 }
 #feature-wrapper{
     padding: 60px 0px;
@@ -241,10 +292,11 @@
 }
 #discover-button .btn{
     width: 200px;
-    background-color: #398439;
-    border: solid 1px #398439;
+    background-color: #42BF77;
     color: #ffffff;
 }
+#discover-button .btn:hover {background-color: #55d98d;}
+
 #footer{
     text-align: center;
 }

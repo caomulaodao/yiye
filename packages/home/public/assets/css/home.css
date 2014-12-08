@@ -534,16 +534,16 @@ button:focus {outline:0;}
 .create-channel button {
     width: 150px;
     height: 40px;
-    border: dashed 1px #333;
-    color: #333;
-    border-radius: 10px;
+    border: solid 1px #40c192;
+    color: #40c192;
+    border-radius: 30px;
     vertical-align: middle;
     margin-top: 20px;
     background-color: inherit;
 }
 .create-channel button:hover {
-    border: dashed 1px #40c192;
-    color: #40c192;
+color: #fff;
+    background-color: #40c192;
 }
 /* content page */
 
