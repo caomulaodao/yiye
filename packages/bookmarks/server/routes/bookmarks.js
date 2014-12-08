@@ -10,9 +10,6 @@ module.exports = function(Bookmarks, app, auth, database) {
     app.route('/api/bookmarks/post')
         .post(bookmarks.receive);
 
-    //获取某个频道的bookmarks列表
-    //app.route('/api/bookmarks/:channelId/:time')
-    //   .post(bookmarks.);
 
     //获取某个频道的初始化列表
     app.route('/api/bookmarks/init')
@@ -20,10 +17,10 @@ module.exports = function(Bookmarks, app, auth, database) {
 
     //用户支持书签
     app.route('/api/bookmarks/like/:bookmarkId')
-        .get(bookmarks.like);
+        .post(bookmarks.like);
     //用户反对书签
     app.route('/api/bookmarks/hate/:bookmarkId')
-        .get(bookmarks.hate);
+        .post(bookmarks.hate);
 
     //获取离请求日期最近的某天的所有书签
     app.route('/api/bookmarks/oneDay/:channelId')

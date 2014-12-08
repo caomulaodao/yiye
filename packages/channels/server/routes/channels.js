@@ -18,12 +18,12 @@ module.exports = function(Channels, app, auth, database) {
         channels.renderCheck(req,res,Channels);
     });
     //订阅某个频道
-    app.get('/channel/sub/:channelId',channels.sub);
+    app.post('/channel/sub/:channelId',channels.sub);
 
     //更新频道信息
     app.post('/channel/:channelId/update',channels.update);
 
     //取消订阅某个频道
-    app.get('/channel/:channelId/nowatch',channels.noWatch);
+    app.post('/channel/:channelId/nowatch',channels.noWatch);
 
 };
