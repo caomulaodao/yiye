@@ -206,7 +206,7 @@
     width: 225px;
     margin: 50px auto;
 }
-#down-android:hover>#two-dimension-code {
+#android-btn:hover+#two-dimension-code {
     opacity: 1;
     top: 60px;
     -webkit-transition: all 250ms;
