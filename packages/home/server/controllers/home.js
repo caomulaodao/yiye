@@ -317,18 +317,18 @@ exports.ajaxBookmarks = function(req,res){
 
 //ajax返回新消息
 exports.newNews = function(req,res){
-    if(!req.user) return res.status(401).json({info:'请先注册或登录'});
+    if(!req.user) return res.sendResult('请先登录或注册',1000,null);
     var limit=10;//一次ajax请求返回的数量
     var number = req.query.number||1;
-    if(!Myverify.isNumber(number)) {return res.status(400).json({info:'参数非法'})}
+    if(!Myverify.isNumber(number)) {return res.sendResult('请求参数格式错误',2000,null)}
     async.waterfall([
         function(callback){
             Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[1,2]}}).sort({postTime:1}).limit(1)
-            .exec(function(err,doc){callback(err,doc)});
+            .exec(function(err,doc){if(err){console.log(err);return res.sendResult('服务器内部错误',5000,null)}callback(err,doc)});
         },
         function(doc,callback){
             Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[1,2]}}).sort({postTime:-1}).skip((number-1)*limit).limit(limit).exec(function(err,list){
-                if (err) {return console.log(err);}
+                if (err) {console.log(err);return res.sendResult('服务器内部错误',5000,null)}
                 var isHave=true;
                 if(list.length==0) {isHave=false;}
                 else{
@@ -340,20 +340,21 @@ exports.newNews = function(req,res){
             })
         }],
         function(err,list,isHave){
-            res.json({news:list,isHave:isHave});
+            if(err){console.log(err);return res.sendResult('服务器内部错误',5000,null)}
+            res.sendResult('返回成功',0,{news:list,isHave:isHave});
         }
     )
 }
 //ajax返回历史消息
 exports.history = function(req,res){
-    if(!req.user) return res.status(401).json({info:'请先注册或登录'});
+    if(!req.user) return res.sendResult('请先注册或登录',1000,null);
     var limit=10;
     var number = req.query.number||1;
-    if(!Myverify.isNumber(number)) {return res.status(400).json({info:'参数非法'})}
+    if(!Myverify.isNumber(number)) {return res.sendResult('请求参数格式错误',2000,null)}
     async.waterfall([
         function(callback){
             Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[3,4]}}).sort({postTime:1}).limit(1)
-            .exec(function(err,doc){callback(err,doc)});
+            .exec(function(err,doc){if(err){console.log(err);return res.sendResult('服务器内部错误',5000,null)}callback(err,doc)});
         },
         function(doc,callback){
             Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[3,4]}}).sort({postTime:-1}).skip((number-1)*limit).limit(limit).exec(function(err,list){
@@ -369,7 +370,8 @@ exports.history = function(req,res){
             })
         }],
         function(err,list,isHave){
-            res.json({hismes:list,isHave:isHave});
+            if(err){console.log(err);return res.sendResult('服务器内部错误',5000,null)}
+            res.sendResult('返回成功',0,{hismes:list,isHave:isHave});
         }
     )
 }

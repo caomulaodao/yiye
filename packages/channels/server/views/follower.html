@@ -71,18 +71,19 @@
                 <div class="member-inf">
                     <a class="member-name" href="/u/{{''+users.creator._id}}">{{ users.creator.username }}</a><br>
                     <div class="channel-inf">
-                        <a href="/u/{{''+users.creator._id}}/create">创建：{{ users.creator.createNum }}&nbsp</a><br>
-                        <a href="/u/{{''+users.creator._id}}/watch">订阅：{{ users.creator.subNum }}&nbsp</a>
+                        <a href="/u/{{''+users.creator._id}}/create">创建：{{ users.creator.createNum }}&nbsp;</a><br>
+                        <a href="/u/{{''+users.creator._id}}/watch">订阅：{{ users.creator.subNum }}&nbsp;</a>
                     </div>
                     <div class="links-inf">
-                        <a href="javascript:;">收藏：{{ users.creator.collectNum }}&nbsp</a><br>
-                        <a href="/u/{{''+users.creator._id}}">提交：{{ users.creator.postNum }}&nbsp</a>
+                        <a href="javascript:;">收藏：{{ users.creator.collectNum }}&nbsp;</a><br>
+                        <a href="/u/{{''+users.creator._id}}">提交：{{ users.creator.postNum }}&nbsp;</a>
                     </div>
                 </div>
             </li>
             {% endif %}
             {% if users.admins %}
                 {% for admin in users.admins %}
+                    {% if admin %}
                     <li class="member admin-icon">
                         <a href="/u/{{''+admin._id}}">
                             <img src="http://yiye.qiniudn.com/{{ admin.avatar }}">
@@ -90,15 +91,16 @@
                         <div class="member-inf">
                             <a class="member-name" href="/u/{{''+admin._id}}">{{ admin.username }}</a><br>
                             <div class="channel-inf">
-                                <a href="/u/{{''+admin._id}}/create">创建：{{ admin.createNum }}&nbsp</a><br>
-                                <a href="/u/{{''+admin._id}}/watch">订阅：{{ admin.subNum }}&nbsp</a>
+                                <a href="/u/{{''+admin._id}}/create">创建：{{ admin.createNum }}&nbsp;</a><br>
+                                <a href="/u/{{''+admin._id}}/watch">订阅：{{ admin.subNum }}&nbsp;</a>
                             </div>
                             <div class="links-inf">
-                                <a href="javascript:;">收藏：{{ admin.collectNum }}&nbsp</a><br>
-                                <a href="/u/{{''+admin._id}}">提交：{{ admin.postNum }}&nbsp</a>
+                                <a href="javascript:;">收藏：{{ admin.collectNum }}&nbsp;</a><br>
+                                <a href="/u/{{''+admin._id}}">提交：{{ admin.postNum }}&nbsp;</a>
                             </div>
                         </div>
                     </li>
+                    {% endif %}
                 {% endfor%}
             {% endif %}
             {% if users.followers %}
@@ -110,12 +112,12 @@
                         <div class="member-inf">
                             <a class="member-name" href="/u/{{''+follower._id}}">{{ follower.username }}</a><br>
                             <div class="channel-inf">
-                                <a href="/u/{{''+follower._id}}/create">创建：{{ follower.createNum }}&nbsp</a><br>
-                                <a href="/u/{{''+follower._id}}/watch">订阅：{{ follower.subNum }}&nbsp</a>
+                                <a href="/u/{{''+follower._id}}/create">创建：{{ follower.createNum }}&nbsp;</a><br>
+                                <a href="/u/{{''+follower._id}}/watch">订阅：{{ follower.subNum }}&nbsp;</a>
                             </div>
                             <div class="links-inf">
-                                <a href="javascript:;">收藏：{{ follower.collectNum }}&nbsp</a><br>
-                                <a href="/u/{{''+follower._id}}">提交：{{ follower.postNum }}&nbsp</a>
+                                <a href="javascript:;">收藏：{{ follower.collectNum }}&nbsp;</a><br>
+                                <a href="/u/{{''+follower._id}}">提交：{{ follower.postNum }}&nbsp;</a>
                             </div>
                         </div>
                     </li>

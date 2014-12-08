@@ -76,8 +76,16 @@ module.exports = function(app, passport, db) {
             data:data
         });
       };
+      res.sendError = function(){
+        res.json({
+            msg:'服务器内部错误',
+            code:5000,
+            data:null
+        });
+      };
       next();
   });
+  //包装返回服务器错误函数
 
   // The cookieParser should be above session
   app.use(cookieParser());

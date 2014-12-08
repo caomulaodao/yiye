@@ -25,6 +25,7 @@ exports.render = function(req, res,Package) {
         }],function(err,result){
             if(err){
                 console.log(err);
+                res.sendError();
             }
             else{
                 var user_number=result[0];
@@ -32,7 +33,7 @@ exports.render = function(req, res,Package) {
                 var label_number=result[2];
                 Package.render('index',{user_number:user_number,channel_number:channel_number,label_number:label_number,user:req.user},
                     function(err,html){
-                    if(err) consoe.log(err);
+                    if(err) {consoe.log(err);return res.sendError()}
                         res.send(html);
                     }
                 )
@@ -48,7 +49,7 @@ exports.explore = function(req, res,Package){
     if (!myVerify.isNumber(p)){p=1;}//判断参数是否合法
     async.waterfall([function(cb){
         Channels.count({},function(err,count){
-            if (err) return console.log(err);
+            if (err){console.log(err);return sendError()}
             cb(err,count);
         })
     },
@@ -62,7 +63,7 @@ exports.explore = function(req, res,Package){
         //防止超过下限
         if (minPage<1){minPage=1;}
         Channels.find().sort({subNum:-1,bmkNum:-1}).skip(limit*(minPage-1)).limit(limit).exec(function (err, channels) {
-            if(err) return console.log(err);
+            if(err) {console.log(err);return res.sendError()}
             callback(err,channels,page);
         });
     },
@@ -70,7 +71,7 @@ exports.explore = function(req, res,Package){
     function(channels,page,callback){
         if (!req.user) return callback(null,channels,page,[]);
         Channel2User.find({'userId':req.user._id},function(err,channel2user){
-            if (err) return console.log(err);
+            if (err) {console.log(err);return res.sendError()}
             var channel2userId=[];
             channel2user.forEach(function(item){
                 channel2userId.push(item.channelId+'');
@@ -79,7 +80,7 @@ exports.explore = function(req, res,Package){
         })
     }
     ],function(err,channels,page,channel2userId){
-        if (err) return console.log(err);
+        if (err) {console.log(err);return res.sendError()}
         channels.forEach(function(item,index,array){
             if (channel2userId.indexOf(item._id+'')>-1){
                 array[index].isAttention=true;//已经关注
@@ -88,7 +89,7 @@ exports.explore = function(req, res,Package){
             Package.render('explore', {
                 channels:channels,user:req.user,page:page
             }, function(err, html) {
-                if(err) console.log(err);
+                if(err) {console.log(err);return res.sendError()}
                 res.send(html);
             });
         });
@@ -103,7 +104,7 @@ exports.query = function(req,res,Package){
     var searchMax=15;
     var search = req.query.q;
     var searchPage=req.query.p||1;
-    if (!myVerify.isNumber(searchPage)) {return res.status(400).send({info:'参数类型错误'})}
+    if (!myVerify.isNumber(searchPage)) {return res.sendResult('参数类型错误',2000,null)}
     searchPage=+searchPage;
     var limit=30;//单页显示数
     if(search.length>=searchMax){
@@ -114,7 +115,7 @@ exports.query = function(req,res,Package){
         //返回频道总数count
         function(cb){
             Channels.count({name:new RegExp(search,'i')},function(err,count){
-                if (err) console.log(err);
+                if (err) {console.log(err);return res.sendError()}
                 cb(err,count);
             });
         },
@@ -128,14 +129,14 @@ exports.query = function(req,res,Package){
             if (minPage<1){minPage=1;}
             Channels.find({name:new RegExp(search,'i')}).sort({subNum:1}).skip(limit*(minPage-1)).limit(limit).exec(function(err,channels){
                 var page=tool.skipPage(minPage,pageLength);
-                if (err) return console.log(err);
+                if (err) {console.log(err);return res.sendError()}
                 callback(err,page,channels);
             });
         },
         function(page,channels,callback){
             if (!req.user) return callback(null,page,channels,[]);
             Channel2User.find({'userId':req.user._id},function(err,channel2user){
-                if (err) return console.log(err);
+                if (err) {console.log(err);return res.sendError()}
                 var channel2userId=[];
                 channel2user.forEach(function(item){
                     channel2userId.push(item.channelId+'');
@@ -144,7 +145,7 @@ exports.query = function(req,res,Package){
             })
         }],
         function(err,page,channels,channel2userId){
-            if (err) return console.log(err);//bug
+            if (err) {console.log(err);return res.sendError()}//bug
             channels.forEach(function(item,index,array){
                 array[index].isAttention=false;
                 if (channel2userId.indexOf(item._id+'')>-1){
@@ -152,27 +153,12 @@ exports.query = function(req,res,Package){
                 }
             });
         Package.render('query',{channels:channels,query:search,page:page,user:req.user},function(err,html){
-            if (err) console.log(err);
+            if (err){console.log(err);return res.sendError();}
             res.send(html);
         });       
     })
 };
 
-exports.web_api_discovery = function(req, res) {
-  var searchMax = 15;
-  var keyword = req.query.keyword;
-  if (!myVerify.isString(keyword)) {return res.status(400).send({info:'参数类型错误'})}
-  if(keyword.length >= searchMax) {
-    keyword = keyword.substr(0, searchMax);
-  }
-  keyword=tool.stripscript(keyword);//过滤非法字符
-  Channels.find({name: new RegExp(keyword, 'i')}).sort({subNum: 1}).exec(function(err, channels) {
-    if (channels.length > 0)
-      res.json({message: 'ok', data: channels})
-    else
-      res.json({message: '未找到'})
-  });
-};
 
 
 

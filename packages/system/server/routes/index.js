@@ -18,9 +18,6 @@ module.exports = function(System, app, auth, database) {
     index.query(req,res,System);
   });
 
-  app.route('/api/discovery')
-    .get(index.web_api_discovery);
-
   app.route('/signup')
       .get(user.signup);
 

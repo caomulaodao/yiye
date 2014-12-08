@@ -24,7 +24,7 @@ module.exports = function(Home, app, auth, database) {
     //home中发现频道api
     app.route('/api/home/discover')
         .get(home.discover);
-    //home中获取书签api
+    //ajax加载频道中的书签
     app.route('/api/home/bookmark/')
         .get(home.ajaxBookmarks);
     //获取新消息
