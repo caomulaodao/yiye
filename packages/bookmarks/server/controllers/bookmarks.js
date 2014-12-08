@@ -46,16 +46,16 @@ var mongoose = require('mongoose'),
 exports.receive = function(req,res){
     if(!req.user) return res.sendResult('请先注册或登录',1000,null);
     var titleLength=100,descriptionLength=200;//限制长度
-    if(res.body.title==null){return res.sendResult('标题不能为空',3001,null);}
-    if(res.body.description==null){return res.sendResult('描述不能为空',3002,null);}
-    if(res.body.url==null){return res.sendResult('书签地址不能为空',3003,null);}
-    if(res.body.image==null){return res.sendResult('图片不能为空',3004,null);}
-    if(res.body.tags==null){return res.sendResult('标签不能为空',3005,null);}
-    if(res.body.channels==null||(verify.isArray(res.body.channels)&&res.body.channels.length==0)){return res.sendResult('提交频道不能为空',3006,null);}
+    if(req.body.tags==null) req.body.tags='';
+    if(req.body.title==null){return res.sendResult('标题不能为空',3001,null);}
+    if(req.body.description==null){return res.sendResult('描述不能为空',3002,null);}
+    if(req.body.url==null){return res.sendResult('书签地址不能为空',3003,null);}
+    if(req.body.image==null){return res.sendResult('图片不能为空',3004,null);}
+    if(req.body.channels==null||(verify.isArray(req.body.channels)&&req.body.channels.length==0)){return res.sendResult('提交频道不能为空',3006,null);}
     if(!(
         verify.isString(req.body.title)&&verify.isString(req.body.description)&&verify.isString(req.body.url)
         &&verify.isString(req.body.image)&&verify.isString(req.body.tags)&&verify.isArray(req.body.channels)
-        )){ return res.sendResult('提交数据格式不对',2000,null)};//判断数据格式
+        )){ return res.sendResult('参数类型错误',2000,null)};//判断数据格式
     var bookmarks ={
         title:xss(req.body.title,{whiteList:{}}),
         description:xss(req.body.description,{whiteList:{}}),
@@ -70,7 +70,7 @@ exports.receive = function(req,res){
     var channels = req.body.channels.unique();
     for(var i=0;i<channels.length;i++){
         if (!verify.idVerify(channels[i])){
-            return res.sendResult('数据格式不对',2000,null)
+            return res.sendResult('数据格式错误',2001,null)
         }
         channels[i] = xss(channels[i],{whiteList:{}});
     }
@@ -83,12 +83,10 @@ exports.receive = function(req,res){
                 Channel2User.findOne({channelId:item,userId:req.user._id},function(err,doc){
                     if(err) {console.log(err);return res.sendError()}
                     var bookmark = Bookmarks(bookmarks);
-
                     //向书签中加入所在频道的信息
                     bookmark.channelInfo.channelId = doc.channelId;
                     bookmark.channelInfo.channelName = doc.name;
                     bookmark.channelInfo.channelLogo = doc.logo;
-
                     var pass = false;
                     //如果是管理员或创始人，则直接审核通过
                     if(doc.type == "creator" || doc.type == "admin"){
@@ -133,14 +131,14 @@ exports.receive = function(req,res){
         //返回频道信息
         Channel2User.find({userId:req.user._id,channelId:{$in:channels}},'channelId name logo type',function(err,channels){
             if(err) {console.log(err);return res.sendError();}
-            return res.sendResult('获取频道信息成功',0,channels);
+            return res.sendResult('提交成功!',0,channels);
         });
     });
 
 
 
 }
-//初始化获取书签
+//获取频道内的书签
 exports.init  =  function(req,res){
     var limit=20;
     if(!req.user) return res.sendResult('请先注册或登录',1000,null);
