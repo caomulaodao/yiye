@@ -314,7 +314,7 @@ exports.update = function(req,res){
         if (!myVerify.isString(avatar)||!myVerify.isString(intro)){ return res.send({err:true,info:'参数格式错误'})}
         avatar = xss(avatar,{whiteList:{}});
         intro = xss(intro,{whiteList:{}});
-
+        intro = intro.substr(0,150);
         //更新各处中的个人信息
         async.parallel([
             //更新用表User中的用户信息
