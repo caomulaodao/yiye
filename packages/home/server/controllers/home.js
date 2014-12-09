@@ -214,7 +214,7 @@ function getTags(str){
 
 //ajax加载'发现'页面内容
 exports.discover = function(req,res){
-    if(!req.user) return res.redirect('/');
+    if(!req.user) return res.sendResult('请先登录或注册',1000,null);
     //number为请求次数 limit为每次返回的数量
     var number=req.query.number||1;
     var limit=12;

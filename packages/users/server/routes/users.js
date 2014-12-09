@@ -51,6 +51,7 @@ module.exports = function(MeanUser, app, auth, database, passport) {
           )(req,res,next);
       }
   );
+
   //Logout web API (by coolbit.in@gmail.com)
   app.route('/api/account/logout')
     .get(users.web_api_logout);
