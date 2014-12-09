@@ -99,10 +99,15 @@ $(function(){
             that.list.fetch({
                 url:'/api/bookmarks/init?channelId='+channelId,
                 success:function(model,response){
-                    that.$el.html(that.initTemplate(response.data));
-                    that.list.date = response.data.nextTime;
-                    that.list.channelId =  response.data._id;
-                    that.renderAfter();
+                    if(response.code==0){
+                        that.$el.html(that.initTemplate(response.data));
+                        that.list.date = response.data.nextTime;
+                        that.list.channelId =  response.data.info._id;
+                        that.renderAfter();
+                    }
+                    else{
+                        console.log(response);
+                    }
                 }
             })
         },
@@ -128,14 +133,20 @@ $(function(){
                     data: {date: sDate, channelId: sChannelId},
                     url: "/api/home/bookmark",
                     success: function(model, response){
-                        $('.content-body>ul').append(that.channelTemplate(response.data));
-                        if(!response.data.isHave){
-                            $('.content-body>ul').append("<p class='no-news'>无新内容了</p>");
-                        } else {
-                            var nextDate = response.data.nextTime;   //将下次日期赋值给nextDate变量
-                            that.list.set("date", nextDate);         //记录下次Ajax日期
-                            that.channelAjax.bScroll = true;         //许可Ajax加载
+                        if (response.code==0){
+                            $('.content-body>ul').append(that.channelTemplate(response.data));
+                            if(!response.data.isHave){
+                                $('.content-body>ul').append("<p class='no-news'>无新内容了</p>");
+                            } else {
+                                var nextDate = response.data.nextTime;   //将下次日期赋值给nextDate变量
+                                that.list.set("date", nextDate);         //记录下次Ajax日期
+                                that.channelAjax.bScroll = true;         //许可Ajax加载
+                            }                           
                         }
+                        else{
+                            console.log(response);
+                        }
+
                     }
                 });
             }
@@ -150,11 +161,17 @@ $(function(){
             var bookmarkId = $(event.currentTarget).data('bookmarkid');
             var that = this;
             like.fetch({url:'/api/bookmarks/like/'+bookmarkId,success:function(model,response){
-                if(response.data.isLiked == false){
-                    var count = $(event.currentTarget).find('span');
-                    count.text(+count.text()+1);
+                if (response.code==0){
+                    if(response.data.isLiked == false){
+                        var count = $(event.currentTarget).find('span');
+                        count.text(+count.text()+1);
+                    }
+                    that.lock.bkUp = false;  
                 }
-                that.lock.bkUp = false;
+                else{
+                    console.log(response);
+                }
+
             }})
         },
 
@@ -165,11 +182,17 @@ $(function(){
             var bookmarkId = $(event.currentTarget).data('bookmarkid');
             var that = this;
             hate.fetch({url:'/api/bookmarks/hate/'+bookmarkId,success:function(model,response){
-                if(response.data.isLiked == true && response.data.isHated == false){
-                    var count = $(event.currentTarget).parent().find('span');
-                    count.text(+count.text()-1);
+                if (response.code==0){
+                    if(response.data.isLiked == true && response.data.isHated == false){
+                        var count = $(event.currentTarget).parent().find('span');
+                        count.text(+count.text()-1);
+                    }
+                    that.lock.bkDown = false;  
                 }
-                that.lock.bkDown = false;
+                else{
+                    console.log(response);
+                }
+
             }})
         }
     });
@@ -339,20 +362,31 @@ $(function(){
                     url: '/api/account/update',
                     type: 'post',
                     data: user,
-                    statusCode: {
-                        401: function () {
-                            //结果提示
-                            popup("个人信息更新失败");
+                    // statusCode: {
+                    //     401: function () {
+                    //         //结果提示
+                    //         popup("个人信息更新失败");
 
-                            that.lock.info = false;
-                        },
-                        200: function () {
-                            //结果提示
-                            popup("个人信息更新成功");
+                    //         that.lock.info = false;
+                    //     },
+                    //     200: function () {
+                    //         //结果提示
+                    //         popup("个人信息更新成功");
 
-                            that.lock.info = false;
-                        }
-                    }
+                    //         that.lock.info = false;
+                    //     }
+                    // }
+
+                    success: function (response) {
+                            //结果提示
+                                if(response.code==0){
+                                    popup('个人信息更新成功');
+                                }
+                                else{
+                                    popup(response.msg);
+                                }                         
+                                that.lock.info = false;
+                            }                  
                 });
             }
         },
@@ -380,20 +414,29 @@ $(function(){
                     url: '/api/account/changePassword',
                     type: 'post',
                     data: password,
-                    statusCode: {
-                        401: function (jq) {
-                            //结果提示
-                            console.log(jq);
-                            $('#User-Change-Error').text(jq.responseJSON.info).show();
+                    // statusCode: {
+                    //     401: function (jq) {
+                    //         //结果提示
+                    //         console.log(jq);
+                    //         $('#User-Change-Error').text(jq.responseJSON.info).show();
 
-                            that.lock.password = false;
-                        },
-                        200: function () {
-                            //结果提示
-                            popup("密码修改成功");
+                    //         that.lock.password = false;
+                    //     },
+                    //     200: function () {
+                    //         //结果提示
+                    //         popup("密码修改成功");
 
-                            that.lock.password = false;
+                    //         that.lock.password = false;
+                    //     }
+                    // }
+                    success:function(response){
+                        if (response.code==0){
+                            popup('密码修改成功');
                         }
+                        else {
+                            $('#User-Change-Error').text(response.msg).show();
+                        }
+                        that.lock.password = false;
                     }
                 });
             }
@@ -410,21 +453,40 @@ $(function(){
                     url: '/api/news/viewed',
                     type: 'post',
                     data: {bookmarkId: bookmarkId},
-                    statusCode: {
-                        200: function () {
-                            //结果提示
-                            var num = $("#news-tab").data('num') - 1;
-                            $('#news-' + index).remove();
-                            if (num > 0) {
+                    // statusCode: {
+                    //     200: function () {
+                    //         //结果提示
+                    //         var num = $("#news-tab").data('num') - 1;
+                    //         $('#news-' + index).remove();
+                    //         if (num > 0) {
+                    //             $("#news-tab").data('num', num)
+                    //             $("#news-tab").text("新消息(" + num + ")");
+                    //             $("#news-popup-num").text(num);
+                    //         } else {
+                    //             $("#news-tab").text("新消息");
+                    //             $("#news-popup-num").remove();
+                    //         }
+                    //         that.lock.viewed = false;
+                    //     }
+                    // }
+                    success:function(response){
+                        if (response.code==0){
+                            var num = $('#news-tab').data('num') -1;
+                            $('#news-'+index).remove();
+                            if (num>0){
                                 $("#news-tab").data('num', num)
                                 $("#news-tab").text("新消息(" + num + ")");
                                 $("#news-popup-num").text(num);
-                            } else {
-                                $("#news-tab").text("新消息");
-                                $("#news-popup-num").remove();
                             }
-                            that.lock.viewed = false;
+                            else{
+                                $('#news-tab').text('新消息');
+                                $('#news-popup-num').remove();
+                            }
                         }
+                        else {
+                            console.log(response);
+                        }
+                        that.lock.viewed = false;
                     }
                 });
             }
@@ -437,8 +499,14 @@ $(function(){
                 url: 'api/home/newmes',
                 data: {'number': 1},
                 success: function (model, response) {
-                    $('.user-news-list').html(that.newMesTemplate(response.data));
-                    that.newMes.set('number', 2);
+                    if (response.code==0){
+                        $('.user-news-list').html(that.newMesTemplate(response.data));
+                        that.newMes.set('number', 2);                      
+                    }
+                    else{
+                        console.log(response);
+                    }
+
                 }
             });
 
@@ -451,13 +519,19 @@ $(function(){
         history: function () {
             var that = this;
             that.hisMes = new hisMessage;
-            that.hisMes.fetch({url: '/api/home/hismes',
+            that.hisMes.fetch({
+                url: '/api/home/hismes',
+                data:{'number':1},
                 success: function (model, response) {
-                    $('.user-history-list').html(that.historyTemplate(response.data));
-                    that.hisMes.set('number', 2);
+                    if(response.code==0){
+                        $('.user-history-list').html(that.historyTemplate(response.data));
+                        that.hisMes.set('number',2);                      
+                    }
+                    else{
+                        console.log(response);
+                    }
                 }
             });
-
             that.hisMesAjax.bScroll = true;    //许可Ajax加载
             $('.content-page').scroll(function () {
                 that.hisMesAjax();
@@ -476,12 +550,17 @@ $(function(){
                     data: {number: nNum},
                     url: "/api/home/newmes",
                     success: function (model, response) {
-                        $('.user-news-list').append(that.newMesTemplate(response.data));
-                        if (!response.data.isHave) {
-                            $('.user-news-list').append("<p class='no-news'>无新内容了</p>");
-                        } else {
-                            that.newMes.set("number", ++nNum);
-                            that.newMesAjax.bScroll = true;     //许可Ajax加载
+                        if (response.code==0){
+                            $('.user-news-list').append(that.newMesTemplate(response.data));
+                            if (!response.data.isHave) {
+                                $('.user-news-list').append("<p class='no-news'>无新内容了</p>");
+                            } else {
+                                that.newMes.set("number", ++nNum);
+                                that.newMesAjax.bScroll = true;     //许可Ajax加载
+                            }                            
+                        }
+                        else{
+                            console.log(response);
                         }
                     }
                 });
@@ -500,13 +579,18 @@ $(function(){
                     data: {number: nNum},
                     url: "/api/home/hismes",
                     success: function (model, response) {
-                        $('.user-history-list').append(that.historyTemplate(response.data));
-                        if (!response.data.isHave) {
-                            $('.user-history-list').append("<p class='no-news'>无新内容了</p>");
-                        } else {
-                            that.hisMes.set("number", ++nNum);
-                            that.hisMesAjax.bScroll = true;     //许可Ajax加载
+                        if (response.code==0){
+                            $('.user-history-list').append(that.historyTemplate(response.data));
+                            if (!response.data.isHave) {
+                                $('.user-history-list').append("<p class='no-news'>无新内容了</p>");
+                            } else {
+                                that.hisMes.set("number", ++nNum);
+                                that.hisMesAjax.bScroll = true;     //许可Ajax加载
+                            }                           
                         }
+                        else {
+                            console.log(response);
+                        }   
                     }
                 });
             }
@@ -534,10 +618,15 @@ $(function(){
             var that = this;
             that.cList = new channelShowcase;
             that.cList.fetch({url:'/api/home/discover',success:function(model,response){
-                that.$el.html(that.initTemplate(response.data));
-                that.cList.set("number", 2);
-                $('.ex-creator').tooltip();    //创建者头像绑定tooltip
-                that.renderAfter();
+                if (response.code==0){
+                    that.$el.html(that.initTemplate(response.data));
+                    that.cList.set("number", 2);
+                    $('.ex-creator').tooltip();    //创建者头像绑定tooltip
+                    that.renderAfter();
+                }
+                else{
+                    console.log(response);
+                }
             }})
         },
 
@@ -562,13 +651,18 @@ $(function(){
                     data: {number: nNum},
                     url: "/api/home/discover",
                     success: function(model, response){
-                        $('#channel-explore ul').append(that.addTemplate(response.data));
-                        $('.ex-creator').tooltip();        //创建者头像绑定tooltip
-                        if(!response.data.isHave){
-                            $('#channel-explore ul').append("<p class='no-news'>无新内容了</p>");
-                        } else {
-                            that.cList.set("number",++nNum);
-                            that.exploreAjax.bScroll = true;     //许可Ajax加载
+                        if (response.code==0){
+                            $('#channel-explore ul').append(that.addTemplate(response.data));
+                            $('.ex-creator').tooltip();        //创建者头像绑定tooltip
+                            if(!response.data.isHave){
+                                $('#channel-explore ul').append("<p class='no-news'>无新内容了</p>");
+                            } else {
+                                that.cList.set("number",++nNum);
+                                that.exploreAjax.bScroll = true;     //许可Ajax加载
+                            }                           
+                        }
+                        else{
+                            console.log(response);
                         }
                     },
                     error: function() {
@@ -587,8 +681,13 @@ $(function(){
             subChannel.fetch({
                 url: "/channel/sub/"+ channelId,
                 success: function(model, response) {
-                    $(event.currentTarget).html('已订阅');
-                    $(event.currentTarget).addClass('have-subed').removeClass('to-sub');
+                    if (response.code==0){
+                        $(event.currentTarget).html('已订阅');
+                        $(event.currentTarget).addClass('have-subed').removeClass('to-sub');                       
+                    }
+                    else{
+                        console.log(response);
+                    }
                 }
             });
         }

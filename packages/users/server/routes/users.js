@@ -7,6 +7,7 @@ module.exports = function(MeanUser, app, auth, database, passport) {
 
   app.route('/logout')
     .get(users.signout);
+
   app.route('/api/user/me')
     .get(users.me);
 
@@ -24,25 +25,18 @@ module.exports = function(MeanUser, app, auth, database, passport) {
   app.route('/verified/:token')
         .get(users.verify);
 
-  // Setting up the userId param
-  app.param('userId', users.user);
-
-  // AngularJS route to check for authentication
-  app.route('/loggedin')
-    .get(function(req, res) {
-      res.send(req.isAuthenticated() ? req.user : '0');
-    });
-
   // Setting the local strategy route
   app.route('/api/account/login')
     .post(function(req,res,next){
           passport.authenticate('local',
               function(err, user, info){
                   if (err) { return next(err); }
-                  if (!user) { return res.status(401).send(info) }
+                  if(!user){
+                      return res.sendResult(info,3001,null);
+                  }
                   req.logIn(user, function(err) {
                       if (err) { return next(err); }
-                      return res.status(200).send({
+                      return res.sendResult("登录成功",0,{
                           redirectUrl:'/home',
                           success:true
                       });
@@ -51,6 +45,7 @@ module.exports = function(MeanUser, app, auth, database, passport) {
           )(req,res,next);
       }
   );
+
   //Logout web API (by coolbit.in@gmail.com)
   app.route('/api/account/logout')
     .get(users.web_api_logout);

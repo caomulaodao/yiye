@@ -14,26 +14,11 @@ var mongoose = require('mongoose'),
   templates = require('../template');
   var myVerify=require('../../../../config/tools/verify');
 
-/**
- * Auth callback
- */
-exports.authCallback = function(req, res) {
-  res.redirect('/');
-};
+
 
 /**
- * Show login form
- */
- //注册界面
-exports.signin = function(req, res) {
-  if (req.isAuthenticated()) {
-    return res.redirect('/');
-  }
-  res.redirect('#!/login');
-};
-
-/**
- * Logout
+ * 退出登录
+ *
  */
 exports.signout = function(req, res) {
   req.logout();
@@ -44,18 +29,18 @@ exports.signout = function(req, res) {
  * Logout web API (by coolbit.in@gmail.com)
  */
 exports.web_api_logout = function(req, res) {
-  if (req.isAuthenticated()) {
+  if(req.isAuthenticated()){
     req.logout();
     if (req.isUnauthenticated())
-      res.json({message: 'ok'});
+        res.sendResult("退出成功",0,null);
     else
-      res.status('401').json({message: '注销失败'});
+        res.sendResult("注销失败",3001,null);
   }
   else
-    res.status('401').json({message: '未登录'});
-
+      res.sendResult("未登录",1001,null);
 
 };
+
 /**
  * Session
  */
@@ -64,15 +49,13 @@ exports.session = function(req, res) {
 };
 
 /**
- * Create user
+ * 用户注册
  */
- //创建用户
 exports.create = function(req, res, next) {
   var username=req.body.username;console.log(req.body);
-  if(typeof username!='string') {return res.status(400).send([{msg:'含有非法字符'}]);}
   //注册名字非法的时候
   if (!myVerify.userVerify(username)){
-      return res.status(400).send([{msg:'含有非法字符'}]);
+      return res.sendResult("含有非法字符",2001,null);
   }
   var user = new User(req.body);
   user.provider = 'local';
@@ -84,86 +67,56 @@ exports.create = function(req, res, next) {
 
   var errors = req.validationErrors();
   if (errors) {
-    return res.status(400).send(errors);
+      return res.sendResult(errors,2001,null);
   }
 
   // Hard coded for now. Will address this with the user permissions system in v0.3.5
   user.roles = ['authenticated'];
-  user.save(function(err) {
-    if (err) {
+  user.save(function(err){
+    if(err){
       switch (err.code) {
         case 11000:
-          res.status(400).send([{
-            msg: '用户名已经被注册',
-            param: 'email'
-          }]);
+            return res.sendResult("邮箱已经被注册",3001,null);
           break;
         case 11001:
-          res.status(400).send([{
-            msg: '用户名已经被注册',
-            param: 'username'
-          }]);
+            return res.sendResult("用户名已经被注册",3002,null);
           break;
         default:
-          var modelErrors = [];
-
-          if (err.errors) {
-
-            for (var x in err.errors) {
-              modelErrors.push({
-                param: x,
-                msg: err.errors[x].message,
-                value: err.errors[x].value
-              });
-            }
-
-            res.status(400).send(modelErrors);
+          if (err.errors){
+            return res.sendResult(err.errors[0],3000,null);
           }
       }
-
-      return res.status(400);
     }
     sendVerify(user,req, function() {
       var emailServer = 'http://mail.'+(user.email).split("@")[1];
       req.flash('emailServer',emailServer);
-      return res.status(200).send({
-          redirectUrl:'/verify'
-      });
+        return res.sendResult("注册成功",0,{
+            redirectUrl:'/verify'
+        });
     });
   });
 };
+
 /**
- * Send User
+ * 获取当前访问用户信息
+ *
  */
+
 exports.me = function(req, res) {
   if(req.user){
       //如果用户已经登录
-      res.sendResult("成功获取用户信息",0,req.user);
+      return res.sendResult("成功获取用户信息",0,req.user);
   }else
   {
       //用户未登录
-      res.sendResult("用户未登录",100,null);
+      return res.sendResult("用户未登录",100,null);
   }
 };
 
-/**
- * Find user by id
- */
-exports.user = function(req, res, next, id) {
-  User
-    .findOne({
-      _id: id
-    })
-    .exec(function(err, user) {
-      if (err) return next(err);
-      if (!user) return next(new Error('Failed to load User ' + id));
-      req.profile = user;
-      next();
-    });
-};
 
 /**
- * Resets the password
+ * 重置用户账号密码
+ *
  */
 
 exports.resetpassword = function(req, res, next) {
@@ -174,20 +127,16 @@ exports.resetpassword = function(req, res, next) {
     }
   }, function(err, user) {
     if (err) {
-      return res.status(400).json({
-        message: err
-      });
+        return res.sendResult(err,5001,null);
     }
-    if (!user) {
-      return res.status(400).json({
-        message: '此链接失效，请重新找回密码'
-      });
+    if(!user){
+        return res.sendResult('此链接失效，请重新找回密码',3001,null);
     }
     req.assert('password', '密码长度为6到20位').len(6, 20);
     req.assert('password2', '两次输入密码不相同').equals(req.body.password);
     var errors = req.validationErrors();
     if (errors) {
-      return res.status(400).send(errors);
+        return res.sendResult(errors,2001,null);
     }
     user.password = req.body.password;
     user.resetPasswordToken = undefined;
@@ -195,7 +144,7 @@ exports.resetpassword = function(req, res, next) {
     user.save(function(err) {
       req.logIn(user, function(err) {
         if (err) return next(err);
-        return res.status(200).send({
+        return res.sendResult("密码重置成功",0,{
             redirectUrl:'/home'
         });
       });
@@ -290,31 +239,32 @@ exports.forgotpassword = function(req, res, next) {
       }
     ],
     function(err, status) {
-      if (err) {
-          return res.status(401).send({
-              message: "此邮箱用户不存在"
-          });
+      if(err){
+          return res.sendResult("此邮箱用户不存在",3001,null);
       }
-      res.status(200).send({
-          redirectUrl:'/waitReset'
+
+      return res.sendResult("等待邮箱验证中",0,{
+            redirectUrl:'/waitReset'
       });
+
     }
   );
 };
 
 /**
  * 更新用户信息
- *
  */
 exports.update = function(req,res){
-    if(!req.user) return res.send({err:true,info:'请先登陆或注册'});
+    if(!req.user) return res.sendResult('请先登录或注册',1000,null);
     if(req.body.avatar && req.body.intro){
         var avatar = req.body.avatar;
         var intro = req.body.intro;
-        if (!myVerify.isString(avatar)||!myVerify.isString(intro)){ return res.send({err:true,info:'参数格式错误'})}
+        if (!myVerify.isString(avatar)||!myVerify.isString(intro)){
+            return res.sendResult('参数格式错误',2001,null);
+        }
         avatar = xss(avatar,{whiteList:{}});
         intro = xss(intro,{whiteList:{}});
-
+        intro = intro.substr(0,150);
         //更新各处中的个人信息
         async.parallel([
             //更新用表User中的用户信息
@@ -338,16 +288,10 @@ exports.update = function(req,res){
         //返回信息
         function(err, results){
             //修改成功
-            return res.status(200).send({
-                info:'数据修改成功',
-                success:true
-            });
+            return res.sendResult('数据修改成功',0,null);
         });
     }else{
-        return res.status(401).send({
-            info:'请提交修改的数据',
-            success:false
-        });
+        return res.sendResult('请提交修改的数据',2002,null);
     }
 }
 
@@ -356,30 +300,21 @@ exports.update = function(req,res){
  *
  */
 exports.changePassword = function(req,res){
-    if(!req.user) return res.send({err:true,info:'请先登陆或注册'});
+    if(!req.user) return res.sendResult('请先登录或注册',1000,null);
     var oldPassword = req.body.old;
     var newPassword = req.body.new;
     if(newPassword.lenght < 6 || newPassword.lenght > 20){
-        return res.status(401).send({
-            info:'新密码长度在6到20位之间。',
-            success:false
-        });
+        return res.sendResult('新密码长度在6到20位之间。',2001,null);
     }
     User.findOne({_id:req.user._id},function(err,doc){
         if(err) console.log(err);
         if(!doc){
-            return res.status(401).send({
-                info:'原密码输入错误。',
-                success:false
-            });
+            return res.sendResult('原密码输入错误。',3001,null);
         }
         if(doc.hashed_password === doc.hashPassword(oldPassword)){
             User.update({_id:req.user._id},{hashed_password:doc.hashPassword(newPassword)},function(err,num){
                 if(err)  console.log(err);
-                return res.status(200).send({
-                    info:'个人信息修改成功',
-                    success:true
-                });
+                return res.sendResult('个人信息修改成功。',0,null);
             });
         }
     });

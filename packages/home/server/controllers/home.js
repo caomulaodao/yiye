@@ -214,7 +214,7 @@ function getTags(str){
 
 //ajax加载'发现'页面内容
 exports.discover = function(req,res){
-    if(!req.user) return res.redirect('/');
+    if(!req.user) return res.sendResult('请先登录或注册',1000,null);
     //number为请求次数 limit为每次返回的数量
     var number=req.query.number||1;
     var limit=12;
@@ -271,7 +271,11 @@ exports.discover = function(req,res){
 //ajax加载加载bookmarks
 exports.ajaxBookmarks = function(req,res){
     if(!req.user) return res.sendResult('请先注册或登录',1000,null);
-    var date=req.query.date, limit = 20;//date为前端当前展示的时间
+    var nowDate = new Date();
+    var nowday = nowDate.getDate();
+    if (nowday<10){nowday='0'+nowday}
+    var now = nowDate.getFullYear()+'-'+nowDate.getMonth()+'-'+nowDate.getDate();
+    var date=req.query.date||now, limit = 20;//date为前端当前展示的时间
     date=moment(date).toDate();
     var channelId = req.query['channelId'];
     if (!Myverify.idVerify(channelId)) return res.sendResult("请求参数格式错误",2000,null);

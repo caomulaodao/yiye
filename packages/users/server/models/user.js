@@ -10,6 +10,7 @@ var mongoose = require('mongoose'),
 
 /**
  * Validations
+ *
  */
 var validatePresenceOf = function(value) {
   // If you are authenticating by any of the oauth strategies, don't validate.
