@@ -272,7 +272,9 @@ exports.discover = function(req,res){
 exports.ajaxBookmarks = function(req,res){
     if(!req.user) return res.sendResult('请先注册或登录',1000,null);
     var nowDate = new Date();
-    var now = nowDate.getFullYear()+'-'+nowDate.getMonth()+'-'+newDate.getDate();
+    var nowday = nowDate.getDate();
+    if (nowday<10){nowday='0'+nowday}
+    var now = nowDate.getFullYear()+'-'+nowDate.getMonth()+'-'+nowDate.getDate();
     var date=req.query.date||now, limit = 20;//date为前端当前展示的时间
     date=moment(date).toDate();
     var channelId = req.query['channelId'];
