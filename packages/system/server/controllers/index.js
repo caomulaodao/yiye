@@ -13,6 +13,7 @@ var mongoose = require('mongoose'),
 
 //渲染首页 注入用户数量,频道数量,标签数量
 exports.render = function(req, res,Package) {
+    if (req.user){return res.redirect('/home')}//如果用户已登录 则跳转到home界面
     async.parallel([
         function(cb){
         User.count({},function(err,user_number){cb(err,user_number)});

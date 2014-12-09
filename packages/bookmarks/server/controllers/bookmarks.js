@@ -395,13 +395,13 @@ exports.pass = function(req,res){
 
 //编辑并通过某个书签
 exports.edit = function(req,res){
-    if(!req.user) return res.status(401).json({info:'请先注册或登录'});
+    if(!req.user) return res.sendResult('请先注册或登录',1000,null);
     var channelId = req.params['channelId'];
     var bookmarkId = req.params['bookmarkId'];
     var title = req.body.title;
     var description = req.body.description;
-    if (title==null){return res.sendResult('标题不能为空',3000,null)}
-    if (description==null) {res.sendResult('描述不能为空',3000,null)}
+    if (title==null){return res.sendResult('标题不能为空',2007,null)}
+    if (description==null) {res.sendResult('描述不能为空',2008,null)}
     if(!verify.idVerify(channelId)||!verify.idVerify(bookmarkId)||!verify.isString(title)||!verify.isString(description)) {return res.sendResult('参数格式错误',2000,null)}
     Channel2User.findOne({channelId:channelId,userId:req.user._id,type:{$in:['creator','admin']}},function(err,doc){
         if(doc){
