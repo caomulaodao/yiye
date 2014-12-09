@@ -11,12 +11,11 @@ $('#YIYE_ConfirmEmail').click(function(){
         type: "POST",
         url:API_ForgotEmailUrl,
         data:$('#YIYE_ForgotEmailForm').serialize(),
-        statusCode: {
-            401: function(res) {
-                showSigninError(res.responseJSON['message']);
-            },
-            200:function(res){
-                location.href = res.redirectUrl;
+        success:function(data){
+            if(data.code == 0){
+                location.href = data.data.redirectUrl;
+            }else{
+                showSigninError(data.msg);
             }
         }
     });

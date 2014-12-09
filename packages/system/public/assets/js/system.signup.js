@@ -16,12 +16,11 @@ $('#YIYE_Signup').click(function(){
         type: "POST",
         url:API_SignupUrl,
         data:$('#YIYE_SignupForm').serialize(),
-        statusCode: {
-            400: function(res) {
-                showSignupError(res.responseJSON[0]['msg']);
-            },
-            200:function(res){
-                location.href = res.redirectUrl;
+        success:function(data){
+            if(data.code == 0){
+                location.href = data.data.redirectUrl;
+            }else{
+                showSignupError(data.msg);
             }
         }
     });
@@ -59,5 +58,3 @@ verification.len = function(str,min,max){
         return false;
     }
 }
-
-//
