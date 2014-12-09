@@ -7,6 +7,7 @@ module.exports = function(MeanUser, app, auth, database, passport) {
 
   app.route('/logout')
     .get(users.signout);
+
   app.route('/api/user/me')
     .get(users.me);
 
@@ -23,15 +24,6 @@ module.exports = function(MeanUser, app, auth, database, passport) {
   //验证用户邮箱并登录
   app.route('/verified/:token')
         .get(users.verify);
-
-  // Setting up the userId param
-  app.param('userId', users.user);
-
-  // AngularJS route to check for authentication
-  app.route('/loggedin')
-    .get(function(req, res) {
-      res.send(req.isAuthenticated() ? req.user : '0');
-    });
 
   // Setting the local strategy route
   app.route('/api/account/login')
