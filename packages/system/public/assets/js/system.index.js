@@ -10,3 +10,10 @@ $(function(){
         $(".video-modal").hide();
     });
 });
+
+function ExtInstall() {
+    if (chrome.app.isInstalled)
+        alert("already installed!");
+    else
+        chrome.webstore.install();
+}
