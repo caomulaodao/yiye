@@ -402,7 +402,7 @@ exports.edit = function(req,res){
     var description = req.body.description;
     if (title==null){return res.sendResult('标题不能为空',2007,null)}
     if (description==null) {res.sendResult('描述不能为空',2008,null)}
-    if(!verify.idVerify(channelId)||!verify.idVerify(bookmarkId)||!verify.isString(title)||!verify.isString(description)) {return res.sendResult('参数格式错误',2000,null)}
+    if(!verify.idVerify(channelId)||!verify.idVerify(bookmarkId)||!verify.isString(title)||!verify.isString(description)) {return res.sendResult('参数类型错误',2000,null)}
     Channel2User.findOne({channelId:channelId,userId:req.user._id,type:{$in:['creator','admin']}},function(err,doc){
         if(doc){
             var checkUser = {userId:req.user._id,username:req.user.username,avatar:req.user.avatar};
