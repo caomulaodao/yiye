@@ -21,11 +21,15 @@ function initialize() {
         var bookmarkId = $(that).data('bookmarkid');
         $.ajax({
             url: '/api/bookmarks/like/'+bookmarkId,
-            type:'get'
+            type:'POST'
         }).done(function ( data ) {
-            if(data.results.isLiked == false){
-                var count = $(that).find('span');
-                count.text(+count.text()+1);
+            if(data.code == 0){
+                if(data.data.results.isLiked == false){
+                    var count = $(that).find('span');
+                    count.text(+count.text()+1);
+                }
+            }else{
+
             }
             bkUp = false;
         });
@@ -40,9 +44,13 @@ function initialize() {
             url: '/api/bookmarks/hate/'+bookmarkId,
             type:'get'
         }).done(function ( data ) {
-            if(data.results.isLiked == true && data.results.isHated == false){
-                 var count = $(that).parent().find('span');
-                 count.text(+count.text()-1);
+            if(data.code == 0){
+                if(data.results.isLiked == true && data.results.isHated == false){
+                    var count = $(that).parent().find('span');
+                    count.text(+count.text()-1);
+                }
+            }else{
+
             }
             bkDown = false;
         });
