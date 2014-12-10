@@ -144,7 +144,7 @@ exports.sub = function(req,res){
                 }
             ],function(err){
                 if(err) {console.log(err);res.sendError()}
-                res.send('订阅成功',0,null);
+                res.sendResult('订阅成功',0,null);
             });
         }
 
@@ -223,7 +223,7 @@ exports.renderFollower = function(req,res,Package){
                             if (minPage<1){minPage=1;}min_page=minPage;
                             var skipnumber;
                             if(minPage===1){followerNum=limit-creator-adminsId.length;skipnumber=0}
-                            else{followerNum=limit;skipnumber=limit*(minPage-1)-creator-adminsId.length}console.log(skipnumber);console.log(followerNum);
+                            else{followerNum=limit;skipnumber=limit*(minPage-1)-creator-adminsId.length}
                             Channel2User.find({channelId: channelId,type:'follower'}).sort({followerTime:-1}).skip(skipnumber).limit(followerNum).exec(function (err, followers) {
                                 
                                 var followersId = followers.map(function(item){

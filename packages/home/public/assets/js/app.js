@@ -632,7 +632,7 @@ $(function(){
             var that = this;
             var channelId = $(event.currentTarget).data('id');
             var subChannel = new subChannelModel;
-            subChannel.fetch({
+            subChannel.save({},{
                 url: "/channel/sub/"+ channelId,
                 success: function(model, response) {
                     if (response.code==0){
@@ -674,6 +674,14 @@ $(function(){
             'touch .administration' : 'showAdministration',
             'click .channel-item' :'showSubBkm',//订阅频道的书签
             'touch .channel-item' :'showSubBkm',
+            'click #message' : 'showMessage',//消息界面
+            'touch #message' : 'showMessage',
+            'click #discover' : 'showDiscover',//发现界面
+            'touch #discover' : 'showDiscover',
+            'click #help' :'showHelp',//帮助页面
+            'touch #help' :'showHelp',
+            'click #set' :'showSet',//设置界面
+            'touch #set' :'showSet'
         },
 
         initialize: function() {
@@ -716,8 +724,25 @@ $(function(){
         showSubscription : function(){
             Router.navigate('sub',true);
         },
+        //展示对应频道里面的书签
         showSubBkm : function(event){
             Router.navigate('channel/'+$(event.currentTarget).data('id'),true);
+        },
+        //展示消息
+        showMessage : function(){
+            Router.navigate('message',true);
+        },
+        //展示发现界面
+        showDiscover : function(){
+            Router.navigate('discover',true);
+        },
+        //帮助页面
+        showHelp : function(){
+            Router.navigate('help',true);
+        },
+        //设置界面
+        showSet : function(){
+            Router.navigate('set',true);
         }
     });
 
@@ -727,30 +752,37 @@ $(function(){
         //爱屁屁的路由
     var AppRouter = Backbone.Router.extend({
         routes:{
-            'sub': 'subControl',
-            'sub/:channelId': 'channelControl',
-            'manage': 'manage',
-            'channel/:channelId' :'channelBookmarks',
-            'create' : 'create'
+            'sub' : 'subControl',
+            'sub/:channelId' : 'channelControl',
+            'manage' : 'manage',
+            'channel/:channelId' : 'channelBookmarks',
+            'create' : 'create',
+            'message' : 'message',
+            'discover' : 'discover',
+            'help' : 'help',
+            'set' : 'set'
         },
-        defaultRoute: function(){
+        defaultRoute : function(){
         },
-        subControl: function(){
+        subControl : function(){
             $('.subscription').addClass('active').next().removeClass('active');
             $('.channel-list').show().next().hide();
         },
-        manage: function(){
+        manage : function(){
             $('.administration').addClass('active').prev().removeClass('active');
             $('.admin-interface').show().prev().hide();
         },
-        channelBookmarks: function(){
+        channelBookmarks : function(){
             $('.channel-item').removeClass('active');
             $(this).addClass('active').children('.links-num').remove();
         },
-        create: function(){
+        create : function(){
             var view = new NewChannelView();
             App.main.html(view.render().el);
             view.renderAfter();
+        },
+        message: function(){
+
         }
 
 
