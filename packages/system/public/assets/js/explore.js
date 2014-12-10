@@ -17,8 +17,12 @@ function subChannelAjax() {
             $.ajax({
                 type: "get",
                 url: '/channel/sub/' + channelId
-            }).done(function(){
-                $(that).addClass('have-subed').removeClass('to-sub').html('已订阅');
+            }).done(function(data){
+                if(data.code == 0){
+                    $(that).addClass('have-subed').removeClass('to-sub').html('已订阅');
+                }else{
+                    alert("请先登录");
+                }
             });
     });
 }

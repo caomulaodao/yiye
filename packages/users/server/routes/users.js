@@ -32,7 +32,7 @@ module.exports = function(MeanUser, app, auth, database, passport) {
               function(err, user, info){
                   if (err) { return next(err); }
                   if(!user){
-                      return res.sendResult(info,3001,null);
+                      return res.sendResult(info.message,3001,null);
                   }
                   req.logIn(user, function(err) {
                       if (err) { return next(err); }
