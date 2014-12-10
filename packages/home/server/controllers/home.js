@@ -413,10 +413,10 @@ exports.callmsg = function(req,res){
                 if (+list[i]['checked']<3){
                     updateList.push(list[i]['_id']);
                 }
-            }console.log(updateList);console.log('~~~~~~');
+            }
             Bookmarks.update({'_id':{$in:updateList}},{$inc:{checked:2}},{ multi: true }).exec(function(err,doc){
                 if (err) {console.log(err);return res.sendError();}
-                res.sendResult('返回成功',0,{hismes:list,isHave:isHave});
+                res.sendResult('返回成功',0,{msg:list,isHave:isHave});
             })
             
         }
@@ -442,39 +442,39 @@ exports.checkmsg = function(req,res){
                 callback(err,channelsId);
             })
         },
-        //最后一条通知消息
+        // //最后一条通知消息
+        // function(channelsId,callback){
+        //     Bookmarks.find({'channelId':{$in:channelsId},$or:[{'checked':0},{'checkUser.userId':req.user._id}]}).sort({'postTime' :1}).limit(1)
+        //     .exec(function(err,doc){if(err){console.log(err);return res.sendError()}callback(err,doc)});
+        // },
+        //未审核的书签总数
         function(channelsId,callback){
-            Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[1,2,3,4]}}).sort({postTime:1}).limit(1)
-            .exec(function(err,doc){if(err){console.log(err);return res.sendError()}callback(err,doc)});
+            Bookmarks.count({'channelId':{$in:channelsId},'checked':0}).exec(function(err,count){
+                if (err){console.log(err);return res.sendError();}
+                callback(null,channelsId,count);
+            })
         },
-        //返回的通知消息
-        function(doc,callback){
-            Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[1,2,3,4]}}).sort({postTime:-1}).skip((number-1)*limit).limit(limit).exec(function(err,list){
+        //先返回未审核的书签
+        function(channelsId,count,callback){
+            Bookmarks.find({'channelId':{$in:channelsId},'checked':0}).sort({postTime:-1}).skip((number-1)*limit).limit(limit).exec(function(err,list){
                 if (err) {console.log(err);return res.sendError()}
-                var isHave=true;
-                if(doc.length==0) {isHave=false;}
-                else{
-                    if(doc[0]['postTime']+''==list[list.length-1]['postTime']+''){
-                        isHave=false;
-                    }
-                }
-                callback(err,list,isHave);
+                callback(null,channelsId,list,count);
+            })
+        },
+        //返回已经审核的书签
+        function(channelsId,noChecked,count,callback){
+            if (noChecked.length>=limit){return callback(err,noChecked)}//如果未审核的数量足够多 则直接返回
+            var skipnumber = (number-1)*limit-count>0?(number-1)*limit-count:0;
+            Bookmarks.find({'channelId':{$in:[channelsId]},'checkUser':req.user._id}).sort({postTime:-1}).skip(skipnumber).limit(limit-noChecked.length).exec(function(err,checkedBkms){
+                if(err) {console.log(err);return res.sendError();}
+                callback(null,noChecked.concat(checkedBkms))
             })
         }],
-        function(err,list,isHave){
+        function(err,list){
             if(err){console.log(err);return res.sendError()}
-            var updateList=[];//未通知的消息
-            var news;console.log(list);
-            for ( news in  list){
-                if (news.checked<3){console.log(news);
-                    updateList.push(news['_id']);
-                }
-            }
-            Bookmarks.update({'_id':{$in:updateList}},{$inc:{checked:2}},{ multi: true }).exec(function(err,doc){
-                if (err) {console.log(err);return res.sendError();}
-                res.sendResult('返回成功',0,{hismes:list,isHave:isHave});
-            })
-            
+            var isHave = true;
+            if (list.length<limit){isHave = false}
+            res.sendResult('获取消息成功',0,list);
         }
     )
 }

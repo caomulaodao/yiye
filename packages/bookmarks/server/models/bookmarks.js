@@ -72,6 +72,9 @@ var bookmarksSchema = Schema({
         userId:Schema.ObjectId,
         username:String,
         avatar:String
+    },
+    checkTime:{
+        type:Date
     }
 });
 
