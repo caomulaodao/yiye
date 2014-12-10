@@ -809,6 +809,9 @@ $(function(){
         },
 
         initialize: function() {
+            if (window.location.href.indexOf('#')>-1){
+                return;
+            }
             this.showExplore();
         },
 
@@ -906,11 +909,11 @@ $(function(){
             view.renderAfter();
         },
         message: function(){
-            console.log('dsd');
+
         },
         discover: function(){
             var view = new ExploreView();
-            App.main.html(view.render().el);
+            App.main.html(view.render());
             view.renderAfter();
         },
         help: function(){
