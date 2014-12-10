@@ -15,7 +15,7 @@ function subChannelAjax() {
         var that = this;
         var channelId = $(event.currentTarget).data('id');
             $.ajax({
-                type: "get",
+                type: "POST",
                 url: '/channel/sub/' + channelId
             }).done(function(data){
                 if(data.code == 0){
