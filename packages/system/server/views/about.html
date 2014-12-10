@@ -15,20 +15,29 @@
 <div class="control-page" >
     <div class="control-page-content">
         <div class="control-header" >
+            {% if user%}
+                <a class="avatar" id="user-center">
+                    <img src="http://yiye.qiniudn.com/{{ user.avatar }}">
+                </a>
+            {% endif %}
            <!--  <a class="avatar" id="user-center">
                 <img src="http://yiye.qiniudn.com/{{ user.avatar }}">
             </a> -->
             <img src="/home/assets/img/brand_name_green.png" onclick="window.location.assign('/home')">
-            <!-- <i id="rounded-arrow" class="iconfont">&#x3435</i> -->
+            <!-- -->
+            {% if user%}
+            <i id="rounded-arrow" class="iconfont">&#x3435</i>
         </div>
         <div id="function-module">
             <ul id="function-module-ul">
-                <li><i class="iconfont">&#xf00b5</i><div>消息</div></li>
-                <li><i class="iconfont">&#xe684</i><div>发现</div></li>
-                <li><i class="iconfont">&#xf00b8</i><div>帮助</div></li>
-                <li><i class="iconfont">&#xf013e</i><div>设置</div></li>
+                <li id='message'><i class="iconfont">&#xf00b5</i><div>消息</div></li>
+                <li id='discover' ><i class="iconfont">&#xe684</i><div>发现</div></li>
+                <li id='help'><i class="iconfont">&#xf00b8</i><div>帮助</div></li>
+                <li id='set'><i class="iconfont">&#xf013e</i><div>设置</div></li>
             </ul>
         </div>
+            {% endif %}
+       
 
         <div class="control-body">
                 <ul class='about-item'>
@@ -50,26 +59,26 @@
          <div class='one-page' >
         <div class='staff ab-center'>
             <div class='staff-gallery'>
-                <a href="#"><img src="http://placehold.it/100x100" alt=""></a>
-                <a href="#"><img src="http://placehold.it/100x100" alt=""></a>
-                <a href="#"><img src="http://placehold.it/100x100" alt=""></a>
-                <a href="#"><img src="http://placehold.it/100x100" alt=""></a>
-                <a href="#"><img src="http://placehold.it/100x100" alt=""></a>
-                <a href="#"><img src="http://placehold.it/100x100" alt=""></a>
-                <a href="#"><img src="http://placehold.it/100x100" alt=""></a>
-                <a href="#"><img src="http://placehold.it/100x100" alt=""></a>
-                <a href="#"><img src="http://placehold.it/100x100" alt=""></a>
-                <a href="#"><img src="http://placehold.it/100x100" alt=""></a>
-                <a href="#"><img src="http://placehold.it/100x100" alt=""></a>
-                <a href="#"><img src="http://placehold.it/100x100" alt=""></a>
-                <a href="#"><img src="http://placehold.it/100x100" alt=""></a>
-                <a href="#"><img src="http://placehold.it/100x100" alt=""></a>
-                <a href="#"><img src="http://placehold.it/100x100" alt=""></a>
-                <a href="#"><img src="http://placehold.it/100x100" alt=""></a>
+                <a href="#"><img src="http://www.avatarpro.biz/avatar?s=100&t=1" alt=""></a>
+                <a href="#"><img src="http://www.avatarpro.biz/avatar?s=100&t=2" alt=""></a>
+                <a href="#"><img src="http://www.avatarpro.biz/avatar?s=100&t=3" alt=""></a>
+                <a href="#"><img src="http://www.avatarpro.biz/avatar?s=100&t=4" alt=""></a>
+                <a href="#"><img src="http://www.avatarpro.biz/avatar?s=100&t=5" alt=""></a>
+                <a href="#"><img src="http://www.avatarpro.biz/avatar?s=100&t=6" alt=""></a>
+                <a href="#"><img src="http://www.avatarpro.biz/avatar?s=100&t=7" alt=""></a>
+                <a href="#"><img src="http://www.avatarpro.biz/avatar?s=100&t=8" alt=""></a>
+                <a href="#"><img src="http://www.avatarpro.biz/avatar?s=100&t=9" alt=""></a>
+                <a href="#"><img src="http://www.avatarpro.biz/avatar?s=100&t=10" alt=""></a>
+                <a href="#"><img src="http://www.avatarpro.biz/avatar?s=100&t=11" alt=""></a>
+                <a href="#"><img src="http://www.avatarpro.biz/avatar?s=100&t=12" alt=""></a>
+                <a href="#"><img src="http://www.avatarpro.biz/avatar?s=100&t=13" alt=""></a>
+                <a href="#"><img src="http://www.avatarpro.biz/avatar?s=100&t=14" alt=""></a>
+                <a href="#"><img src="http://www.avatarpro.biz/avatar?s=100&t=15" alt=""></a>
+                <a href="#"><img src="http://www.avatarpro.biz/avatar?s=100&t=16" alt=""></a>
             </div>
             <div class='staff-one'>
                 <div class='staff-avatar-wrapper'>
-                 <img class='staff-avatar' src="http://placehold.it/100x100">                
+                 <img class='staff-avatar' src="http://www.avatarpro.biz/avatar?s=100">                
                 </div>
                     <h4 class='staff-name'>黄江舟</h4>
                     <small class='staff-position'>CEO</small>
@@ -110,7 +119,7 @@
         <div class='follow-us ab-center'>
             <div class="sponsor-friend">
                 <div class="friend-img">
-                    <a href="#"><i class='iconfont'>&#xe82e;</i></a>
+                    <a href="#"><span class='iconfont'>&#xe82e;</span></a>
                 </div>
                 <div class="friend-name">官方QQ群</div>
             </div>
@@ -151,9 +160,9 @@
 </div>
 
 </body>
-
  <script rel="script" src="/bower_components/jquery/dist/jquery.js"></script>
  <script src='/system/assets/js/about.js'></script>
+<script rel="script" src="/home/assets/js/home.js"></script>
 <!--<script rel="script" src="/system/assets/js/system.about.js"></script>
 <script rel="script" src="/system/assets/js/system.about1.js"></script>
 <script rel="script" src="/system/assets/js/system.about2.js"></script>
