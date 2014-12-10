@@ -158,6 +158,9 @@
 .sponsor-friend{
 	display: inline-block;
 }
+.sponsor-friend a{
+	text-decoration: none;
+}
 /*bug reporter*/
 .bug-reporter{
 	/*display: none*/

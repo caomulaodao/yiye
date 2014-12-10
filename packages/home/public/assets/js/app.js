@@ -296,7 +296,7 @@ $(function(){
 
         layerShadow: $('.shadow'),
 
-        //向主视图绑定事件
+        //向视图绑定事件
         events: {
             'click #user-info-button': "upUserInfo",
             'click #password-change-button': "changePassword",
@@ -362,21 +362,6 @@ $(function(){
                     url: '/api/account/update',
                     type: 'post',
                     data: user,
-                    // statusCode: {
-                    //     401: function () {
-                    //         //结果提示
-                    //         popup("个人信息更新失败");
-
-                    //         that.lock.info = false;
-                    //     },
-                    //     200: function () {
-                    //         //结果提示
-                    //         popup("个人信息更新成功");
-
-                    //         that.lock.info = false;
-                    //     }
-                    // }
-
                     success: function (response) {
                             //结果提示
                                 if(response.code==0){
@@ -414,21 +399,6 @@ $(function(){
                     url: '/api/account/changePassword',
                     type: 'post',
                     data: password,
-                    // statusCode: {
-                    //     401: function (jq) {
-                    //         //结果提示
-                    //         console.log(jq);
-                    //         $('#User-Change-Error').text(jq.responseJSON.info).show();
-
-                    //         that.lock.password = false;
-                    //     },
-                    //     200: function () {
-                    //         //结果提示
-                    //         popup("密码修改成功");
-
-                    //         that.lock.password = false;
-                    //     }
-                    // }
                     success:function(response){
                         if (response.code==0){
                             popup('密码修改成功');
@@ -453,22 +423,6 @@ $(function(){
                     url: '/api/news/viewed',
                     type: 'post',
                     data: {bookmarkId: bookmarkId},
-                    // statusCode: {
-                    //     200: function () {
-                    //         //结果提示
-                    //         var num = $("#news-tab").data('num') - 1;
-                    //         $('#news-' + index).remove();
-                    //         if (num > 0) {
-                    //             $("#news-tab").data('num', num)
-                    //             $("#news-tab").text("新消息(" + num + ")");
-                    //             $("#news-popup-num").text(num);
-                    //         } else {
-                    //             $("#news-tab").text("新消息");
-                    //             $("#news-popup-num").remove();
-                    //         }
-                    //         that.lock.viewed = false;
-                    //     }
-                    // }
                     success:function(response){
                         if (response.code==0){
                             var num = $('#news-tab').data('num') -1;
@@ -569,12 +523,12 @@ $(function(){
 
         hisMesAjax: function () {
             var that = this;
-            var nClientH = $(window).height();                  console.log(nClientH);
-            var nScrollTop = $('.content-page').scrollTop();    console.log(nScrollTop);
-            var nChannelH = $('.personal-center').height();     console.log(nChannelH);
+            var nClientH = $(window).height();                  
+            var nScrollTop = $('.content-page').scrollTop();   
+            var nChannelH = $('.personal-center').height();     
             if ((nClientH + nScrollTop >= nChannelH) && (that.hisMesAjax.bScroll == true)) {
                 that.hisMesAjax.bScroll = false;     //禁止Ajax加载
-                var nNum = that.hisMes.get('number');console.log('function');
+                var nNum = that.hisMes.get('number');
                 that.hisMes.fetch({
                     data: {number: nNum},
                     url: "/api/home/hismes",
@@ -596,6 +550,130 @@ $(function(){
             }
         }
     });
+    //设置界面
+    var Setting = Backbone.View.extend({
+        el: $('#tp-personal-setting').html(),
+
+        layer: $('#home-popup-layer'),
+        lock: {
+            info: false,
+            password: false,
+            viewed: false
+        },
+        layerShadow: $('.shadow'),
+        initialize: function() {
+            this.channel.on("invalid", function(model, error) {
+                $('#Channel-Create-Error').text(error).show();
+            });
+        },
+        events: {
+            'click #user-info-button': "upUserInfo",
+            'click #password-change-button': "changePassword",
+            'click .sure': "viewed",
+        },
+        initialize: function () {
+        },
+
+        render: function () {
+            return this;
+        },  
+
+        renderAfter: function () {
+            //频道logo上传
+            var that = this;
+            var cgChLogoUploader = Qiniu.uploader({
+                runtimes: 'html5,flash,html4',
+                browse_button: 'change-user-logo',
+                max_file_size: '2mb',
+                flash_swf_url: '/bower_components/js/plupload/Moxie.swf',
+                dragdrop: true,
+                chunk_size: '1mb',
+                uptoken_url: "/uptoken",
+                domain: "http://yiye.qiniudn.com/",
+                auto_start: true,
+                init: {
+                    'Key': function (up, file, info) {
+                        return  "avatar/" + (md5(Math.floor(Math.random() * 10000))).slice(0, 16) + (md5(file.name + Date.now())).slice(0, 16) + ".png";
+                    },
+                    'FilesAdded': function () {
+                        $('#user-info-logo').addClass('upLoading');
+                    },
+                    'FileUploaded': function (up, file, info) {
+                        var info = JSON.parse(info);
+                        var logo = info.key;
+                        $('#user-change-logo').attr('src', cdnUrl + logo);
+                        $('#user-info-logo').removeClass('upLoading');
+                    },
+                    'Error': function (up, err, errTip) {
+                        console.log(err);
+                    }
+                }
+            });
+        },
+
+
+        upUserInfo: function () {
+            var user = {};
+            user.avatar = $('#user-change-logo').attr('src').split(".com/")[1];
+            user.intro = $('#user-info-intro>textarea').val();
+            var that = this;
+            if (!that.lock.info) {
+                that.lock.info = true;
+                $.ajax({
+                    url: '/api/account/update',
+                    type: 'post',
+                    data: user,
+                    success: function (response) {
+                            //结果提示
+                                if(response.code==0){
+                                    popup('个人信息更新成功');
+                                }
+                                else{
+                                    popup(response.msg);
+                                }                         
+                                that.lock.info = false;
+                            }                  
+                });
+            }
+        },
+
+        changePassword: function () {
+            if (!$('#user-current-password').val()) {
+                return $('#User-Change-Error').text('请先填写当前密码').show();
+            }
+            if (!$('#user-new-password').val()) {
+                return $('#User-Change-Error').text('请填写新密码').show();
+            }
+            if (!$('#user-repeat-password').val()) {
+                return $('#User-Change-Error').text('请填写确认密码密码').show();
+            }
+            if ($('#user-repeat-password').val() !== $('#user-new-password').val()) {
+                return $('#User-Change-Error').text('新的密码与确认密码不同').show();
+            }
+            var password = {};
+            password.new = $('#user-new-password').val();
+            password.old = $('#user-current-password').val();
+            var that = this;
+            if (!that.lock.password) {
+                that.lock.password = true;
+                $.ajax({
+                    url: '/api/account/changePassword',
+                    type: 'post',
+                    data: password,
+                    success:function(response){
+                        if (response.code==0){
+                            popup('密码修改成功');
+                        }
+                        else {
+                            $('#User-Change-Error').text(response.msg).show();
+                        }
+                        that.lock.password = false;
+                    }
+                });
+            }
+
+        },                  
+    })
 
     //用户发现页面
     var ExploreView = Backbone.View.extend({
@@ -678,7 +756,7 @@ $(function(){
             var that = this;
             var channelId = $(event.currentTarget).data('id');
             var subChannel = new subChannelModel;
-            subChannel.fetch({
+            subChannel.save({},{
                 url: "/channel/sub/"+ channelId,
                 success: function(model, response) {
                     if (response.code==0){
@@ -709,22 +787,40 @@ $(function(){
 
         //向主视图绑定事件
         events: {
-            'click .create-channel>button' : "createChannels",
-            'click #user-center' : "showPerson",
+            'click .create-channel>button' : "createChannels",//创建频道
+            'click #user-center' : "showPerson",//显示个人主页
             'click #admin-channel-list  li' : 'showChannel',
             'click #sub-channel-list  li' : 'showChannel',
-            'click #explore' : 'showExplore'
+            'click #explore' : 'showExplore',
+            'click .subscription' : 'showSubscription',//展示订阅频道
+            'touch .subscription' : 'showSubscription',
+            'click .administration' : 'showAdministration',//展示管理频道
+            'touch .administration' : 'showAdministration',
+            'click .channel-item' :'showSubBkm',//订阅频道的书签
+            'touch .channel-item' :'showSubBkm',
+            'click #message' : 'showMessage',//消息界面
+            'touch #message' : 'showMessage',
+            'click #discover' : 'showDiscover',//发现界面
+            'touch #discover' : 'showDiscover',
+            'click #help' :'showHelp',//帮助页面
+            'touch #help' :'showHelp',
+            'click #set' :'showSet',//设置界面
+            'touch #set' :'showSet'
         },
 
         initialize: function() {
+            if (window.location.href.indexOf('#')>-1){
+                return;
+            }
             this.showExplore();
         },
 
         //展示创建频道弹出页
         createChannels : function(){
-            var view = new NewChannelView();
-            this.main.html(view.render().el);
-            view.renderAfter();
+            // var view = new NewChannelView();
+            // this.main.html(view.render().el);
+            // view.renderAfter();
+            Router.navigate('create',true);
         },
 
         //展示用户个人中心弹出层
@@ -746,11 +842,93 @@ $(function(){
         showExplore : function(){
             var explore = new ExploreView();
             explore.render();
+        },
+        //展示管理频道
+        showAdministration : function(){
+            Router.navigate('manage',true);
+        },
+        //展示订阅频道
+        showSubscription : function(){
+            Router.navigate('sub',true);
+        },
+        //展示对应频道里面的书签
+        showSubBkm : function(event){
+            Router.navigate('channel/'+$(event.currentTarget).data('id'),true);
+        },
+        //展示消息
+        showMessage : function(){
+            Router.navigate('message',true);
+        },
+        //展示发现界面
+        showDiscover : function(){
+            Router.navigate('discover',true);
+        },
+        //帮助页面
+        showHelp : function(){
+            Router.navigate('help',true);
+        },
+        //设置界面
+        showSet : function(){
+            Router.navigate('set',true);
         }
     });
 
     //实例化
     var App = new AppView;
+
+        //爱屁屁的路由
+    var AppRouter = Backbone.Router.extend({
+        routes:{
+            'sub' : 'subControl',
+            'sub/:channelId' : 'channelControl',
+            'manage' : 'manage',
+            'channel/:channelId' : 'channelBookmarks',
+            'create' : 'create',
+            'message' : 'message',
+            'discover' : 'discover',
+            'help' : 'help',
+            'set' : 'set',
+        },
+        defaultRoute : function(){
+        },
+        subControl : function(){
+            $('.subscription').addClass('active').next().removeClass('active');
+            $('.channel-list').show().next().hide();
+        },
+        manage : function(){
+            $('.administration').addClass('active').prev().removeClass('active');
+            $('.admin-interface').show().prev().hide();
+        },
+        channelBookmarks : function(){
+            $('.channel-item').removeClass('active');
+            $(this).addClass('active').children('.links-num').remove();
+        },
+        create : function(){
+            var view = new NewChannelView();
+            App.main.html(view.render().el);
+            view.renderAfter();
+        },
+        message: function(){
+
+        },
+        discover: function(){
+            var view = new ExploreView();
+            App.main.html(view.render());
+            view.renderAfter();
+        },
+        help: function(){
+
+        },
+        set: function(){
+            var view = new Setting();
+            App.main.html(view.render().el);
+            view.renderAfter();
+        }
+
+
+    })
+    var Router = new AppRouter;
+    Backbone.history.start();
 
 
     //消息提示函数
