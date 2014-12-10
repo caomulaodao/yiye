@@ -44,6 +44,9 @@ module.exports = function(System, app, auth, database) {
   
   // 关于我们
   app.get('/our/team',function(req,res){
-    res.render('about');
+      System.render('about',req,function(err,html){
+        if(err) {consoe.log(err);return res.sendError()}
+        res.send(html);
+      });
   })
 };

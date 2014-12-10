@@ -11,6 +11,7 @@
     -ms-user-select: none; 
 }
 .about-item{
+	margin-top: 30px;
 	width: 100%;
 }
 .about-item li{
@@ -27,7 +28,7 @@
 	display: block;
 	border-left:4px solid transparent;
 }
-.about-item a:hover{
+.about-item a:hover,.about-item a.active{
 	background: #ddd;
 	border-left:4px solid #40c192;
 }
@@ -124,7 +125,7 @@
     url('../icons/fonts/iconfont.ttf') format('truetype'), 
     url('../icons/fonts/iconfont.svg#uxiconfont') format('svg'); 
 }
-.iconfont{
+.sponsor-friend .iconfont{
     font-family:"iconfont" !important;
     font-size:60px;font-style:normal;
     -webkit-font-smoothing: antialiased;

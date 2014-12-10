@@ -1,12 +1,19 @@
 (function(){
 	if(window.location.hash){
+		//
+		changeSiblings(window.location.hash);
 		scrollToPage(getPosition(window.location.hash));
 	}
 	$('.about-item').delegate('a','click',function(e){
+		changeSiblings($(e.currentTarget).attr('href'));
 		scrollToPage(getPosition($(e.currentTarget).attr('href')));
 	});
 	window.onscroll = function (){
 		return false;
+	}
+	function changeSiblings(hash){
+		$('.about-item a').removeClass('active');
+		$('a[href='+hash+']').addClass('active');
 	}
 	function scrollToPage(pos){
 		$('#content-manage').animate({"top":pos},300,'swing',function(){});
