@@ -296,7 +296,7 @@ $(function(){
 
         layerShadow: $('.shadow'),
 
-        //向主视图绑定事件
+        //向视图绑定事件
         events: {
             'click #user-info-button': "upUserInfo",
             'click #password-change-button': "changePassword",
@@ -550,6 +550,130 @@ $(function(){
             }
         }
     });
+    //设置界面
+    var Setting = Backbone.View.extend({
+        el: $('#tp-personal-setting').html(),
+
+        layer: $('#home-popup-layer'),
+        lock: {
+            info: false,
+            password: false,
+            viewed: false
+        },
+        layerShadow: $('.shadow'),
+        initialize: function() {
+            this.channel.on("invalid", function(model, error) {
+                $('#Channel-Create-Error').text(error).show();
+            });
+        },
+        events: {
+            'click #user-info-button': "upUserInfo",
+            'click #password-change-button': "changePassword",
+            'click .sure': "viewed",
+        },
+        initialize: function () {
+        },
+
+        render: function () {
+            return this;
+        },  
+
+        renderAfter: function () {
+            //频道logo上传
+            var that = this;
+            var cgChLogoUploader = Qiniu.uploader({
+                runtimes: 'html5,flash,html4',
+                browse_button: 'change-user-logo',
+                max_file_size: '2mb',
+                flash_swf_url: '/bower_components/js/plupload/Moxie.swf',
+                dragdrop: true,
+                chunk_size: '1mb',
+                uptoken_url: "/uptoken",
+                domain: "http://yiye.qiniudn.com/",
+                auto_start: true,
+                init: {
+                    'Key': function (up, file, info) {
+                        return  "avatar/" + (md5(Math.floor(Math.random() * 10000))).slice(0, 16) + (md5(file.name + Date.now())).slice(0, 16) + ".png";
+                    },
+                    'FilesAdded': function () {
+                        $('#user-info-logo').addClass('upLoading');
+                    },
+                    'FileUploaded': function (up, file, info) {
+                        var info = JSON.parse(info);
+                        var logo = info.key;
+                        $('#user-change-logo').attr('src', cdnUrl + logo);
+                        $('#user-info-logo').removeClass('upLoading');
+                    },
+                    'Error': function (up, err, errTip) {
+                        console.log(err);
+                    }
+                }
+            });
+        },
+
+
+        upUserInfo: function () {
+            var user = {};
+            user.avatar = $('#user-change-logo').attr('src').split(".com/")[1];
+            user.intro = $('#user-info-intro>textarea').val();
+            var that = this;
+            if (!that.lock.info) {
+                that.lock.info = true;
+                $.ajax({
+                    url: '/api/account/update',
+                    type: 'post',
+                    data: user,
+                    success: function (response) {
+                            //结果提示
+                                if(response.code==0){
+                                    popup('个人信息更新成功');
+                                }
+                                else{
+                                    popup(response.msg);
+                                }                         
+                                that.lock.info = false;
+                            }                  
+                });
+            }
+        },
+
+        changePassword: function () {
+            if (!$('#user-current-password').val()) {
+                return $('#User-Change-Error').text('请先填写当前密码').show();
+            }
+            if (!$('#user-new-password').val()) {
+                return $('#User-Change-Error').text('请填写新密码').show();
+            }
+            if (!$('#user-repeat-password').val()) {
+                return $('#User-Change-Error').text('请填写确认密码密码').show();
+            }
+            if ($('#user-repeat-password').val() !== $('#user-new-password').val()) {
+                return $('#User-Change-Error').text('新的密码与确认密码不同').show();
+            }
+            var password = {};
+            password.new = $('#user-new-password').val();
+            password.old = $('#user-current-password').val();
+            var that = this;
+            if (!that.lock.password) {
+                that.lock.password = true;
+                $.ajax({
+                    url: '/api/account/changePassword',
+                    type: 'post',
+                    data: password,
+                    success:function(response){
+                        if (response.code==0){
+                            popup('密码修改成功');
+                        }
+                        else {
+                            $('#User-Change-Error').text(response.msg).show();
+                        }
+                        that.lock.password = false;
+                    }
+                });
+            }
+
+        },                  
+    })
 
     //用户发现页面
     var ExploreView = Backbone.View.extend({
@@ -760,7 +884,7 @@ $(function(){
             'message' : 'message',
             'discover' : 'discover',
             'help' : 'help',
-            'set' : 'set'
+            'set' : 'set',
         },
         defaultRoute : function(){
         },
@@ -782,7 +906,20 @@ $(function(){
             view.renderAfter();
         },
         message: function(){
+            console.log('dsd');
+        },
+        discover: function(){
+            var view = new ExploreView();
+            App.main.html(view.render().el);
+            view.renderAfter();
+        },
+        help: function(){
 
+        },
+        set: function(){
+            var view = new Setting();
+            App.main.html(view.render().el);
+            view.renderAfter();
         }
 
 
