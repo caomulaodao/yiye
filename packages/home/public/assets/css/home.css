@@ -351,6 +351,9 @@ button:focus {outline:0;}
     float: right;
     color: #ccc;
     -webkit-transition: all 300ms;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select:none;
 }
 
 #rounded-arrow:hover {
@@ -372,6 +375,9 @@ button:focus {outline:0;}
     background: #40c192;
     overflow: hidden;
     -webkit-transition: all 300ms;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select:none;
 }
 
 #function-module.unfold {height: 80px;padding-top: 10px;}
