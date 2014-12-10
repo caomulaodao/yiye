@@ -46,7 +46,8 @@ button:focus {outline:0;}
 
 #control-page {
     position: fixed;
-    width: 27%;
+    /*vinthony@gmail.com 2014年12月10日19:20:30*/
+    width: 330px;
     min-width: 275px;
     height: 100%;
     z-index: 4;
@@ -60,12 +61,14 @@ button:focus {outline:0;}
     background-position: center center;
     top: 0;
     left: 0;
+    z-index: -9999;
     opacity: 1;
     -webkit-filter: blur(2px);
     filter: blur(2px);
 }
 
 #bg-opacity {
+    z-index: -30;
     width: 100%;
     height: 100%;
     position: absolute;
@@ -284,9 +287,10 @@ button:focus {outline:0;}
     ===================================================================================== */
 
 #content-page {
+    /*vinthony@gmail.com 2014年12月10日19:21:10*/
     height: 100%;
     background-color: #f3f3f3;
-    margin-left: 27%;
+    margin-left: 330px;
     position: relative;
 }
 

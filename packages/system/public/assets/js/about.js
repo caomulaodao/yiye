@@ -3,6 +3,8 @@
 		//
 		changeSiblings(window.location.hash);
 		scrollToPage(getPosition(window.location.hash));
+	}else{
+		changeSiblings("#staff");
 	}
 	$('.about-item').delegate('a','click',function(e){
 		changeSiblings($(e.currentTarget).attr('href'));

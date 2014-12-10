@@ -2,11 +2,13 @@
  * Created by laodao on 14/10/28.
  */
 $(window).load(function() {
-    initialize();
+    console.log('678');
+    init();
     channelsSub();
 });
 
-function initialize() {
+function init() {
+    console.log('123');
     $('#links-btn').on('click', function(){
         $('#members-part').hide();
         $('#links-part').show();
