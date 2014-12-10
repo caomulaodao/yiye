@@ -12,12 +12,11 @@ $('#YIYE_Signin').click(function(){
         type: "POST",
         url:API_SigninUrl,
         data:$('#YIYE_SigninForm').serialize(),
-        statusCode: {
-            401: function(res) {
-                showSigninError(res.responseJSON['message']);
-            },
-            200:function(res){
-                location.href = res.redirectUrl;
+        success:function(data){
+            if(data.code == 0){
+                location.href = data.data.redirectUrl;
+            }else{
+                showSigninError(data.msg);
             }
         }
     });
