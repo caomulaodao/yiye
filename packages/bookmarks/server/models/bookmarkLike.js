@@ -22,6 +22,15 @@ var bookmarkLikeSchema = Schema({
     username :{
         type: String,
         required: true
+    },
+    //未通知为0 通知后为1
+    remind :{
+        type: Number,
+        default: 0
+    },
+    likeTime :{
+        type: Date,
+        default: Date.now
     }
 });
 
