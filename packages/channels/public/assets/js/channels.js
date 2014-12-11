@@ -1,9 +1,8 @@
 /**
  * Created by laodao on 14/10/28.
  */
-$(window).load(function() {
+$(function() {
     init();
-    channelsSub();
 });
 
 function init() {
@@ -13,6 +12,8 @@ function init() {
     });
     var bkUp = false;
     var bkDown = false;
+    var subDown = false;
+
     //按钮点赞
     $("#sub-channel-list").on("click",".up",function(){
         if(bkUp) return false;
@@ -34,6 +35,7 @@ function init() {
             bkUp = false;
         });
     });
+
     //按钮反对
     $("#sub-channel-list").on("click",".down",function(){
         if(bkDown) return false;
@@ -42,7 +44,7 @@ function init() {
         var bookmarkId = $(that).data('bookmarkid');
         $.ajax({
             url: '/api/bookmarks/hate/'+bookmarkId,
-            type:'get'
+            type:'POST'
         }).done(function ( data ) {
             if(data.code == 0){
                 if(data.results.isLiked == true && data.results.isHated == false){
@@ -56,18 +58,24 @@ function init() {
         });
     });
 
-}
-
-
-//订阅频道
-function channelsSub(){
+    //订阅频道
     $('#subscribe-btn').click(function(event){
+        if(subDown) return false;
         var channelId = $('#control-body').data('channelid');
-        $.get('/channel/sub/'+channelId, function(data) {
-            if(data.success){
+        subDown = true;
+        $.ajax({
+            url: '/channel/sub/'+channelId,
+            type:'POST'
+        }).done(function(data){
+            if(data.code == 0){
+
                 $('#channel-sub').text('已订阅').attr("id","channel-subed");
-                $('#channel-menu').append("<li id='cancel-sub'><a href='/channel/"+ channelId +"/nowatch'>取消订阅</a></li>");
+
+            }else{
+
             }
+            subDown = false;
         });
     });
+
 }
