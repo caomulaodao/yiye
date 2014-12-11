@@ -9,7 +9,7 @@
 </head>
 <body>
 
-<!-- 左部控制栏 -->
+<!-- 控制栏 -->
 <div class="control-page">
     <div class="control-page-content">
         <div class="control-header" >
@@ -77,12 +77,12 @@
 </div>
 
 
-<!--content page-->
+<!-- 内容页面 -->
 <div class="content-page">
 </div>
 
 
-<!-- 结果提示页面  -->
+<!-- 结果提示弹窗  -->
 <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="result-dialog">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
@@ -97,7 +97,7 @@
     </div>
 </div>
 
-<!--create channel page-->
+<!-- 创建频道页面 -->
 <script type="text/template" id="tp-create-channels">
     <div id="create-channel">
         <h3 id="create-channel-title">创建频道</h3>
@@ -177,6 +177,9 @@
         </div>
     </div>
 </script>
+
+<!-- 个人中心（废弃） -->
+<!--
 <script type="text/x-handlebars-template" id="tp-personal-center">
     <div class="personal-center">
         <ul class="nav nav-tabs" role="tablist" id="channel-manage-tab">
@@ -260,6 +263,8 @@
 
     </div>
 </script>
+-->
+<!-- 频道主界面 -->
 <script type="text/x-handlebars-template" id="tp-channels-main">
     <div class="content-page-content">
         <div class="content-header">
@@ -321,6 +326,8 @@
         </div>
     </div>
 </script>
+
+<!--  展示一天的书签 -->
 <script type="text/x-handlebars-template" id="tp-bookmarks-oneday">
         <% for(var i = 0;i< list.length; i++){ %>
         <div class="date-divide">
@@ -357,6 +364,8 @@
         <% } %>
         <% } %>
 </script>
+
+<!-- 发现页面第一次加载 -->
 <script type="text/x-handlebars-template" id="tp-channel-explore">
     <div id="channel-explore">
         <h1 id="channel-explore-title">发现频道</h1>
@@ -390,6 +399,8 @@
         </ul>
     </div>
 </script>
+
+<!-- 发现页面滚动加载内容 -->
 <script type="text/x-handlebars-template" id="tp-channel-explore-ul">
     <% for(var i = 0;i < list.length; i++){ %>
     <li class="channel-showcase">
@@ -416,7 +427,14 @@
         </div>
     </li>
     <% } %>
+<<<<<<< HEAD
+</script >
+
+
+<!-- 历史消息 -->
+=======
 </script>
+>>>>>>> ef8f769dbcc088eebf708e5c19667c70b5b54eba
 <script type="text/x-handlebars-template" id="tp-user-history">
     <% if(hismes.length == 0){%>
     <div class="no-inf">
@@ -447,6 +465,8 @@
     </li>
     <% } %>
 </script>
+
+<!-- 通过与否消息提示 -->
 <script type="text/x-handlebars-template" id="tp-user-news">
     <% if(news == 0){%>
     <div class="no-inf">
@@ -477,6 +497,69 @@
     </li>
     <% } %>
 </script>
+
+<!-- 消息界面 -->
+<script type="text/x-handlebars-template" id="tp-message-check">
+    <div class="personal-center">
+        <ul class="nav nav-tabs" role="tablist" id="channel-manage-tab">
+            <li id="check-btn" role="news" class="active"><a href="#check" role="tab" data-toggle="tab">审核</a></li>
+            <li id="inform-btn" role="news"><a href="#inform" role="tab" data-toggle="tab">通知</a></li>
+            <li id="attention-btn" role="news"><a href="#attention" role="tab" data-toggle="tab">关注</a></li>
+            <li id="praise-btn" role="news"><a href="#praise" role="tab" data-toggle="tab">赞</a></li>
+        </ul>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="check">
+                <ul class="user-check-list"></ul>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="inform">
+                <ul class="user-inform-list"></ul>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="attention">
+                <ul class="user-attention-list"></ul>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="praise">
+                <ul class="user-praise-list"></ul>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/x-handlebars-template" id="tp-user-check">
+    <% if(msg == 0){%>
+    <div class="no-inf">
+        <img src="/system/assets/img/no-message.png">
+    </div>
+    <% } %>
+    <% for(var i = 0;i < msg.length; i++){ %>
+    <li id="msg-<%= i %>">
+        <% if(msg[i]["checked"] == 1){%>
+            <div class="status pass">
+                通过
+            </div>
+        <% } %>
+        <% if(msg[i]["checked"] == 2){ %>
+            <div class="status fail">
+                失败
+            </div>
+        <% } %>
+        <div class="main">
+            <div class="user-news-bookmarks" ><a href="#"><%= msg[i]["title"] %></a> <div class="user-news-info"><span>频道:<a href="#"><%= msg[i]["channelInfo"]["channelName"] %></a></span><span>审核:<a href="#"><%= msg[i]["checkUser"]["username"] %></a></span></div></div>
+            <% if(msg[i]["checked"] == 2){ %>
+            <div class="user-news-fail-result">
+                <span>原因：</span><%= msg[i]["deleteInfo"] %>
+            </div>
+            <% } %>
+            <div class="user-news-footer"><span>时间：</span><%=  ''+msg[i]["postTime"] %>  <a href="#" class="sure" data-bookmarkid="<%= ''+msg[i]["_id"] %>" data-index="<%= i %>">确定</a></div>
+        </div>
+    </li>
+    <% } %>
+</script>
+<script type="text/x-handlebars-template" id="tp-user-inform">
+    
+</script>
+<script type="text/x-handlebars-template" id="tp-user-attention"></script>
+<script type="text/x-handlebars-template" id="tp-user-praise"></script>
+
+<!-- 设置界面 -->
 <script type="text/x-handlebars-template" id="tp-personal-setting">
     <div class="personal-center">
         <ul class="nav nav-tabs" role="tablist" id="channel-manage-tab">
@@ -484,6 +567,7 @@
             <li role="presentation"><a href="#new" role="tab" data-toggle="tab">账号</a></li>
         </ul>
         <div class="tab-content">
+            
             <div role="tabpanel" class="tab-pane" id="new">
                 <div class="user-info-item">
                     <label>用户名:</label>
@@ -522,6 +606,7 @@
                     <button class="btn" id="user-info-button">更新</button> <button type="button" class="btn btn-link" id="user-quit-button" onclick="window.open('/logout')">账号退出</button>
                 </div>
             </div>
+            
             <div role="tabpanel" class="tab-pane" id="profile">
                 <div class="user-password-item">
                     <label>当前密码:</label>

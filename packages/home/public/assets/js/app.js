@@ -60,6 +60,24 @@ $(function(){
         defaults: {number: 1}    //Ajax加载次数
     });
 
+    //审核model
+    var checkMsg = Backbone.Model.extend({
+        defaults: {number: 0}
+    });
+    //通知model
+    var informMsg = Backbone.Model.extend({
+        defaults: {number: 0}
+    });
+    //关注model
+    var attentionMsg = Backbone.Model.extend({
+        defaults: {number: 0}
+    });
+    //点赞model
+    var praiseMsg = Backbone.Model.extend({
+        defaults: {number: 0}
+    });
+
+
     var channelList = Backbone.Model.extend({
     });
 
@@ -283,6 +301,7 @@ $(function(){
 
 
     //用户个人中心视图
+    /*
     var PersonView = Backbone.View.extend({
         el: $('#tp-personal-center').html(),
 
@@ -550,6 +569,192 @@ $(function(){
             }
         }
     });
+    */
+    
+
+    //消息界面（审核，通知，关注，赞）
+    var MessageView = Backbone.View.extend({
+        el: $('#tp-message-check').html(),
+
+        layer: $('#home-popup-layer'),
+
+        lock: {
+            info: false,
+            viewed: false
+        },
+
+        layerShadow: $('.shadow'),
+
+        //向视图绑定事件
+        events: {
+            'click #check-btn' : 'check',
+            'click #inform-btn' : 'inform',
+            'click #attention-btn' : 'attention',
+            'click #praise-btn' : 'praise',
+            'touch #check-btn' : 'check',
+            'touch #inform-btn' : 'inform',
+            'touch #attention-btn' : 'attention',
+            'touch #praise-btn' : 'praise'
+        },
+
+        initialize: function () {
+        },
+
+        render: function () {
+            return this;
+        },
+
+        checkTemplate: _.template($('#tp-user-check').html()),
+
+        informTemplate: _.template($('#tp-user-inform').html()),
+
+        attentionTemplate: _.template($('#tp-user-attention').html()),
+
+        praiseTemplate: _.template($('#tp-user-praise').html()),
+
+        renderAfter: function () {
+            //频道logo上传
+            var that = this;
+            var cgChLogoUploader = Qiniu.uploader({
+                runtimes: 'html5,flash,html4',
+                browse_button: 'change-user-logo',
+                max_file_size: '2mb',
+                flash_swf_url: '/bower_components/js/plupload/Moxie.swf',
+                dragdrop: true,
+                chunk_size: '1mb',
+                uptoken_url: "/uptoken",
+                domain: "http://yiye.qiniudn.com/",
+                auto_start: true,
+                init: {
+                    'Key': function (up, file, info) {
+                        return  "avatar/" + (md5(Math.floor(Math.random() * 10000))).slice(0, 16) + (md5(file.name + Date.now())).slice(0, 16) + ".png";
+                    },
+                    'FilesAdded': function () {
+                        $('#user-info-logo').addClass('upLoading');
+                    },
+                    'FileUploaded': function (up, file, info) {
+                        var info = JSON.parse(info);
+                        var logo = info.key;
+                        $('#user-change-logo').attr('src', cdnUrl + logo);
+                        $('#user-info-logo').removeClass('upLoading');
+                    },
+                    'Error': function (up, err, errTip) {
+                        console.log(err);
+                    }
+                }
+            });
+        },
+
+        //审核tab
+        check: function() {
+            var that = this;            
+            that.checkMsg = new checkMsg;
+            that.checkMsg.fetch({
+                url: 'api/home/checkmsg',
+                data: {'number': 1},
+                success: function (model, response) {
+                    if (response.code == 0){
+                        $('.user-check-list').html(that.checkTemplate(response.data));
+                        that.checkMsg.set('number', 2);   //设置下次加载的number （滚动ajax加载）                  
+                    }
+                    else{
+                        console.log(response);
+                    }
+                }
+            });
+
+            that.checkAjax.bScroll = true;   //许可Ajax加载
+            $('.content-page').scroll(function () {
+                that.checkAjax();
+            });
+        },
+
+        //通知tab
+        inform: function() {
+            var that = this;            
+            that.informMsg;
+            that.informMsg.fetch({
+                url: 'api/home/callmsg',
+                data: {'number': 1},
+                success: function (model, response) {
+                    if (response.code == 0){
+                        $('.user-inform-list').html(that.informTemplate(response.data));
+                        that.informMsg.set('number', 2);   //设置下次加载的number （滚动ajax加载）                  
+                    }
+                    else{
+                        console.log(response);
+                    }
+                }
+            });
+
+            that.infromAjax.bScroll = true;   //许可Ajax加载
+            $('.content-page').scroll(function () {
+                that.informAjax();
+            });
+        },
+
+
+        checkAjax: function() {
+            var that = this;
+            var nClientH = $(window).height();                  
+            var nScrollTop = $('.content-page').scrollTop();   
+            var nChannelH = $('.personal-center').height();     
+            if ((nClientH + nScrollTop >= nChannelH) && (that.checkAjax.bScroll == true)) {
+                that.checkAjax.bScroll = false;     //禁止Ajax加载
+                var nNum = that.checkMsg.get('number');
+                that.checkMsg.fetch({
+                    data: {number: nNum},
+                    url: "/api/home/checkmsg",
+                    success: function (model, response) {
+                        if (response.code==0){
+                            $('.user-check-list').append(that.checkTemplate(response.data));
+                            if (!response.data.isHave) {
+                                $('.user-check-list').append("<p class='no-news'>无新内容了</p>");
+                            } else {
+                                that.checkMsg.set("number", ++nNum);
+                                that.checkAjax.bScroll = true;     //许可Ajax加载
+                            }                           
+                        }
+                        else {
+                            console.log(response);
+                        }   
+                    }
+                });
+            }
+        },
+
+        informAjax: function() {
+            var that = this;
+            var nClientH = $(window).height();                  
+            var nScrollTop = $('.content-page').scrollTop();   
+            var nChannelH = $('.personal-center').height();     
+            if ((nClientH + nScrollTop >= nChannelH) && (that.informAjax.bScroll == true)) {
+                that.informAjax.bScroll = false;     //禁止Ajax加载
+                var nNum = that.informMsg.get('number');
+                that.informMsg.fetch({
+                    data: {number: nNum},
+                    url: "/api/home/callmsg",
+                    success: function (model, response) {
+                        if (response.code==0){
+                            $('.user-check-list').append(that.checkTemplate(response.data));
+                            if (!response.data.isHave) {
+                                $('.user-check-list').append("<p class='no-news'>无新内容了</p>");
+                            } else {
+                                that.informMsg.set("number", ++nNum);
+                                that.checkAjax.bScroll = true;     //许可Ajax加载
+                            }                           
+                        }
+                        else {
+                            console.log(response);
+                        }   
+                    }
+                });
+            }
+        }
+
+    });
+
+
     //设置界面
     var Setting = Backbone.View.extend({
         el: $('#tp-personal-setting').html(),
@@ -673,7 +878,7 @@ $(function(){
             }
 
         },                  
-    })
+    });
 
     //用户发现页面
     var ExploreView = Backbone.View.extend({
@@ -788,9 +993,8 @@ $(function(){
         //向主视图绑定事件
         events: {
             'click .create-channel>button' : "createChannels",//创建频道
-            'click #user-center' : "showPerson",//显示个人主页
-            'click #admin-channel-list  li' : 'showChannel',
-            'click #sub-channel-list  li' : 'showChannel',
+            'click #admin-channel-list li' : 'showChannel',
+            'click #sub-channel-list li' : 'showChannel',
             'click #explore' : 'showExplore',
             'click .subscription' : 'showSubscription',//展示订阅频道
             'touch .subscription' : 'showSubscription',
@@ -821,14 +1025,6 @@ $(function(){
             // this.main.html(view.render().el);
             // view.renderAfter();
             Router.navigate('create',true);
-        },
-
-        //展示用户个人中心弹出层
-        showPerson : function(){
-            var view = new PersonView();
-            this.main.html(view.render().el);
-            view.renderAfter();
-
         },
 
         //展示频道
@@ -910,7 +1106,10 @@ $(function(){
             view.renderAfter();
         },
         message: function(){
-
+            //消息部分
+            var view = new MessageView();
+            App.main.html(view.render().el);
+            view.renderAfter();
         },
         discover: function(){
             var view = new ExploreView();
