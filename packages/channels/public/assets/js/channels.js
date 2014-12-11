@@ -61,12 +61,12 @@ function init() {
 
 //订阅频道
 function channelsSub(){
+
     $('#subscribe-btn').click(function(event){
         var channelId = $('#control-body').data('channelid');
         $.get('/channel/sub/'+channelId, function(data) {
             if(data.success){
-                $('#channel-sub').text('已订阅').attr("id","channel-subed");
-                $('#channel-menu').append("<li id='cancel-sub'><a href='/channel/"+ channelId +"/nowatch'>取消订阅</a></li>");
+                $('#channel-sub').text('取消订阅').attr("id","channel-subed");
             }
         });
     });

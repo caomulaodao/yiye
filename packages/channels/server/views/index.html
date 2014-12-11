@@ -13,7 +13,7 @@
 <!-- control page -->
 <div id="control-page">
     <div>
-        <div id="bg-img" style="background: url(/{{ channel.banner }}) no-repeat;background-size: cover;"></div>
+        <div id="bg-img" style="background: url(http://yiye.qiniudn.com/{{ channel.logo }}) no-repeat;background-position:center center;background-size: cover;"></div>
         <div id="bg-opacity"></div>
     </div>
     <div id="control-page-content">
@@ -49,9 +49,6 @@
 
         <div id="control-body" data-channelid="{{ ''+channel._id }}">
             <div id="channel-part">
-                <div id="channel-logo">
-                    <img src="http://yiye.qiniudn.com/{{ channel.logo }}">
-                </div>
                 <div id="channel-name">
                     <p id="channel-title">{{ channel.name }}</p>
                 </div>
@@ -62,9 +59,20 @@
                     <h5>描述：</h5>
                     <span>{{ channel.description }}</span>
                 </div>
+                <div id='ctrl-tab'>
+                     <ul class="ctrl-tab-menu">
+                        <li class="links-btn active"><a href="/channel/{{ ''+channel._id }}" >书签<span>{{ channel.bmkNum }}</span></a></li>
+                        <li class="links-btn"><a href="/channel/{{ ''+channel._id }}/follower">关注者<span>{{ channel.subNum }}</span></a></li>
+                    </ul>
+                </div>
             </div>
             <div id="subscribe">
-                <button id="subscribe-btn">{% if channel.userType == 'not' %} <span id="channel-sub">订阅该频道</span> {% endif %} {% if channel.userType == 'admin' %} <span id="channel-manage"><a href="/channel/{{ ''+channel._id }}/check">管理</a></span> {% endif %} {% if channel.userType == 'follower' %} <span id="channel-subed">已订阅</span> {% endif %} <span>|</span><span class="icon-rss"></span>{{ channel.subNum }}</button>
+                {% if channel.userType == 'not' %}
+                    <button id="subscribe-btn">订阅</button>
+                {% endif %}
+                {% if channel.userType =！ 'not' %}
+                    <button id="subscribe-btn" class='active'>取消订阅</button>
+                {% endif %}
             </div>
         </div>
     </div>

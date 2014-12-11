@@ -7,7 +7,6 @@ $(function(){
 
 //initialization
 function initialize() {
-    console.log('456');
     //点击频道换色
     $('.channel-item').on('click touch', function(){
         $('.channel-item').removeClass('active');

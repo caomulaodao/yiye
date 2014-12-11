@@ -276,6 +276,7 @@ exports.renderFollower = function(req,res,Package){
             Package.render('follower', {
                 channel:channel,
                 users:users,
+                user:req.user,
                 page:page
             }, function(err, html) {
                 if(err) {console.log(err);return res.sendError()}
