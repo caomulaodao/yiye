@@ -45,10 +45,13 @@ function isString(str){
 function isArray(array){
 	 return Object.prototype.toString.call(array) === '[object Array]';  
 }
-//判断是否数字
+//判断是否正整数
 function isNumber(number){
 	var number = +number;
-	return !isNaN(number);
+	if (isNaN(number)) return false;
+	if (number<0) return false;
+	if ((number+'').indexOf('.')>-1) return false;	
+	return true;
 }
 exports.userVerify = userVerify;
 exports.idVerify = idVerify;

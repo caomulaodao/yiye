@@ -899,9 +899,10 @@ $(function(){
             $('.administration').addClass('active').prev().removeClass('active');
             $('.admin-interface').show().prev().hide();
         },
-        channelBookmarks : function(){
+        channelBookmarks : function(id){
+            var dataId = id;
             $('.channel-item').removeClass('active');
-            $(this).addClass('active').children('.links-num').remove();
+            $('.channel-item[data-id='+ dataId +']').addClass('active');
         },
         create : function(){
             var view = new NewChannelView();
