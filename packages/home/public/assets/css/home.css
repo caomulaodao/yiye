@@ -550,10 +550,12 @@ button:focus {outline:0;}
     margin-top: 20px;
     background-color: inherit;
 }
+
 .create-channel button:hover {
-color: #fff;
+    color: #fff;
     background-color: #40c192;
 }
+
 /* content page */
 
 .content-page {
