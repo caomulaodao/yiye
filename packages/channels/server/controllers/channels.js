@@ -82,7 +82,8 @@ exports.renderMain = function(req,res,Package){
             Package.render('index', {
                 channel:channel,
                 list:list,
-                page:page
+                page:page,
+                user:req.user
             }, function(err, html) {
                 if(err) {console.log(err);return res.sendError()}
                 res.send(html);

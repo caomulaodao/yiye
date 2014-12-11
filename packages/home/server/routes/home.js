@@ -33,4 +33,8 @@ module.exports = function(Home, app, auth, database) {
     //获取历史记录
     app.route('/api/home/hismes')
         .get(home.history);
+    app.route('/api/home/callmsg')
+        .get(home.callmsg);
+    app.route('/api/home/checkmsg')
+        .get(home.checkmsg);
 }

@@ -11,7 +11,7 @@ module.exports = function(Bookmarks, app, auth, database) {
         .post(bookmarks.receive);
 
 
-    //获取某个频道的初始化列表
+    //获取频道内的书签
     app.route('/api/bookmarks/init')
         .get(bookmarks.init);
 
@@ -34,7 +34,7 @@ module.exports = function(Bookmarks, app, auth, database) {
     app.route('/api/bookmarks/edit/:channelId/:bookmarkId')
         .post(bookmarks.edit);
 
-    //编辑并通过某个书签
+    //删除并通过某个书签
     app.route('/api/bookmarks/delete/:channelId/:bookmarkId')
         .post(bookmarks.delete);
 };

@@ -16,17 +16,34 @@
     </div>
     <div id="control-page-content">
         <div id="control-header">
-            <a href="/" id="yiye-logo">
-                <img src="/system/assets/img/logo_white2.png">
-            </a>
-            <div id="menu-btn">
+            <div class="control-header" >
+                {% if user %}
+                <a class="avatar" id="user-center">
+                    <img src="http://yiye.qiniudn.com/{{ user.avatar }}">
+                </a>
+                {% endif %}
+                <img src="/home/assets/img/brand_name_green.png" onclick="window.location.assign('/home')">
+                 {% if user %}
+                <i id="rounded-arrow" class="iconfont">&#x3435</i>
+                {% endif %}
+                
+            </div>
+                <div id="function-module">
+                    <ul id="function-module-ul">
+                        <li id='message'><i class="iconfont">&#xf00b5</i><div>消息</div></li>
+                        <li id='discover' ><i class="iconfont">&#xe684</i><div>发现</div></li>
+                        <li id='help'><i class="iconfont">&#xf00b8</i><div>帮助</div></li>
+                        <li id='set'><i class="iconfont">&#xf013e</i><div>设置</div></li>
+                    </ul>
+                </div>
+            <!-- <div id="menu-btn">
                 <i class="glyphicon glyphicon-align-justify"></i>
                 <ul id="channel-menu">
                     <li id="links-btn"><a href="/channel/{{ ''+channel._id }}" >书签</a></li>
                     <li id="members-btn"><a href="/channel/{{ ''+channel._id }}/follower" >关注者</a></li>
                     {% if channel.userType == 'follower' %} <li id="cancel-sub"><a href="/channel/{{''+channel._id}}/nowatch">取消订阅</a></li>  {% endif %}
                 </ul>
-            </div>
+            </div> -->
 
         </div>
 

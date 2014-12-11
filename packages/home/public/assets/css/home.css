@@ -502,6 +502,8 @@ button:focus {outline:0;}
 }
 
 .channel-item.active {
+    /*vinthony@gmail.com 2014年12月10日20:37:48*/
+    cursor: pointer;
     color: #0091EA;
     border-color: #0091ea;
 }
