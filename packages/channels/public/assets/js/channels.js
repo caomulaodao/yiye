@@ -59,6 +59,7 @@ function init() {
     });
 
     //订阅频道
+
     $('#subscribe-btn').click(function(event){
         if(subDown) return false;
         var channelId = $('#control-body').data('channelid');
