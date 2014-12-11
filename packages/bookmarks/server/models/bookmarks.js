@@ -73,7 +73,7 @@ var bookmarksSchema = Schema({
         username:String,
         avatar:String
     },
-    checkTime:{
+    checkedTime:{
         type:Date
     }
 });

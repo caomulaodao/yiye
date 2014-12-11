@@ -11,6 +11,10 @@ var mongoose = require('mongoose'),
  **/
 
 var bookmarkLikeSchema = Schema({
+    channelId :{
+        type: Schema.ObjectId,
+        required: true
+    },
     bookmarkId :{
         type: Schema.ObjectId,
         required: true
