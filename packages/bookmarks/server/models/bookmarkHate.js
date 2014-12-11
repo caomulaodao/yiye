@@ -12,6 +12,10 @@ var mongoose = require('mongoose'),
  **/
 
 var bookmarkHateSchema = Schema({
+    channelId :{
+        type: Schema.ObjectId,
+        require :true
+    },
     bookmarkId :{
         type: Schema.ObjectId,
         required: true
@@ -23,7 +27,12 @@ var bookmarkHateSchema = Schema({
     username :{
         type: String,
         required: true
+    },
+    hateTime :{
+        type: Date,
+        default:Date.now
     }
+
 });
 
 
