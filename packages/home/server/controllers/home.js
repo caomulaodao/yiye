@@ -71,7 +71,7 @@ exports.initHome = function(req,res,Home){
         },
         function(err, results) {
             //渲染home页面
-            console.log(req.headers);
+            console.log(results.sub);
             Home.render('index', {admChannelList:results.adm,subChannelList:results.sub,creatNum:results.creatNum,user:results.user,news:results.news}, function (err, html) {
                 //Rendering a view from the Package server/views
                 if(err) return console.log(err);
