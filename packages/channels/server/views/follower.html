@@ -81,12 +81,14 @@
 <!-- content page -->
 <div id="content-page">
 <div id="content-page-content">
-<div id="members-part">
-    <div id="members-list">
-        <div id="section-title">
-            <h3>成员</h3>
+ <div id="section-title">
+            <h3><img src="http://yiye.qiniudn.com/{{ channel.logo }}"><span>{{ channel.name }}·订阅者</span></h3>
         </div>
+<div id="members-part">
 
+    <div id="members-list">
+       
+        
         <ul id="members-ul">
             {% if users.creator %}
             <li class="member founder-icon">
