@@ -71,7 +71,6 @@ exports.initHome = function(req,res,Home){
         },
         function(err, results) {
             //渲染home页面
-            console.log(results.sub);
             Home.render('index', {admChannelList:results.adm,subChannelList:results.sub,creatNum:results.creatNum,user:results.user,news:results.news}, function (err, html) {
                 //Rendering a view from the Package server/views
                 if(err) return console.log(err);
@@ -507,12 +506,12 @@ exports.praisemsg = function(req,res){
     var limit = 10;
     if (!Myverify.isNumber(number)){return res.sendResult('请求参数类型错误',2000,null);}
     async.waterfall([
-        //自己提交的所有书签id
+        //自己提交的所有书签id 
         function(callback){
-            Bookmarks.find({'postUser.userId':req.user._id},function(err,doc){console.log(doc);
+            Bookmarks.find({'postUser.userId':req.user._id},function(err,doc){
                 if (err) {console.log(err);return res.sendError();}
                 if (doc.length==0){return callback(null,[]);}
-                var i=0,bookmarkId=[]
+                var i=0,bookmarkId=[],channelsId=[];
                 for (i;i<doc.length;i++){
                     bookmarkId.push(doc[i].id+'');
                 }
@@ -523,15 +522,22 @@ exports.praisemsg = function(req,res){
         function(bookmarkId,callback){
             BookmarkLike.find({'bookmarkId':{$in:bookmarkId}}).sort({'likeTime':-1}).skip((number-1)*limit).limit(limit).exec(function(err,doc){
                 if (err) {console.log(err);return res.sendError();}
-                callback(null,doc);
+                callback(null,bookmarkId,doc);
             })
-        }],
-        function(err,doc){
+        }
+        ],
+        //
+        function(err,bookmarkId,doc){
            if(err) {console.log(err);return res.sendError();}
            var isHave= true;
            if (doc.length<limit) {isHave=false;}
-           res.sendResult('返回信息成功',0,{list:doc,isHave:isHave}) 
-        })
+           BookmarkLike.update({'bookmarkId':{$in:bookmarkId}},{$set:{'remind':1}},{multi:true}).exec(function(err,number){console.log(number,'number');
+                if (err) {console.log(err);return res.sendError();}
+                res.sendResult('返回成功',0,doc);
+           })
+           
+
+       })
 }
 
 //消息总数
@@ -577,14 +583,14 @@ exports.msgcount = function(req,res){
         praisemsg: function(callback){
             async.waterfall([
                 //访问者提交的所有书签的id
-                function(callback1){console.log(req.user._id);
+                function(callback1){
                     Bookmarks.find({'postUser.userId':req.user._id},function(err,doc){
                         if (err) {console.log(err);return res.sendError();}
                         if (doc.length==0){return callback1(null,[]);}
                         var i=0,bookmarkId=[]
                         for (i;i<doc.length;i++){
                             bookmarkId.push(doc[i].id+'');
-                        }console.log(bookmarkId);
+                        }
                         callback1(null,bookmarkId);
                     })
                 },

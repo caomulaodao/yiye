@@ -34,7 +34,7 @@ button:focus {outline:0;}
 /****************control page******************/
 .control-page {
     position: fixed;
-    width: 30%;
+    width: 330px;
     min-width: 275px;
     height: 100%;
 }
@@ -195,7 +195,7 @@ button:focus {outline:0;}
 #content-page {
     height: 100%;
     background-color: #f3f3f3;
-    margin-left: 30%;
+    margin-left: 330px;
     position: relative;
 }
 
