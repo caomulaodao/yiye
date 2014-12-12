@@ -1,5 +1,6 @@
 /**
  * Created by laodao on 14-10-10.
+ * update by vinthony on 2014年12月12日19:57:18 
  */
 $(function(){
     initialize();
@@ -19,6 +20,11 @@ function initialize() {
             $(this).addClass('active');
             $('#function-module').addClass('unfold');
         }
+    });
+    // 绑定切换事件。
+    $('#function-module-ul').delegate('li','click',function(e){
+        var id = $(e.currentTarget).attr('id');
+        window.location.href="/home#"+id;
     });
 
 }

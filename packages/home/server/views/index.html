@@ -13,7 +13,7 @@
 <div class="control-page">
     <div class="control-page-content">
         <div class="control-header" >
-            <a class="avatar" id="user-center">
+            <a class="avatar" id="user-center" onclick="window.location.assign('/u/{{''+user._id}}')">
                 <img src="http://yiye.qiniudn.com/{{ user.avatar }}">
             </a>
             <img src="/home/assets/img/brand_name_green.png" onclick="window.location.assign('/home')">
@@ -427,14 +427,8 @@
         </div>
     </li>
     <% } %>
-<<<<<<< HEAD
-</script >
-
-
-<!-- 历史消息 -->
-=======
 </script>
->>>>>>> ef8f769dbcc088eebf708e5c19667c70b5b54eba
+
 <script type="text/x-handlebars-template" id="tp-user-history">
     <% if(hismes.length == 0){%>
     <div class="no-inf">

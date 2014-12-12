@@ -563,7 +563,8 @@ button:focus {outline:0;}
     margin-left: 330px;
     background-color: #f3f3f3;
     position: relative;
-    overflow-x: hidden;
+    /*overflow-x: hidden;*/
+    overflow: hidden;
 }
 
 .content-page-content {

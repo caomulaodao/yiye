@@ -110,6 +110,13 @@
 .staff-info-txt:after{
 	content:"」";
 }
+.staff h1{
+    font-size: 30px;
+
+}
+.staff p{
+    font-size: 16px;
+}
 /*join us*/
 .joinus h2{
 	margin: 0;
