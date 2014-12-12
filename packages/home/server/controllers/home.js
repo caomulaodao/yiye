@@ -135,7 +135,8 @@ exports.createChannel = function(req,res){
                         channelId:doc._id,
                         name: channels.name,
                         type: "creator",
-                        logo: channels.logo
+                        logo: channels.logo,
+                        remind: 1
                     });
                     admChannel.save(function(err){
                         if(err) {console.log(err);return res.sendResult('服务器内部问题',5000,null)}
