@@ -5,6 +5,8 @@
     <title>{{user.username}}的个人主页</title>
     <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="/person/assets/css/person.css">
+    <link rel="stylesheet" type="text/css" href="/system/assets/icons/ali_icons/iconfont.css">
+    <link rel="stylesheet" href="/system/assets/css/global_nav.css">
 </head>
 <body>
 <!--web_loading-->
@@ -18,12 +20,27 @@
         <div class="bg-opacity"></div>
     </div>
     <div class="control-page-content">
-        <div class="control-header">
+         <div class="control-header" >
+            <a class="avatar" id="user-center" onclick="window.location.assign('/u/{{''+user._id}}/watch')">
+                <img src="http://yiye.qiniudn.com/{{ user.avatar }}">
+            </a>
+            <img src="/home/assets/img/brand_name_green.png" onclick="window.location.assign('/home')">
+            <i id="rounded-arrow" class="iconfont">&#x3435</i>
+        </div>
+        <div id="function-module">
+            <ul id="function-module-ul">
+                <li id='message'><i class="iconfont">&#xf00b5</i><div>消息</div></li>
+                <li id='discover' ><i class="iconfont">&#xe684</i><div>发现</div></li>
+                <li id='help'><i class="iconfont">&#xf00b8</i><div>帮助</div></li>
+                <li id='set'><i class="iconfont">&#xf013e</i><div>设置</div></li>
+            </ul>
+        </div>
+       <!--  <div class="control-header">
             <a href="javascript:;" class="yiye-logo">
                 <img src="/system/assets/img/logo_white1.png">
             </a>
             <a href="/home" title="我的主页" class="glyphicon glyphicon-home"></a>
-        </div>
+        </div> -->
         <div class="control-body" >
             <div class="user-part">
                 <div class="user-avatar">
@@ -128,5 +145,6 @@
 <script rel="script" src="/bower_components/jquery/dist/jquery.js"></script>
 <script rel="script" src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
 <script type="text/javascript"  src="/person/assets/js/create.js"></script>
+<script rel="script" src="/home/assets/js/home.js"></script>
 </body>
 </html>

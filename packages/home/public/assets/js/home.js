@@ -12,7 +12,6 @@ function initialize() {
     // 如果元素之前绑定过click则取消绑定
     $('#rounded-arrow').unbind('click');
     $('#rounded-arrow').on('click', function() {
-        console.log(this);
         if($(this).hasClass('active')) {
             $(this).removeClass('active');
             $('#function-module').removeClass('unfold');
