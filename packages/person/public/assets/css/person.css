@@ -48,6 +48,7 @@ button:focus {outline:0;}
     background-color: #fff;
     top: 0;
     left: 0;
+    z-index: -9999;
     opacity: 1;
     -webkit-filter: blur(2px);
     filter: blur(2px);
@@ -57,6 +58,7 @@ button:focus {outline:0;}
     height: 100%;
     position: absolute;
     left: 0;
+    z-index: -100;
     top: 0;
     background-color: #24282f;
     opacity: 0.7;
@@ -71,7 +73,7 @@ button:focus {outline:0;}
 
 .control-header {
     height: 60px;
-    padding-top: 5px;
+    /*padding-top: 5px;*/
     padding-right: 20px;
     width: 100%;
     position: relative;
