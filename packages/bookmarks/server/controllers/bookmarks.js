@@ -227,17 +227,25 @@ exports.like = function(req,res){
                 if (doc.length > 0) {
                     callback(null, true);
                 }else{
-                    var like = BookmarkLike({});
-                    like.bookmarkId = bookmarkId;
-                    like.userId = req.user._id;
-                    like.username = req.user.username;
-                    like.save(function (err) {
+                    //查询获取bookmarkId
+                    Bookmarks.find({_id: bookmarkId}, function (err, bookmark) {
                         if (err) {console.log(err);return res.sendError()}
-                        Bookmarks.update({_id: bookmarkId}, {$inc: {likeNum: 1}}, function (err, doc) {
+                        var like = BookmarkLike({});
+                        like.bookmarkId = bookmarkId;
+                        like.userId = req.user._id;
+                        like.username = req.user.username;
+                        like.channelId = bookmark.channelId;
+                        //保存点赞数据
+                        like.save(function (err) {
                             if (err) {console.log(err);return res.sendError()}
-                            callback(null,false);
+                            //更新书签数据
+                            Bookmarks.update({_id: bookmarkId}, {$inc: {likeNum: 1}}, function (err, doc) {
+                                if (err) {console.log(err);return res.sendError()}
+                                callback(null,false);
+                            });
                         });
                     });
+
                 }
             });
         }
@@ -273,15 +281,18 @@ exports.hate = function(req,res){
                 if(doc.length > 0){
                     callback(null,true);
                 }else{
-                    var hate = BookmarkHate({});
-                    hate.bookmarkId = bookmarkId;
-                    hate.userId = req.user._id;
-                    hate.username = req.user.username;
-                    hate.save(function(err){
-                        if(err) {console.log(err);return res.sendError()}
-                        Bookmarks.update({_id:bookmarkId},{$inc:{hateNum:1}},function(err,doc){
+                    Bookmarks.find({_id: bookmarkId}, function (err, bookmark) {
+                        var hate = BookmarkHate({});
+                        hate.bookmarkId = bookmarkId;
+                        hate.userId = req.user._id;
+                        hate.username = req.user.username;
+                        hate.channelId = bookmark.channelId;
+                        hate.save(function(err){
                             if(err) {console.log(err);return res.sendError()}
-                            callback(null,false);
+                            Bookmarks.update({_id:bookmarkId},{$inc:{hateNum:1}},function(err,doc){
+                                if(err) {console.log(err);return res.sendError()}
+                                callback(null,false);
+                            });
                         });
                     });
                 }
