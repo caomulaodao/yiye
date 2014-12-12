@@ -16,7 +16,7 @@
     <div class="control-page-content">
         <div class="control-header" >
             {% if user%}
-                <a class="avatar" id="user-center">
+                <a class="avatar" id="user-center"  onclick="window.location.assign('/u/{{''+user._id}}')">
                     <img src="http://yiye.qiniudn.com/{{ user.avatar }}">
                 </a>
             {% endif %}
