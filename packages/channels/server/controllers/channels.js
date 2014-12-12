@@ -96,8 +96,6 @@ exports.sub = function(req,res){
     if(!req.user) return res.sendResult('请先登陆或注册',1000,null);
     var channelId = req.params['channelId'];
     if(!verify.idVerify(channelId)) {return res.sendResult('参数格式错误',2001,null)}
-
-
     //判断是否已经订阅
     Channel2User.findOne({channelId:channelId,userId:req.user._id},function(err,doc) {
         if (err) {console.log(err);return res.sendError()}
@@ -119,6 +117,7 @@ exports.sub = function(req,res){
                     var follower = Channel2User({
                         channelId : channelId,
                         userId : req.user._id,
+                        username :req.user.username,
                         type : 'follower',
                         name : channel.name,
                         logo : channel.logo
