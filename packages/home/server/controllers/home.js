@@ -445,6 +445,7 @@ exports.checkmsg = function(req,res){
         },
         //未审核的书签总数
         function(channelsId,callback){
+            if (channelsId.length===0){return callback(null,[],0);}
             Bookmarks.count({'channelId':{$in:channelsId},'checked':0}).exec(function(err,count){
                 if (err){console.log(err);return res.sendError();}
                 callback(null,channelsId,count);
@@ -452,6 +453,7 @@ exports.checkmsg = function(req,res){
         },
         //先返回未审核的书签
         function(channelsId,count,callback){
+            if (channelsId.length==0){return callback(null,[],[],0)}
             Bookmarks.find({'channelId':{$in:channelsId},'checked':0}).sort({postTime:-1}).skip((number-1)*limit).limit(limit).exec(function(err,list){
                 if (err) {console.log(err);return res.sendError()}
                 callback(null,channelsId,list,count);
@@ -459,6 +461,7 @@ exports.checkmsg = function(req,res){
         },
         //返回未审核和已经审核的书签
         function(channelsId,noChecked,count,callback){
+            if (channelsId.length===0) {return callback(null,[])}
             if (noChecked.length>=limit){return callback(err,noChecked)}//如果未审核的数量足够多 则直接返回
             var skipnumber = (number-1)*limit-count>0?(number-1)*limit-count:0;
             Bookmarks.find({'channelId':{$in:[channelsId]},'checkUser':req.user._id}).sort({postTime:-1}).skip(skipnumber).limit(limit-noChecked.length).exec(function(err,checkedBkms){

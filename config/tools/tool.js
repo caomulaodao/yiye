@@ -76,8 +76,20 @@ function stripscript(s) {
         rs = s.replace(pattern, '');
     return rs;
 }
+//将用户输入的url转换为可以访问的url
+function safeUrl(url){
+    var RegUrl = new RegExp();
+    RegUrl.compile("^(https?://)?[A-Za-z0-9-_]+\\.[A-Za-z0-9-_%&\?\/.=]+$",'g');
+    RegUrl.test(url,'$1');console.log(RegExp.$1);
+    if(RegExp.$1) return url;
+    return 'http://'+url;
+}
 
-
+//分页
 exports.skipPage = skipPage;
+//日期的文档排序成数组
 exports.listToArray=listToArray;
+//过滤非法字符
 exports.stripscript = stripscript;
+//将用户输入的url转换为可访问的url
+exports.safeUrl = safeUrl;
