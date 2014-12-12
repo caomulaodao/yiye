@@ -464,7 +464,7 @@ exports.checkmsg = function(req,res){
             if (channelsId.length===0) {return callback(null,[])}
             if (noChecked.length>=limit){return callback(err,noChecked)}//如果未审核的数量足够多 则直接返回
             var skipnumber = (number-1)*limit-count>0?(number-1)*limit-count:0;
-            Bookmarks.find({'channelId':{$in:[channelsId]},'checkUser':req.user._id}).sort({postTime:-1}).skip(skipnumber).limit(limit-noChecked.length).exec(function(err,checkedBkms){
+            Bookmarks.find({'channelId':{$in:channelsId},'checkUser':req.user._id}).sort({postTime:-1}).skip(skipnumber).limit(limit-noChecked.length).exec(function(err,checkedBkms){
                 if(err) {console.log(err);return res.sendError();}
                 callback(null,noChecked.concat(checkedBkms))
             })
