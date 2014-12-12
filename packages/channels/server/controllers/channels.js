@@ -119,6 +119,7 @@ exports.sub = function(req,res){
                     var follower = Channel2User({
                         channelId : channelId,
                         userId : req.user._id,
+                        username :req.user.username,
                         type : 'follower',
                         name : channel.name,
                         logo : channel.logo

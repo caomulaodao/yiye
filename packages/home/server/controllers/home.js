@@ -104,7 +104,7 @@ exports.createChannel = function(req,res){
     var newchannel={
         logo:xss(req.body.logo,{whiteList:{}}),
         name:xss(req.body.name,{whiteList:{}}),
-        description:xss(req.body.tags,{whiteList:{}}),
+        description:xss(req.body.description,{whiteList:{}}),
         type:xss(req.body.type,{whiteList:{}}),
         tags:xss(req.body.tags,{whiteList:{}}),
         banner:xss(req.body.banner,{whiteList:{}})
@@ -113,6 +113,7 @@ exports.createChannel = function(req,res){
     if(newchannel.description.length>descriptionLength) {return res.sendResult('描述限制100字',2007,null)}//描述长度限制
     var channels = new Channels(newchannel);
     channels.tags = getTags(channels.tags);
+    if (channels.tags.length>10) {return res.sendResult('标签不能超过10个',2008,null);}
     channels.creator = {userId:req.user._id,userName:req.user.username,userLogo:req.user.avatar};
     async.waterfall([
         function(callback){
@@ -263,7 +264,6 @@ exports.discover = function(req,res){
                         isHave=false;
                     }
                 }//
-                console.log(results);
                 res.sendResult('加载成功',0,{list:results,isHave:isHave})
             });
 }
@@ -388,12 +388,12 @@ exports.callmsg = function(req,res){
     async.waterfall([
         //最后一条通知消息
         function(callback){
-            Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[1,2,3,4]}}).sort({postTime:1}).limit(1)
+            Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[1,2,3,4]}}).sort({'postTime':1}).limit(1)
             .exec(function(err,doc){if(err){console.log(err);return res.sendError()}callback(err,doc)});
         },
         //返回的通知消息
         function(doc,callback){
-            Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[1,2,3,4]}}).sort({postTime:-1}).skip((number-1)*limit).limit(limit).exec(function(err,list){
+            Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[1,2,3,4]}}).sort({'checked':1,'postTime':-1}).skip((number-1)*limit).limit(limit).exec(function(err,list){
                 if (err) {console.log(err);return res.sendError()}
                 var isHave=true;
                 if(doc.length==0) {isHave=false;}
@@ -408,7 +408,7 @@ exports.callmsg = function(req,res){
         function(err,list,isHave){
             if(err){console.log(err);return res.sendError()}
             var updateList=[];//未通知的消息
-            var i;console.log(list);
+            var i;
             for(i=0;i<list.length;i++){
                 if (+list[i]['checked']<3){
                     updateList.push(list[i]['_id']);
@@ -456,7 +456,7 @@ exports.checkmsg = function(req,res){
                 callback(null,channelsId,list,count);
             })
         },
-        //返回已经审核的书签
+        //返回未审核和已经审核的书签
         function(channelsId,noChecked,count,callback){
             if (noChecked.length>=limit){return callback(err,noChecked)}//如果未审核的数量足够多 则直接返回
             var skipnumber = (number-1)*limit-count>0?(number-1)*limit-count:0;
@@ -469,20 +469,20 @@ exports.checkmsg = function(req,res){
             if(err){console.log(err);return res.sendError()}
             var isHave = true;
             if (list.length<limit){isHave = false}
-            res.sendResult('获取消息成功',0,list);
+            res.sendResult('获取消息成功',0,{msg:list,isHave:isHave});
         }
     )
 }
-//别人关注频道时提醒
+//别人关注频道时提醒 只提醒创建者
 exports.remindmsg = function(req,res){
     if(!req.user){return res.sendResult('请先登录或注册',1000,null)}
     var limit = 10;
     var number = req.query.number||1;
     if (!Myverify.isNumber(number)){ return res.sendResult('参数类型错误',2000,null)}
     async.waterfall([
-        //创建者或管理者的频道Id
+        //创建者的频道Id
         function(callback){
-            Channel2User.find({'userId':req.user._id,'type':{$in:['creator','admin']}},function(err,channels){
+            Channel2User.find({'userId':req.user._id,'type':'creator'},function(err,channels){
                 if(err) {console.log(err);return res.sendError();}
                 if (channels.length==0) {return callback(err,[]);}
                 var channelsId = [];
@@ -493,10 +493,25 @@ exports.remindmsg = function(req,res){
                 callback(err,channelsId);
             })
         },
-
-        ],function(){
-
-    })
+        //关注者 并且按时间排序
+        function(channelsId,callback){
+            if (channelsId.length==0) {return callback(null,[],[]);}
+            Channel2User.find({'channelId':{$in:channelsId},'type':'follower'}).sort({'remind':1,'followerTime':-1}).skip((number-1)*limit).limit(limit).exec(function(err,followers){
+                if (err) {console.log(err);return res.sendError();}
+                var channelsId =[],i=0;
+                if (followers.length==0) {return callback(channelsId,[]);}
+                for(i;i<followers.length;i++){
+                    channelsId.push(followers[i]['_id']);
+                }
+                callback(null,channelsId,followers);
+            })
+        }],
+        function(err,channelsId,followers){
+            if (err){console.log(err);return res.sendError();}
+            Channel2User.update({'_id':{$in:channelsId}},{'remind':1},{multi:true}).exec(function(err){
+                res.sendResult('返回消息成功',0,followers);
+            });           
+        })
 }
 
 //提交的书签被点赞的消息
@@ -520,7 +535,7 @@ exports.praisemsg = function(req,res){
         },
         //找到消息并按照时间排序
         function(bookmarkId,callback){
-            BookmarkLike.find({'bookmarkId':{$in:bookmarkId}}).sort({'likeTime':-1}).skip((number-1)*limit).limit(limit).exec(function(err,doc){
+            BookmarkLike.find({'bookmarkId':{$in:bookmarkId}}).sort({'remind':1,'likeTime':-1}).skip((number-1)*limit).limit(limit).exec(function(err,doc){
                 if (err) {console.log(err);return res.sendError();}
                 callback(null,bookmarkId,doc);
             })
@@ -531,12 +546,11 @@ exports.praisemsg = function(req,res){
            if(err) {console.log(err);return res.sendError();}
            var isHave= true;
            if (doc.length<limit) {isHave=false;}
-           BookmarkLike.update({'bookmarkId':{$in:bookmarkId}},{$set:{'remind':1}},{multi:true}).exec(function(err,number){console.log(number,'number');
+           BookmarkLike.update({'bookmarkId':{$in:bookmarkId}},{$set:{'remind':1}},{multi:true}).exec(function(err,number){
                 if (err) {console.log(err);return res.sendError();}
-                res.sendResult('返回成功',0,doc);
+                res.sendResult('返回成功',0,{msg:doc,isHave:isHave});
            })
            
-
        })
 }
 
@@ -604,6 +618,31 @@ exports.msgcount = function(req,res){
             ],function(err,count){
                 if (err) {console.log(err);return res.sendError();}
                 callback(null,count);
+            })
+        },
+        //创建的频道被关注时的通知信息
+        remindmsg: function(callback){
+            async.waterfall([
+                //创建者的频道id
+            function(callback1){
+                Channel2User.find({'userId':req.user._id,'type':'creator'},function(err,channels){
+                    if(err) {console.log(err);return res.sendError();}
+                    if (channels.length==0) {return callback1(err,[]);}
+                    var channelsId = [];
+                    var i = 0;
+                    for(i;i<channels.length;i++){
+                        channelsId.push(channels[i]['channelId']+'');//将idObject转换为字符串
+                    }
+                    callback1(err,channelsId);
+                })
+            }],
+            function(err,channelsId){
+                if (err) {console.log(err);return res.sendError();}
+                if (channelsId.length==0){return callback(null,0);}
+                Channel2User.count({'channelId':{$in:channelsId},'type':'follower','remind':0},function(err,count){
+                    if (err) {console.log(err);return res.sendError();}
+                    callback(null,count);
+                })
             })
         }
     },
