@@ -50,6 +50,8 @@
 }
 .staff{
 	/*display: none;*/
+    width: 500px;
+    margin: 0 auto;
 }
 .staff-gallery{
 	width: 400px;
@@ -112,7 +114,8 @@
 }
 .staff h1{
     font-size: 30px;
-
+    margin-bottom: 20px;
+    text-align: center;
 }
 .staff p{
     font-size: 16px;

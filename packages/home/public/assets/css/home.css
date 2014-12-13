@@ -92,7 +92,7 @@ button:focus {outline:0;}
     margin-bottom: 20px;
 }
 #create-channel-title{
-    font-size: 20px;
+    font-size: 24px;
     margin: 20px 0px;
     text-align: center;
     padding-bottom: 15px;
@@ -115,7 +115,8 @@ button:focus {outline:0;}
 }
 #create-channel-discription{
     padding:20px 5px;
-    color: #999;
+    font-size: 14px;
+    color: #777;
 }
 #channel-create-logo-info button{
 

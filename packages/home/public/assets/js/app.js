@@ -286,11 +286,15 @@ $(function(){
             this.channel.save(null,{error: function(model, response){
                 $('#Channel-Create-Error').text('网络异常').show();
             },success: function(model, response){
+                console.log(model,response);
                 if(response.code == 0) {
-                    popup("频道创建成功 ！");
-                    setTimeout(function(){
-                        location.href = '/home';
-                    },1000);
+                    modelAlert("频道创建成功 ！",["去看看","取消"],function(){
+                        //成功回调
+                        window.location.href="/channel/"+response.data.channelId;
+                    },function(){
+                        //失败回调
+                       window.location.href="/home";
+                    });
                 } else {
                     popup(response.msg);
                 }                
@@ -970,11 +974,62 @@ $(function(){
 
     //消息提示函数
     function popup(info){
-        $('#result-dialog-content').text(info);
-        $('#result-dialog').modal('show');
-        setTimeout(function(){
-            $('#result-dialog').modal('hide');
-        },2000);
+        $('#dialog-output').html(modelModual("tips",info));
+        $('#module-dialog').modal('show');
+        // setTimeout(function(){
+        //     $('#result-dialog').modal('hide');
+        // },2000);
+    }
+
+    function modelModual(type,message,arr){
+        if(!arr) arr= ["确认","取消"];
+        var typeModual = "<div class='modal-footer'>\
+                            <button type='button' id='alert-cancel' class='btn btn-default' data-dismiss='modal'>"+arr[1]+"</button>\
+                            <button type='button' id='alert-submit' class='btn btn-primary'>"+arr[0]+"</button>\
+                          </div>";
+        if(type !="alert"){
+            typeModual = "";
+        }
+
+     return "<div class='modal fade' tabindex='-1' role='dialog' aria-labelledby='mySmallModalLabel' aria-hidden='true' id='module-dialog'>\
+                <div class='modal-dialog'>\
+                    <div class='modal-content'>\
+                        <div class='modal-header'>\
+                            <button type='button' class='close' data-dismiss='modal'><span aria-hidden='true'>×</span><span class='sr-only'>Close</span></button>\
+                            <h4 class='modal-title' id='mySmallModalLabel'>提示</h4>\
+                        </div>\
+                        <div class='modal-body' id='result-dialog-content'>\
+                        "+message+"\
+                        </div>\
+                        "+typeModual+"\
+                    </div>\
+                </div>\
+            </div>";   
+    }
+    //alert 测试
+    // $('.content-page').click(function(){
+    //     modelAlert("test",["点我","不点我"],function(){
+    //         alert('成功');
+    //     })
+    // })
+    /*
+        兼容原有popup实现
+        用法：info为模态框内容
+        arr为按钮数组【确认，取消】
+        successcb为确认按钮的对应的回调
+        cancelcb为取消按钮对应的回调
+
+    */ 
+    function modelAlert(info,arr,success_cb,cancel_cb){
+        $('#dialog-output').html(modelModual("alert",info,arr));
+        $("#alert-submit").click(function(){
+            (typeof success_cb == "function")&&success_cb();
+        });
+        $("#alert-cancel").click(function(){
+            if(!cancel_cb) return true;
+            (typeof cancel_cb == "function")&&cancel_cb();
+        });
+        $('#module-dialog').modal('show');
     }
 
 
