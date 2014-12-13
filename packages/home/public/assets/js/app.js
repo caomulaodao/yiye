@@ -429,7 +429,7 @@ $(function(){
             var that = this;            
             that.attentionMsg = new attentionMsg;
             that.attentionMsg.fetch({
-                url: 'api/home/attentionmsg',
+                url: 'api/home/remind',
                 data: {'number': 1},
                 success: function (model, response) {
                     if (response.code == 0){
@@ -544,7 +544,7 @@ $(function(){
                 var nNum = that.attentionMsg.get('number');
                 that.attentionMsg.fetch({
                     data: {number: nNum},
-                    url: "/api/home/attentionmsg",
+                    url: "/api/home/remind",
                     success: function (model, response) {
                         if (response.code==0){
                             $('.user-attention-list').append(that.attentionTemplate(response.data));
