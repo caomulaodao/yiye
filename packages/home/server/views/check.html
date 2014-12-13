@@ -1,0 +1,27 @@
+<div id="post-list">
+    <ul>
+        {% if msg.length == 0%}
+        <div class="no-inf">
+            <img src="/system/assets/img/no-message.png">
+        </div>
+        {% endif %}
+        {% for bookmark in msg %}
+        <li class="post-item item-{{ loop.index }}">
+            <div class="link-part-content">
+                <div class="bookmark-pic"><img src="http://yiye.qiniudn.com/{{ bookmark['image'] }}"/></div>
+                <a class="link link-{{ loop.index }}" target="_blank" href="{{ bookmark['url'] }}">{{ bookmark['title'] }}</a>
+                <div class="description">
+                    <span>描述：</span><b class="description-{{ loop.index }}">{{ bookmark['description'] }}</b>
+                </div>
+                <div class="footer-part footer-{{ loop.index }}" data-bookmarkid="{{ ''+ bookmark['_id'] }}">
+                    <span class="submit-time">提交于:{{ ''+bookmark['postTime']|date('Y-M-D H:m:s') }}</span>
+                    <span>by <a href="#" data-userId="{{ ''+bookmark['postUser']['userId'] }}">{{ bookmark['postUser']['username'] }}</a></a></span>
+                    <span><i class="glyphicon glyphicon-ok"></i><a class="passBookmark" href="#" data-index="{{ loop.index }}">通过</a></span>
+                    <span><i class="glyphicon glyphicon-pencil"></i><a class="editBookmark" href="#" data-index="{{ loop.index }}">编辑</a></span>
+                    <span><i class="glyphicon glyphicon-trash"></i><a class="deleteBookmark" href="#" data-index="{{ loop.index }}">筛除</a></span>
+                </div>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+</div>

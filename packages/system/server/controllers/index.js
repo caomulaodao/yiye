@@ -9,6 +9,7 @@ var mongoose = require('mongoose'),
     jsdom = require ('jsdom'),
     User = mongoose.model('User'),
     Channel2User = mongoose.model('Channel2User'),
+    Bugs = mongoose.model('Bugs'),
     Channels = mongoose.model('Channels'),
     Bookmarks = mongoose.model('Bookmarks'),
     tool=require('../../../../config/tools/tool'),
@@ -45,7 +46,19 @@ exports.render = function(req, res,Package) {
         })
 
 };
-
+exports.bugs = function(req,res){
+    if (!myVerify.userVerify(req.body.username)){
+      return res.sendResult("含有非法字符",2001,null);
+  }
+  var bug = new Bugs(req.body);
+  var errors = req.validationErrors();
+  if (errors) {
+      return res.sendResult(errors,2001,null);
+  }
+  user.save(function(){
+    
+  });
+}
 //渲染发现页面
 exports.explore = function(req, res,Package){
     var limit = 20;//每页限制显示数
