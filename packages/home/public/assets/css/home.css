@@ -92,7 +92,7 @@ button:focus {outline:0;}
     margin-bottom: 20px;
 }
 #create-channel-title{
-    font-size: 20px;
+    font-size: 24px;
     margin: 20px 0px;
     text-align: center;
     padding-bottom: 15px;
@@ -115,7 +115,8 @@ button:focus {outline:0;}
 }
 #create-channel-discription{
     padding:20px 5px;
-    color: #999;
+    font-size: 14px;
+    color: #777;
 }
 #channel-create-logo-info button{
 
@@ -893,7 +894,7 @@ a.header-channel-name, a.header-channel-name:hover{
     margin-left: 43px;
 }
 .comment-header {
-    margin: -1px 0 0px 43px;;
+    margin: -1px 0 0px 43px;
 }
 .user-name {
     font-size: 1.3em;
@@ -1494,4 +1495,81 @@ a.ex-creator {float: right;}
 #channel-create-button-box-new #channel-create-button{
     background-color: rgba(0,201,149,0.8);
     color:#fff;
+}
+
+
+/* check.html */
+#post-list{
+    height: 100%;
+    padding-left: 25px;
+    padding-top: 5px;
+}
+
+#post-list ul{list-style-type: none;}
+
+.post-item{
+    margin-bottom: 15px;
+    margin-right: 40px;
+}
+
+.post-item .link-part-content{padding-left:0px;}
+
+.link-part-content {
+    padding-left: 65px;
+    width: 100%;
+    min-height: 100px;
+}
+
+.bookmark-pic{
+    float: right;
+    margin-top: 27px;
+    margin-left: 35px;
+    height: 50px;
+    width: 100px;
+}
+.bookmark-pic img{
+    height: 50px;
+    width: 100px;
+}
+.link {
+    font-size: 1.6em;
+    font-weight: bold;
+    color: #157CCC;
+}
+.link:hover {
+    color: #157ccc;
+}
+
+.description b{font-weight: normal;}
+
+.description {
+    margin-top: 10px;
+    font-size: 1.3em;
+    color: #666;
+}
+.description>span{
+    margin-right: 2px;
+    font-weight: bold;
+}
+.footer-part {
+    margin-top: 3px;
+    letter-spacing: 1px;
+}
+.footer-part span{
+    color: #999;
+    margin-right: 4px;
+}
+.footer-part a {
+    color: #999;
+}
+.footer-part i{
+    color: #999;
+    margin-right: 3px;
+}
+.footer-part a:hover {
+    color: #698EBF;
+}
+.submit-time {
+    color: #999;
+    margin-right:4px;
 }

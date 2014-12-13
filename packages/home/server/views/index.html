@@ -66,7 +66,7 @@
                     {% endfor %}
                     <div class="create-channel">
                         <button>
-                            <span>新建频道({{ creatNum }}/5)</span>
+                            <span>新建书签频道({{ creatNum }}/5)</span>
                         </button>
                     </div>
                 </ul>
@@ -83,7 +83,8 @@
 
 
 <!-- 结果提示弹窗  -->
-<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="result-dialog">
+<div id="dialog-output"></div>
+<!-- <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="result-dialog">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
@@ -95,7 +96,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 <!-- 创建频道页面update -->
 <script type="text/template" id="tp-create-channels">
     <div id="create-channel">
@@ -597,12 +598,30 @@
 
 <!--审核模板-->
 <script type="text/x-handlebars-template" id="tp-user-check">
-    <% if(msg == 0){%>
+    <% if (msg.length == 0) {%>
     <div class="no-inf">
         <img src="/system/assets/img/no-message.png">
     </div>
+    <% } else { %>
+    <% for(var i=0; i<msg.length; i++) { %>
+    <li class="post-item" data-id= <%= msg[i]['_id'] %>>
+        <div class="link-part-content">
+            <div class="bookmark-pic"><img src="http://yiye.qiniudn.com/<%= msg[i]['image']%>"/></div>
+            <a class="link" data-id= <%= msg[i]['_id'] %> target="_blank" href=<%= msg[i]['url'] %>><%=msg[i]['title']%></a>
+            <div class="description">
+                <span>描述：</span><b data-id= <%= msg[i]['_id'] %> ><%= msg[i]['description']%></b>
+            </div>
+            <div class="footer-part" data-id= <%= msg[i]['_id'] %>>
+                <span class="submit-time">提交于:<%= msg[i]['postTime'] %></span>
+                <span>by <a href="#" data-id= <%= msg[i]['_id'] %>><%= msg[i]['postUser']['username']%></a></a></span>
+                <span><i class="glyphicon glyphicon-ok"></i><a class="passBookmark" href="#" data-id= <%= msg[i]['_id'] %>>通过</a></span>
+                <span><i class="glyphicon glyphicon-pencil"></i><a class="editBookmark" href="#" data-id= <%= msg[i]['_id'] %>>编辑</a></span>
+                <span><i class="glyphicon glyphicon-trash"></i><a class="deleteBookmark" href="#" data-id= <%= msg[i]['_id'] %>>筛除</a></span>
+            </div>
+        </div>
+    </li>
     <% } %>
-    
+    <% } %>  
 </script>
 
 <!--通知模板-->
@@ -639,13 +658,23 @@
 
 <!--关注模板-->
 <script type="text/x-handlebars-template" id="tp-user-attention">
-    
+    <% if(msg == 0){%>
+    <div class="no-inf">
+        <img src="/system/assets/img/no-message.png">
+    </div>
+    <% } %>
+
 
 </script>
 
 <!--点赞模板-->
 <script type="text/x-handlebars-template" id="tp-user-praise">
-    
+    <% if(msg == 0){%>
+    <div class="no-inf">
+        <img src="/system/assets/img/no-message.png">
+    </div>
+    <% } %>
+
 
 </script>
 
@@ -658,7 +687,7 @@
         </ul>
         <div class="tab-content">
             
-            <div role="tabpanel" class="tab-pane" id="new">
+            <div role="tabpanel" class="tab-pane active" id="new">
                 <div class="user-info-item">
                     <label>用户名:</label>
                     <div class="user-info-item-main">
