@@ -138,11 +138,12 @@ exports.createChannel = function(req,res){
                         logo: channels.logo,
                         remind: 1
                     });
+                    var channelId = doc._id;
                     admChannel.save(function(err){
                         if(err) {console.log(err);return res.sendResult('服务器内部问题',5000,null)}
                         User.update({_id:req.user._id},{$inc:{createNum:1}},function(err,num){
                             if(err) {console.log(err);return res.sendResult('服务器内部问题',5000,null)}
-                            callback(null,isCreate);
+                            callback(null,isCreate,channelId);
                         });
                     });
                 });
@@ -150,9 +151,9 @@ exports.createChannel = function(req,res){
                 callback(null,isCreate);
             }
         }
-    ],function(err,isCreate){
+    ],function(err,isCreate,channelId){
            if(isCreate){
-                res.sendResult("频道创建成功",0,null);
+                res.sendResult("频道创建成功",0,{channelId:channelId});
            }else{
                res.sendResult("创建数量已达上限，无法创建新频道。",3000,null);
            }
