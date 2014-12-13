@@ -461,6 +461,7 @@
 </script>
 
 <!-- 通过与否消息提示 -->
+
 <script type="text/x-handlebars-template" id="tp-user-news">
     <% if(news == 0){%>
     <div class="no-inf">
@@ -517,7 +518,19 @@
         </div>
     </div>
 </script>
+
+<!--审核模板-->
 <script type="text/x-handlebars-template" id="tp-user-check">
+    <% if(msg == 0){%>
+    <div class="no-inf">
+        <img src="/system/assets/img/no-message.png">
+    </div>
+    <% } %>
+    
+</script>
+
+<!--通知模板-->
+<script type="text/x-handlebars-template" id="tp-user-inform">
     <% if(msg == 0){%>
     <div class="no-inf">
         <img src="/system/assets/img/no-message.png">
@@ -547,18 +560,25 @@
     </li>
     <% } %>
 </script>
-<script type="text/x-handlebars-template" id="tp-user-inform">
+
+<!--关注模板-->
+<script type="text/x-handlebars-template" id="tp-user-attention">
     
+
 </script>
-<script type="text/x-handlebars-template" id="tp-user-attention"></script>
-<script type="text/x-handlebars-template" id="tp-user-praise"></script>
+
+<!--点赞模板-->
+<script type="text/x-handlebars-template" id="tp-user-praise">
+    
+
+</script>
 
 <!-- 设置界面 -->
 <script type="text/x-handlebars-template" id="tp-personal-setting">
     <div class="personal-center">
         <ul class="nav nav-tabs" role="tablist" id="channel-manage-tab">
+            <li role="presentation" class="active"><a href="#new" role="tab" data-toggle="tab">账号</a></li>
             <li role="presentation"><a href="#profile" role="tab" data-toggle="tab">密码</a></li>
-            <li role="presentation"><a href="#new" role="tab" data-toggle="tab">账号</a></li>
         </ul>
         <div class="tab-content">
             
