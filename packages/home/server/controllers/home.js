@@ -514,6 +514,7 @@ exports.remindmsg = function(req,res){
         function(err,channelsId,followers){
             if (err){console.log(err);return res.sendError();}
             Channel2User.update({'_id':{$in:channelsId}},{'remind':1},{multi:true}).exec(function(err){
+                if (err){console.log(err);return res.sendError();}
                 res.sendResult('返回消息成功',0,followers);
             });           
         })
