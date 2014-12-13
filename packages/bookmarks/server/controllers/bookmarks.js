@@ -56,7 +56,7 @@ exports.receive = function(req,res){
         verify.isString(req.body.title)&&verify.isString(req.body.description)&&verify.isString(req.body.url)
         &&verify.isString(req.body.image)&&verify.isString(req.body.tags)&&verify.isArray(req.body.channels)
         )){ return res.sendResult('参数类型错误',2000,null)};//判断数据格式
-    if (!verify.isUrl(url)){return res.sendResult('url格式错误',2010,null);}
+    if (!verify.isUrl(req.body.url)){return res.sendResult('url格式错误',2010,null);}
     var bookmarks ={
         title:xss(req.body.title,{whiteList:{}}),
         description:xss(req.body.description,{whiteList:{}}),
