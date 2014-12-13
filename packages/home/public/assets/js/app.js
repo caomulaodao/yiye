@@ -807,6 +807,7 @@ $(function(){
         defaultRoute : function(){
         },
         subControl : function(){
+
             $('.subscription').addClass('active').next().removeClass('active');
             $('.channel-list').show().next().hide();
         },
@@ -816,8 +817,11 @@ $(function(){
         },
         channelBookmarks : function(id){
             var dataId = id;
+            var view = new listView();
             $('.channel-item').removeClass('active');
             $('.channel-item[data-id='+ dataId +']').addClass('active');
+            App.main.html(view.render());console.log('sds');
+            view.renderAfter();
         },
         create : function(){
             var view = new NewChannelView();

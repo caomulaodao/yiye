@@ -734,7 +734,17 @@ a.header-channel-name, a.header-channel-name:hover{
     height: 50px;
     width: 100px;
 }
+.add-channel{
+    position: fixed;
+    top:80%;
+    right:100px;    
+    background-color: #ddd;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border:20px solid #eee;
 
+}
 
 
 
