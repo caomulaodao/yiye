@@ -580,7 +580,7 @@
             <li id="praise-btn" role="news"><a href="#praise" role="tab" data-toggle="tab">赞</a></li>
         </ul>
         <div class="tab-content">
-            <div role="tabpanel" class="tab-pane active" id="check">
+            <div role="tabpanel" class="tab-pane" id="check">
                 <ul class="user-check-list"></ul>
             </div>
             <div role="tabpanel" class="tab-pane" id="inform">
@@ -607,7 +607,10 @@
     <li class="post-item" data-id= <%= msg[i]['_id'] %>>
         <div class="link-part-content">
             <div class="bookmark-pic"><img src="http://yiye.qiniudn.com/<%= msg[i]['image']%>"/></div>
-            <a class="link" data-id= <%= msg[i]['_id'] %> target="_blank" href=<%= msg[i]['url'] %>><%=msg[i]['title']%></a>
+            <a class="link" target="_blank" href=<%= msg[i]['url'] %>><%= msg[i]['title']%></a>
+            <div class="to-channel">
+                <span>提交到：</span><a target="_blank" href='/channel/'+<%=msg[i]['channelId'] %>><%= msg[i]['channelInfo']['channelName']%></a>
+            </div>
             <div class="description">
                 <span>描述：</span><b data-id= <%= msg[i]['_id'] %> ><%= msg[i]['description']%></b>
             </div>

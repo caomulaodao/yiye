@@ -57,6 +57,7 @@ button:focus {outline:0;}
 .personal-center {
     margin: 20px 20px;
     min-width: 450px;
+    height: 100%;
 }
 
 #channel-manage-tab>li.active a {
@@ -1044,6 +1045,8 @@ a.header-channel-name, a.header-channel-name:hover{
 /**   user set page  **/
 .tab-content{
     padding-top: 20px;
+    height: 100%;
+    overflow-y: scroll;
 }
 .user-info-item{
     margin-bottom: 20px;
@@ -1500,15 +1503,10 @@ a.ex-creator {float: right;}
 .post-item{
     margin-bottom: 15px;
     margin-right: 40px;
+    list-style-type: none;
 }
 
 .post-item .link-part-content{padding-left:0px;}
-
-.link-part-content {
-    padding-left: 65px;
-    width: 100%;
-    min-height: 100px;
-}
 
 .bookmark-pic{
     float: right;
@@ -1520,14 +1518,6 @@ a.ex-creator {float: right;}
 .bookmark-pic img{
     height: 50px;
     width: 100px;
-}
-.link {
-    font-size: 1.6em;
-    font-weight: bold;
-    color: #157CCC;
-}
-.link:hover {
-    color: #157ccc;
 }
 
 .description b{font-weight: normal;}
@@ -1563,3 +1553,9 @@ a.ex-creator {float: right;}
     color: #999;
     margin-right:4px;
 }
+
+/* inform.html */
+
+/* attention.html */
+
+/* praise.html */
