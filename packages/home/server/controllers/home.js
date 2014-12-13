@@ -504,7 +504,7 @@ exports.remindmsg = function(req,res){
             Channel2User.find({'channelId':{$in:channelsId},'type':'follower'}).sort({'remind':1,'followerTime':-1}).skip((number-1)*limit).limit(limit).exec(function(err,followers){
                 if (err) {console.log(err);return res.sendError();}
                 var channelsId =[],i=0;
-                if (followers.length==0) {return callback(channelsId,[],[]);}
+                if (followers.length==0) {return callback(err,channelsId,[]);}
                 for(i;i<followers.length;i++){
                     channelsId.push(followers[i]['_id']);
                 }
