@@ -288,10 +288,9 @@ $(function(){
             },success: function(model, response){
                 console.log(model,response);
                 if(response.code == 0) {
-                    alert(123);
                     modelAlert("频道创建成功 ！",["去看看","取消"],function(){
                         //成功回调
-                        window.location.href="/channel/";//response.data.channelId;
+                        window.location.href="/channel/"+response.data.channelId;
                     },function(){
                         //失败回调
                        window.location.href="/home";
