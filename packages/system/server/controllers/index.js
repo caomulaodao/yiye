@@ -4,6 +4,9 @@ var mean = require('meanio');
 
 var mongoose = require('mongoose'),
     async = require('async'),
+    jquery = require('jquery'),
+    request = require('request'),
+    jsdom = require ('jsdom'),
     User = mongoose.model('User'),
     Channel2User = mongoose.model('Channel2User'),
     Channels = mongoose.model('Channels'),
@@ -159,6 +162,54 @@ exports.query = function(req,res,Package){
         });       
     })
 };
+exports.scraper = function(req,res){
+    if (!req.user){return res.sendResult('请先登陆或注册',1000,null);}
+    var userUrl = req.body.url;console.log(req.body.url);
+    //参数检测
+    if (userUrl==null) {return res.sendResult('url地址不能为空',2012,null);}
+    if (typeof userUrl!=='string') {return res.sendResult('url地址格式错误',2013,null);}
+    var url = tool.safeUrl(userUrl);
+    if (!url) return res.sendResult('url地址格式错误',2013,null);console.log(url);
+//开始爬指定url
+
+    //请求头部设定
+    var options = {
+        'url': url,
+        'headers': {
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'
+        }
+    };
+    //传入dom后的处理函数
+    var callback = function(err,response,content){
+        if (err) return res.sendResult('访问该网站出错',3001,null);
+        if (!err&&response.statusCode == 200){
+            var window = jsdom.jsdom(content).parentWindow;
+            var $ =jquery(window);
+        }
+        var title=$('title').text();
+        var description=$('meta[name=description]').attr('content');
+        if (!description){
+            description = $('p').text().substr(0,100);
+        }
+        var imgUrl = $('p img').attr('src')||$('img').attr('src');
+        //判断是相对路径还是绝对路径
+        if (!myVerify.isUrl(imgUrl)){
+            imgUrl = url+'/'+imgUrl;
+        }
+        var result = {
+            title:title,
+            description:description,
+            imgUrl:imgUrl
+        }
+        res.sendResult('返回网站信息成功',0,result);
+    }
+    request(options,callback);
+
+}
+
+
+
+
 
 
 

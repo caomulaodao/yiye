@@ -96,11 +96,88 @@
         </div>
     </div>
 </div>
-
-<!-- 创建频道页面 -->
+<!-- 创建频道页面update -->
 <script type="text/template" id="tp-create-channels">
     <div id="create-channel">
-        <h3 id="create-channel-title">创建频道</h3>
+        <h3 id="create-channel-title">创建书签频道</h3>
+        <div id="create-channel-discription" >
+        书签频道是一个书签的集合，你可以基于某个话题和兴趣去创建。之后，你便可以向这个书签频道提交与它相关的书签了。
+        对了，你的书签频道也可以被其他人订阅哦。这些订阅用户也可以向你的书签频道提交书签哦，不过需要你审核哦。
+        </div>
+        <div class='card-wrapper'>
+            <div id="channel-info-wrapper">
+                <div class='image-wrapper'>
+                    <div id="channel-create-logo">
+                            <img src="http://yiye.qiniudn.com/cLogo/7647966b7343c2906d3f341cf255be6b.png" id="channel-logo">
+                            <p><span id="change-channel-logo">上传</span></p>
+                    </div>
+                    <div id="channel-new-logo-info">
+                        <p>支持 JPG、PNG、GIF 格式，不要超过 2M 。</p>
+                    </div>
+                </div>
+                <div class='info-wrapper'>
+                    <div class="channel-create-item-main">
+                        <div id="channel-create-name">
+                            <input type="text" class="form-control" placeholder="输入频道名称">
+                        </div>
+                    </div>
+                     <div class="channel-create-item-main">
+                        <div id="channel-create-description">
+                            <textarea rows="5" class="form-control" placeholder="请填写比较详细的描述信息"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="channel-create-item">
+                    <div class="channel-create-item-main">
+                        <form id="channel-create-type">
+                                <label class="checkbox-inline">
+                                    <input type="radio" name="type"  value="life" > 生活
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="radio" name="type"  value="technology" > 科技
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="radio" name="type"  value="humanities" > 人文
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="radio" name="type"  value="entertainment" > 娱乐
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="radio" name="type"  value="sports" > 体育
+                                </label>
+                        </form>
+                        <div id="channel-create-type-info">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="channel-create-item">
+                    <div class="channel-create-item-main">
+                        <div id="channel-create-tags">
+                            <input type="email" class="form-control" placeholder="标签（多个标签请用逗号隔开）">
+                        </div>
+                        <div id="channel-create-tags-info">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p class="bg-danger danger-info" id="Channel-Create-Error"></p>
+        <div id="channel-create-button-box-new">
+            <button class="btn btn-cancel" onclick="window.location.assign('/home')" >取消</button>
+            <button class="btn" id="channel-create-button">创建</button>
+        </div>
+    </div>
+</script>
+<!-- 创建频道页面 
+<script type="text/template" id="tp-create-channels"> -->
+  <!--  <div id="create-channel">
+        <h3 id="create-channel-title">创建书签频道</h3>
+        <div id="create-channel-discription" >
+        书签频道是一个书签的集合，你可以基于某个话题和兴趣去创建。之后，你便可以向这个书签频道提交与它相关的书签了。
+        对了，你的书签频道也可以被其他人订阅哦。这些订阅用户也可以向你的书签频道提交书签哦，不过需要你审核哦。
+        </div>
         <div>
             <div id="channel-info-wrapper">
                 <div class="channel-create-item">
@@ -175,10 +252,9 @@
         <div id="channel-create-button-box">
             <button class="btn" id="channel-create-button">创建</button>
         </div>
-    </div>
-</script>
-
-<!-- 个人中心（废弃） -->
+    </div> -->
+<!-- </script> -->
+<!-- 个人中心（废弃）
 <!--
 <script type="text/x-handlebars-template" id="tp-personal-center">
     <div class="personal-center">
@@ -297,7 +373,6 @@
                                 <div class="single-link-button">
                                     <button class="up" title="赞同" data-bookmarkid="<%= list[i]['dList'][j]['_id']%>">
                                         <i class="vote-up"></i>
-                                        <!-- <span class="lable">赞同</span> -->
                                         <span class="count"><%= list[i]['dList'][j]['likeNum'] %></span>
                                     </button>
                                     <button class="down" title="反对" data-bookmarkid="<%= list[i]['dList'][j]['_id']%>">
@@ -313,7 +388,7 @@
                                     <div class="footer-part">
                                         <span class="submit-time">提交于:<%= moment(''+list[i]['dList'][j]['postTime']).format('H:mm:ss') %></span>
                                         <span>by <a href="/u/<%= list[i]['dList'][j]['postUser']['userId']%>" data-userId="<%= list[i]['dList'][j]['postUser']['userId']%>"><%= list[i]['dList'][j]['postUser']['username'] %></a></a></span>
-                                        <!-- <span><i class="glyphicon glyphicon-star"></i><a class="collect" href="#">收藏</a></span>  -->
+
                                     </div>
                                 </div>
 
@@ -322,6 +397,7 @@
                     <% } %>
                 <% } %>
             </ul>
+            <div class= 'add-channel'>
             <div style="height:100px"></div>
         </div>
     </div>

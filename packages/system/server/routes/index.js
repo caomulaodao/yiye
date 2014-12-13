@@ -49,4 +49,9 @@ module.exports = function(System, app, auth, database) {
         res.send(html);
       });
   })
+
+  //url爬虫接口
+  app.route('/system/scraper')
+     .post(index.scraper);
+
 };

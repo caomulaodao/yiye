@@ -10,7 +10,9 @@ module.exports = function(Bookmarks, app, auth, database) {
     app.route('/api/bookmarks/post')
         .post(bookmarks.receive);
 
-
+    //爬虫提交的bookmarks
+    app.route('/api/bookmarks/scraper/post')
+        .post(bookmarks.scraperReceive);
     //获取频道内的书签
     app.route('/api/bookmarks/init')
         .get(bookmarks.init);
@@ -37,4 +39,5 @@ module.exports = function(Bookmarks, app, auth, database) {
     //删除并通过某个书签
     app.route('/api/bookmarks/delete/:channelId/:bookmarkId')
         .post(bookmarks.delete);
+
 };

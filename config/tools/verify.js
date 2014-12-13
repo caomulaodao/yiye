@@ -53,9 +53,19 @@ function isNumber(number){
 	if ((number+'').indexOf('.')>-1) return false;	
 	return true;
 }
+//判断是否url 必须带有头部
+function isUrl(str) { 
+	if (typeof str !=='string') {return false;}
+	var RegUrl = new RegExp(); 
+	RegUrl.compile("^[A-Za-z]+://[A-Za-z0-9-_]+\\.[A-Za-z0-9-_%&\?\/.=]+$");//jihua.cnblogs.com 
+		if (!RegUrl.test(str)) { return false; } 
+	return true; 
+} 
+
 exports.userVerify = userVerify;
 exports.idVerify = idVerify;
 exports.xssVerify = xssVerify;
 exports.isString = isString;
 exports.isArray = isArray;
 exports.isNumber = isNumber;
+exports.isUrl = isUrl;
