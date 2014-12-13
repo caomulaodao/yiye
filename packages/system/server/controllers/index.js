@@ -199,7 +199,7 @@ exports.scraper = function(req,res){
         var result = {
             title:title,
             description:description,
-            img:imgUrl
+            imgUrl:imgUrl
         }
         res.sendResult('返回网站信息成功',0,result);
     }

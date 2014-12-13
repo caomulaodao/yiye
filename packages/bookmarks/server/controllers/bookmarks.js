@@ -135,10 +135,103 @@ exports.receive = function(req,res){
             return res.sendResult('提交成功!',0,channels);
         });
     });
-
-
-
 }
+//频道界面添加书签插件的接口
+exports.scraperReceive = function(req,res){
+    if(!req.user) return res.sendResult('请先注册或登录',1000,null);
+    var titleLength=100,descriptionLength=200;//限制长度
+    if(req.body.tags==null) req.body.tags='';
+    if(req.body.title==null){return res.sendResult('标题不能为空',3001,null);}
+    if(req.body.description==null){return res.sendResult('描述不能为空',3002,null);}
+    if(req.body.url==null){return res.sendResult('书签地址不能为空',3003,null);}
+    if(req.body.image==null){return res.sendResult('图片不能为空',3004,null);}
+    if(req.body.channel==null||(verify.idVerify(req.body.channel))){return res.sendResult('频道ID格式错误',3006,null);}
+    if(!(
+        verify.isString(req.body.title)&&verify.isString(req.body.description)&&verify.isString(req.body.url)
+        &&verify.isString(req.body.image)&&verify.isString(req.body.tags)
+        )){ return res.sendResult('参数类型错误',2000,null)};//判断数据格式
+    if (!verify.isUrl(url)){return res.sendResult('url格式错误',2010,null);}
+    var bookmarks ={
+        title:xss(req.body.title,{whiteList:{}}),
+        description:xss(req.body.description,{whiteList:{}}),
+        url:encodeURIComponent(xss(req.body.url,{whiteList:{}})),
+        image:xss(req.body.image,{whiteList:{}}),
+        channels:req.body.channel,
+        tags:xss(req.body.tags,{whiteList:{}})
+    };
+    if(bookmarks.title.length>titleLength){bookmarks.title=bookmarks.title.substr(0,titleLength);}
+    if(bookmarks.description.length>descriptionLength){bookmarks.description=bookmarks.description.substr(0,descriptionLength);}
+    bookmarks.tags = getTags(bookmarks.tags);
+    var channels = [];
+    channels[0] =req.body.channel;
+    bookmarks.channels = undefined;
+
+    async.parallel([
+        function(callback){
+            async.map(channels,function(item,callback){
+                //查看用户是否是管理员？
+                Channel2User.findOne({channelId:item,userId:req.user._id},function(err,doc){
+                    if(err) {console.log(err);return res.sendError()}
+                    var bookmark = Bookmarks(bookmarks);
+                    //向书签中加入所在频道的信息
+                    bookmark.channelInfo.channelId = doc.channelId;
+                    bookmark.channelInfo.channelName = doc.name;
+                    bookmark.channelInfo.channelLogo = doc.logo;
+                    var pass = false;
+                    //如果是管理员或创始人，则直接审核通过
+                    if(doc.type == "creator" || doc.type == "admin"){
+                        pass = true;
+                        bookmark.checked = 5;
+                    }
+                    bookmark.channelId = item;
+                    bookmark.postUser = {userId:req.user._id,username:req.user.username};
+                    bookmark.save(function(err){
+                        if(err) {console.log(err);return res.sendError()}
+                        if(pass){
+                            Channels.update({_id:item},{$inc:{bmkNum:1}},function(err,doc){
+                                if(err) {console.log(err);return res.sendError()}
+                                callback(null,true);
+                            });
+                        }else{
+                            callback(null,true);
+                        }
+                    });
+                });
+            }, function(err, results){
+                if(err) {console.log(err);return res.sendError()}
+                callback(null,true);
+            });
+        },
+        function(callback){
+            // 添加用户自己留底的书签记录
+            var bookmark = Bookmarks(bookmarks);
+            bookmark.checked = 6;
+            bookmark.channelId =  undefined;
+            bookmark.postUser = {userId:req.user._id,username:req.user.username};
+            bookmark.save(function(err){
+                if(err) {console.log(err);return res.sendError()}
+                User.update({_id:req.user._id},{$inc:{postNum:1}},function(err,doc){
+                    if(err) {console.log(err);return res.sendError()}
+                    callback(null,true);
+                })
+            });
+        }
+    ]
+    ,function(err,results){
+        //返回频道信息
+        Channel2User.find({userId:req.user._id,channelId:{$in:channels}},'channelId name logo type',function(err,channels){
+            if(err) {console.log(err);return res.sendError();}
+            return res.sendResult('提交成功!',0,channels);
+        });
+    });
+}
+
+
+
+
+
+
+
 //获取频道内的书签
 exports.init  =  function(req,res){
     var limit=20;
