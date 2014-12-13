@@ -50,8 +50,6 @@
 }
 .staff{
 	/*display: none;*/
-    width: 500px;
-    margin: 0 auto;
 }
 .staff-gallery{
 	width: 400px;
@@ -112,12 +110,13 @@
 .staff-info-txt:after{
 	content:"」";
 }
-.staff h1{
+.staff h1,#joinus h1{
     font-size: 30px;
     margin-bottom: 20px;
     text-align: center;
+    color: #40c192;
 }
-.staff p{
+.staff p,#joinus p{
     font-size: 16px;
 }
 /*join us*/
@@ -125,6 +124,7 @@
 	margin: 0;
 	text-align: center;
 	line-height:400px;
+    color: #40c192;
 	/*display: none;*/
 }
 @font-face {
@@ -141,7 +141,7 @@
     -webkit-font-smoothing: antialiased;
     -webkit-text-stroke-width: 0.2px;
     -moz-osx-font-smoothing: grayscale;
-    color:rgba(23,20,15,1);
+    color:#40c192;
 }
 .sponsor{
     text-align: center;

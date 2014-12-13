@@ -575,8 +575,8 @@ button:focus {outline:0;}
     margin-left: 330px;
     background-color: #f3f3f3;
     position: relative;
-    /*overflow-x: hidden;*/
-    overflow: hidden;
+    overflow-x: hidden;
+    /*overflow: hidden;*/
 }
 
 .content-page-content {
@@ -1429,7 +1429,11 @@ a.ex-creator {float: right;}
     width: 100px;
     float: left;
 }
+#create-channel{
+    width: 600px;
+}
 .card-wrapper{
+    width: 600px;
     border: 1px solid #ccc;
     box-shadow: 0 0 2px #ccc;
     overflow: hidden;
