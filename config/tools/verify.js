@@ -41,6 +41,10 @@ function xssArray(array){
 function isString(str){
 	return typeof str==='string';
 }
+function isEmail(str){
+    if (typeof str!='string') return false;
+	return /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/.test(str);
+}
 //判断是否数组
 function isArray(array){
 	 return Object.prototype.toString.call(array) === '[object Array]';  
@@ -69,3 +73,4 @@ exports.isString = isString;
 exports.isArray = isArray;
 exports.isNumber = isNumber;
 exports.isUrl = isUrl;
+exports.isEmail = isEmail;

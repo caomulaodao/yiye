@@ -108,7 +108,10 @@ $(function(){
 
         events:{
             "click .up" : "bkUp",
-            "click .down": "bkDown"
+            "click .down": "bkDown",
+            "click .add-channel": "addChannel",
+            "mouseover .add-channel": "showAnimate",
+            "mouseout .add-channel": "outAnimate"
         },
 
         render: function(channelId){
@@ -212,6 +215,24 @@ $(function(){
                 }
 
             }})
+        },
+
+        showAnimate: function(event){
+            $('.add-channel').stop().animate({width:'100px',height:'100px',border:'10px soild #eee',fontSize:'50px',right:'90px',borderRadius: '50%'},300);           
+        },
+
+        outAnimate: function(event){
+            $('.add-channel').stop().animate({width:'80px',height:'80px',border:'20px soild #eee',fontSize:'30px',right:'100px',borderRadius: '50%'},300);
+        },
+
+        addChannel: function(event){
+            $('.add-channel').text("");
+            $('.add-channel').stop().animate({
+                width:'200px',
+                height:'70px',
+                border:'1px soid rgba(200,200,200,1)',
+                borderRadius: '0'
+                })
         }
     });
 
@@ -429,7 +450,7 @@ $(function(){
             var that = this;            
             that.attentionMsg = new attentionMsg;
             that.attentionMsg.fetch({
-                url: 'api/home/attentionmsg',
+                url: 'api/home/remind',
                 data: {'number': 1},
                 success: function (model, response) {
                     if (response.code == 0){
@@ -544,7 +565,7 @@ $(function(){
                 var nNum = that.attentionMsg.get('number');
                 that.attentionMsg.fetch({
                     data: {number: nNum},
-                    url: "/api/home/attentionmsg",
+                    url: "/api/home/remind",
                     success: function (model, response) {
                         if (response.code==0){
                             $('.user-attention-list').append(that.attentionTemplate(response.data));
@@ -869,11 +890,11 @@ $(function(){
         },
         
         //展示频道
-        showChannel : function(event){
-            var channelId = $(event.currentTarget).data('id');
-            var list = new listView;
-            list.render(channelId);
-        },
+        // showChannel : function(event){
+        //     var channelId = $(event.currentTarget).data('id');
+        //     var list = new listView;
+        //     list.render(channelId);
+        // },
 
         //展示发现页面
         showExplore : function(){
@@ -929,6 +950,7 @@ $(function(){
         defaultRoute : function(){
         },
         subControl : function(){
+
             $('.subscription').addClass('active').next().removeClass('active');
             $('.channel-list').show().next().hide();
         },
@@ -937,9 +959,11 @@ $(function(){
             $('.admin-interface').show().prev().hide();
         },
         channelBookmarks : function(id){
-            var dataId = id;
+            var channelsId = id;
+            var view = new listView();
             $('.channel-item').removeClass('active');
-            $('.channel-item[data-id='+ dataId +']').addClass('active');
+            $('.channel-item[data-id='+ channelsId +']').addClass('active');
+            view.render(channelsId);
         },
         create : function(){
             var view = new NewChannelView();
