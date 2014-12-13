@@ -71,7 +71,7 @@ button:focus {outline:0;}
 
 /* create page */
 #create-channel {
-    margin: 20px 40px;
+    margin: 20px 200px;
 }
 #create-channel .btn:focus{
     outline: none;
@@ -92,8 +92,9 @@ button:focus {outline:0;}
     margin-bottom: 20px;
 }
 #create-channel-title{
-    font-size: 18px;
+    font-size: 20px;
     margin: 20px 0px;
+    text-align: center;
     padding-bottom: 15px;
     border-bottom: solid 1px #dadada;
     box-shadow: 0 1px 0 #fff;
@@ -107,16 +108,23 @@ button:focus {outline:0;}
     width: 100px;
 }
 #channel-create-logo-info{
+    vertical-align: bottom;
     display: inline-block;
     min-width: 250px;
     padding-left: 20px;
 }
+#create-channel-discription{
+    padding:20px 5px;
+    color: #999;
+}
 #channel-create-logo-info button{
+
     color: #ffffff;
     background-color: #00C995;
 }
 #channel-create-logo-info p{
     padding-top: 10px;
+    margin: 0;
 }
 #channel-create-name{
     display: inline-block;
@@ -141,6 +149,7 @@ button:focus {outline:0;}
 }
 #channel-create-cover-info button{
     color: #ffffff;
+
     background-color: #00C995;
 }
 #channel-create-cover-info p{
@@ -165,6 +174,8 @@ button:focus {outline:0;}
     color: #ffffff;
     background-color: #00C995;
     width: 100px;
+    margin: 0 auto;
+    display: block;
 }
 #Channel-Create-Error{
     max-width: 800px;
@@ -1396,4 +1407,80 @@ a.ex-creator {float: right;}
     text-align: center;
     margin: 30px auto;
     font-size: 1.8em;
+}
+/*新版新建频道*/
+.image-wrapper{
+    width: 100px;
+    float: left;
+}
+.card-wrapper{
+    border: 1px solid #ccc;
+    box-shadow: 0 0 2px #ccc;
+    overflow: hidden;
+    padding: 10px 20px;
+    padding-bottom: 20px;
+    background: #fff;
+    margin: 30px 0;
+}
+.card-wrapper .channel-create-item-main{
+    float: right;
+    min-width: 400px;
+    width: 426px;
+}
+.card-wrapper #channel-create-description,.card-wrapper #channel-create-tags,.card-wrapper #channel-create-name{
+    width: 426px;
+}
+.card-wrapper .channel-create-item label{
+    width: 76px;
+}
+.card-wrapper input,.card-wrapper textarea{
+    background-color: #f1f1f1;
+    box-shadow: none;
+    border: none;
+    border-radius: 0;
+    transition:none;
+    margin-bottom: 15px;
+}
+.card-wrapper textarea{
+    margin-bottom: 0px;
+}
+
+.card-wrapper input:focus,.card-wrapper textarea:focus{
+    border: none;
+    border-color: none;
+    outline: 0;
+    box-shadow: none;
+    background-color: #fcfcfc;
+}
+.card-wrapper #channel-create-logo{
+    position: relative;
+}
+.card-wrapper #channel-create-logo p{
+    margin-bottom: 0;
+    position: absolute;
+    bottom: 0;
+    color: #fff;
+    cursor: pointer;
+    background-color: rgba(0,201,149,0.8);
+}
+.card-wrapper #channel-create-logo span{
+    display: block;
+    width: 100px;
+    text-align: center;
+}
+#channel-new-logo-info p{
+    font-size: 12px;
+}
+#channel-create-button-box-new{
+    text-align: right;
+}
+#channel-create-button-box-new button{
+    margin:0 5px;
+}
+#channel-create-button-box-new .btn-cancel{
+    background: rgba(200,200,200,1);
+}
+#channel-create-button-box-new #channel-create-button{
+    background-color: rgba(0,201,149,0.8);
+    color:#fff;
 }
