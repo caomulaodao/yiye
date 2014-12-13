@@ -66,7 +66,7 @@
                     {% endfor %}
                     <div class="create-channel">
                         <button>
-                            <span>新建频道({{ creatNum }}/5)</span>
+                            <span>新建书签频道({{ creatNum }}/5)</span>
                         </button>
                     </div>
                 </ul>
@@ -83,7 +83,8 @@
 
 
 <!-- 结果提示弹窗  -->
-<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="result-dialog">
+<div id="dialog-output"></div>
+<!-- <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="result-dialog">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
@@ -95,7 +96,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 <!-- 创建频道页面update -->
 <script type="text/template" id="tp-create-channels">
     <div id="create-channel">
@@ -686,7 +687,7 @@
         </ul>
         <div class="tab-content">
             
-            <div role="tabpanel" class="tab-pane" id="new">
+            <div role="tabpanel" class="tab-pane active" id="new">
                 <div class="user-info-item">
                     <label>用户名:</label>
                     <div class="user-info-item-main">
