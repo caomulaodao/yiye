@@ -96,11 +96,88 @@
         </div>
     </div>
 </div>
-
-<!-- 创建频道页面 -->
+<!-- 创建频道页面update -->
 <script type="text/template" id="tp-create-channels">
     <div id="create-channel">
-        <h3 id="create-channel-title">创建频道</h3>
+        <h3 id="create-channel-title">创建书签频道</h3>
+        <div id="create-channel-discription" >
+        书签频道是一个书签的集合，你可以基于某个话题和兴趣去创建。之后，你便可以向这个书签频道提交与它相关的书签了。
+        对了，你的书签频道也可以被其他人订阅哦。这些订阅用户也可以向你的书签频道提交书签哦，不过需要你审核哦。
+        </div>
+        <div class='card-wrapper'>
+            <div id="channel-info-wrapper">
+                <div class='image-wrapper'>
+                    <div id="channel-create-logo">
+                            <img src="http://yiye.qiniudn.com/cLogo/7647966b7343c2906d3f341cf255be6b.png" id="channel-logo">
+                            <p><span id="change-channel-logo">上传</span></p>
+                    </div>
+                    <div id="channel-new-logo-info">
+                        <p>支持 JPG、PNG、GIF 格式，不要超过 2M 。</p>
+                    </div>
+                </div>
+                <div class='info-wrapper'>
+                    <div class="channel-create-item-main">
+                        <div id="channel-create-name">
+                            <input type="text" class="form-control" placeholder="输入频道名称">
+                        </div>
+                    </div>
+                     <div class="channel-create-item-main">
+                        <div id="channel-create-description">
+                            <textarea rows="5" class="form-control" placeholder="请填写比较详细的描述信息"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="channel-create-item">
+                    <div class="channel-create-item-main">
+                        <form id="channel-create-type">
+                                <label class="checkbox-inline">
+                                    <input type="radio" name="type"  value="life" > 生活
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="radio" name="type"  value="technology" > 科技
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="radio" name="type"  value="humanities" > 人文
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="radio" name="type"  value="entertainment" > 娱乐
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="radio" name="type"  value="sports" > 体育
+                                </label>
+                        </form>
+                        <div id="channel-create-type-info">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="channel-create-item">
+                    <div class="channel-create-item-main">
+                        <div id="channel-create-tags">
+                            <input type="email" class="form-control" placeholder="标签（多个标签请用逗号隔开）">
+                        </div>
+                        <div id="channel-create-tags-info">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p class="bg-danger danger-info" id="Channel-Create-Error"></p>
+        <div id="channel-create-button-box-new">
+            <button class="btn btn-cancel" onclick="window.location.assign('/home')" >取消</button>
+            <button class="btn" id="channel-create-button">创建</button>
+        </div>
+    </div>
+</script>
+<!-- 创建频道页面 
+<script type="text/template" id="tp-create-channels"> -->
+  <!--  <div id="create-channel">
+        <h3 id="create-channel-title">创建书签频道</h3>
+        <div id="create-channel-discription" >
+        书签频道是一个书签的集合，你可以基于某个话题和兴趣去创建。之后，你便可以向这个书签频道提交与它相关的书签了。
+        对了，你的书签频道也可以被其他人订阅哦。这些订阅用户也可以向你的书签频道提交书签哦，不过需要你审核哦。
+        </div>
         <div>
             <div id="channel-info-wrapper">
                 <div class="channel-create-item">
@@ -175,8 +252,94 @@
         <div id="channel-create-button-box">
             <button class="btn" id="channel-create-button">创建</button>
         </div>
+    </div> -->
+<!-- </script> -->
+<!-- 个人中心（废弃）
+<!--
+<script type="text/x-handlebars-template" id="tp-personal-center">
+    <div class="personal-center">
+        <ul class="nav nav-tabs" role="tablist" id="channel-manage-tab">
+            <li role="news" class="active"><a href="#news" role="tab" data-toggle="tab" id="news-tab" data-num="{{ news.length }}">新消息{% if news > 0 %}({{ news }}){% endif %}</a></li>
+            <li role="news"><a href="#history" role="tab" data-toggle="tab" id="history-tab">历史消息</a></li>
+            <li role="presentation"><a href="#profile" role="tab" data-toggle="tab">密码</a></li>
+            <li role="presentation"><a href="#new" role="tab" data-toggle="tab">账号</a></li>
+            <button class="btn" id="gotoPerson" onclick="window.open('/u/{{ ''+user._id}}')">我的主页</button>
+        </ul>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane" id="new">
+                <div class="user-info-item">
+                    <label>用户名:</label>
+                    <div class="user-info-item-main">
+                        <div id="user-info-name">
+                            {{ user.username }}
+                        </div>
+                        <div id="channel-info-name-info">
+                        </div>
+                    </div>
+                </div>
+                <div class="user-info-item">
+                    <label  class="">头像:</label>
+                    <div class="user-info-item-main">
+                        <div id="user-info-logo">
+                            <img src="http://yiye.qiniudn.com/{{ user.avatar }}" id="user-change-logo">
+                        </div>
+                        <div id="user-info-logo-info">
+                            <div><button class="btn" id="change-user-logo">上传</button></div>
+                            <p>支持 JPG、PNG、GIF 格式，不要超过 2M 。</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="user-info-item">
+                    <label>签名:</label>
+                    <div class="user-info-item-main">
+                        <div id="user-info-intro">
+                            <textarea rows="5" class="form-control">{{ user.intro }}</textarea>
+                        </div>
+                        <div id="user-info-intro-info">
+                        </div>
+                    </div>
+                </div>
+                <p class="bg-danger danger-info" id="password-Change-Error"></p>
+                <div id="user-info-button-box">
+                    <button class="btn" id="user-info-button">更新</button> <button type="button" class="btn btn-link" id="user-quit-button" onclick="window.open('/logout')">账号退出</button>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="profile">
+                <div class="user-password-item">
+                    <label>当前密码:</label>
+                    <div class="user-password-item-main" >
+                        <input type="password"  id="user-current-password" class="form-control">
+                    </div>
+                </div>
+                <div class="user-password-item">
+                    <label>新的密码:</label>
+                    <div class="user-password-item-main" >
+                        <input type="password"  id="user-new-password" class="form-control">
+                    </div>
+                </div>
+                <div class="user-password-item">
+                    <label>确认密码:</label>
+                    <div class="user-password-item-main" >
+                        <input type="password"  id="user-repeat-password" class="form-control">
+                    </div>
+                </div>
+                <p class="bg-danger danger-info" id="User-Change-Error"></p>
+                <div id="password-change-button-box">
+                    <button class="btn" id="password-change-button">修改</button>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane active" id="news">
+                <ul class="user-news-list">
+                </ul>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="history">
+                <ul class="user-history-list"></ul>
+            </div>
+        </div>
+
     </div>
 </script>
+-->
 <!-- 频道主界面 -->
 <script type="text/x-handlebars-template" id="tp-channels-main">
     <div class="content-page-content">
