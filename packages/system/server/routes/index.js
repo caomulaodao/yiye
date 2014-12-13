@@ -41,7 +41,8 @@ module.exports = function(System, app, auth, database) {
   app.get('/please/use/chrome',function(req,res){
     res.render('useChrome');
   });
-  
+  //提交bug
+  app.route('/api/bugs').post(index.bugs);
   // 关于我们
   app.get('/our/team',function(req,res){
       System.render('about',req,function(err,html){
