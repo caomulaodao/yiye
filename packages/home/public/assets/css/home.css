@@ -755,7 +755,11 @@ a.header-channel-name, a.header-channel-name:hover{
     height: 80px;
     border-radius: 50%;
     border:20px solid #eee;
-
+    color:#b4b4b4;
+    font-size: 30px;
+    text-align: center;
+    cursor: pointer;
+    z-index: 250;
 }
 
 

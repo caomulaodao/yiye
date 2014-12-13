@@ -42,7 +42,7 @@ module.exports = function(Home, app, auth, database) {
     app.route('/api/home/praisemsg')//可用
         .get(home.praisemsg);
     //频道被关注时提醒
-    app.route('/api/home/remind')
+    app.route('/api/home/remind')//可用
         .get(home.remindmsg);
     //各种消息的总数
     app.route('/api/home/msgcount')//可用

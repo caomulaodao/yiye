@@ -108,7 +108,10 @@ $(function(){
 
         events:{
             "click .up" : "bkUp",
-            "click .down": "bkDown"
+            "click .down": "bkDown",
+            "click .add-channel": "addChannel",
+            "mouseover .add-channel": "showAnimate",
+            "mouseout .add-channel": "outAnimate"
         },
 
         render: function(channelId){
@@ -212,6 +215,24 @@ $(function(){
                 }
 
             }})
+        },
+
+        showAnimate: function(event){
+            $('.add-channel').stop().animate({width:'100px',height:'100px',border:'10px soild #eee',fontSize:'50px',right:'90px',borderRadius: '50%'},300);           
+        },
+
+        outAnimate: function(event){
+            $('.add-channel').stop().animate({width:'80px',height:'80px',border:'20px soild #eee',fontSize:'30px',right:'100px',borderRadius: '50%'},300);
+        },
+
+        addChannel: function(event){
+            $('.add-channel').text("");
+            $('.add-channel').stop().animate({
+                width:'200px',
+                height:'70px',
+                border:'1px soid rgba(200,200,200,1)',
+                borderRadius: '0'
+                })
         }
     });
 
