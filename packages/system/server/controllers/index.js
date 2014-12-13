@@ -47,7 +47,7 @@ exports.render = function(req, res,Package) {
 
 };
 exports.bugs = function(req,res){
-    if (!myVerify.userVerify(req.body.username)){
+  if (!myVerify.isEmail(req.body.email)){
       return res.sendResult("含有非法字符",2001,null);
   }
   var bug = new Bugs(req.body);
@@ -55,9 +55,14 @@ exports.bugs = function(req,res){
   if (errors) {
       return res.sendResult(errors,2001,null);
   }
-  user.save(function(){
-    
+  bug.save(function(err){
+        if(err){
+            return res.sendResult("提交错误",err,null);
+        }
+  },function(){
+    return res.sendResult("提交成功","0",null);
   });
+
 }
 //渲染发现页面
 exports.explore = function(req, res,Package){

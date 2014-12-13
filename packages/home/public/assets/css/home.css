@@ -1415,8 +1415,11 @@ a.ex-creator {float: right;}
     width: 100px;
     float: left;
 }
+#create-channel{
+    width: 600px;
+}
 .card-wrapper{
-    width: 595px;
+    width: 600px;
     border: 1px solid #ccc;
     box-shadow: 0 0 2px #ccc;
     overflow: hidden;

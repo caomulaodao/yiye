@@ -76,23 +76,23 @@
     <!-- bug反馈 -->
     <div class='one-page' >
         <div class='bug-reporter ab-center'>
-         <form action='/' method='post' class="form-horizontal">
+         <form action='/api/bugs' method='post' class="form-horizontal" name='form'>
             <!-- 直接填充现有的nickname/如果没有则提示 -->
               <div class="form-group form-group-lg">
-                <label for="exampleInputEmail1 " class='col-sm-4 control-label'>你的名字</label>
+                <label for="exampleInputEmail1 " class='col-sm-4 control-label'>你的邮箱</label>
                 <div class="col-sm-6">
-                  <input class="form-control" type="text" id="formGroupInputLarge" placeholder="昵称">
+                  <input class="form-control" name='email' type="email" id="email-input" placeholder="邮箱">
                 </div>
               </div>
                <div class="form-group form-group-lg">
                 <label class="col-sm-4 control-label" for="formGroupInputSmall">bug反馈</label>
                 <div class="col-sm-6">
-                    <textarea name="bug-zone" class="form-control" rows="6" placeholder="问题描述"></textarea>
+                    <textarea name="bugzone" id='bugzone' class="form-control" rows="6" placeholder="问题描述"></textarea>
                 </div>
               </div>
              <!-- 问题 -->
-             <button type="button" class="btn-bug-reporter btn btn-success">提交</button>
          </form>
+          <button class="btn-bug-reporter btn btn-success">提交</button>
      </div>
     </div>
     <!-- 关注我们 -->
@@ -144,6 +144,28 @@
  <script rel="script" src="/bower_components/jquery/dist/jquery.js"></script>
  <script src='/system/assets/js/about.js'></script>
 <script rel="script" src="/home/assets/js/home.js"></script>
+<script>
+    $('.btn-bug-reporter').click(function(e){
+        e.preventDefault();
+        $.ajax({
+            type:"POST",
+            url:"/api/bugs",
+            data:{
+                email:$('#email-input').val(),
+                bugzone:$('#bugzone').val()
+            },
+            dataType:"json",
+            success:function(response){
+               if(response.code == 0){
+                    alert(response.msg);
+                    window.location.reload();
+               }else{
+                alert(response.msg);
+               }
+            }
+        });
+    });
+</script>
 <!--<script rel="script" src="/system/assets/js/system.about.js"></script>
 <script rel="script" src="/system/assets/js/system.about1.js"></script>
 <script rel="script" src="/system/assets/js/system.about2.js"></script>
