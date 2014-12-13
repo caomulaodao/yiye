@@ -672,7 +672,7 @@ $(function(){
         //通知tab
         inform: function() {
             var that = this;            
-            that.informMsg;
+            that.informMsg = new informMsg;
             that.informMsg.fetch({
                 url: 'api/home/callmsg',
                 data: {'number': 1},
@@ -687,12 +687,59 @@ $(function(){
                 }
             });
 
-            that.infromAjax.bScroll = true;   //许可Ajax加载
+            that.informAjax.bScroll = true;   //许可Ajax加载
             $('.content-page').scroll(function () {
                 that.informAjax();
             });
         },
 
+        // //关注tab
+        // attention: function() {
+        //     var that = this;            
+        //     that.attentionMsg = new attentionMsg;
+        //     that.attentionMsg.fetch({
+        //         url: 'api/home/attentionmsg',
+        //         data: {'number': 1},
+        //         success: function (model, response) {
+        //             if (response.code == 0){
+        //                 $('.user-attention-list').html(that.attentionTemplate(response.data));
+        //                 that.attentionMsg.set('number', 2);   //设置下次加载的number （滚动ajax加载）                  
+        //             }
+        //             else{
+        //                 console.log(response);
+        //             }
+        //         }
+        //     });
+
+        //     that.attentionAjax.bScroll = true;   //许可Ajax加载
+        //     $('.content-page').scroll(function () {
+        //         that.attentionAjax();
+        //     });
+        // },
+
+        // //点赞tab
+        // praise: function() {
+        //     var that = this;            
+        //     that.praiseMsg = new praiseMsg;
+        //     that.praiseMsg.fetch({
+        //         url: 'api/home/praisemsg',
+        //         data: {'number': 1},
+        //         success: function (model, response) {
+        //             if (response.code == 0){
+        //                 $('.user-praise-list').html(that.praiseTemplate(response.data));
+        //                 that.praiseMsg.set('number', 2);   //设置下次加载的number （滚动ajax加载）                  
+        //             }
+        //             else{
+        //                 console.log(response);
+        //             }
+        //         }
+        //     });
+
+        //     that.praiseAjax.bScroll = true;   //许可Ajax加载
+        //     $('.content-page').scroll(function () {
+        //         that.praiseAjax();
+        //     });
+        // },
 
         checkAjax: function() {
             var that = this;
@@ -741,7 +788,7 @@ $(function(){
                                 $('.user-check-list').append("<p class='no-news'>无新内容了</p>");
                             } else {
                                 that.informMsg.set("number", ++nNum);
-                                that.checkAjax.bScroll = true;     //许可Ajax加载
+                                that.informAjax.bScroll = true;     //许可Ajax加载
                             }                           
                         }
                         else {
@@ -750,7 +797,65 @@ $(function(){
                     }
                 });
             }
-        }
+        },
+
+        // attentionAjax: function() {
+        //     var that = this;
+        //     var nClientH = $(window).height();                  
+        //     var nScrollTop = $('.content-page').scrollTop();   
+        //     var nChannelH = $('.personal-center').height();     
+        //     if ((nClientH + nScrollTop >= nChannelH) && (that.attentionAjax.bScroll == true)) {
+        //         that.attentionAjax.bScroll = false;     //禁止Ajax加载
+        //         var nNum = that.attentionMsg.get('number');
+        //         that.attentionMsg.fetch({
+        //             data: {number: nNum},
+        //             url: "/api/home/attentionmsg",
+        //             success: function (model, response) {
+        //                 if (response.code==0){
+        //                     $('.user-attention-list').append(that.attentionTemplate(response.data));
+        //                     if (!response.data.isHave) {
+        //                         $('.user-attention-list').append("<p class='no-news'>无新内容了</p>");
+        //                     } else {
+        //                         that.attentionMsg.set("number", ++nNum);
+        //                         that.attentionAjax.bScroll = true;     //许可Ajax加载
+        //                     }                           
+        //                 }
+        //                 else {
+        //                     console.log(response);
+        //                 }   
+        //             }
+        //         });
+        //     }
+        // },
+
+        // praiseAjax: function() {
+        //     var that = this;
+        //     var nClientH = $(window).height();                  
+        //     var nScrollTop = $('.content-page').scrollTop();   
+        //     var nChannelH = $('.personal-center').height();     
+        //     if ((nClientH + nScrollTop >= nChannelH) && (that.praiseAjax.bScroll == true)) {
+        //         that.praiseAjax.bScroll = false;     //禁止Ajax加载
+        //         var nNum = that.praiseMsg.get('number');
+        //         that.praiseMsg.fetch({
+        //             data: {number: nNum},
+        //             url: "/api/home/praisemsg",
+        //             success: function (model, response) {
+        //                 if (response.code==0){
+        //                     $('.user-praise-list').append(that.praiseTemplate(response.data));
+        //                     if (!response.data.isHave) {
+        //                         $('.user-praise-list').append("<p class='no-news'>无新内容了</p>");
+        //                     } else {
+        //                         that.praiseMsg.set("number", ++nNum);
+        //                         that.praiseAjax.bScroll = true;     //许可Ajax加载
+        //                     }                           
+        //                 }
+        //                 else {
+        //                     console.log(response);
+        //                 }   
+        //             }
+        //         });
+        //     }
+        // }
 
     });
 
@@ -1019,14 +1124,7 @@ $(function(){
             this.showExplore();
         },
 
-        //展示创建频道弹出页
-        createChannels : function(){
-            // var view = new NewChannelView();
-            // this.main.html(view.render().el);
-            // view.renderAfter();
-            Router.navigate('create',true);
-        },
-
+        
         //展示频道
         showChannel : function(event){
             var channelId = $(event.currentTarget).data('id');
