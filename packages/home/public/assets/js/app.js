@@ -747,11 +747,11 @@ $(function(){
 
         
         //展示频道
-        showChannel : function(event){
-            var channelId = $(event.currentTarget).data('id');
-            var list = new listView;
-            list.render(channelId);
-        },
+        // showChannel : function(event){
+        //     var channelId = $(event.currentTarget).data('id');
+        //     var list = new listView;
+        //     list.render(channelId);
+        // },
 
         //展示发现页面
         showExplore : function(){
@@ -816,12 +816,11 @@ $(function(){
             $('.admin-interface').show().prev().hide();
         },
         channelBookmarks : function(id){
-            var dataId = id;
+            var channelsId = id;
             var view = new listView();
             $('.channel-item').removeClass('active');
-            $('.channel-item[data-id='+ dataId +']').addClass('active');
-            App.main.html(view.render());console.log('sds');
-            view.renderAfter();
+            $('.channel-item[data-id='+ channelsId +']').addClass('active');
+            view.render(channelsId);
         },
         create : function(){
             var view = new NewChannelView();
