@@ -76,12 +76,13 @@ function stripscript(s) {
         rs = s.replace(pattern, '');
     return rs;
 }
-//将用户输入的url转换为可以访问的url
+//将用户输入的url转换为可以访问的url 如果匹配不成功就返回false 否则返回 服务器可以访问的链接
 function safeUrl(url){
     var RegUrl = new RegExp();
     RegUrl.compile("^(https?://)?[A-Za-z0-9-_]+\\.[A-Za-z0-9-_%&\?\/.=]+$",'g');
-    RegUrl.test(url,'$1');console.log(RegExp.$1);
-    if(RegExp.$1) return url;
+    var result = RegUrl.test(url,'head');
+    if (!result) return false;
+    if(RegExp.head) return url;
     return 'http://'+url;
 }
 

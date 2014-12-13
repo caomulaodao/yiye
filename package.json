@@ -76,7 +76,8 @@
     "time-grunt": "^0.3.1",
     "view-helpers": "^0.1.4",
     "xss": "*",
-    "request" : "*"
+    "request" : "*",
+    "jsdom" :"*"
   },
   "devDependencies": {
     "grunt-karma": "^0.8.2",
