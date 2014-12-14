@@ -57,6 +57,7 @@ button:focus {outline:0;}
 .personal-center {
     margin: 20px 20px;
     min-width: 450px;
+    height: 100%;
 }
 
 #channel-manage-tab>li.active a {
@@ -576,7 +577,7 @@ button:focus {outline:0;}
     background-color: #f3f3f3;
     position: relative;
     overflow-x: hidden;
-    /*overflow: hidden;*/
+    overflow-y: scroll;
 }
 
 .content-page-content {
@@ -1094,6 +1095,7 @@ p.add-true{
 /**   user set page  **/
 .tab-content{
     padding-top: 20px;
+    height: 100%;
 }
 .user-info-item{
     margin-bottom: 20px;
@@ -1388,17 +1390,17 @@ a.have-subed:hover {
 a.ex-creator {float: right;}
 
 /** 用户历史记录 **/
-.user-history-list{
+.user-inform-list{
     list-style: none;
     margin: 10px 10px;
 }
-.user-history-list li{
+.user-inform-list li{
     position: relative;
     margin-bottom: 10px;
     border-bottom: solid 1px rgb(250,250,250);
     padding-bottom: 5px;
 }
-.user-history-list li .status{
+.user-inform-list li .status{
     position: absolute;
     left: 0px;
     top: 0px;
@@ -1410,11 +1412,11 @@ a.ex-creator {float: right;}
     text-align: center;
     font-size: 13px;
 }
-.user-history-list li .status.pass{background-color: #00C995;}
+.user-inform-list li .status.pass{background-color: #00C995;}
 
-.user-history-list li .status.fail{background-color: #D8556E;}
+.user-inform-list li .status.fail{background-color: #D8556E;}
 
-.user-history-list li .main{margin-left: 50px;}
+.user-inform-list li .main{margin-left: 50px;}
 
 .user-history-bookmarks{
     height: 20px;
@@ -1554,14 +1556,12 @@ a.ex-creator {float: right;}
 .post-item{
     margin-bottom: 15px;
     margin-right: 40px;
+    list-style-type: none;
 }
 
-.post-item .link-part-content{padding-left:0px;}
-
-.link-part-content {
-    padding-left: 65px;
-    width: 100%;
-    min-height: 100px;
+.post-item .link-part-content{
+    padding-left:0px;
+    border-bottom: 2px solid #fff;
 }
 
 .bookmark-pic{
@@ -1574,14 +1574,6 @@ a.ex-creator {float: right;}
 .bookmark-pic img{
     height: 50px;
     width: 100px;
-}
-.link {
-    font-size: 1.6em;
-    font-weight: bold;
-    color: #157CCC;
-}
-.link:hover {
-    color: #157ccc;
 }
 
 .description b{font-weight: normal;}
@@ -1616,4 +1608,7 @@ a.ex-creator {float: right;}
 .submit-time {
     color: #999;
     margin-right:4px;
+}
+.to-channel {
+    font-size: 1.5em;
 }

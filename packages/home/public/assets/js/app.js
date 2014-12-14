@@ -321,15 +321,11 @@ $(function(){
             this.channel.save(null,{error: function(model, response){
                 $('#Channel-Create-Error').text('网络异常').show();
             },success: function(model, response){
-                console.log(model,response);
                 if(response.code == 0) {
-                    modelAlert("频道创建成功 ！",["去看看","取消"],function(){
-                        //成功回调
-                        window.location.href="/channel/"+response.data.channelId;
-                    },function(){
-                        //失败回调
-                       window.location.href="/home";
-                    });
+                    popup("频道创建成功 ！");
+                    setTimeout(function(){
+                        location.href = '/home';
+                    },1000);
                 } else {
                     popup(response.msg);
                 }                
@@ -361,6 +357,8 @@ $(function(){
             'touch #inform-btn' : 'inform',
             'touch #attention-btn' : 'attention',
             'touch #praise-btn' : 'praise'
+
+
         },
 
         initialize: function () {
@@ -369,6 +367,8 @@ $(function(){
         render: function () {
             return this;
         },
+
+        noInfModel: _.template($('#tp-no-info').html()),
 
         checkTemplate: _.template($('#tp-user-check').html()),
 
@@ -409,6 +409,7 @@ $(function(){
                     }
                 }
             });
+
         },
 
         //审核tab
@@ -420,8 +421,10 @@ $(function(){
                 data: {'number': 1},
                 success: function (model, response) {
                     if (response.code == 0){
-                        $('.user-check-list').html(that.checkTemplate(response.data));
-                        that.checkMsg.set('number', 2);   //设置下次加载的number （滚动ajax加载）                  
+                        $('.user-check-list').html(that.noInfModel(response.data));
+                        $('.user-check-list').append(that.checkTemplate(response.data));
+                        that.checkMsg.set('number', 2);   //设置下次加载的number （滚动ajax加载）
+                        that.checkfun();                  //绑定“通过”“编辑”“筛除”事件
                     }
                     else{
                         console.log(response);
@@ -444,7 +447,8 @@ $(function(){
                 data: {'number': 1},
                 success: function (model, response) {
                     if (response.code == 0){
-                        $('.user-inform-list').html(that.informTemplate(response.data));
+                        $('.user-inform-list').html(that.noInfModel(response.data));
+                        $('.user-inform-list').append(that.informTemplate(response.data));
                         that.informMsg.set('number', 2);   //设置下次加载的number （滚动ajax加载）                  
                     }
                     else{
@@ -468,7 +472,8 @@ $(function(){
                 data: {'number': 1},
                 success: function (model, response) {
                     if (response.code == 0){
-                        $('.user-attention-list').html(that.attentionTemplate(response.data));
+                        $('.user-attention-list').html(that.noInfModel(response.data));
+                        $('.user-attention-list').append(that.attentionTemplate(response.data));
                         that.attentionMsg.set('number', 2);   //设置下次加载的number （滚动ajax加载）                  
                     }
                     else{
@@ -492,7 +497,8 @@ $(function(){
                 data: {'number': 1},
                 success: function (model, response) {
                     if (response.code == 0){
-                        $('.user-praise-list').html(that.praiseTemplate(response.data));
+                        $('.user-praise-list').html(that.noInfModel(response.data));
+                        $('.user-praise-list').append(that.praiseTemplate(response.data));
                         that.praiseMsg.set('number', 2);   //设置下次加载的number （滚动ajax加载）                  
                     }
                     else{
@@ -508,12 +514,11 @@ $(function(){
         },
 
         //审核Ajax
-
         checkAjax: function() {
             var that = this;
-            var nClientH = $(window).height();                  
-            var nScrollTop = $('.content-page').scrollTop();   
-            var nChannelH = $('.personal-center').height();     
+            var nClientH = $(window).height();
+            var nScrollTop = $('.content-page').scrollTop();
+            var nChannelH = $('#check').height();
             if ((nClientH + nScrollTop >= nChannelH) && (that.checkAjax.bScroll == true)) {
                 that.checkAjax.bScroll = false;     //禁止Ajax加载
                 var nNum = that.checkMsg.get('number');
@@ -523,6 +528,7 @@ $(function(){
                     success: function (model, response) {
                         if (response.code==0){
                             $('.user-check-list').append(that.checkTemplate(response.data));
+                            that.checkfun();            //绑定“通过”“编辑”“筛除”事件
                             if (!response.data.isHave) {
                                 $('.user-check-list').append("<p class='no-news'>无新内容了</p>");
                             } else {
@@ -543,7 +549,7 @@ $(function(){
             var that = this;
             var nClientH = $(window).height();                  
             var nScrollTop = $('.content-page').scrollTop();   
-            var nChannelH = $('.personal-center').height();     
+            var nChannelH = $('#inform').height();     
             if ((nClientH + nScrollTop >= nChannelH) && (that.informAjax.bScroll == true)) {
                 that.informAjax.bScroll = false;     //禁止Ajax加载
                 var nNum = that.informMsg.get('number');
@@ -573,7 +579,7 @@ $(function(){
             var that = this;
             var nClientH = $(window).height();                  
             var nScrollTop = $('.content-page').scrollTop();   
-            var nChannelH = $('.personal-center').height();     
+            var nChannelH = $('#attention').height();     
             if ((nClientH + nScrollTop >= nChannelH) && (that.attentionAjax.bScroll == true)) {
                 that.attentionAjax.bScroll = false;     //禁止Ajax加载
                 var nNum = that.attentionMsg.get('number');
@@ -601,9 +607,9 @@ $(function(){
         //点赞Ajax
         praiseAjax: function() {
             var that = this;
-            var nClientH = $(window).height();                  
+            var nClientH = $(window).height();
             var nScrollTop = $('.content-page').scrollTop();   
-            var nChannelH = $('.personal-center').height();     
+            var nChannelH = $('#praise').height();     
             if ((nClientH + nScrollTop >= nChannelH) && (that.praiseAjax.bScroll == true)) {
                 that.praiseAjax.bScroll = false;     //禁止Ajax加载
                 var nNum = that.praiseMsg.get('number');
@@ -626,6 +632,164 @@ $(function(){
                     }
                 });
             }
+        },
+
+        //为每个新加载的审核元素绑定事件
+        checkfun: function() {
+            var lock = {
+                pass:false,
+                edit:false,
+                delete:false,
+                update:false
+            };
+
+            //通过某个书签 弹出确认对话框
+            $('.passBookmark').on('click', function(event){
+                var dataId = $(this).attr('data-id');
+                var channelId = $(this).attr('data-channelId');
+                var title = $('.title-link[data-id='+dataId+']').text();
+                var channelTitle = $('.channel-title[data-id='+dataId+']').text();
+                $('#pass-bookmark-title').text(title);
+                $('#pass-to-channel').text(channelTitle);
+                $('#pass-confirm-ok').data('bookmarkid', dataId);
+                $('#pass-confirm-ok').data('channelid', channelId);
+                $('#pass-confirm-box').modal('show');
+            });
+
+            //确认通过当前的书签
+            $('#pass-confirm-ok').on('click', function(event){
+                var bookmarkId = $('#pass-confirm-ok').data('bookmarkid');
+                var channelId = $('#pass-confirm-ok').data('channelid');
+                if(!lock.pass){
+                    lock.pass = true;
+                    $.ajax({
+                        url: '/api/bookmarks/pass/'+channelId+'/'+bookmarkId,
+                        type:'post',
+                    }).done(function(response) {
+                        if(response.code == 0) {
+                            $('#pass-confirm-box').modal('hide');
+                            //结果提示
+                            $('#result-dialog').modal('show');
+                            setTimeout(function(){
+                                $('#result-dialog').modal('hide');
+                            },2000);
+                            $('.post-item[data-id='+ bookmarkId +']').remove();
+
+                            lock.pass = false;
+                        } else {
+                            $('#pass-confirm-box').modal('hide');
+                            //结果提示
+                            $('#result-dialog').modal('show');
+                            setTimeout(function(){
+                                $('#result-dialog').modal('hide');
+                            },2000);
+
+                            lock.pass = false;
+                        }
+                    });
+                }
+
+            });
+
+            //编辑某个书签，并且添加到频道中
+            $('.editBookmark').on('click', function(event){
+                var dataId = $(this).attr('data-id');
+                var channelId = $(this).attr('data-channelId');
+                var title = $('.title-link[data-id='+dataId+']').text();
+                var description = $('.description[data-id='+ dataId +']').children('b').text();
+                var channelTitle = $('.channel-title[data-id='+dataId+']').text();
+                $('#pass-edit-box-title').val(title);
+                $('#pass-edit-box-description').val(description);
+                $('#pass-edit-ok').data('bookmarkid',dataId);
+                $('#pass-edit-ok').data('channelid',channelId);
+                $('#pass-edit-box').modal('show');
+            });
+
+            //确认通过当前的书签
+            $('#pass-edit-ok').on('click', function(event){
+                var bookmarkId = $('#pass-edit-ok').data('bookmarkid');
+                var channelId = $('#pass-edit-ok').data('channelid');
+                var title = $('#pass-edit-box-title').val();
+                var description = $('#pass-edit-box-description').val();
+                if(!lock.edit){
+                    lock.edit = true;
+                    $.ajax({
+                        url: '/api/bookmarks/edit/'+channelId+'/'+bookmarkId,
+                        type:'post',
+                        data:{title:title,description:description},
+                    }).done(function(response){
+                        if(response.code == 0) {
+                            $('#pass-edit-box').modal('hide');
+                            //结果提示
+                            $('#result-dialog').modal('show');
+                            setTimeout(function(){
+                                $('#result-dialog').modal('hide');
+                            },2000);
+                            $('.post-item[data-id='+ bookmarkId +']').remove();
+
+                            lock.edit = false;
+                        } else {
+                            $('#pass-edit-box').modal('hide');
+                            //结果提示
+                            $('#result-dialog').modal('show');
+                            setTimeout(function(){
+                                $('#result-dialog').modal('hide');
+                            },2000);
+
+                            lock.edit = false;
+                        }
+                    });
+                }
+
+            });
+
+            //筛除某个书签
+            $('.deleteBookmark').on('click', function(event){
+                var dataId = $(this).attr('data-id');
+                var title = $('.title-link[data-id='+dataId+']').text();
+                var channelTitle = $('.channel-title[data-id='+dataId+']').text();
+                $('#delete-to-channel').text(channelTitle);
+                $('#delete-bookmark-title').text(title);
+                $('#delete-confirm-ok').data('bookmarkid',dataId);
+                $('#delete-confirm-box').modal('show');
+            });
+
+            //确认删除某个书签
+            $('#delete-confirm-ok').on('click', function(event){
+                var reason = $('#delete-result-box').val();
+                if(!reason) return $('#delete-result-box').addClass('error');
+                var bookmarkId = $('#delete-confirm-ok').data('bookmarkid');
+                var channelId = $('#delete-confirm-ok').data('channelid');
+                if(!lock.delete){
+                    lock.delete = true;
+                    $.ajax({
+                        url: '/api/bookmarks/delete/'+channelId+'/'+bookmarkId,
+                        type:'post',
+                        data:{reason:reason}
+                    }).done(function(response){
+                        if(response.code == 0){
+                            $('#delete-confirm-box').modal('hide');
+                            //结果提示
+                            $('#result-dialog-fail').modal('show');
+                            setTimeout(function(){
+                                $('#result-dialog-fail').modal('hide');
+                            },2000);
+                            $('.post-item[data-id='+ bookmarkId +']').remove();
+                            lock.delete = false;
+                        } else {
+                            $('#delete-confirm-box').modal('hide');
+                            //结果提示
+                            $('#result-dialog-fail').modal('show');
+                            setTimeout(function(){
+                                $('#result-dialog-fail').modal('hide');
+                            },2000);
+
+                            lock.delete = false;
+                        }
+                    });
+                }
+            });
+
         }
     });
 
@@ -926,6 +1090,7 @@ $(function(){
         //展示对应频道里面的书签
         showSubBkm : function(event){
             Router.navigate('channel/'+$(event.currentTarget).data('id'),true);
+            $(event.currentTarget).children('.links-num').remove();
         },
         //展示消息
         showMessage : function(){
@@ -989,6 +1154,7 @@ $(function(){
             var view = new MessageView();
             App.main.html(view.render().el);
             view.renderAfter();
+            $('#check-btn').click();
         },
         discover: function(){
             var view = new ExploreView();
@@ -1012,62 +1178,11 @@ $(function(){
 
     //消息提示函数
     function popup(info){
-        $('#dialog-output').html(modelModual("tips",info));
-        $('#module-dialog').modal('show');
-        // setTimeout(function(){
-        //     $('#result-dialog').modal('hide');
-        // },2000);
-    }
-
-    function modelModual(type,message,arr){
-        if(!arr) arr= ["确认","取消"];
-        var typeModual = "<div class='modal-footer'>\
-                            <button type='button' id='alert-cancel' class='btn btn-default' data-dismiss='modal'>"+arr[1]+"</button>\
-                            <button type='button' id='alert-submit' class='btn btn-primary'>"+arr[0]+"</button>\
-                          </div>";
-        if(type !="alert"){
-            typeModual = "";
-        }
-
-     return "<div class='modal fade' tabindex='-1' role='dialog' aria-labelledby='mySmallModalLabel' aria-hidden='true' id='module-dialog'>\
-                <div class='modal-dialog'>\
-                    <div class='modal-content'>\
-                        <div class='modal-header'>\
-                            <button type='button' class='close' data-dismiss='modal'><span aria-hidden='true'>×</span><span class='sr-only'>Close</span></button>\
-                            <h4 class='modal-title' id='mySmallModalLabel'>提示</h4>\
-                        </div>\
-                        <div class='modal-body' id='result-dialog-content'>\
-                        "+message+"\
-                        </div>\
-                        "+typeModual+"\
-                    </div>\
-                </div>\
-            </div>";   
-    }
-    //alert 测试
-    // $('.content-page').click(function(){
-    //     modelAlert("test",["点我","不点我"],function(){
-    //         alert('成功');
-    //     })
-    // })
-    /*
-        兼容原有popup实现
-        用法：info为模态框内容
-        arr为按钮数组【确认，取消】
-        successcb为确认按钮的对应的回调
-        cancelcb为取消按钮对应的回调
-
-    */ 
-    function modelAlert(info,arr,success_cb,cancel_cb){
-        $('#dialog-output').html(modelModual("alert",info,arr));
-        $("#alert-submit").click(function(){
-            (typeof success_cb == "function")&&success_cb();
-        });
-        $("#alert-cancel").click(function(){
-            if(!cancel_cb) return true;
-            (typeof cancel_cb == "function")&&cancel_cb();
-        });
-        $('#module-dialog').modal('show');
+        $('#result-dialog-content').text(info);
+        $('#result-dialog').modal('show');
+        setTimeout(function(){
+            $('#result-dialog').modal('hide');
+        },2000);
     }
 
 
