@@ -421,7 +421,6 @@ exports.callmsg = function(req,res){
                 if (err) {console.log(err);return res.sendError();}
                 res.sendResult('返回成功',0,{msg:list,isHave:isHave});
             })
-            
         }
     )
 }
