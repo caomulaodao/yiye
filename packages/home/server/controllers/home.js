@@ -399,7 +399,7 @@ exports.callmsg = function(req,res){
                 if (err) {console.log(err);return res.sendError()}
                 var isHave=true;
                 if(doc.length==0) {isHave=false;}
-                else{console.log(doc);
+                else{console.log(doc);console.log(list);
                     if(doc[0]['postTime']+''==list[list.length-1]['postTime']+''){
                         isHave=false;
                     }
