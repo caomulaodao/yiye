@@ -577,7 +577,7 @@ button:focus {outline:0;}
     background-color: #f3f3f3;
     position: relative;
     overflow-x: hidden;
-    /*overflow: hidden;*/
+    overflow-y: scroll;
 }
 
 .content-page-content {
@@ -1060,7 +1060,7 @@ a.header-channel-name, a.header-channel-name:hover{
 .tab-content{
     padding-top: 20px;
     height: 100%;
-    overflow-y: scroll;
+    overflow: hidden;
 }
 .user-info-item{
     margin-bottom: 20px;
@@ -1355,17 +1355,17 @@ a.have-subed:hover {
 a.ex-creator {float: right;}
 
 /** 用户历史记录 **/
-.user-history-list{
+.user-inform-list{
     list-style: none;
     margin: 10px 10px;
 }
-.user-history-list li{
+.user-inform-list li{
     position: relative;
     margin-bottom: 10px;
     border-bottom: solid 1px rgb(250,250,250);
     padding-bottom: 5px;
 }
-.user-history-list li .status{
+.user-inform-list li .status{
     position: absolute;
     left: 0px;
     top: 0px;
@@ -1377,11 +1377,11 @@ a.ex-creator {float: right;}
     text-align: center;
     font-size: 13px;
 }
-.user-history-list li .status.pass{background-color: #00C995;}
+.user-inform-list li .status.pass{background-color: #00C995;}
 
-.user-history-list li .status.fail{background-color: #D8556E;}
+.user-inform-list li .status.fail{background-color: #D8556E;}
 
-.user-history-list li .main{margin-left: 50px;}
+.user-inform-list li .main{margin-left: 50px;}
 
 .user-history-bookmarks{
     height: 20px;

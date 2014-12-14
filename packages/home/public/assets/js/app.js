@@ -504,7 +504,7 @@ $(function(){
             var that = this;
             var nClientH = $(window).height();                  
             var nScrollTop = $('.content-page').scrollTop();   
-            var nChannelH = $('.user-check-list').height();     
+            var nChannelH = $('#check').height();     
             if ((nClientH + nScrollTop + 280 >= nChannelH) && (that.checkAjax.bScroll == true)) {
                 that.checkAjax.bScroll = false;     //禁止Ajax加载
                 var nNum = that.checkMsg.get('number');
@@ -535,7 +535,7 @@ $(function(){
             var that = this;
             var nClientH = $(window).height();                  
             var nScrollTop = $('.content-page').scrollTop();   
-            var nChannelH = $('.user-inform-list').height();     
+            var nChannelH = $('#inform').height();     
             if ((nClientH + nScrollTop >= nChannelH) && (that.informAjax.bScroll == true)) {
                 that.informAjax.bScroll = false;     //禁止Ajax加载
                 var nNum = that.informMsg.get('number');
@@ -565,7 +565,7 @@ $(function(){
             var that = this;
             var nClientH = $(window).height();                  
             var nScrollTop = $('.content-page').scrollTop();   
-            var nChannelH = $('.user-attention-list').height();     
+            var nChannelH = $('#attention').height();     
             if ((nClientH + nScrollTop >= nChannelH) && (that.attentionAjax.bScroll == true)) {
                 that.attentionAjax.bScroll = false;     //禁止Ajax加载
                 var nNum = that.attentionMsg.get('number');
@@ -595,7 +595,7 @@ $(function(){
             var that = this;
             var nClientH = $(window).height();
             var nScrollTop = $('.content-page').scrollTop();   
-            var nChannelH = $('.user-praise-list').height();     
+            var nChannelH = $('#praise').height();     
             if ((nClientH + nScrollTop >= nChannelH) && (that.praiseAjax.bScroll == true)) {
                 that.praiseAjax.bScroll = false;     //禁止Ajax加载
                 var nNum = that.praiseMsg.get('number');
@@ -651,28 +651,26 @@ $(function(){
                     $.ajax({
                         url: '/api/bookmarks/pass/'+channelId+'/'+bookmarkId,
                         type:'post',
-                        statusCode: {
-                            401: function() {
-                                $('#pass-confirm-box').modal('hide');
-                                //结果提示
-                                $('#result-dialog').modal('show');
-                                setTimeout(function(){
-                                    $('#result-dialog').modal('hide');
-                                },2000);
+                    }).done(function(response) {
+                        if(response.code == 0) {
+                            $('#pass-confirm-box').modal('hide');
+                            //结果提示
+                            $('#result-dialog').modal('show');
+                            setTimeout(function(){
+                                $('#result-dialog').modal('hide');
+                            },2000);
+                            $('.post-item[data-id='+ bookmarkId +']').remove();
 
-                                lock.pass = false;
-                            },
-                            200: function(){
-                                $('#pass-confirm-box').modal('hide');
-                                //结果提示
-                                $('#result-dialog').modal('show');
-                                setTimeout(function(){
-                                    $('#result-dialog').modal('hide');
-                                },2000);
-                                $('.post-item[data-id='+ bookmarkId +']').remove();
+                            lock.pass = false;
+                        } else {
+                            $('#pass-confirm-box').modal('hide');
+                            //结果提示
+                            $('#result-dialog').modal('show');
+                            setTimeout(function(){
+                                $('#result-dialog').modal('hide');
+                            },2000);
 
-                                lock.pass = false;
-                            }
+                            lock.pass = false;
                         }
                     });
                 }
@@ -705,28 +703,26 @@ $(function(){
                         url: '/api/bookmarks/edit/'+channelId+'/'+bookmarkId,
                         type:'post',
                         data:{title:title,description:description},
-                        statusCode: {
-                            401: function() {
-                                $('#pass-edit-box').modal('hide');
-                                //结果提示
-                                $('#result-dialog').modal('show');
-                                setTimeout(function(){
-                                    $('#result-dialog').modal('hide');
-                                },2000);
+                    }).done(function(response){
+                        if(response.code == 0) {
+                            $('#pass-edit-box').modal('hide');
+                            //结果提示
+                            $('#result-dialog').modal('show');
+                            setTimeout(function(){
+                                $('#result-dialog').modal('hide');
+                            },2000);
+                            $('.post-item[data-id='+ bookmarkId +']').remove();
 
-                                lock.edit = false;
-                            },
-                            200: function(){
-                                $('#pass-edit-box').modal('hide');
-                                //结果提示
-                                $('#result-dialog').modal('show');
-                                setTimeout(function(){
-                                    $('#result-dialog').modal('hide');
-                                },2000);
-                                $('.post-item[data-id='+ bookmarkId +']').remove();
+                            lock.edit = false;
+                        } else {
+                            $('#pass-edit-box').modal('hide');
+                            //结果提示
+                            $('#result-dialog').modal('show');
+                            setTimeout(function(){
+                                $('#result-dialog').modal('hide');
+                            },2000);
 
-                                lock.edit = false;
-                            }
+                            lock.edit = false;
                         }
                     });
                 }
@@ -755,28 +751,26 @@ $(function(){
                     $.ajax({
                         url: '/api/bookmarks/delete/'+channelId+'/'+bookmarkId,
                         type:'post',
-                        data:{reason:reason},
-                        statusCode: {
-                            401: function() {
-                                $('#delete-confirm-box').modal('hide');
-                                //结果提示
-                                $('#result-dialog').modal('show');
-                                setTimeout(function(){
-                                    $('#result-dialog').modal('hide');
-                                },2000);
+                        data:{reason:reason}
+                    }).done(function(response){
+                        if(response.code == 0){
+                            $('#delete-confirm-box').modal('hide');
+                            //结果提示
+                            $('#result-dialog-fail').modal('show');
+                            setTimeout(function(){
+                                $('#result-dialog-fail').modal('hide');
+                            },2000);
+                            $('.post-item[data-id='+ bookmarkId +']').remove();
+                            lock.delete = false;
+                        } else {
+                            $('#delete-confirm-box').modal('hide');
+                            //结果提示
+                            $('#result-dialog-fail').modal('show');
+                            setTimeout(function(){
+                                $('#result-dialog-fail').modal('hide');
+                            },2000);
 
-                                lock.delete = false;
-                            },
-                            200: function(){
-                                $('#delete-confirm-box').modal('hide');
-                                //结果提示
-                                $('#result-dialog').modal('show');
-                                setTimeout(function(){
-                                    $('#result-dialog').modal('hide');
-                                },2000);
-                                $('.post-item[data-id='+ bookmarkId +']').remove();
-                                lock.delete = false;
-                            }
+                            lock.delete = false;
                         }
                     });
                 }
@@ -1082,6 +1076,7 @@ $(function(){
         //展示对应频道里面的书签
         showSubBkm : function(event){
             Router.navigate('channel/'+$(event.currentTarget).data('id'),true);
+            $(event.currentTarget).children('.links-num').remove();
         },
         //展示消息
         showMessage : function(){
