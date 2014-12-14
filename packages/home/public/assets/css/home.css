@@ -747,21 +747,57 @@ a.header-channel-name, a.header-channel-name:hover{
     height: 50px;
     width: 100px;
 }
-.add-channel{
+.add-bookmark{
     position: fixed;
     top:80%;
     right:100px;    
-    background-color: #ddd;
+    background-color: #fff;
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    border:20px solid #eee;
+    border:15px solid #eee;
     color:#b4b4b4;
-    font-size: 30px;
+    font-size: 12px;
     text-align: center;
     cursor: pointer;
-    z-index: 250;
+    z-index: 250; 
 }
+.add-bookmark:hover{
+/*    width:80px;
+    height:80px;
+    border-width:15px;
+    font-size:12px;
+    top:top+10+'px',right:'100px',borderRadius: '50%'*/
+    transform: scale(1.3);
+    transition: all 1s ease 0s;
+    -webkit-transform: scale(1.3);
+    -webkit-transform: all 1s ease 0s;
+}
+.add-bookmark p{
+    margin:6px 0px;
+}
+p.add-true{
+    margin-top:16px;
+}
+.input-url{
+    position: fixed;
+    top:80%;
+    right:250px;
+    display: none;
+    z-index: 200;
+}
+.input-url input{
+    color:#000;
+    font-size: 14px;
+    width: 200px;
+    padding: 2px 4px;
+
+}
+.input-url input::-webkit-input-placeholder{
+    color:#eee;
+
+}
+
 
 
 

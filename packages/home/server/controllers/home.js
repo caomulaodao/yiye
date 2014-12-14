@@ -398,8 +398,9 @@ exports.callmsg = function(req,res){
             Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[1,2,3,4]}}).sort({'checked':1,'postTime':-1}).skip((number-1)*limit).limit(limit).exec(function(err,list){
                 if (err) {console.log(err);return res.sendError()}
                 var isHave=true;
-                if(doc.length==0) {isHave=false;}
-                else{console.log(doc);console.log(list);
+                if(doc.length==0) {isHave = false;}
+                if (list.length==0) {isHve = false; return callback(err,list,isHave);}
+                else{
                     if(doc[0]['postTime']+''==list[list.length-1]['postTime']+''){
                         isHave=false;
                     }
@@ -420,7 +421,6 @@ exports.callmsg = function(req,res){
                 if (err) {console.log(err);return res.sendError();}
                 res.sendResult('返回成功',0,{msg:list,isHave:isHave});
             })
-            
         }
     )
 }
