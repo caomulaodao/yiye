@@ -1145,6 +1145,7 @@ $(function(){
             var view = new MessageView();
             App.main.html(view.render().el);
             view.renderAfter();
+            $('#check-btn').click();
         },
         discover: function(){
             var view = new ExploreView();
