@@ -504,7 +504,7 @@ exports.remindmsg = function(req,res){
             Channel2User.find({'channelId':{$in:channelsId},'type':'follower'}).sort({'remind':1,'followerTime':-1}).skip((number-1)*limit).limit(limit).exec(function(err,followers){
                 if (err) {console.log(err);return res.sendError();}
                 var channelsId =[],i=0;
-                if (followers.length==0) {return callback(channelsId,[]);}
+                if (followers.length==0) {return callback(err,channelsId,[]);}
                 for(i;i<followers.length;i++){
                     channelsId.push(followers[i]['_id']);
                 }
@@ -514,7 +514,10 @@ exports.remindmsg = function(req,res){
         function(err,channelsId,followers){
             if (err){console.log(err);return res.sendError();}
             Channel2User.update({'_id':{$in:channelsId}},{'remind':1},{multi:true}).exec(function(err){
-                res.sendResult('返回消息成功',0,followers);
+                if (err){console.log(err);return res.sendError();}
+                var isHave = true;
+                if (followers.length<limit){ isHave=false;}
+                res.sendResult('返回消息成功',0,{msg:followers,isHave:isHave});
             });           
         })
 }

@@ -576,8 +576,8 @@ button:focus {outline:0;}
     margin-left: 330px;
     background-color: #f3f3f3;
     position: relative;
-    /*overflow-x: hidden;*/
-    overflow: hidden;
+    overflow-x: hidden;
+    /*overflow: hidden;*/
 }
 
 .content-page-content {
@@ -747,7 +747,21 @@ a.header-channel-name, a.header-channel-name:hover{
     height: 50px;
     width: 100px;
 }
-
+.add-channel{
+    position: fixed;
+    top:80%;
+    right:100px;    
+    background-color: #ddd;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border:20px solid #eee;
+    color:#b4b4b4;
+    font-size: 30px;
+    text-align: center;
+    cursor: pointer;
+    z-index: 250;
+}
 
 
 
@@ -1418,7 +1432,11 @@ a.ex-creator {float: right;}
     width: 100px;
     float: left;
 }
+#create-channel{
+    width: 600px;
+}
 .card-wrapper{
+    width: 600px;
     border: 1px solid #ccc;
     box-shadow: 0 0 2px #ccc;
     overflow: hidden;
@@ -1553,9 +1571,12 @@ a.ex-creator {float: right;}
     color: #999;
     margin-right:4px;
 }
+<<<<<<< HEAD
 
 /* inform.html */
 
 /* attention.html */
 
 /* praise.html */
+=======
+>>>>>>> 3a463908959f7ab07310282d182380f7e435cbcc

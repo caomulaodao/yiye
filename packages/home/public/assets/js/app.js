@@ -108,7 +108,10 @@ $(function(){
 
         events:{
             "click .up" : "bkUp",
-            "click .down": "bkDown"
+            "click .down": "bkDown",
+            "click .add-channel": "addChannel",
+            "mouseover .add-channel": "showAnimate",
+            "mouseout .add-channel": "outAnimate"
         },
 
         render: function(channelId){
@@ -212,6 +215,24 @@ $(function(){
                 }
 
             }})
+        },
+
+        showAnimate: function(event){
+            $('.add-channel').stop().animate({width:'100px',height:'100px',border:'10px soild #eee',fontSize:'50px',right:'90px',borderRadius: '50%'},300);           
+        },
+
+        outAnimate: function(event){
+            $('.add-channel').stop().animate({width:'80px',height:'80px',border:'20px soild #eee',fontSize:'30px',right:'100px',borderRadius: '50%'},300);
+        },
+
+        addChannel: function(event){
+            $('.add-channel').text("");
+            $('.add-channel').stop().animate({
+                width:'200px',
+                height:'70px',
+                border:'1px soid rgba(200,200,200,1)',
+                borderRadius: '0'
+                })
         }
     });
 
@@ -322,6 +343,8 @@ $(function(){
             'touch #inform-btn' : 'inform',
             'touch #attention-btn' : 'attention',
             'touch #praise-btn' : 'praise'
+
+
         },
 
         initialize: function () {
@@ -330,6 +353,8 @@ $(function(){
         render: function () {
             return this;
         },
+
+        noInfModel: _.template($('#tp-no-info').html()),
 
         checkTemplate: _.template($('#tp-user-check').html()),
 
@@ -382,8 +407,10 @@ $(function(){
                 data: {'number': 1},
                 success: function (model, response) {
                     if (response.code == 0){
-                        $('.user-check-list').html(that.checkTemplate(response.data));
-                        that.checkMsg.set('number', 2);   //设置下次加载的number （滚动ajax加载）                  
+                        $('.user-check-list').html(that.noInfModel(response.data));
+                        $('.user-check-list').append(that.checkTemplate(response.data));
+                        that.checkMsg.set('number', 2);   //设置下次加载的number （滚动ajax加载）
+                        that.checkfun();                  //绑定“通过”“编辑”“筛除”事件
                     }
                     else{
                         console.log(response);
@@ -395,7 +422,6 @@ $(function(){
             $('.content-page').scroll(function () {
                 that.checkAjax();
             });
-
         },
 
         //通知tab
@@ -407,7 +433,8 @@ $(function(){
                 data: {'number': 1},
                 success: function (model, response) {
                     if (response.code == 0){
-                        $('.user-inform-list').html(that.informTemplate(response.data));
+                        $('.user-inform-list').html(that.noInfModel(response.data));
+                        $('.user-inform-list').append(that.informTemplate(response.data));
                         that.informMsg.set('number', 2);   //设置下次加载的number （滚动ajax加载）                  
                     }
                     else{
@@ -427,11 +454,12 @@ $(function(){
             var that = this;            
             that.attentionMsg = new attentionMsg;
             that.attentionMsg.fetch({
-                url: 'api/home/attentionmsg',
+                url: 'api/home/remind',
                 data: {'number': 1},
                 success: function (model, response) {
                     if (response.code == 0){
-                        $('.user-attention-list').html(that.attentionTemplate(response.data));
+                        $('.user-attention-list').html(that.noInfModel(response.data));
+                        $('.user-attention-list').append(that.attentionTemplate(response.data));
                         that.attentionMsg.set('number', 2);   //设置下次加载的number （滚动ajax加载）                  
                     }
                     else{
@@ -455,7 +483,8 @@ $(function(){
                 data: {'number': 1},
                 success: function (model, response) {
                     if (response.code == 0){
-                        $('.user-praise-list').html(that.praiseTemplate(response.data));
+                        $('.user-praise-list').html(that.noInfModel(response.data));
+                        $('.user-praise-list').append(that.praiseTemplate(response.data));
                         that.praiseMsg.set('number', 2);   //设置下次加载的number （滚动ajax加载）                  
                     }
                     else{
@@ -475,8 +504,8 @@ $(function(){
             var that = this;
             var nClientH = $(window).height();                  
             var nScrollTop = $('.content-page').scrollTop();   
-            var nChannelH = $('.personal-center').height();     
-            if ((nClientH + nScrollTop >= nChannelH) && (that.checkAjax.bScroll == true)) {
+            var nChannelH = $('.user-check-list').height();     
+            if ((nClientH + nScrollTop + 280 >= nChannelH) && (that.checkAjax.bScroll == true)) {
                 that.checkAjax.bScroll = false;     //禁止Ajax加载
                 var nNum = that.checkMsg.get('number');
                 that.checkMsg.fetch({
@@ -485,6 +514,7 @@ $(function(){
                     success: function (model, response) {
                         if (response.code==0){
                             $('.user-check-list').append(that.checkTemplate(response.data));
+                            that.checkfun();            //绑定“通过”“编辑”“筛除”事件
                             if (!response.data.isHave) {
                                 $('.user-check-list').append("<p class='no-news'>无新内容了</p>");
                             } else {
@@ -505,7 +535,7 @@ $(function(){
             var that = this;
             var nClientH = $(window).height();                  
             var nScrollTop = $('.content-page').scrollTop();   
-            var nChannelH = $('.personal-center').height();     
+            var nChannelH = $('.user-inform-list').height();     
             if ((nClientH + nScrollTop >= nChannelH) && (that.informAjax.bScroll == true)) {
                 that.informAjax.bScroll = false;     //禁止Ajax加载
                 var nNum = that.informMsg.get('number');
@@ -535,13 +565,13 @@ $(function(){
             var that = this;
             var nClientH = $(window).height();                  
             var nScrollTop = $('.content-page').scrollTop();   
-            var nChannelH = $('.personal-center').height();     
+            var nChannelH = $('.user-attention-list').height();     
             if ((nClientH + nScrollTop >= nChannelH) && (that.attentionAjax.bScroll == true)) {
                 that.attentionAjax.bScroll = false;     //禁止Ajax加载
                 var nNum = that.attentionMsg.get('number');
                 that.attentionMsg.fetch({
                     data: {number: nNum},
-                    url: "/api/home/attentionmsg",
+                    url: "/api/home/remind",
                     success: function (model, response) {
                         if (response.code==0){
                             $('.user-attention-list').append(that.attentionTemplate(response.data));
@@ -563,9 +593,9 @@ $(function(){
         //点赞Ajax
         praiseAjax: function() {
             var that = this;
-            var nClientH = $(window).height();                  
+            var nClientH = $(window).height();
             var nScrollTop = $('.content-page').scrollTop();   
-            var nChannelH = $('.personal-center').height();     
+            var nChannelH = $('.user-praise-list').height();     
             if ((nClientH + nScrollTop >= nChannelH) && (that.praiseAjax.bScroll == true)) {
                 that.praiseAjax.bScroll = false;     //禁止Ajax加载
                 var nNum = that.praiseMsg.get('number');
@@ -592,23 +622,30 @@ $(function(){
 
         //为每个新加载的审核元素绑定事件
         checkfun: function() {
+            var lock = {
+                pass:false,
+                edit:false,
+                delete:false,
+                update:false
+            };
+
             //通过某个书签 弹出确认对话框
-            $('.passBookmark').click(function(event){
-                var index = $(event.target).data('index');
-                var title = $('.link-'+index).text();
-                var bookmarkid = $('.footer-'+index).data('bookmarkid');
-                var channelTitle = $('#channel-title').text();
+            $('.passBookmark').on('click', function(event){
+                var dataId = $(this).attr('data-id');
+                var channelId = $(this).attr('data-channelId');
+                var title = $('.title-link[data-id='+dataId+']').text();
+                var channelTitle = $('.channel-title[data-id='+dataId+']').text();
                 $('#pass-bookmark-title').text(title);
                 $('#pass-to-channel').text(channelTitle);
-                $('#pass-confirm-ok').data('bookmarkid',bookmarkid);
-                $('#pass-confirm-ok').data('index',index);
+                $('#pass-confirm-ok').data('bookmarkid', dataId);
+                $('#pass-confirm-ok').data('channelid', channelId);
                 $('#pass-confirm-box').modal('show');
             });
+
             //确认通过当前的书签
-            $('#pass-confirm-ok').click(function(event){
+            $('#pass-confirm-ok').on('click', function(event){
                 var bookmarkId = $('#pass-confirm-ok').data('bookmarkid');
-                var index =   $('#pass-confirm-ok').data('index');
-                var channelId = $('#control-body').data('channelid');
+                var channelId = $('#pass-confirm-ok').data('channelid');
                 if(!lock.pass){
                     lock.pass = true;
                     $.ajax({
@@ -632,7 +669,7 @@ $(function(){
                                 setTimeout(function(){
                                     $('#result-dialog').modal('hide');
                                 },2000);
-                                $('.item-'+index).remove();
+                                $('.post-item[data-id='+ bookmarkId +']').remove();
 
                                 lock.pass = false;
                             }
@@ -641,6 +678,110 @@ $(function(){
                 }
 
             });
+
+            //编辑某个书签，并且添加到频道中
+            $('.editBookmark').on('click', function(event){
+                var dataId = $(this).attr('data-id');
+                var channelId = $(this).attr('data-channelId');
+                var title = $('.title-link[data-id='+dataId+']').text();
+                var description = $('.description[data-id='+ dataId +']').children('b').text();
+                var channelTitle = $('.channel-title[data-id='+dataId+']').text();
+                $('#pass-edit-box-title').val(title);
+                $('#pass-edit-box-description').val(description);
+                $('#pass-edit-ok').data('bookmarkid',dataId);
+                $('#pass-edit-ok').data('channelid',channelId);
+                $('#pass-edit-box').modal('show');
+            });
+
+            //确认通过当前的书签
+            $('#pass-edit-ok').on('click', function(event){
+                var bookmarkId = $('#pass-edit-ok').data('bookmarkid');
+                var channelId = $('#pass-edit-ok').data('channelid');
+                var title = $('#pass-edit-box-title').val();
+                var description = $('#pass-edit-box-description').val();
+                if(!lock.edit){
+                    lock.edit = true;
+                    $.ajax({
+                        url: '/api/bookmarks/edit/'+channelId+'/'+bookmarkId,
+                        type:'post',
+                        data:{title:title,description:description},
+                        statusCode: {
+                            401: function() {
+                                $('#pass-edit-box').modal('hide');
+                                //结果提示
+                                $('#result-dialog').modal('show');
+                                setTimeout(function(){
+                                    $('#result-dialog').modal('hide');
+                                },2000);
+
+                                lock.edit = false;
+                            },
+                            200: function(){
+                                $('#pass-edit-box').modal('hide');
+                                //结果提示
+                                $('#result-dialog').modal('show');
+                                setTimeout(function(){
+                                    $('#result-dialog').modal('hide');
+                                },2000);
+                                $('.post-item[data-id='+ bookmarkId +']').remove();
+
+                                lock.edit = false;
+                            }
+                        }
+                    });
+                }
+
+            });
+
+            //筛除某个书签
+            $('.deleteBookmark').on('click', function(event){
+                var dataId = $(this).attr('data-id');
+                var title = $('.title-link[data-id='+dataId+']').text();
+                var channelTitle = $('.channel-title[data-id='+dataId+']').text();
+                $('#delete-to-channel').text(channelTitle);
+                $('#delete-bookmark-title').text(title);
+                $('#delete-confirm-ok').data('bookmarkid',dataId);
+                $('#delete-confirm-box').modal('show');
+            });
+
+            //确认删除某个书签
+            $('#delete-confirm-ok').on('click', function(event){
+                var reason = $('#delete-result-box').val();
+                if(!reason) return $('#delete-result-box').addClass('error');
+                var bookmarkId = $('#delete-confirm-ok').data('bookmarkid');
+                var channelId = $('#delete-confirm-ok').data('channelid');
+                if(!lock.delete){
+                    lock.delete = true;
+                    $.ajax({
+                        url: '/api/bookmarks/delete/'+channelId+'/'+bookmarkId,
+                        type:'post',
+                        data:{reason:reason},
+                        statusCode: {
+                            401: function() {
+                                $('#delete-confirm-box').modal('hide');
+                                //结果提示
+                                $('#result-dialog').modal('show');
+                                setTimeout(function(){
+                                    $('#result-dialog').modal('hide');
+                                },2000);
+
+                                lock.delete = false;
+                            },
+                            200: function(){
+                                $('#delete-confirm-box').modal('hide');
+                                //结果提示
+                                $('#result-dialog').modal('show');
+                                setTimeout(function(){
+                                    $('#result-dialog').modal('hide');
+                                },2000);
+                                $('.post-item[data-id='+ bookmarkId +']').remove();
+                                lock.delete = false;
+                            }
+                        }
+                    });
+                }
+            });
+
         }
     });
 
@@ -919,11 +1060,11 @@ $(function(){
         },
         
         //展示频道
-        showChannel : function(event){
-            var channelId = $(event.currentTarget).data('id');
-            var list = new listView;
-            list.render(channelId);
-        },
+        // showChannel : function(event){
+        //     var channelId = $(event.currentTarget).data('id');
+        //     var list = new listView;
+        //     list.render(channelId);
+        // },
 
         //展示发现页面
         showExplore : function(){
@@ -979,6 +1120,7 @@ $(function(){
         defaultRoute : function(){
         },
         subControl : function(){
+
             $('.subscription').addClass('active').next().removeClass('active');
             $('.channel-list').show().next().hide();
         },
@@ -987,9 +1129,11 @@ $(function(){
             $('.admin-interface').show().prev().hide();
         },
         channelBookmarks : function(id){
-            var dataId = id;
+            var channelsId = id;
+            var view = new listView();
             $('.channel-item').removeClass('active');
-            $('.channel-item[data-id='+ dataId +']').addClass('active');
+            $('.channel-item[data-id='+ channelsId +']').addClass('active');
+            view.render(channelsId);
         },
         create : function(){
             var view = new NewChannelView();

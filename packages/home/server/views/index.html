@@ -171,6 +171,87 @@
         </div>
     </div>
 </script>
+
+<!-- 书签通过确认框  -->
+<div class="modal fade" id="pass-confirm-box">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">确认添加书签</h4>
+            </div>
+            <div class="modal-body">
+                <h5>你将向频道“<span id="pass-to-channel"></span>”中添加书签:</h5>
+                <p id="pass-bookmark-title" ></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="pass-confirm-ok">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 结果提示页面  -->
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="result-dialog">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="mySmallModalLabel">提示</h4>
+            </div>
+            <div class="modal-body" id="result-dialog-content">
+                书签添加成功。
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 书签编辑框  -->
+<div class="modal fade" id="pass-edit-box">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">编辑并添加书签</h4>
+            </div>
+            <div class="modal-body">
+                <h5>标题</h5>
+                <input type="text" class="form-control" id="pass-edit-box-title">
+                <h5>描述</h5>
+                <textarea class="form-control" rows="3" id="pass-edit-box-description"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="pass-edit-ok">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- 书签删除确认框  -->
+<div class="modal fade" id="delete-confirm-box">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">是否筛除书签</h4>
+            </div>
+            <div class="modal-body">
+                <h5>你将筛除向频道“<span id="delete-to-channel"></span>”中添加的书签:</h5>
+                <p id="delete-bookmark-title"></p>
+                <h5>请给出筛除原因(必须)：</h5>
+                <textarea class="form-control" rows="3" id="delete-result-box"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="delete-confirm-ok">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
 <!-- 创建频道页面 
 <script type="text/template" id="tp-create-channels"> -->
   <!--  <div id="create-channel">
@@ -398,7 +479,7 @@
                     <% } %>
                 <% } %>
             </ul>
-            <div class= 'add-channel'>
+            <div class= 'add-channel'>+</div>
             <div style="height:100px"></div>
         </div>
     </div>
@@ -595,45 +676,42 @@
         </div>
     </div>
 </script>
-
-<!--审核模板-->
-<script type="text/x-handlebars-template" id="tp-user-check">
+<!--无消息模板-->
+<script type="text/x-handlebars-template" id="tp-no-info">
     <% if (msg.length == 0) {%>
     <div class="no-inf">
         <img src="/system/assets/img/no-message.png">
     </div>
-    <% } else { %>
+    <% } %>
+</script>
+
+<!--审核模板-->
+<script type="text/x-handlebars-template" id="tp-user-check">
     <% for(var i=0; i<msg.length; i++) { %>
     <li class="post-item" data-id= <%= msg[i]['_id'] %>>
         <div class="link-part-content">
             <div class="bookmark-pic"><img src="http://yiye.qiniudn.com/<%= msg[i]['image']%>"/></div>
-            <a class="link" target="_blank" href=<%= msg[i]['url'] %>><%= msg[i]['title']%></a>
+            <a class="link title-link"  data-id= <%= msg[i]['_id'] %> target="_blank" href=<%= msg[i]['url'] %>> <%= msg[i]['title']%> </a>
             <div class="to-channel">
-                <span>提交到：</span><a target="_blank" href='/channel/'+<%=msg[i]['channelId'] %>><%= msg[i]['channelInfo']['channelName']%></a>
+                <span>提交到：</span><a target="_blank" class="channel-title" data-id= <%= msg[i]['_id'] %> href="/channel/<%=msg[i]['channelId'] %>"><%= msg[i]['channelInfo']['channelName']%></a>
             </div>
-            <div class="description">
+            <div class="description" data-id= <%= msg[i]['_id'] %>>
                 <span>描述：</span><b data-id= <%= msg[i]['_id'] %> ><%= msg[i]['description']%></b>
             </div>
             <div class="footer-part" data-id= <%= msg[i]['_id'] %>>
                 <span class="submit-time">提交于:<%= msg[i]['postTime'] %></span>
                 <span>by <a href="#" data-id= <%= msg[i]['_id'] %>><%= msg[i]['postUser']['username']%></a></a></span>
-                <span><i class="glyphicon glyphicon-ok"></i><a class="passBookmark" href="#" data-id= <%= msg[i]['_id'] %>>通过</a></span>
-                <span><i class="glyphicon glyphicon-pencil"></i><a class="editBookmark" href="#" data-id= <%= msg[i]['_id'] %>>编辑</a></span>
+                <span><i class="glyphicon glyphicon-ok"></i><a class="passBookmark" href="#" data-channelId=<%= msg[i]['channelId']%> data-id= <%= msg[i]['_id'] %>>通过</a></span>
+                <span><i class="glyphicon glyphicon-pencil"></i><a class="editBookmark" href="#"  data-channelId=<%= msg[i]['channelId']%> data-id= <%= msg[i]['_id'] %>>编辑</a></span>
                 <span><i class="glyphicon glyphicon-trash"></i><a class="deleteBookmark" href="#" data-id= <%= msg[i]['_id'] %>>筛除</a></span>
             </div>
         </div>
     </li>
-    <% } %>
-    <% } %>  
+    <% } %> 
 </script>
 
 <!--通知模板-->
 <script type="text/x-handlebars-template" id="tp-user-inform">
-    <% if(msg == 0){%>
-    <div class="no-inf">
-        <img src="/system/assets/img/no-message.png">
-    </div>
-    <% } %>
     <% for(var i = 0;i < msg.length; i++){ %>
     <li id="msg-<%= i %>">
         <% if(msg[i]["checked"] == 1){%>
@@ -661,22 +739,13 @@
 
 <!--关注模板-->
 <script type="text/x-handlebars-template" id="tp-user-attention">
-    <% if(msg == 0){%>
-    <div class="no-inf">
-        <img src="/system/assets/img/no-message.png">
-    </div>
-    <% } %>
 
 
 </script>
 
 <!--点赞模板-->
 <script type="text/x-handlebars-template" id="tp-user-praise">
-    <% if(msg == 0){%>
-    <div class="no-inf">
-        <img src="/system/assets/img/no-message.png">
-    </div>
-    <% } %>
+
 
 
 </script>
