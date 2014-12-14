@@ -398,7 +398,8 @@ exports.callmsg = function(req,res){
             Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[1,2,3,4]}}).sort({'checked':1,'postTime':-1}).skip((number-1)*limit).limit(limit).exec(function(err,list){
                 if (err) {console.log(err);return res.sendError()}
                 var isHave=true;
-                if(doc.length==0) {isHave=false;}
+                if(doc.length==0) {isHave = false;}
+                if (list.length==0) {isHve = false; return callback(err,list,isHave);}
                 else{
                     if(doc[0]['postTime']+''==list[list.length-1]['postTime']+''){
                         isHave=false;

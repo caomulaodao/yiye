@@ -89,6 +89,19 @@ $(function(){
     var newBookmarkModel = Backbone.Model.extend({
 
     });
+    //提交书签
+    var addBookmarkModel = Backbone.Model.extend({
+        url:'/api/bookmarks/scraper/post',
+        validate: function(attrs, options) {
+            if (!attrs.website){
+                return '请填写需要添加的网址';
+            }
+        var RegUrl = new RegExp();
+        RegUrl.compile("^(https?://)?[A-Za-z0-9-_]+\\.[A-Za-z0-9-_%&\?\/.=]+$",'g');
+        var result = RegUrl.test(attrs.website,'head');
+        if (!result) return '请填写正确的地址';
+        }
+    });
 
 
 
@@ -105,13 +118,10 @@ $(function(){
 
         initialize: function(){
         },
-
         events:{
             "click .up" : "bkUp",
             "click .down": "bkDown",
-            "click .add-channel": "addChannel",
-            "mouseover .add-channel": "showAnimate",
-            "mouseout .add-channel": "outAnimate"
+            "click .add-bookmark": "addBookmark",
         },
 
         render: function(channelId){
@@ -217,22 +227,26 @@ $(function(){
             }})
         },
 
-        showAnimate: function(event){
-            $('.add-channel').stop().animate({width:'100px',height:'100px',border:'10px soild #eee',fontSize:'50px',right:'90px',borderRadius: '50%'},300);           
-        },
-
-        outAnimate: function(event){
-            $('.add-channel').stop().animate({width:'80px',height:'80px',border:'20px soild #eee',fontSize:'30px',right:'100px',borderRadius: '50%'},300);
-        },
-
-        addChannel: function(event){
-            $('.add-channel').text("");
-            $('.add-channel').stop().animate({
-                width:'200px',
-                height:'70px',
-                border:'1px soid rgba(200,200,200,1)',
-                borderRadius: '0'
-                })
+        addBookmark: function(event){
+            if (!$('.add-bookmark').hasClass('active')){
+                $('.add-bookmark').html('<p class="add-true">确定</p>').addClass('active');
+                var top = $(window).height()/10*8;console.log(top,$('.add-bookmark').offset().top,$('.add-bookmark').height()/2,$('.input-url').height()/2);
+                $('.input-url').css({'top':top+$('.add-bookmark').height()/2});
+                $('.input-url').fadeIn('2s');
+            }
+            else{
+                var addbookmark =  new newBookmarkModel();
+                addbookmark.set({'website':$('.input-url input').val()});
+                $('.add-bookmark').removeClass('active').html('<p>正在</p><p>获取</p>');
+                $('.input-url').fadeOut('2s');
+                addbookmark.save(null,{'error': function(model,response){
+                    $('#Channel-Create-Error').text('网络异常').show();
+                },
+                'success': function(model,response){
+                    console.log(response);
+                }
+            })
+            }
         }
     });
 
