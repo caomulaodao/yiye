@@ -502,10 +502,10 @@ $(function(){
         //审核Ajax
         checkAjax: function() {
             var that = this;
-            var nClientH = $(window).height();                  
-            var nScrollTop = $('.content-page').scrollTop();   
-            var nChannelH = $('#check').height();     
-            if ((nClientH + nScrollTop + 280 >= nChannelH) && (that.checkAjax.bScroll == true)) {
+            var nClientH = $(window).height();
+            var nScrollTop = $('.content-page').scrollTop();
+            var nChannelH = $('#check').height();
+            if ((nClientH + nScrollTop >= nChannelH) && (that.checkAjax.bScroll == true)) {
                 that.checkAjax.bScroll = false;     //禁止Ajax加载
                 var nNum = that.checkMsg.get('number');
                 that.checkMsg.fetch({

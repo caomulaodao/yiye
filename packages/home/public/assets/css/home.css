@@ -1060,7 +1060,6 @@ a.header-channel-name, a.header-channel-name:hover{
 .tab-content{
     padding-top: 20px;
     height: 100%;
-    overflow: hidden;
 }
 .user-info-item{
     margin-bottom: 20px;
@@ -1524,7 +1523,10 @@ a.ex-creator {float: right;}
     list-style-type: none;
 }
 
-.post-item .link-part-content{padding-left:0px;}
+.post-item .link-part-content{
+    padding-left:0px;
+    border-bottom: 2px solid #fff;
+}
 
 .bookmark-pic{
     float: right;
@@ -1571,12 +1573,6 @@ a.ex-creator {float: right;}
     color: #999;
     margin-right:4px;
 }
-<<<<<<< HEAD
-
-/* inform.html */
-
-/* attention.html */
-
-/* praise.html */
-=======
->>>>>>> 3a463908959f7ab07310282d182380f7e435cbcc
+.to-channel {
+    font-size: 1.5em;
+}
