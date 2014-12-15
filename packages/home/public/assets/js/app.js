@@ -89,20 +89,38 @@ $(function(){
     var newBookmarkModel = Backbone.Model.extend({
 
     });
-    //提交书签
+    //提交书签的url
     var addBookmarkModel = Backbone.Model.extend({
-        url:'/api/bookmarks/scraper/post',
+        url: "/system/scraper",
         validate: function(attrs, options) {
             if (!attrs.website){
                 return '请填写需要添加的网址';
             }
-        var RegUrl = new RegExp();
-        RegUrl.compile("^(https?://)?[A-Za-z0-9-_]+\\.[A-Za-z0-9-_%&\?\/.=]+$",'g');
-        var result = RegUrl.test(attrs.website,'head');
-        if (!result) return '请填写正确的地址';
+            var RegUrl = new RegExp();
+            RegUrl.compile("^(https?://)?[A-Za-z0-9-_]+\\.[A-Za-z0-9-_%&\?\/.=]+$",'g');
+            var result = RegUrl.test(attrs.website,'head');
+            if (!result) return '请填写正确的地址';
         }
     });
+    //抓取到的书签信息
+    var submitBookmarkModel = Backbone.Model.extend({
+        url: "/api/bookmarks/scraper/post",
+        validate: function(attrs,options) {
+            if (!attrs.title){
+                return "请填写书签标题";
+            }
+            if (attrs.title.length>100) {
+                return "标题字数不能超过100字";
+            }
+            if (!attrs.description){
+                return "请填写描述";
+            }
+            if (attrs.description.length>200) {
+                return "描述字数不能超过200字";
+            }
 
+        }
+    })
 
 
     //书签列表视图
@@ -110,6 +128,8 @@ $(function(){
         el: $('.content-page'),
 
         initTemplate: _.template($('#tp-channels-main').html()),
+        //添加书签 视图
+        submitbkmTemplate: _.template($('#tp-submit-bookmark').html()),
 
         lock:{
             bkUp:false,
@@ -226,27 +246,33 @@ $(function(){
 
             }})
         },
-
         addBookmark: function(event){
+            var that =this;
             if (!$('.add-bookmark').hasClass('active')){
                 $('.add-bookmark').html('<p class="add-true">确定</p>').addClass('active');
-                var top = $(window).height()/10*8;console.log(top,$('.add-bookmark').offset().top,$('.add-bookmark').height()/2,$('.input-url').height()/2);
+                var top = $(window).height()/10*8;
                 $('.input-url').css({'top':top+$('.add-bookmark').height()/2});
                 $('.input-url').fadeIn('2s');
             }
             else{
-                var addbookmark =  new newBookmarkModel();
-                addbookmark.set({'website':$('.input-url input').val()});
+                var addbookmark =  new addBookmarkModel();
+                var submitbookmark = new submitBookmarkModel();
+                addbookmark.set({'website':$('.input-url input').val()});console.log($('.input-url input').val());
                 $('.add-bookmark').removeClass('active').html('<p>正在</p><p>获取</p>');
                 $('.input-url').fadeOut('2s');
-                addbookmark.save(null,{'error': function(model,response){
-                    $('#Channel-Create-Error').text('网络异常').show();
+                addbookmark.save(null,{error: function(model,response){
+                   console.log('网络异常或参数错误');
                 },
-                'success': function(model,response){
+                success: function(model,response){
                     console.log(response);
+                    that.$el.append(that.submitbkmTemplate);console.log(response.data.description);
+                    alert(response.data.description);
                 }
             })
             }
+        },
+        loading: function(){
+
         }
     });
 
