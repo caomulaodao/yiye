@@ -44,7 +44,8 @@
                    <li><a href="#staff">关于我们</a></li>
                    <li><a href="#joinUs">加入我们</a></li>     
                    <li><a href="#bugReporter">bug反馈</a></li>     
-                   <li><a href="#followUs">关注我们</a></li>     
+                   <li><a href="#followUs">关注我们</a></li>
+                   <li><a href="#help">使用帮助</a></li>
                 </ul>
             </div>
         </div>
@@ -77,22 +78,23 @@
     <!-- bug反馈 -->
     <div class='one-page' >
         <div class='bug-reporter ab-center'>
-         <form action='/api/bugs' method='post' class="form-horizontal" name='form'>
-            <!-- 直接填充现有的nickname/如果没有则提示 -->
+            <h1>bug提交</h1>
+            <form action='/api/bugs' method='post' class="form-horizontal" name='form'>
+              <!-- 直接填充现有的nickname/如果没有则提示 -->
               <div class="form-group form-group-lg">
                 <label for="exampleInputEmail1 " class='col-sm-4 control-label'>你的邮箱</label>
                 <div class="col-sm-6">
                   <input class="form-control" name='email' type="email" id="email-input" placeholder="邮箱">
                 </div>
               </div>
-               <div class="form-group form-group-lg">
+              <div class="form-group form-group-lg">
                 <label class="col-sm-4 control-label" for="formGroupInputSmall">bug反馈</label>
                 <div class="col-sm-6">
                     <textarea name="bugzone" id='bugzone' class="form-control" rows="6" placeholder="问题描述"></textarea>
                 </div>
               </div>
              <!-- 问题 -->
-         </form>
+            </form>
           <button class="btn-bug-reporter btn btn-success">提交</button>
      </div>
     </div>
@@ -137,13 +139,18 @@
             </div>
         </div>
     </div>
+    <!-- bug反馈 -->
+    <div class='one-page' >
+        <div class='ab-center help'>
+            this help
+        </div>
     </div>
-   
+    </div>
 </div>
 
 </body>
- <script rel="script" src="/bower_components/jquery/dist/jquery.js"></script>
- <script src='/system/assets/js/about.js'></script>
+<script rel="script" src="/bower_components/jquery/dist/jquery.js"></script>
+<script src='/system/assets/js/about.js'></script>
 <script rel="script" src="/home/assets/js/home.js"></script>
 <script>
     $('.btn-bug-reporter').click(function(e){
@@ -161,7 +168,7 @@
                     alert(response.msg);
                     window.location.reload();
                }else{
-                alert(response.msg);
+                    alert(response.msg);
                }
             }
         });

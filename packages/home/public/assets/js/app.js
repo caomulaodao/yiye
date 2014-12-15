@@ -982,7 +982,7 @@ $(function(){
             view.renderAfter();
         },
         help: function(){
-
+            window.location.href = "/our/team/";
         },
         set: function(){
             var view = new Setting();

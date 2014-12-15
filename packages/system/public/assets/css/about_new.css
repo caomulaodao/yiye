@@ -110,7 +110,7 @@
 .staff-info-txt:after{
 	content:"」";
 }
-.staff h1,#joinus h1{
+.staff h1,#joinus h1,.bug-reporter h1{
     font-size: 30px;
     margin-bottom: 20px;
     text-align: center;
