@@ -80,9 +80,9 @@ function stripscript(s) {
 function safeUrl(url){
     var RegUrl = new RegExp();
     RegUrl.compile("^(https?://)?[A-Za-z0-9-_]+\\.[A-Za-z0-9-_%&\?\/.=]+$",'g');
-    var result = RegUrl.test(url,'head');
+    var result = RegUrl.test(url,'$1');
     if (!result) return false;
-    if(RegExp.head) return url;
+    if(RegExp.$1) return url;
     return 'http://'+url;
 }
 

@@ -225,7 +225,8 @@ exports.scraper = function(req,res){
         var result = {
             title:title,
             description:description,
-            imgUrl:imgUrl
+            imgUrl:imgUrl,
+            website: url
         };console.log(result);
         res.sendResult('返回网站信息成功',0,result);
     }

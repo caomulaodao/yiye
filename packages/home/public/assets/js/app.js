@@ -120,7 +120,23 @@ $(function(){
             }
 
         }
-    })
+    });
+    var SubmitView = Backbone.View.extend({
+            el: $('.submit-view'),
+
+            initTemplate: _.template($('#tp-submit-bookmark').html()),
+
+            lock:{
+                submit:false
+            },
+
+             initialize: function(){
+            },       
+
+            // events:{
+            //     "click .add-bookmark": "addBookmark",
+            // },        
+        });
 
 
     //书签列表视图
@@ -129,7 +145,7 @@ $(function(){
 
         initTemplate: _.template($('#tp-channels-main').html()),
         //添加书签 视图
-        submitbkmTemplate: _.template($('#tp-submit-bookmark').html()),
+        // submitbkmTemplate: _.template($('#tp-submit-bookmark').html()),
 
         lock:{
             bkUp:false,
@@ -138,6 +154,11 @@ $(function(){
 
         initialize: function(){
         },
+
+        addbookmark:  new addBookmarkModel(),
+
+        submitbookmark: new submitBookmarkModel(),
+
         events:{
             "click .up" : "bkUp",
             "click .down": "bkDown",
@@ -247,28 +268,47 @@ $(function(){
             }})
         },
         addBookmark: function(event){
+            var submitView = new SubmitView();
             var that =this;
-            if (!$('.add-bookmark').hasClass('active')){
-                $('.add-bookmark').html('<p class="add-true">确定</p>').addClass('active');
-                var top = $(window).height()/10*8;
-                $('.input-url').css({'top':top+$('.add-bookmark').height()/2});
-                $('.input-url').fadeIn('2s');
-            }
-            else{
-                var addbookmark =  new addBookmarkModel();
-                var submitbookmark = new submitBookmarkModel();
-                addbookmark.set({'website':$('.input-url input').val()});console.log($('.input-url input').val());
-                $('.add-bookmark').removeClass('active').html('<p>正在</p><p>获取</p>');
-                $('.input-url').fadeOut('2s');
-                addbookmark.save(null,{error: function(model,response){
-                   console.log('网络异常或参数错误');
-                },
-                success: function(model,response){
-                    console.log(response);
-                    that.$el.append(that.submitbkmTemplate);console.log(response.data.description);
-                    alert(response.data.description);
+            if (!submitView.lock.submit){
+                //第一次点击
+                if (!$('.add-bookmark').hasClass('submit-active')){
+                    $('.add-bookmark').html('<p class="add-true">确定</p>').addClass('submit-active');
+                    var top = $(window).height()/10*8;
+                    $('.input-url').css({'top':top+$('.add-bookmark').height()/2});
+                    $('.input-url').fadeIn('2s');
                 }
-            })
+                //第二次点击
+                else{
+                    that.addbookmark.set({'website':$('.input-url input').val()});console.log($('.input-url input').val());
+                    $('.add-bookmark').removeClass('submit-active').html('<p>正在</p><p>获取</p>');
+                    submitView.lock.submit=true;
+                    $('.input-url').fadeOut('2s');
+                    that.addbookmark.save(null,{error: function(model,response){
+                            console.log('网络异常或参数错误');
+                        },
+                        success: function(model,response){
+                            console.log(response);
+                            submitView.$el.html(submitView.initTemplate(response.data));
+                            $('.submit-content').fadeIn('1s');
+                            that.submitbookmark.set({'website':response.data.website,'channel':$('#sub-channel-list .active').data('id')});console.log($('#sub-channel-list .active').html());
+                            $('.add-bookmark').html('<p class="add-true">确定</p>');
+                        }
+                    })
+                }
+            }
+            else{ 
+                that.submitbookmark.set({'title':$('.submit-content-title div').text(),'description':$('.submit-content-description div').text(),'image':$('.submit-content-img img').attr('src'),'tags':$('.submit-content-tags input').val()})           
+                that.submitbookmark.save(null,{error:function(){
+                        console.log('网络连接异常');
+                    },
+                    success: function(model,response){
+                        console.log(response);
+                        submitView.lock.submit = false;
+                        $('.input-url input').val('');
+                        submitView.remove();
+                    }
+                })
             }
         },
         loading: function(){
