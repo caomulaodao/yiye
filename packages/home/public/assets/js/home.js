@@ -23,7 +23,11 @@ function initialize() {
     // 绑定切换事件。
     $('#function-module-ul').delegate('li','click',function(e){
         var id = $(e.currentTarget).attr('id');
-        window.location.href="/home#"+id;
+        if(id == "help"){
+            window.location.href = "/our/team/";
+        }else{
+            window.location.href = "/home#"+id;
+        }
     });
 
 }

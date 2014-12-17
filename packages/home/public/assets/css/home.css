@@ -554,7 +554,7 @@ button:focus {outline:0;}
     text-align: center;
 }
 .create-channel button {
-    width: 150px;
+    width: 230px;
     height: 40px;
     border: solid 1px #40c192;
     color: #40c192;
@@ -1382,7 +1382,8 @@ a.have-subed:hover {
     font-weight: normal;
     margin: 0px;
     margin-bottom: 5px;
-    font-size: 26px;
+    font-size: 22px;
+    color: #5B8484;
 }
 #channel-explore-description{
     text-align: center;
@@ -1618,3 +1619,44 @@ a.ex-creator {float: right;}
     font-size: 1.5em;
 }
 
+/*   发现页面  */
+#channel-explore-tools{
+   list-style: none;
+}
+#channel-explore-tools li{
+    display: inline-block;
+    height: 64px;
+    width: 64px;
+    text-align: center;
+}
+#channel-explore-tools li i{
+    display: inline-block;
+    width: 26px;
+    height: 26px;
+    margin: 30px 19px 0px 19px;
+    cursor: pointer;
+}
+#channel-explore-tools li i#search{
+    background: url("/home/assets/img/iconfont-sousuo.png") no-repeat;
+    background-size: 100% 100%;
+}
+#channel-explore-tools li i#extends{
+    background: url("/home/assets/img/iconfont-iconfontdengdai.png") no-repeat;
+    background-size: 100% 100%;
+}
+#channel-explore-tools li i#android{
+    background: url("/home/assets/img/iconfont-android.png") no-repeat;
+    background-size: 100% 100%;
+}
+#channel-explore-tools li i#userHelp{
+    background: url("/home/assets/img/iconfont-bangzhu.png") no-repeat;
+    background-size: 100% 100%;
+}
+#channel-explore-tools li i#postBug{
+    background: url("/home/assets/img/iconfont-wentifankui.png") no-repeat;
+    background-size: 100% 100%;
+}
+#channel-explore-tools li span{
+    height: 20px;
+    color: #A9B7B7;
+}

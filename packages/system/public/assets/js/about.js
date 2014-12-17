@@ -30,6 +30,8 @@
 				return '-200vh';
 			case '#followUs':
 				return '-300vh';
+            case '#help':
+                return '-400vh';
 			default:
 				return 0;	
 		}
