@@ -141,6 +141,7 @@ $(function(){
 
     //书签列表视图
     var listView = Backbone.View.extend({
+        isHave: false,
         el: $('.content-page'),
 
         initTemplate: _.template($('#tp-channels-main').html()),
@@ -269,7 +270,7 @@ $(function(){
         },
         addBookmark: function(event){
             var submitView = new SubmitView();
-            var that =this;
+            var that =this;console.log(submitView.lock.submit);
             if (!submitView.lock.submit){
                 //第一次点击
                 if (!$('.add-bookmark').hasClass('submit-active')){
@@ -280,7 +281,8 @@ $(function(){
                 }
                 //第二次点击
                 else{
-                    that.addbookmark.set({'website':$('.input-url input').val()});console.log($('.input-url input').val());
+                    that.addbookmark.set({'website':$('.input-url input').val()},{validate:true});
+                    if(that.addbookmark.validationError){return console.log(that.addbookmark.validationError);}
                     $('.add-bookmark').removeClass('submit-active').html('<p>正在</p><p>获取</p>');
                     submitView.lock.submit=true;
                     $('.input-url').fadeOut('2s');
@@ -294,21 +296,22 @@ $(function(){
                             that.submitbookmark.set({'website':response.data.website,'channel':$('#sub-channel-list .active').data('id')});console.log($('#sub-channel-list .active').html());
                             $('.add-bookmark').html('<p class="add-true">确定</p>');
                         }
-                    })
+                    });
                 }
             }
             else{ 
+                submitView.lock.submit = false;
                 that.submitbookmark.set({'title':$('.submit-content-title div').text(),'description':$('.submit-content-description div').text(),'image':$('.submit-content-img img').attr('src'),'tags':$('.submit-content-tags input').val()})           
                 that.submitbookmark.save(null,{error:function(){
                         console.log('网络连接异常');
                     },
                     success: function(model,response){
-                        console.log(response);
-                        submitView.lock.submit = false;
+                        console.log(response);                
                         $('.input-url input').val('');
                         submitView.remove();
+                        submitView=null;
                     }
-                })
+                });
             }
         },
         loading: function(){
