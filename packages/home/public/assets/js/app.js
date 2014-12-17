@@ -89,27 +89,64 @@ $(function(){
     var newBookmarkModel = Backbone.Model.extend({
 
     });
-    //提交书签
+    //提交书签的url
     var addBookmarkModel = Backbone.Model.extend({
-        url:'/api/bookmarks/scraper/post',
+        url: "/system/scraper",
         validate: function(attrs, options) {
             if (!attrs.website){
                 return '请填写需要添加的网址';
             }
-        var RegUrl = new RegExp();
-        RegUrl.compile("^(https?://)?[A-Za-z0-9-_]+\\.[A-Za-z0-9-_%&\?\/.=]+$",'g');
-        var result = RegUrl.test(attrs.website,'head');
-        if (!result) return '请填写正确的地址';
+            var RegUrl = new RegExp();
+            RegUrl.compile("^(https?://)?[A-Za-z0-9-_]+\\.[A-Za-z0-9-_%&\?\/.=]+$",'g');
+            var result = RegUrl.test(attrs.website,'head');
+            if (!result) return '请填写正确的地址';
         }
     });
+    //抓取到的书签信息
+    var submitBookmarkModel = Backbone.Model.extend({
+        url: "/api/bookmarks/scraper/post",
+        validate: function(attrs,options) {
+            if (!attrs.title){
+                return "请填写书签标题";
+            }
+            if (attrs.title.length>100) {
+                return "标题字数不能超过100字";
+            }
+            if (!attrs.description){
+                return "请填写描述";
+            }
+            if (attrs.description.length>200) {
+                return "描述字数不能超过200字";
+            }
 
+        }
+    });
+    var SubmitView = Backbone.View.extend({
+            el: $('.submit-view'),
+
+            initTemplate: _.template($('#tp-submit-bookmark').html()),
+
+            lock:{
+                submit:false
+            },
+
+             initialize: function(){
+            },       
+
+            // events:{
+            //     "click .add-bookmark": "addBookmark",
+            // },        
+        });
 
 
     //书签列表视图
     var listView = Backbone.View.extend({
+        isHave: false,
         el: $('.content-page'),
 
         initTemplate: _.template($('#tp-channels-main').html()),
+        //添加书签 视图
+        // submitbkmTemplate: _.template($('#tp-submit-bookmark').html()),
 
         lock:{
             bkUp:false,
@@ -118,6 +155,11 @@ $(function(){
 
         initialize: function(){
         },
+
+        addbookmark:  new addBookmarkModel(),
+
+        submitbookmark: new submitBookmarkModel(),
+
         events:{
             "click .up" : "bkUp",
             "click .down": "bkDown",
@@ -226,27 +268,54 @@ $(function(){
 
             }})
         },
-
         addBookmark: function(event){
-            if (!$('.add-bookmark').hasClass('active')){
-                $('.add-bookmark').html('<p class="add-true">确定</p>').addClass('active');
-                var top = $(window).height()/10*8;console.log(top,$('.add-bookmark').offset().top,$('.add-bookmark').height()/2,$('.input-url').height()/2);
-                $('.input-url').css({'top':top+$('.add-bookmark').height()/2});
-                $('.input-url').fadeIn('2s');
-            }
-            else{
-                var addbookmark =  new newBookmarkModel();
-                addbookmark.set({'website':$('.input-url input').val()});
-                $('.add-bookmark').removeClass('active').html('<p>正在</p><p>获取</p>');
-                $('.input-url').fadeOut('2s');
-                addbookmark.save(null,{'error': function(model,response){
-                    $('#Channel-Create-Error').text('网络异常').show();
-                },
-                'success': function(model,response){
-                    console.log(response);
+            var submitView = new SubmitView();
+            var that =this;console.log(submitView.lock.submit);
+            if (!submitView.lock.submit){
+                //第一次点击
+                if (!$('.add-bookmark').hasClass('submit-active')){
+                    $('.add-bookmark').html('<p class="add-true">确定</p>').addClass('submit-active');
+                    var top = $(window).height()/10*8;
+                    $('.input-url').css({'top':top+$('.add-bookmark').height()/2});
+                    $('.input-url').fadeIn('2s');
                 }
-            })
+                //第二次点击
+                else{
+                    that.addbookmark.set({'website':$('.input-url input').val()},{validate:true});
+                    if(that.addbookmark.validationError){return console.log(that.addbookmark.validationError);}
+                    $('.add-bookmark').removeClass('submit-active').html('<p>正在</p><p>获取</p>');
+                    submitView.lock.submit=true;
+                    $('.input-url').fadeOut('2s');
+                    that.addbookmark.save(null,{error: function(model,response){
+                            console.log('网络异常或参数错误');
+                        },
+                        success: function(model,response){
+                            console.log(response);
+                            submitView.$el.html(submitView.initTemplate(response.data));
+                            $('.submit-content').fadeIn('1s');
+                            that.submitbookmark.set({'website':response.data.website,'channel':$('#sub-channel-list .active').data('id')});console.log($('#sub-channel-list .active').html());
+                            $('.add-bookmark').html('<p class="add-true">确定</p>');
+                        }
+                    });
+                }
             }
+            else{ 
+                submitView.lock.submit = false;
+                that.submitbookmark.set({'title':$('.submit-content-title div').text(),'description':$('.submit-content-description div').text(),'image':$('.submit-content-img img').attr('src'),'tags':$('.submit-content-tags input').val()})           
+                that.submitbookmark.save(null,{error:function(){
+                        console.log('网络连接异常');
+                    },
+                    success: function(model,response){
+                        console.log(response);                
+                        $('.input-url input').val('');
+                        submitView.remove();
+                        submitView=null;
+                    }
+                });
+            }
+        },
+        loading: function(){
+
         }
     });
 

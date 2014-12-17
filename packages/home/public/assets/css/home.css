@@ -747,6 +747,9 @@ a.header-channel-name, a.header-channel-name:hover{
     height: 50px;
     width: 100px;
 }
+
+
+/*提交书签按钮*/
 .add-bookmark{
     position: fixed;
     top:80%;
@@ -763,11 +766,6 @@ a.header-channel-name, a.header-channel-name:hover{
     z-index: 250; 
 }
 .add-bookmark:hover{
-/*    width:80px;
-    height:80px;
-    border-width:15px;
-    font-size:12px;
-    top:top+10+'px',right:'100px',borderRadius: '50%'*/
     transform: scale(1.3);
     transition: all 1s ease 0s;
     -webkit-transform: scale(1.3);
@@ -799,7 +797,14 @@ p.add-true{
 }
 
 
-
+/*提交书签表单*/
+.submit-content{
+    position: fixed;
+    top: 40%;
+    right: 200px;
+    z-index: 251;
+    display: none;
+}
 
 /* date divide */
 .date-divide {
@@ -1612,3 +1617,4 @@ a.ex-creator {float: right;}
 .to-channel {
     font-size: 1.5em;
 }
+
