@@ -608,7 +608,7 @@
     <li class="post-item" data-id= <%= msg[i]['_id'] %>>
         <div class="link-part-content">
             <div class="bookmark-pic"><img src="http://yiye.qiniudn.com/<%= msg[i]['image']%>"/></div>
-            <a class="link title-link"  data-id= <%= msg[i]['_id'] %> target="_blank" href=<%= msg[i]['url'] %>> <%= msg[i]['title']%> </a>
+            <a class="link title-link"  href=<%= msg[i]['url'] %> data-id= <%= msg[i]['_id'] %> target="_blank" > <%= msg[i]['title']%> </a>
             <div class="to-channel">
                 <span>提交到：</span><a target="_blank" class="channel-title" data-id= <%= msg[i]['_id'] %> href="/channel/<%=msg[i]['channelId'] %>"><%= msg[i]['channelInfo']['channelName']%></a>
             </div>
@@ -642,7 +642,7 @@
             </div>
         <% } %>
         <div class="main">
-            <div class="user-news-bookmarks" ><a href=<%= msg[i]['url'] %>><%= msg[i]["title"] %></a> <div class="user-news-info"><span>频道:<a href="#"><%= msg[i]["channelInfo"]["channelName"] %></a></span><span>审核:<a href="#"><%= msg[i]["checkUser"]["username"] %></a></span></div></div>
+            <div class="user-news-bookmarks" ><a href=<%= msg[i]['url'] %> target="_blank"><%= msg[i]["title"] %></a> <div class="user-news-info"><span>频道:<a href="#"><%= msg[i]["channelInfo"]["channelName"] %></a></span><span>审核:<a href="#"><%= msg[i]["checkUser"]["username"] %></a></span></div></div>
             <% if(msg[i]["checked"] == 2){ %>
             <div class="user-news-fail-result">
                 <span>原因：</span><%= msg[i]["deleteInfo"] %>

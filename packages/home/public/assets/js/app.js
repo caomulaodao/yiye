@@ -547,9 +547,9 @@ $(function(){
         //通知Ajax
         informAjax: function() {
             var that = this;
-            var nClientH = $(window).height();                  
-            var nScrollTop = $('.content-page').scrollTop();   
-            var nChannelH = $('#inform').height();     
+            var nClientH = $(window).height();       console.log(nClientH);           
+            var nScrollTop = $('.content-page').scrollTop();   console.log(nScrollTop);
+            var nChannelH = $('#inform').height();     console.log(nClientH);
             if ((nClientH + nScrollTop >= nChannelH) && (that.informAjax.bScroll == true)) {
                 that.informAjax.bScroll = false;     //禁止Ajax加载
                 var nNum = that.informMsg.get('number');
