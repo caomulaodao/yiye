@@ -89,166 +89,241 @@ $(function(){
     var newBookmarkModel = Backbone.Model.extend({
 
     });
-    //提交书签
+    //提交书签的url
     var addBookmarkModel = Backbone.Model.extend({
-        url:'/api/bookmarks/scraper/post',
+        url: "/system/scraper",
         validate: function(attrs, options) {
             if (!attrs.website){
                 return '请填写需要添加的网址';
             }
-        var RegUrl = new RegExp();
-        RegUrl.compile("^(https?://)?[A-Za-z0-9-_]+\\.[A-Za-z0-9-_%&\?\/.=]+$",'g');
-        var result = RegUrl.test(attrs.website,'head');
-        if (!result) return '请填写正确的地址';
+            var RegUrl = new RegExp();
+            RegUrl.compile("^(https?://)?[A-Za-z0-9-_]+\\.[A-Za-z0-9-_%&\?\/.=]+$",'g');
+            var result = RegUrl.test(attrs.website,'head');
+            if (!result) return '请填写正确的地址';
         }
     });
+    //抓取到的书签信息
+    var submitBookmarkModel = Backbone.Model.extend({
+        url: "/api/bookmarks/scraper/post",
+        validate: function(attrs,options) {
+            if (!attrs.title){
+                return "请填写书签标题";
+            }
+            if (attrs.title.length>100) {
+                return "标题字数不能超过100字";
+            }
+            if (!attrs.description){
+                return "请填写描述";
+            }
+            if (attrs.description.length>200) {
+                return "描述字数不能超过200字";
+            }
 
+        }
+    });
+    var SubmitView = Backbone.View.extend({
+            el: $('.submit-view'),
+
+            initTemplate: _.template($('#tp-submit-bookmark').html()),
+
+            lock:{
+                submit:false
+            },
+
+             initialize: function(){
+            },       
+
+            // events:{
+            //     "click .add-bookmark": "addBookmark",
+            // },        
+        });
 
 
     //书签列表视图
-    var listView = Backbone.View.extend({
-        el: $('.content-page'),
+    var newlistView = function (){
+        var listView = Backbone.View.extend({
 
-        initTemplate: _.template($('#tp-channels-main').html()),
+            el: $('.content-page'),
 
-        lock:{
-            bkUp:false,
-            bkDown:false
-        },
+            initTemplate: _.template($('#tp-channels-main').html()),
+            //添加书签 视图
+            // submitbkmTemplate: _.template($('#tp-submit-bookmark').html()),
 
-        initialize: function(){
-        },
-        events:{
-            "click .up" : "bkUp",
-            "click .down": "bkDown",
-            "click .add-bookmark": "addBookmark",
-        },
+            lock:{
+                bkUp:false,
+                bkDown:false
+            },
 
-        render: function(channelId){
-            var that = this;
-            that.list = new bkListInit;
-            that.list.fetch({
-                url:'/api/bookmarks/init?channelId='+channelId,
-                success:function(model,response){
-                    if(response.code==0){
-                        that.$el.html(that.initTemplate(response.data));
-                        that.list.date = response.data.nextTime;
-                        that.list.channelId =  response.data.info._id;
-                        that.renderAfter();
-                    }
-                    else{
-                        console.log(response);
-                    }
-                }
-            })
-        },
+            initialize: function(){
+            },
 
-        renderAfter : function(){
-            var that = this;
-            that.channelAjax.bScroll = true; //许可Ajax加载
-            $(".content-page-content").scroll(function(){
-                that.channelAjax();
-            });
-        },
+            addbookmark:  new addBookmarkModel(),
 
-        channelAjax: function() {
-            var that = this;
-            var nClientH = $(window).height();
-            var nScrollTop = $('.content-page-content').scrollTop();
-            var nChannelH = $('.content-body').height();
-            if((nClientH + nScrollTop + 100 >= nChannelH) && (that.channelAjax.bScroll == true)) {
-                that.channelAjax.bScroll = false;   //禁止Ajax加载
-                var sDate = that.list.date;
-                var sChannelId = that.list.channelId;
+            submitbookmark: new submitBookmarkModel(),
+
+            events:{
+                "click .up" : "bkUp",
+                "click .down": "bkDown",
+                "click .add-bookmark": "addBookmark",
+            },
+
+            render: function(channelId){
+                var that = this;
+                that.list = new bkListInit;
                 that.list.fetch({
-                    data: {date: sDate, channelId: sChannelId},
-                    url: "/api/home/bookmark",
-                    success: function(model, response){
-                        if (response.code==0){
-                            $('.content-body>ul').append(that.channelTemplate(response.data));
-                            if(!response.data.isHave){
-                                $('.content-body>ul').append("<p class='no-news'>无新内容了</p>");
-                            } else {
-                                var nextDate = response.data.nextTime;   //将下次日期赋值给nextDate变量
-                                that.list.set("date", nextDate);         //记录下次Ajax日期
-                                that.channelAjax.bScroll = true;         //许可Ajax加载
-                            }                           
+                    url:'/api/bookmarks/init?channelId='+channelId,
+                    success:function(model,response){
+                        if(response.code==0){
+                            that.$el.html(that.initTemplate(response.data));
+                            that.list.date = response.data.nextTime;
+                            that.list.channelId =  response.data.info._id;
+                            that.renderAfter();
                         }
                         else{
                             console.log(response);
                         }
-
                     }
+                })
+            },
+
+            renderAfter : function(){
+                var that = this;
+                that.channelAjax.bScroll = true; //许可Ajax加载
+                $(".content-page-content").scroll(function(){
+                    that.channelAjax();
                 });
-            }
-        },
+            },
 
-        channelTemplate: _.template($('#tp-bookmarks-oneday').html()),
+            channelAjax: function() {
+                var that = this;
+                var nClientH = $(window).height();
+                var nScrollTop = $('.content-page-content').scrollTop();
+                var nChannelH = $('.content-body').height();
+                if((nClientH + nScrollTop + 100 >= nChannelH) && (that.channelAjax.bScroll == true)) {
+                    that.channelAjax.bScroll = false;   //禁止Ajax加载
+                    var sDate = that.list.date;
+                    var sChannelId = that.list.channelId;
+                    that.list.fetch({
+                        data: {date: sDate, channelId: sChannelId},
+                        url: "/api/home/bookmark",
+                        success: function(model, response){
+                            if (response.code==0){
+                                $('.content-body>ul').append(that.channelTemplate(response.data));
+                                if(!response.data.isHave){
+                                    $('.content-body>ul').append("<p class='no-news'>无新内容了</p>");
+                                } else {
+                                    var nextDate = response.data.nextTime;   //将下次日期赋值给nextDate变量
+                                    that.list.set("date", nextDate);         //记录下次Ajax日期
+                                    that.channelAjax.bScroll = true;         //许可Ajax加载
+                                }                           
+                            }
+                            else{
+                                console.log(response);
+                            }
 
-        bkUp: function(event){
-            if(this.lock.bkUp) return false;
-            this.lock.bkUp = true;
-            var like = new bkLike;
-            var bookmarkId = $(event.currentTarget).data('bookmarkid');
-            var that = this;
-            like.fetch({url:'/api/bookmarks/like/'+bookmarkId,success:function(model,response){
-                if (response.code==0){
-                    if(response.data.isLiked == false){
-                        var count = $(event.currentTarget).find('span');
-                        count.text(+count.text()+1);
+                        }
+                    });
+                }
+
+            },
+
+            channelTemplate: _.template($('#tp-bookmarks-oneday').html()),
+
+            bkUp: function(event){
+                if(this.lock.bkUp) return false;
+                this.lock.bkUp = true;
+                var like = new bkLike;
+                var bookmarkId = $(event.currentTarget).data('bookmarkid');
+                var that = this;
+                like.fetch({url:'/api/bookmarks/like/'+bookmarkId,success:function(model,response){
+                    if (response.code==0){
+                        if(response.data.isLiked == false){
+                            var count = $(event.currentTarget).find('span');
+                            count.text(+count.text()+1);
+                        }
+                        that.lock.bkUp = false;  
                     }
-                    that.lock.bkUp = false;  
-                }
-                else{
-                    console.log(response);
-                }
-
-            }})
-        },
-
-        bkDown: function(event){
-            if(this.lock.bkDown) return false;
-            this.lock.bkDown = true;
-            var hate = new bkHate;
-            var bookmarkId = $(event.currentTarget).data('bookmarkid');
-            var that = this;
-            hate.fetch({url:'/api/bookmarks/hate/'+bookmarkId,success:function(model,response){
-                if (response.code==0){
-                    if(response.data.isLiked == true && response.data.isHated == false){
-                        var count = $(event.currentTarget).parent().find('span');
-                        count.text(+count.text()-1);
+                    else{
+                        console.log(response);
                     }
-                    that.lock.bkDown = false;  
-                }
-                else{
-                    console.log(response);
-                }
 
-            }})
-        },
+                }})
+            },
 
-        addBookmark: function(event){
-            if (!$('.add-bookmark').hasClass('active')){
-                $('.add-bookmark').html('<p class="add-true">确定</p>').addClass('active');
-                var top = $(window).height()/10*8;console.log(top,$('.add-bookmark').offset().top,$('.add-bookmark').height()/2,$('.input-url').height()/2);
-                $('.input-url').css({'top':top+$('.add-bookmark').height()/2});
-                $('.input-url').fadeIn('2s');
-            }
-            else{
-                var addbookmark =  new newBookmarkModel();
-                addbookmark.set({'website':$('.input-url input').val()});
-                $('.add-bookmark').removeClass('active').html('<p>正在</p><p>获取</p>');
-                $('.input-url').fadeOut('2s');
-                addbookmark.save(null,{'error': function(model,response){
-                    $('#Channel-Create-Error').text('网络异常').show();
-                },
-                'success': function(model,response){
-                    console.log(response);
+            bkDown: function(event){
+                if(this.lock.bkDown) return false;
+                this.lock.bkDown = true;
+                var hate = new bkHate;
+                var bookmarkId = $(event.currentTarget).data('bookmarkid');
+                var that = this;
+                hate.fetch({url:'/api/bookmarks/hate/'+bookmarkId,success:function(model,response){
+                    if (response.code==0){
+                        if(response.data.isLiked == true && response.data.isHated == false){
+                            var count = $(event.currentTarget).parent().find('span');
+                            count.text(+count.text()-1);
+                        }
+                        that.lock.bkDown = false;  
+                    }
+                    else{
+                        console.log(response);
+                    }
+
+                }})
+            },
+            addBookmark: function(event){
+                var submitView = new SubmitView();
+                var that =this;console.log(submitView.lock.submit);
+                if (!submitView.lock.submit){
+                    //第一次点击
+                    if (!$('.add-bookmark').hasClass('submit-active')){
+                        $('.add-bookmark').html('<p class="add-true">确定</p>').addClass('submit-active');
+                        var top = $(window).height()/10*8;
+                        $('.input-url').css({'top':top+$('.add-bookmark').height()/2});
+                        $('.input-url').fadeIn('2s');
+                    }
+                    //第二次点击
+                    else{
+                        that.addbookmark.set({'website':$('.input-url input').val()},{validate:true});
+                        if(that.addbookmark.validationError){return console.log(that.addbookmark.validationError);}
+                        $('.add-bookmark').removeClass('submit-active').html('<p>正在</p><p>获取</p>');
+                        submitView.lock.submit=true;
+                        $('.input-url').fadeOut('2s');
+                        that.addbookmark.save(null,{error: function(model,response){
+                                console.log('网络异常或参数错误');
+                            },
+                            success: function(model,response){
+                                console.log(response);
+                                submitView.$el.html(submitView.initTemplate(response.data));
+                                $('.submit-content').fadeIn('1s');
+                                that.submitbookmark.set({'website':response.data.website,'channel':$('#sub-channel-list .active').data('id')});console.log($('#sub-channel-list .active').html());
+                                $('.add-bookmark').html('<p class="add-true">确定</p>');
+                            }
+                        });
+                    }
                 }
-            })
+                else{ 
+                    submitView.lock.submit = false;
+                    that.submitbookmark.set({'title':$('.submit-content-title div').text(),'description':$('.submit-content-description div').text(),'image':$('.submit-content-img img').attr('src'),'tags':$('.submit-content-tags input').val()})           
+                    that.submitbookmark.save(null,{error:function(){
+                            console.log('网络连接异常');
+                        },
+                        success: function(model,response){
+                            console.log(response);                
+                            $('.input-url input').val('');
+                            submitView.remove();
+                            submitView=null;
+                        }
+                    });
+                }
+            },
+            loading: function(){
+
             }
-        }
-    });
+        });
+        if (this.view){return this.view};
+        this.view = new listView();
+        return this.view;
+    }
 
     //创建频道视图
     var NewChannelView = Backbone.View.extend({
@@ -1139,7 +1214,9 @@ $(function(){
         },
         channelBookmarks : function(id){
             var channelsId = id;
-            var view = new listView();
+            var view = newlistView();
+            //
+
             $('.channel-item').removeClass('active');
             $('.channel-item[data-id='+ channelsId +']').addClass('active');
             view.render(channelsId);

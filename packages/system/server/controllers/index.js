@@ -7,6 +7,8 @@ var mongoose = require('mongoose'),
     jquery = require('jquery'),
     request = require('request'),
     jsdom = require ('jsdom'),
+    iconv = require ('iconv-lite'),//应对gbk的网址
+    BufferHelper = require('bufferhelper'),
     User = mongoose.model('User'),
     Channel2User = mongoose.model('Channel2User'),
     Bugs = mongoose.model('Bugs'),
@@ -182,7 +184,7 @@ exports.query = function(req,res,Package){
 };
 exports.scraper = function(req,res){
     if (!req.user){return res.sendResult('请先登陆或注册',1000,null);}
-    var userUrl = req.body.url;console.log(req.body.url);
+    var userUrl = req.body.website;console.log(req.body);
     //参数检测
     if (userUrl==null) {return res.sendResult('url地址不能为空',2012,null);}
     if (typeof userUrl!=='string') {return res.sendResult('url地址格式错误',2013,null);}
@@ -191,6 +193,7 @@ exports.scraper = function(req,res){
 //开始爬指定url
 
     //请求头部设定
+    console.log(url);
     var options = {
         'url': url,
         'headers': {
@@ -199,8 +202,13 @@ exports.scraper = function(req,res){
     };
     //传入dom后的处理函数
     var callback = function(err,response,content){
-        if (err) return res.sendResult('访问该网站出错',3001,null);
+        if (err) {console.log(err);return res.sendResult('访问该网站出错',3001,null);}
         if (!err&&response.statusCode == 200){
+            // var bufferhelper = new BufferHelper();
+            // var str = iconv.decode(content, 'GBK'); //return unicode string from GBK encoded bytes
+            // str = bufferhelper.concat(str);
+            // str = bufferhelper.toBuffer().toString('UTF8');
+            // console.log(str);
             var window = jsdom.jsdom(content).parentWindow;
             var $ =jquery(window);
         }
@@ -217,8 +225,9 @@ exports.scraper = function(req,res){
         var result = {
             title:title,
             description:description,
-            imgUrl:imgUrl
-        }
+            imgUrl:imgUrl,
+            website: url
+        };console.log(result);
         res.sendResult('返回网站信息成功',0,result);
     }
     request(options,callback);

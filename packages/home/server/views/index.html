@@ -80,7 +80,9 @@
 <!-- 内容页面 -->
 <div class="content-page">
 </div>
-
+<!-- 增加书签表单 -->
+<div class="submit-view">
+</div>
 
 <!-- 结果提示弹窗  -->
 <div id="dialog-output"></div>
@@ -398,6 +400,7 @@
             </ul>
             <div class = 'add-bookmark'><p>提交</p><p>书签</p></div>
             <div class = 'input-url'><input type='text' placeholder='http://' /></div>
+            <div class = 'submit-bookmark'></div>
             <div style="height:100px"></div>
         </div>
     </div>
@@ -748,6 +751,26 @@
             </div>
         </div>
 
+    </div>
+</script>
+
+<!-- 提交书签表单样式 -->
+<script type="text/x-handlebars-template" id= "tp-submit-bookmark">
+    <div class='submit-content'>
+        <div class='submit-content-title'>
+            <p>标题</p>
+            <div contenteditable="true"><%= title %></div>
+        </div>
+        <div class='submit-content-img'>
+            <img src='http://placehold.it/200x200'/>
+        </div>
+        <div class='submit-content-description'>
+            <p>描述</p>
+            <div contenteditable='true'><%= description %></div>
+        </div>
+        <div class='submit-content-tags'>
+            <input type="search"/>
+        </div> 
     </div>
 </script>
 
