@@ -398,7 +398,8 @@ exports.callmsg = function(req,res){
             Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[1,2,3,4]}}).sort({'checked':1,'postTime':-1}).skip((number-1)*limit).limit(limit).exec(function(err,list){
                 if (err) {console.log(err);return res.sendError()}
                 var isHave=true;
-                if(doc.length==0) {isHave=false;}
+                if(doc.length==0) {isHave = false;}
+                if (list.length==0) {isHve = false; return callback(err,list,isHave);}
                 else{
                     if(doc[0]['postTime']+''==list[list.length-1]['postTime']+''){
                         isHave=false;
@@ -420,7 +421,6 @@ exports.callmsg = function(req,res){
                 if (err) {console.log(err);return res.sendError();}
                 res.sendResult('返回成功',0,{msg:list,isHave:isHave});
             })
-            
         }
     )
 }
@@ -463,7 +463,7 @@ exports.checkmsg = function(req,res){
         //返回未审核和已经审核的书签
         function(channelsId,noChecked,count,callback){
             if (channelsId.length===0) {return callback(null,[])}
-            if (noChecked.length>=limit){return callback(err,noChecked)}//如果未审核的数量足够多 则直接返回
+            if (noChecked.length>=limit){return callback(null,noChecked)}//如果未审核的数量足够多 则直接返回
             var skipnumber = (number-1)*limit-count>0?(number-1)*limit-count:0;
             Bookmarks.find({'channelId':{$in:channelsId},'checkUser':req.user._id}).sort({postTime:-1}).skip(skipnumber).limit(limit-noChecked.length).exec(function(err,checkedBkms){
                 if(err) {console.log(err);return res.sendError();}
@@ -504,7 +504,7 @@ exports.remindmsg = function(req,res){
             Channel2User.find({'channelId':{$in:channelsId},'type':'follower'}).sort({'remind':1,'followerTime':-1}).skip((number-1)*limit).limit(limit).exec(function(err,followers){
                 if (err) {console.log(3);return res.sendError();}
                 var channelsId =[],i=0;
-                if (followers.length==0) {console.log('ss');return callback(channelsId,[],[]);}
+                if (followers.length==0) {return callback(err,channelsId,[]);}
                 for(i;i<followers.length;i++){
                     channelsId.push(followers[i]['_id']);
                 }
@@ -514,9 +514,11 @@ exports.remindmsg = function(req,res){
         function(err,channelsId,followers){
             if (err){console.log(2);return res.sendError();}
             Channel2User.update({'_id':{$in:channelsId}},{'remind':1},{multi:true}).exec(function(err){
-                if (err){console.log(1);return res.sendError();}
-                res.sendResult('返回消息成功',0,followers);
-            });           
+                if (err){console.log(err);return res.sendError();}
+                var isHave = true;
+                if (followers.length<limit){ isHave=false;}
+                res.sendResult('返回消息成功',0,{msg:followers,isHave:isHave});
+            });
         })
 }
 
