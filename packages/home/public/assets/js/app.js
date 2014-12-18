@@ -1232,6 +1232,7 @@ $(function(){
             App.main.html(view.render().el);
             view.renderAfter();
             $('#check-btn').click();
+            $('.red-point-count').hide();
         },
         discover: function(){
             var view = new ExploreView();
