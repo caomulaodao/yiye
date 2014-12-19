@@ -235,7 +235,8 @@ $(function(){
                 var like = new bkLike;
                 var bookmarkId = $(event.currentTarget).data('bookmarkid');
                 var that = this;
-                like.save(null, {url:'/api/bookmarks/like/'+bookmarkId,success:function(model,response){
+                like.set('bookmarkId',bookmarkId);
+                like.save(null, {url:'/api/bookmarks/like',success:function(model,response){
                     if (response.code==0){
                         if(response.data.isLiked == false){
                             var count = $(event.currentTarget).find('span');
@@ -246,7 +247,8 @@ $(function(){
                         console.log(response);
                     }
 
-                }})
+                }});
+                this.lock.bkUp = false;
             },
 
             bkDown: function(event){
@@ -255,7 +257,8 @@ $(function(){
                 var hate = new bkHate;
                 var bookmarkId = $(event.currentTarget).data('bookmarkid');
                 var that = this;
-                hate.save(null, {url:'/api/bookmarks/hate/'+bookmarkId,success:function(model,response){
+                hate.set('bookmarkId', bookmarkId);
+                hate.save(null, {url:'/api/bookmarks/hate',success:function(model,response){
                     if (response.code==0){
                         if(response.data.isLiked == true && response.data.isHated == false){
                             var count = $(event.currentTarget).parent().find('span');
@@ -267,7 +270,8 @@ $(function(){
                         console.log(response);
                     }
 
-                }})
+                }});
+                this.lock.bkDown = false;
             },
             addBookmark: function(event){
                 if(!this.submitview) {this.submitview = new SubmitView();}
