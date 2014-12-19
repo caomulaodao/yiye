@@ -1,12 +1,12 @@
 'use strict';
 
 // The Package is past automatically as first parameter
-var index = requre('../controllers/index');
+var index = require('../controllers/overlook');
 module.exports = function(Overlook, app, auth, database) {
 
 
-
-  app.get('/overlook/deleteUser',function(req, res, next) {
+  //删除某个用户
+  app.post('/overlook/deleteUser',function(req, res, next) {
     index.deleteUser(req,res);
   });
 
