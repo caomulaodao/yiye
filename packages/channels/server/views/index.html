@@ -23,7 +23,7 @@
                 <img src="http://yiye.qiniudn.com/{{ user.avatar }}">
             </a>
             {% endif %}
-            <img src="/home/assets/img/brand_name_green.png" onclick="window.location.assign('/home')">
+            <img src="/home/assets/img/brand_name_white.png" onclick="window.location.assign('/home')">
              {% if user %}
             <i id="rounded-arrow" class="iconfont">&#x3435</i>
             {% endif %}
@@ -70,7 +70,7 @@
                 {% if channel.userType == 'not' %}
                     <button id="subscribe-btn">订阅</button>
                 {% endif %}
-                {% if channel.userType =！ 'not' %}
+                {% if channel.userType ==! 'not' %}
                     <button id="subscribe-btn" class='active'>取消订阅</button>
                 {% endif %}
             </div>

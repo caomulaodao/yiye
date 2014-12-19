@@ -488,7 +488,7 @@ exports.remindmsg = function(req,res){
         //创建者的频道Id
         function(callback){
             Channel2User.find({'userId':req.user._id,'type':'creator'},function(err,channels){
-                if(err) {console.log(err);return res.sendError();}
+                if(err) {console.log(4);return res.sendError();}
                 if (channels.length==0) {return callback(err,[]);}
                 var channelsId = [];
                 var i = 0;
@@ -502,7 +502,7 @@ exports.remindmsg = function(req,res){
         function(channelsId,callback){
             if (channelsId.length==0) {return callback(null,[],[]);}
             Channel2User.find({'channelId':{$in:channelsId},'type':'follower'}).sort({'remind':1,'followerTime':-1}).skip((number-1)*limit).limit(limit).exec(function(err,followers){
-                if (err) {console.log(err);return res.sendError();}
+                if (err) {console.log(3);return res.sendError();}
                 var channelsId =[],i=0;
                 if (followers.length==0) {return callback(err,channelsId,[]);}
                 for(i;i<followers.length;i++){
@@ -512,13 +512,13 @@ exports.remindmsg = function(req,res){
             })
         }],
         function(err,channelsId,followers){
-            if (err){console.log(err);return res.sendError();}
+            if (err){console.log(2);return res.sendError();}
             Channel2User.update({'_id':{$in:channelsId}},{'remind':1},{multi:true}).exec(function(err){
                 if (err){console.log(err);return res.sendError();}
                 var isHave = true;
                 if (followers.length<limit){ isHave=false;}
                 res.sendResult('返回消息成功',0,{msg:followers,isHave:isHave});
-            });           
+            });
         })
 }
 

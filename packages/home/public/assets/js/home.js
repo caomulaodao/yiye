@@ -8,7 +8,6 @@ $(function(){
 
 //initialization
 function initialize() {
-    //控制箭头下拉
     // 如果元素之前绑定过click则取消绑定
     $('#rounded-arrow').unbind('click');
     $('#rounded-arrow').on('click', function() {
@@ -20,12 +19,16 @@ function initialize() {
             $('#function-module').addClass('unfold');
         }
     });
+
     // 绑定切换事件。
     $('#function-module-ul').delegate('li','click',function(e){
         var id = $(e.currentTarget).attr('id');
-        window.location.href="/home#"+id;
+        if(id == "help"){
+            window.location.href = "/our/team/";
+        }else{
+            window.location.href = "/home#"+id;
+        }
     });
-
 }
 
 

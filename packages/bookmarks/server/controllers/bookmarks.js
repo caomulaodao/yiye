@@ -322,7 +322,7 @@ exports.like = function(req,res){
                     callback(null, true);
                 }else{
                     //查询获取bookmarkId
-                    Bookmarks.find({_id: bookmarkId}, function (err, bookmark) {
+                    Bookmarks.findOne({_id: bookmarkId}, function (err, bookmark) {
                         if (err) {console.log(err);return res.sendError()}
                         var like = BookmarkLike({});
                         like.bookmarkId = bookmarkId;

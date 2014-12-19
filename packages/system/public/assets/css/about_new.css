@@ -29,7 +29,7 @@
 	border-left:4px solid transparent;
 }
 .about-item a:hover,.about-item a.active{
-	background: #ddd;
+	background: #eaeaea;
 	border-left:4px solid #40c192;
 }
 /*rights */
@@ -110,7 +110,7 @@
 .staff-info-txt:after{
 	content:"」";
 }
-.staff h1,#joinus h1{
+.staff h1,#joinus h1,.bug-reporter h1{
     font-size: 30px;
     margin-bottom: 20px;
     text-align: center;
@@ -164,7 +164,7 @@
     line-height: 30px;
 }
 .iconfont:hover{
-    color:rgba(128,76,28,0.68);
+    color: #fff;
 }
 .sponsor-friend{
 	display: inline-block;
