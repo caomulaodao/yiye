@@ -552,6 +552,16 @@ exports.praisemsg = function(req,res){
         function(bookmarkId,callback){
             BookmarkLike.find({'bookmarkId':{$in:bookmarkId}}).sort({'remind':1,'likeTime':-1}).skip((number-1)*limit).limit(limit).exec(function(err,doc){
                 if (err) {console.log(err);return res.sendError();}
+                var i=0,nowtime = moment(new Date());
+                for (i;i<doc.length;i++){
+                    doc[i].likeTime = moment(doc[i].likeTime);
+                    if (doc[i].likeTime.diff(nowtime,'days')>1){
+                        doc[i].likeTime = doc[i].likeTime.format('llll');
+                    }
+                    else{
+                        doc[i].likeTime = doc[i].likeTime.fromNow();
+                    }
+                }
                 callback(null,bookmarkId,doc);
             })
         }
