@@ -1704,6 +1704,54 @@ a.ex-creator {float: right;}
     white-space: nowrap;
 }
 
+/* praise-style */
+.praise-box {
+    height: 100px;
+    padding: 10px;
+    list-style-type: none;
+}
+
+.praise-user-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-right: 20px;
+    overflow: hidden;
+    float: left;
+}
+.praise-user-name {
+    font-size: 1.7em;
+    font-weight: bold;
+    margin-right: 10px;
+}
+.praise-user-avatar img {
+    width: 80px;
+    height: 80px;
+}
+
+.praise-bookmark-img {
+    width: 100px;
+    height: 100px;
+    float: right;
+    overflow: hidden;
+}
+.praise-bookmark-img img {width: 100px;}
+
+.praise-bookmark-header>span {font-size: 1.5em;}
+
+.praise-bookmark {
+    font-size: 1.5em;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.praise-bookmark-footer {font-size: 1.5em;}
+
+.praise-bookmark-footer>a {margin-right: 20px;}
+
+.praise-bookmark-footer>span {color: #aaa;}
+
 /*   发现页面  */
 #channel-explore-tools{
    list-style: none;

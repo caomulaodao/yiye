@@ -677,9 +677,30 @@
 
 <!--点赞模板-->
 <script type="text/x-handlebars-template" id="tp-user-praise">
-
-
-
+    <% for(var i = 0; i < msg.length; i++) { %>
+    <li data-id=<%=msg[i]['_id']%> class="praise-box">
+        <a href="/channel/<%= msg[i]['channelId']%>" target="_blank">
+            <div class="praise-user-avatar">
+                <img src="http://yiye.qiniudn.com/avatar/<%=msg[i]['_id']%>">
+            </div>
+        </a>
+        <div class="praise-bookmark-img">           
+            <img src="http://yiye.qiniudn.com/bImage/30bb3825e8f631cc5bcbb1fb1b6693f0.png">             
+        </div>
+        <div class="praise-bookmark-header">
+            <a href="/u/<%=msg[i]['userId']%>" class="praise-user-name">zweipix</a>
+            <span>赞了你的书签</span>
+        </div>
+        <div class="praise-bookmark">
+            <a href="#">百度一下，百度云因为有你的寸在的我的圣诞节覅扫地福建按时间段覅哦啊接收到奥斯丁就撒旦教</a>
+        </div>
+        <div class="praise-bookmark-footer">
+            <span>所在频道：</span>
+            <a href="/channel/<%= msg[i]['channelId']%>">才不是前端开发呢!</a>
+            <span>时间：<%=msg[i]['likeTime'] %></span>
+        </div>
+    </li>
+    <% } %>
 </script>
 
 <!-- 设置界面 -->

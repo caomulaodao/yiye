@@ -3,24 +3,83 @@
 <head>
 	<meta charset="UTF-8">
 	<title>praise-template</title>
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
 	<style type="text/css">
+	body {
+		font-size: 10px;
+	}
+	.praise-box {
+		width: 80%;
+		height: 100px;
+		padding: 10px;
+		list-style-type: none;
+	}
+	
+	.praise-user-avatar {
+		width: 80px;
+		height: 80px;
+		border-radius: 50%;
+		margin-right: 20px;
+		overflow: hidden;
+		float: left;
+	}
+	.praise-user-name {
+		font-size: 1.7em;
+		font-weight: bold;
+		margin-right: 10px;
+	}
+	.praise-user-avatar img {
+		width: 80px;
+		height: 80px;
+	}
 
+	.praise-bookmark-img {
+		width: 100px;
+		height: 100px;
+		float: right;
+		overflow: hidden;
+	}
+	.praise-bookmark-img img {width: 100px;}
+	
+	.praise-bookmark-header>span {font-size: 1.5em;}
+
+	.praise-bookmark {
+		font-size: 1.5em;
+		margin-top: 5px;
+		margin-bottom: 5px;
+		overflow: hidden;
+		white-space: nowrap;
+	}
+	.praise-bookmark-footer {font-size: 1.5em;}
+
+	.praise-bookmark-footer>a {margin-right: 20px;}
+
+	.praise-bookmark-footer>span {color: #aaa;}
 	</style>
 </head>
 <body>
 	<ul class="user-praise-list">
 		<li class="praise-box">
 			<a href="#" target="_blank">
-	            <div class="at-user-avatar">
+	            <div class="praise-user-avatar">
 	                <img src="#">
 	            </div>
         	</a>
-        	<img class="praise-bookmark-img" src="#">
-        	<span class="praise-user-name">zweipix</span>
-        	<span>赞了你的书签</span>
-        	<a href="#">dfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf</a>
-			<span>频道名：</span>
-        	<a href="#">才不是前端呢!</a>
+        	<div class="praise-bookmark-img">			
+        		<img src="http://yiye.qiniudn.com/bImage/30bb3825e8f631cc5bcbb1fb1b6693f0.png">        		
+        	</div>
+        	<div class="praise-bookmark-header">
+        		<a href="#" class="praise-user-name">zweipix</a>
+        		<span>赞了你的书签</span>
+        	</div>
+        	<div class="praise-bookmark">
+        		<a href="#">百度一下，百度云因为有你的寸在的我的圣诞节覅扫地福建按时间段覅哦啊接收到奥斯丁就撒旦教</a>
+        	</div>
+        	<div class="praise-bookmark-footer">
+        		<span>所在频道：</span>
+	        	<a href="#">才不是前端开发呢!</a>
+	        	<span>时间：2014-12-19</span>
+        	</div>
 		</li>
 	</ul>
 </body>
