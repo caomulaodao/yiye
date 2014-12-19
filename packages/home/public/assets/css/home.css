@@ -1648,6 +1648,7 @@ a.ex-creator {float: right;}
 }
 
 /* attention-style */
+.user-attention-list {display: table;}
 .attention-box {
     height: 82px;
     width: 290px;

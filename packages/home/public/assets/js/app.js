@@ -210,7 +210,7 @@ $(function(){
                             if (response.code==0){
                                 $('.content-body>ul').append(that.channelTemplate(response.data));
                                 if(!response.data.isHave){
-                                    $('.content-body>ul').append("<p class='no-news'>无新内容了</p>");
+                                    $('.content-body>ul').append("<p class='no-news'>无更多内容</p>");
                                 } else {
                                     var nextDate = response.data.nextTime;   //将下次日期赋值给nextDate变量
                                     that.list.set("date", nextDate);         //记录下次Ajax日期
@@ -229,21 +229,20 @@ $(function(){
 
             channelTemplate: _.template($('#tp-bookmarks-oneday').html()),
 
-            bkUp: function(event){
+            bkUp: function(event) {
                 if(this.lock.bkUp) return false;
                 this.lock.bkUp = true;
                 var like = new bkLike;
                 var bookmarkId = $(event.currentTarget).data('bookmarkid');
                 var that = this;
-                like.fetch({url:'/api/bookmarks/like/'+bookmarkId,success:function(model,response){
+                like.save(null, {url:'/api/bookmarks/like/'+bookmarkId,success:function(model,response){
                     if (response.code==0){
                         if(response.data.isLiked == false){
                             var count = $(event.currentTarget).find('span');
                             count.text(+count.text()+1);
                         }
                         that.lock.bkUp = false;  
-                    }
-                    else{
+                    } else {
                         console.log(response);
                     }
 
@@ -256,7 +255,7 @@ $(function(){
                 var hate = new bkHate;
                 var bookmarkId = $(event.currentTarget).data('bookmarkid');
                 var that = this;
-                hate.fetch({url:'/api/bookmarks/hate/'+bookmarkId,success:function(model,response){
+                hate.save(null, {url:'/api/bookmarks/hate/'+bookmarkId,success:function(model,response){
                     if (response.code==0){
                         if(response.data.isLiked == true && response.data.isHated == false){
                             var count = $(event.currentTarget).parent().find('span');
@@ -547,9 +546,11 @@ $(function(){
                 url: 'api/home/remind',
                 data: {'number': 1},
                 success: function (model, response) {
-                    if (response.code == 0){
+                    if (response.code == 0) {
+                        $('#attention>.no-news').remove();  // 清除上次的“无更多内容”p节点
                         $('.user-attention-list').html(that.noInfModel(response.data));
                         $('.user-attention-list').append(that.attentionTemplate(response.data));
+
                         that.attentionMsg.set('number', 2);   //设置下次加载的number （滚动ajax加载）                  
                     }
                     else{
@@ -606,7 +607,7 @@ $(function(){
                             $('.user-check-list').append(that.checkTemplate(response.data));
                             that.checkFun();            //绑定“通过”“编辑”“筛除”事件
                             if (!response.data.isHave) {
-                                $('.user-check-list').append("<p class='no-news'>无新内容了</p>");
+                                $('.user-check-list').append("<p class='no-news'>无更多内容</p>");
                             } else {
                                 that.checkMsg.set("number", ++nNum);
                                 that.checkAjax.bScroll = true;     //许可Ajax加载
@@ -636,7 +637,7 @@ $(function(){
                         if (response.code==0){
                             $('.user-check-list').append(that.checkTemplate(response.data));
                             if (!response.data.isHave) {
-                                $('.user-check-list').append("<p class='no-news'>无新内容了</p>");
+                                $('.user-check-list').append("<p class='no-news'>无更多内容</p>");
                             } else {
                                 that.informMsg.set("number", ++nNum);
                                 that.informAjax.bScroll = true;     //许可Ajax加载
@@ -666,7 +667,7 @@ $(function(){
                         if (response.code==0){
                             $('.user-attention-list').append(that.attentionTemplate(response.data));
                             if (!response.data.isHave) {
-                                $('.user-attention-list').append("<p class='no-news'>无新内容了</p>");
+                                $('#attention').append("<p class='no-news'>无更多内容</p>");
                             } else {
                                 that.attentionMsg.set("number", ++nNum);
                                 that.attentionAjax.bScroll = true;     //许可Ajax加载
@@ -696,7 +697,7 @@ $(function(){
                         if (response.code==0){
                             $('.user-praise-list').append(that.praiseTemplate(response.data));
                             if (!response.data.isHave) {
-                                $('.user-praise-list').append("<p class='no-news'>无新内容了</p>");
+                                $('.user-praise-list').append("<p class='no-news'>无更多内容</p>");
                             } else {
                                 that.praiseMsg.set("number", ++nNum);
                                 that.praiseAjax.bScroll = true;     //许可Ajax加载
@@ -1088,7 +1089,7 @@ $(function(){
                             $('#channel-explore ul').append(that.addTemplate(response.data));
                             $('.ex-creator').tooltip();        //创建者头像绑定tooltip
                             if(!response.data.isHave){
-                                $('#channel-explore ul').append("<p class='no-news'>无新内容了</p>");
+                                $('#channel-explore ul').append("<p class='no-news'>无更多内容</p>");
                             } else {
                                 that.cList.set("number",++nNum);
                                 that.exploreAjax.bScroll = true;     //许可Ajax加载
@@ -1267,7 +1268,7 @@ $(function(){
             App.main.html(view.render().el);
             view.renderAfter();
             $('#check-btn').click();
-            $('.red-point-count').remove();
+            $('.red-point-count').hide();
         },
         discover: function(){
             var view = new ExploreView();
