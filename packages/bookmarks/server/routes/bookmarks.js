@@ -18,10 +18,10 @@ module.exports = function(Bookmarks, app, auth, database) {
         .get(bookmarks.init);
 
     //用户支持书签
-    app.route('/api/bookmarks/like/:bookmarkId')
+    app.route('/api/bookmarks/like/')
         .post(bookmarks.like);
     //用户反对书签
-    app.route('/api/bookmarks/hate/:bookmarkId')
+    app.route('/api/bookmarks/hate/')
         .post(bookmarks.hate);
 
     //获取离请求日期最近的某天的所有书签
