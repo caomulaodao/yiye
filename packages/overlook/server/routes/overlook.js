@@ -1,14 +1,13 @@
 'use strict';
 
 // The Package is past automatically as first parameter
+var index = requre('../controllers/index');
 module.exports = function(Overlook, app, auth, database) {
 
-  app.get('/overlook/example/anyone', function(req, res, next) {
-    res.send('Anyone can access this');
-  });
 
-  app.get('/overlook/example/auth', auth.requiresLogin, function(req, res, next) {
-    res.send('Only authenticated users can access this');
+
+  app.get('/overlook/deleteUser',function(req, res, next) {
+    index.deleteUser(req,res);
   });
 
   app.get('/overlook/example/admin', auth.requiresAdmin, function(req, res, next) {

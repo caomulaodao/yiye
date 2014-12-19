@@ -10,3 +10,25 @@ var mongoose = require('mongoose'),
     Bookmarks = mongoose.model('Bookmarks'),
     BookmarkLike = mongoose.model('BookmarkLike');
     Myverify = require('../../../../config/tools/verify');
+//传入用户Id删除某个指定用户 
+exports.deleteUserById = function(req,res){
+    if (!req.user) {return res.sendRuselt("你不是管理员",1002,null);}
+    var userId = req.body.userId;//
+    if (!Myverify.idVerify(userId)) {return res.sendRuselt('userId格式错误',2015,null);}
+    User.findByIdAndRemove(userId,function(doc,err){
+        if (err) {return res.sendError(err);}
+        if (!doc) {return res.sendRuselt('你所查找的用户不存在');}
+        res.sendRuselt('删除成功',0,null);
+    })
+}
+//指定用户名删除某个用户
+exports.deleteUserByName = function(req,res){
+    if (!req.user) {return res.sendRuselt("你不是管理员",1002,null);}
+    var userName = req.body.userName;//
+    if (!Myverify.userVerify(userName)) {return res.sendRuselt('用户名格式错误',2015,null);}
+    User.findOneAndRemove(userName,function(doc,err){
+        if (err) {return res.sendError(err);}
+        if (!doc) {return res.sendRuselt('你所查找的用户不存在');}
+        res.sendRuselt('删除成功',0,null);
+    })
+}

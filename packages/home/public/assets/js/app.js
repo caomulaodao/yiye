@@ -139,7 +139,7 @@ $(function(){
         });
 
 
-    //书签列表视图
+    //书签列表视图 采用单例模式 防止事件重复绑定
     var newlistView = function (){
         var listView = Backbone.View.extend({
 
@@ -271,7 +271,8 @@ $(function(){
                 }})
             },
             addBookmark: function(event){
-                var submitView = new SubmitView();
+                if(!this.submitview) {this.submitview = new SubmitView();}
+                var submitView = this.submitview;
                 var that =this;console.log(submitView.lock.submit);
                 if (!submitView.lock.submit){
                     //第一次点击
@@ -295,12 +296,13 @@ $(function(){
                                 console.log(response);
                                 submitView.$el.html(submitView.initTemplate(response.data));
                                 $('.submit-content').fadeIn('1s');
-                                that.submitbookmark.set({'website':response.data.website,'channel':$('#sub-channel-list .active').data('id')});console.log($('#sub-channel-list .active').html());
+                                that.submitbookmark.set({'website':response.data.website,'channel':$('#sub-channel-list .active').data('id')});
                                 $('.add-bookmark').html('<p class="add-true">确定</p>');
                             }
                         });
                     }
                 }
+                //第三次点击
                 else{ 
                     submitView.lock.submit = false;
                     that.submitbookmark.set({'title':$('.submit-content-title div').text(),'description':$('.submit-content-description div').text(),'image':$('.submit-content-img img').attr('src'),'tags':$('.submit-content-tags input').val()})           
@@ -310,8 +312,10 @@ $(function(){
                         success: function(model,response){
                             console.log(response);                
                             $('.input-url input').val('');
-                            submitView.remove();
-                            submitView=null;
+                            $('.submit-content').fadeOut('1s',function(){
+                                submitView.$el.html("");
+                            })
+                            
                         }
                     });
                 }
