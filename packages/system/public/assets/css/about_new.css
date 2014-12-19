@@ -163,9 +163,21 @@
     font-weight: 100;
     line-height: 30px;
 }
-.iconfont:hover{
-    color: #fff;
-}
+#bug-submit-btn {background-color: #40c192;}
+
+#qq-icon:hover {color: #333;}
+
+#weibo-icon:hover {color: #e6162d;}
+
+#wechat-icon:hover {color: #51c332;}
+
+#douban-icon:hover {color: #2e963d;}
+
+#facebook-icon:hover {color: #44619d;}
+
+#twitter-icon:hover {color: #55acee;}
+
+
 .sponsor-friend{
 	display: inline-block;
 }
