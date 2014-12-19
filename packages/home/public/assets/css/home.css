@@ -363,6 +363,7 @@ button:focus {outline:0;}
     margin-top: 2px;
     float: right;
     color: #ccc;
+    position: relative;
     -webkit-transition: all 300ms;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -379,7 +380,33 @@ button:focus {outline:0;}
     -webkit-transform: rotate(180deg);
     -webkit-transition: all 300ms;
 }
-
+/* red-point-count */
+.red-point-count {
+    background: #d33;
+    border: 1px solid #d33;
+    color: #fff;
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    -webkit-text-size-adjust: none;
+    padding: 0 5px;
+    height: 16px;
+    line-height: 16px;
+    border-radius: 16px;
+    text-indent: 0;
+    text-align: center;
+    text-decoration: none; 
+}
+#arrow-count {
+    position: absolute;
+    right: 15px;
+    top: 10px;
+}
+#message-count {
+    position: absolute;
+    right: 3px;
+    top: 9px;
+}
 /* function-module */
 #function-module {
     width: 100%;
@@ -415,6 +442,7 @@ button:focus {outline:0;}
     cursor: pointer;
     color: #fff;
 }
+#message {position: relative;}
 /* control-body */
 
 .control-body {
@@ -1550,7 +1578,7 @@ a.ex-creator {float: right;}
 }
 
 
-/* check.html */
+/* check-style */
 #post-list{
     height: 100%;
     padding-left: 25px;
@@ -1567,7 +1595,7 @@ a.ex-creator {float: right;}
 
 .post-item .link-part-content{
     padding-left:0px;
-    border-bottom: 2px solid #fff;
+    border-bottom: 1px solid #fff;
 }
 
 .bookmark-pic{
@@ -1617,6 +1645,63 @@ a.ex-creator {float: right;}
 }
 .to-channel {
     font-size: 1.5em;
+}
+
+/* attention-style */
+.user-attention-list {display: table;}
+.attention-box {
+    height: 82px;
+    width: 290px;
+    padding: 10px 0 0 10px;
+    display: table-cell;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    float: left;
+    margin: 5px;
+    list-style-type: none;
+    background-color: #fff;
+    box-shadow: 0 0 1px #ccc;
+}
+.attention-box:hover {
+    border-color: #40c192;
+    box-shadow: 0 0 3px #40c192 inset;
+    transition: all 0.3s;
+    -webkit-transition: all 0.3s;
+}
+.attention-box>div {
+    font-size: 1.5em;
+    margin-bottom: 3px;
+    color: #333;
+}
+.at-user-avatar {
+    width: 60px;
+    height: 60px;
+    margin-right: 20px;
+    border-radius: 50%;
+    overflow: hidden;
+    float: left;
+}
+.at-user-avatar img {
+    width: 60px;
+    height: 60px;
+}
+.at-user-name {
+    display: inline-block;
+    font-size: 1.5em;
+    line-height: 1em;
+    width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.at-channel-name {
+    display: inline-block;
+    font-size: 1.5em;
+    line-height: 1em;
+    width: 190px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 /*   发现页面  */

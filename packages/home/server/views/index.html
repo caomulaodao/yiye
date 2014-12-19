@@ -18,10 +18,11 @@
             </a>
             <img src="/home/assets/img/brand_name_green.png" onclick="window.location.assign('/home')">
             <i id="rounded-arrow" class="iconfont">&#x3435</i>
+            <span id="arrow-count"class="red-point-count"style="display:none">0</span>
         </div>
         <div id="function-module">
             <ul id="function-module-ul">
-                <li id='message'><i class="iconfont">&#xf00b5</i><div>消息</div></li>
+                <li id='message'><i class="iconfont">&#xf00b5</i><div>消息</div><span id="message-count" class="red-point-count"style="display:none">0</span></li>
                 <li id='discover' ><i class="iconfont">&#xe684</i><div>发现</div></li>
                 <li id='help'><i class="iconfont">&#xf00b8</i><div>帮助</div></li>
                 <li id='set'><i class="iconfont">&#xf013e</i><div>设置</div></li>
@@ -612,7 +613,7 @@
     <li class="post-item" data-id= <%= msg[i]['_id'] %>>
         <div class="link-part-content">
             <div class="bookmark-pic"><img src="http://yiye.qiniudn.com/<%= msg[i]['image']%>"/></div>
-            <a class="link title-link"  data-id= <%= msg[i]['_id'] %> target="_blank" href=<%= msg[i]['url'] %>> <%= msg[i]['title']%> </a>
+            <a class="link title-link"  href=<%= msg[i]['url'] %> data-id= <%= msg[i]['_id'] %> target="_blank" > <%= msg[i]['title']%> </a>
             <div class="to-channel">
                 <span>提交到：</span><a target="_blank" class="channel-title" data-id= <%= msg[i]['_id'] %> href="/channel/<%=msg[i]['channelId'] %>"><%= msg[i]['channelInfo']['channelName']%></a>
             </div>
@@ -646,7 +647,7 @@
             </div>
         <% } %>
         <div class="main">
-            <div class="user-news-bookmarks" ><a href=<%= msg[i]['url'] %>><%= msg[i]["title"] %></a> <div class="user-news-info"><span>频道:<a href="#"><%= msg[i]["channelInfo"]["channelName"] %></a></span><span>审核:<a href="#"><%= msg[i]["checkUser"]["username"] %></a></span></div></div>
+            <div class="user-news-bookmarks" ><a href=<%= msg[i]['url'] %> target="_blank"><%= msg[i]["title"] %></a> <div class="user-news-info"><span>频道:<a href="#"><%= msg[i]["channelInfo"]["channelName"] %></a></span><span>审核:<a href="#"><%= msg[i]["checkUser"]["username"] %></a></span></div></div>
             <% if(msg[i]["checked"] == 2){ %>
             <div class="user-news-fail-result">
                 <span>原因：</span><%= msg[i]["deleteInfo"] %>
@@ -660,7 +661,18 @@
 
 <!--关注模板-->
 <script type="text/x-handlebars-template" id="tp-user-attention">
-
+    <% for(var i = 0; i < msg.length; i++) { %>
+    <li data-id=<%=msg[i]['_id']%> class="attention-box">
+        <a href="/u/<%=msg[i]['userId']%>" target="_blank">
+            <div class="at-user-avatar">
+                <img src="http://yiye.qiniudn.com/avatar/<%=msg[i]['_id']%>">
+            </div>
+        </a>        
+        <a  href="/u/<%=msg[i]['userId']%>" target="_blank" class="at-user-name"><%=msg[i]['username']%></a><br>
+        <div>关注了</div>
+        <a class="at-channel-name" href="/channel/<%= msg[i]['channelId']%>"target="_blank"><%=msg[i]['name'] %></a>
+    </li>
+    <% } %>
 </script>
 
 <!--点赞模板-->
