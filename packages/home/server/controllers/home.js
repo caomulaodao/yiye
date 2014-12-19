@@ -552,9 +552,11 @@ exports.praisemsg = function(req,res){
         function(bookmarkId,callback){
             BookmarkLike.find({'bookmarkId':{$in:bookmarkId}}).sort({'remind':1,'likeTime':-1}).skip((number-1)*limit).limit(limit).exec(function(err,doc){
                 if (err) {console.log(err);return res.sendError();}
-                var i=0,nowtime = moment(new Date());
+                var i=0,nowtime = moment(new Date()).locale('cn');console.log(nowtime);
+                var doc = JSON.stringify(doc);
+                doc = JSON.parse(doc);
                 for (i;i<doc.length;i++){
-                    doc[i].likeTime = moment(doc[i].likeTime);
+                    doc[i].likeTime = moment(doc[i].likeTime).locale('cn');
                     if (doc[i].likeTime.diff(nowtime,'days')>1){
                         doc[i].likeTime = doc[i].likeTime.format('llll');
                     }
