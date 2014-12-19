@@ -25,7 +25,7 @@ function init() {
             type:'POST'
         }).done(function ( data ) {
             if(data.code == 0){
-                if(data.data.results.isLiked == false){
+                if(data.data.isLiked == false){
                     var count = $(that).find('span');
                     count.text(+count.text()+1);
                 }
@@ -47,7 +47,7 @@ function init() {
             type:'POST'
         }).done(function ( data ) {
             if(data.code == 0){
-                if(data.results.isLiked == true && data.results.isHated == false){
+                if(data.data.isLiked == true && data.data.isHated == false){
                     var count = $(that).parent().find('span');
                     count.text(+count.text()-1);
                 }
