@@ -1690,6 +1690,7 @@ a.ex-creator {float: right;}
     font-size: 1.5em;
     line-height: 1em;
     width: 160px;
+    font-weight: bold;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
