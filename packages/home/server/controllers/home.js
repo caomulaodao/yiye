@@ -454,27 +454,34 @@ exports.checkmsg = function(req,res){
         },
         //先返回未审核的书签
         function(channelsId,count,callback){
+            var noCheckedId = [],i=0;
             if (channelsId.length==0){return callback(null,[],[],0)}
             Bookmarks.find({'channelId':{$in:channelsId},'checked':0}).sort({postTime:-1}).skip((number-1)*limit).limit(limit).exec(function(err,list){
+                for(i;i<list.length;i++){
+                    noCheckedId.push(list[i]._id+'');
+                }
                 if (err) {console.log(err);return res.sendError()}
-                callback(null,channelsId,list,count);
+                callback(null,channelsId,noCheckedId,list,count);
             })
         },
         //返回未审核和已经审核的书签
-        function(channelsId,noChecked,count,callback){
-            if (channelsId.length===0) {return callback(null,[])}
-            if (noChecked.length>=limit){return callback(null,noChecked)}//如果未审核的数量足够多 则直接返回
+        function(channelsId,noCheckedId,noChecked,count,callback){
+            if (channelsId.length===0) {return callback(null,[],[])}
+            if (noChecked.length>=limit){return callback(null,noCheckedId,noChecked)}//如果未审核的数量足够多 则直接返回
             var skipnumber = (number-1)*limit-count>0?(number-1)*limit-count:0;
             Bookmarks.find({'channelId':{$in:channelsId},'checkUser':req.user._id}).sort({postTime:-1}).skip(skipnumber).limit(limit-noChecked.length).exec(function(err,checkedBkms){
                 if(err) {console.log(err);return res.sendError();}
-                callback(null,noChecked.concat(checkedBkms))
+                callback(null,noCheckedId,noChecked.concat(checkedBkms))
             })
         }],
-        function(err,list){
+        function(err,noCheckedId,list){
             if(err){console.log(err);return res.sendError()}
             var isHave = true;
             if (list.length<limit){isHave = false}
-            res.sendResult('获取消息成功',0,{msg:list,isHave:isHave});
+            Bookmarks.update({'_id':{$in:noCheckedId}},{$set:{'checked':1}},{multi:true}).exec(function(err){
+                if (err) {console.log(err);return res.sendError();}
+                res.sendResult('获取消息成功',0,{msg:list,isHave:isHave});
+            })
         }
     )
 }
@@ -513,10 +520,10 @@ exports.remindmsg = function(req,res){
         }],
         function(err,channelsId,followers){
             if (err){console.log(err);return res.sendError();}
-            Channel2User.update({'_id':{$in:channelsId}},{'remind':1},{multi:true}).exec(function(err){
+            Channel2User.update({'_id':{$in:channelsId}},{$set:{'remind':1}},{multi:true}).exec(function(err){
                 if (err){console.log(err);return res.sendError();}
                 var isHave = true;
-                if (followers.length<limit){ isHave=false;}
+                if (followers.length<limit){ isHave = false;}
                 res.sendResult('返回消息成功',0,{msg:followers,isHave:isHave});
             });
         })
@@ -552,10 +559,10 @@ exports.praisemsg = function(req,res){
             var i=0;
             var bookmarkinfo;
             for(i;i<bookmarkLike.length;i++){
-                bookmarkinfo = bookmarks.findOneById(bookmarkLike[i].bookmarkId);
-                console.log(bookmarkinfo.channelId);
+                bookmarkinfo = Bookmarks.findById(bookmarkLike[i].bookmarkId);
+                console.log(JSON.stringify(bookmarkinfo));
             }
-            callback(err,bookmarkId,doc);
+            callback(null,bookmarkId,bookmarkLike);
         }
         ],
         //

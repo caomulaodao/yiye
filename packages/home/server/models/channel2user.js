@@ -14,6 +14,10 @@ var Channel2UserSchema = new Schema({
         type: String,
         require: true
     },
+    userLogo: {
+        type: String,
+        require: true
+    },
     //频道Id
     channelId:{
         type: Schema.Types.ObjectId,
