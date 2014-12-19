@@ -29,30 +29,6 @@ function initialize() {
             window.location.href = "/home#"+id;
         }
     });
-
-    //箭头和消息红点提示ajax
-    function redPointAjax() {
-        $.ajax({
-            url: '/api/home/msgcount',
-            type: 'get',
-            success: function (response) {
-                var count = response.data.count;
-                var callmsg = response.data.callmsg;
-                var reminding = response.data.reminding;
-                var checkmsg = response.data.checkmsg;
-                var praisemsg = response.data.praisemsg;
-                if(count > 0) {
-                    var count = response.data.count;
-                    $('.red-point-count').text(count).show();
-                }
-                else {
-                     $('.red-point-count').hide();
-                }
-            }              
-        });
-    }
-    // // 轮询消息提示Ajax请求
-    setInterval(redPointAjax(), 5000);  
 }
 
 

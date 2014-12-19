@@ -661,7 +661,18 @@
 
 <!--关注模板-->
 <script type="text/x-handlebars-template" id="tp-user-attention">
-
+    <% for(var i = 0; i < msg.length; i++) { %>
+    <li data-id=<%=msg[i]['_id']%> class="attention-box">
+        <a href="/u/<%=msg[i]['userId']%>" target="_blank">
+            <div class="at-user-avatar">
+                <img src="http://yiye.qiniudn.com/avatar/<%=msg[i]['_id']%>">
+            </div>
+        </a>        
+        <a  href="/u/<%=msg[i]['userId']%>" target="_blank" class="at-user-name"><%=msg[i]['username']%></a><br>
+        <div>关注了</div>
+        <a class="at-channel-name" href="/channel/<%= msg[i]['channelId']%>"target="_blank"><%=msg[i]['name'] %></a>
+    </li>
+    <% } %>
 </script>
 
 <!--点赞模板-->

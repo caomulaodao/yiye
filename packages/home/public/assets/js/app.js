@@ -484,7 +484,8 @@ $(function(){
                     }
                 }
             });
-
+            
+            that.redPointAjax();
         },
 
         //审核tab
@@ -499,7 +500,7 @@ $(function(){
                         $('.user-check-list').html(that.noInfModel(response.data));
                         $('.user-check-list').append(that.checkTemplate(response.data));
                         that.checkMsg.set('number', 2);   //设置下次加载的number （滚动ajax加载）
-                        that.checkfun();                  //绑定“通过”“编辑”“筛除”事件
+                        that.checkFun();                  //绑定“通过”“编辑”“筛除”事件
                     }
                     else{
                         console.log(response);
@@ -603,7 +604,7 @@ $(function(){
                     success: function (model, response) {
                         if (response.code==0){
                             $('.user-check-list').append(that.checkTemplate(response.data));
-                            that.checkfun();            //绑定“通过”“编辑”“筛除”事件
+                            that.checkFun();            //绑定“通过”“编辑”“筛除”事件
                             if (!response.data.isHave) {
                                 $('.user-check-list').append("<p class='no-news'>无新内容了</p>");
                             } else {
@@ -709,8 +710,42 @@ $(function(){
             }
         },
 
+        //红点提示信息Ajax
+        redPointAjax: function() {
+            $.ajax({
+                url: '/api/home/msgcount',
+                type: 'get',
+                success: function (response) {
+                    var count = response.data.count;
+                    var checkmsg = response.data.checkmsg;
+                    var callmsg = response.data.callmsg;
+                    var remindmsg = response.data.reminding;                
+                    var praisemsg = response.data.praisemsg;
+                    if(count > 0) {
+                        var count = response.data.count;
+                        $('.red-point-count').text(count).show();
+                        if(checkmsg > 0) {
+                            $('#check-btn>a').text('审核('+ checkmsg +')');
+                        }
+                        if(callmsg > 0) {
+                            $('#inform-btn>a').text('通知('+ callmsg +')');
+                        }
+                        if(remindmsg > 0) {
+                            $('#attention-btn>a').text('关注('+ remindmsg +')');
+                        }
+                        if(praisemsg > 0) {
+                            $('#praise-btn>a').text('赞('+ praisemsg +')');
+                        }                    
+                    }
+                    else {
+                         $('.red-point-count').hide();
+                    }
+                }              
+            });
+        },
+
         //为每个新加载的审核元素绑定事件
-        checkfun: function() {
+        checkFun: function() {
             var lock = {
                 pass:false,
                 edit:false,
