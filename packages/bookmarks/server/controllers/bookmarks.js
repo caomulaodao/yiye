@@ -331,6 +331,7 @@ exports.like = function(req,res){
                         like.channelId = bookmark.channelId;
                         like.channelName = bookmark.channelInfo.channelName,
                         like.bookmarkLogo = bookmark.image,
+                        like.bookmarkName = bookmark.title,
                         like.userLogo = req.user.userLogo,
                         //保存点赞数据
                         like.save(function (err) {
