@@ -299,7 +299,7 @@ exports.init  =  function(req,res){
 exports.like = function(req,res){
 
     if(!req.user) return res.sendResult('请先注册或登录',1000,null);
-    var bookmarkId = req.body['bookmarkId']; console.log(bookmarkId);
+    var bookmarkId = req.body['bookmarkId'];
     if(!verify.idVerify(bookmarkId)){return res.sendResult('参数类型错误',2000,null)}
     async.parallel({
         isHated:function(callback){
@@ -332,7 +332,7 @@ exports.like = function(req,res){
                         like.channelName = bookmark.channelInfo.channelName,
                         like.bookmarkLogo = bookmark.image,
                         like.bookmarkName = bookmark.title,
-                        like.userLogo = req.user.userLogo,
+                        like.userLogo = req.user.avatar,
                         //保存点赞数据
                         like.save(function (err) {
                             if (err) {console.log(err);return res.sendError()}
