@@ -329,6 +329,9 @@ exports.like = function(req,res){
                         like.userId = req.user._id;
                         like.username = req.user.username;
                         like.channelId = bookmark.channelId;
+                        like.channelName = bookmark.channelInfo.channelName,
+                        like.bookmarkLogo = bookmark.image,
+                        like.userLogo = req.user.userLogo,
                         //保存点赞数据
                         like.save(function (err) {
                             if (err) {console.log(err);return res.sendError()}

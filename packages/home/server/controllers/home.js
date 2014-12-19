@@ -554,15 +554,6 @@ exports.praisemsg = function(req,res){
                 if (err) {console.log(err);return res.sendError();}
                 callback(null,bookmarkId,doc);
             })
-        },
-        function(bookmarkId,bookmarkLike,callback){
-            var i=0;
-            var bookmarkinfo;
-            for(i;i<bookmarkLike.length;i++){
-                bookmarkinfo = Bookmarks.findById(bookmarkLike[i].bookmarkId);
-                console.log(JSON.stringify(bookmarkinfo));
-            }
-            callback(null,bookmarkId,bookmarkLike);
         }
         ],
         //

@@ -9,7 +9,7 @@ module.exports = function(Overlook, app, auth, database) {
   app.post('/overlook/deleteUser',function(req, res, next) {
     index.deleteUser(req,res);
   });
-
+  //删除某个频道
   app.get('/overlook/example/admin', auth.requiresAdmin, function(req, res, next) {
     res.send('Only users with Admin role can access this');
   });
