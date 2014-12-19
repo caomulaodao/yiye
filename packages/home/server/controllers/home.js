@@ -132,10 +132,13 @@ exports.createChannel = function(req,res){
                     if(err) {console.log(err);return res.sendResult('服务器内部问题',5000,null)}
                     var admChannel = new Channel2User({
                         userId:req.user._id,
+                        userLogo:req.user.avatar, 
+                        username:req.user.username,                      
                         channelId:doc._id,
                         name: channels.name,
                         type: "creator",
                         logo: channels.logo,
+
                         remind: 1
                     });
                     var channelId = doc._id;
@@ -552,7 +555,7 @@ exports.praisemsg = function(req,res){
         function(bookmarkId,callback){
             BookmarkLike.find({'bookmarkId':{$in:bookmarkId}}).sort({'remind':1,'likeTime':-1}).skip((number-1)*limit).limit(limit).exec(function(err,doc){
                 if (err) {console.log(err);return res.sendError();}
-                var i=0,nowtime = moment(new Date()).locale('zh-cn');console.log(nowtime);
+                var i=0,nowtime = moment(new Date()).locale('zh-cn');
                 var doc = JSON.stringify(doc);
                 doc = JSON.parse(doc);
                 for (i;i<doc.length;i++){
