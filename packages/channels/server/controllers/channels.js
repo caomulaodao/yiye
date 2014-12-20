@@ -94,7 +94,7 @@ exports.renderMain = function(req,res,Package){
 //频道订阅
 exports.sub = function(req,res){
     if(!req.user) return res.sendResult('请先登陆或注册',1000,null);
-    var channelId = req.params['channelId'];
+    var channelId = req.body['channelId'];
     if(!verify.idVerify(channelId)) {return res.sendResult('参数格式错误',2001,null)}
     //判断是否已经订阅
     Channel2User.findOne({channelId:channelId,userId:req.user._id},function(err,doc) {
@@ -412,8 +412,8 @@ exports.update = function(req,res){
 }
 
 //取消订阅某个频道
-exports.noWatch = function(req,res){
-    var channelId = req.params['channelId'];
+exports.noSub = function(req,res){
+    var channelId = req.body['channelId'];
     if(!verify.idVerify(channelId)) {return res.sendResult('参数格式错误',2001,null)}
     if(!req.user) return res.redirect('/');
     

@@ -16,7 +16,7 @@ var Channel2UserSchema = new Schema({
     },
     userLogo: {
         type: String,
-        require: true
+        require: true   
     },
     //频道Id
     channelId:{

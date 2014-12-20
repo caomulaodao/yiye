@@ -67,8 +67,9 @@ function init() {
         var channelId = $('#control-body').data('channelid');
         subDown = true;
         $.ajax({
-            url: '/channel/sub/'+channelId,
-            type:'POST'
+            url: '/channel/sub/',
+            type:'POST',
+            data:{'channelId':channelId}
         }).done(function(data){
             if(data.code == 0){
 
@@ -80,5 +81,26 @@ function init() {
             subDown = false;
         });
     });
+
+//取消订阅频道
+    // $('#subscribe-btn').click(function(event){
+    //     if(subDown) return false;
+    //     var channelId = $('#control-body').data('channelid');
+    //     subDown = true;
+    //     $.ajax({
+    //         url: '/channel/sub/',
+    //         type:'POST',
+    //         data:{'channelId':channelId}
+    //     }).done(function(data){
+    //         if(data.code == 0){
+
+    //             $('#channel-sub').text('已订阅').attr("id","channel-subed");
+
+    //         }else{
+
+    //         }
+    //         subDown = false;
+    //     });
+    // });
 
 }
