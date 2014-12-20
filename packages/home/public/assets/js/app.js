@@ -727,20 +727,23 @@ $(function(){
 
         //每次Ajax后从红点数字中减去checked为0的个数
         minusNumber: function(response) {
-            var count = 0;
-            var countResult = 0;
+            var nCount = 0;
+            var nCountResult = 0;
             var nMsg = response.data.msg;
-            for(var i = 0; i < nMsg.length; i++) {
-                if (nMsg[i]['checked'] == 0) {
-                    count ++;
-                } else {
-
+            var nCurrentCount = $('.red-point-count:first').text();
+            if(nMsg.length > 0) {
+                for(var i = 0; i < nMsg.length; i++) {
+                    if (nMsg[i]['checked'] == 0) {
+                        nCount ++;
+                    }
                 }
             }
-            countResult = $('.red-point-count').text() - count;
-            $('.red-point-count').text(countResult);
-            if($('.red-point-count').text() == 0) {
+            console.log(nCount);
+            nCountResult = nCurrentCount - nCount;          
+            if(nCountResult == 0) {
                 $('.red-point-count').hide();
+            } else {
+                $('.red-point-count').text(nCountResult);
             }
         },
         //为每个新加载的审核元素绑定事件
@@ -1266,7 +1269,6 @@ $(function(){
             App.main.html(view.render().el);
             view.renderAfter();
             $('#check-btn').click();
-            $('.red-point-count').hide();
         },
         discover: function(){
             var view = new ExploreView();

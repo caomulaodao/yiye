@@ -45,23 +45,15 @@ function initialize() {
                     $('.red-point-count').text(count).show();
                     if(checkmsg > 0) {
                         $('#check-btn>a').text('审核('+ checkmsg +')');
-                    } else {
-                        $('#check-btn>a').text('审核');
                     }
                     if(callmsg > 0) {
                         $('#inform-btn>a').text('通知('+ callmsg +')');
-                    } else {
-                        $('#inform-btn>a').text('通知');
                     }
                     if(remindmsg > 0) {
                         $('#attention-btn>a').text('关注('+ remindmsg +')');
-                    } else {
-                        $('#attention-btn>a').text('关注');
                     }
                     if(praisemsg > 0) {
                         $('#praise-btn>a').text('赞('+ praisemsg +')');
-                    } else {
-                        $('#praisemsg>a').text('赞');
                     }
                 }
                 else {
