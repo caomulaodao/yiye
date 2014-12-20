@@ -461,6 +461,8 @@ $(function(){
         praiseTemplate: _.template($('#tp-user-praise').html()),
 
         renderAfter: function () {
+            var that = this;
+            that.redPointAjax();
         },
 
         //审核tab
@@ -476,7 +478,6 @@ $(function(){
                         $('.user-check-list').append(that.checkTemplate(response.data));
                         that.checkMsg.set('number', 2);   //设置下次加载的number （滚动ajax加载）
                         that.checkFun();                  //绑定“通过”“编辑”“筛除”事件
-                        that.minusNumber(response);       //减去小红点中的数字
                     }
                     else{
                         console.log(response);
@@ -486,7 +487,9 @@ $(function(){
 
             that.checkAjax.bScroll = true;   //许可Ajax加载
             $('.content-page').scroll(function () {
-                that.checkAjax();
+                if($('#check:has(.active)')) {
+                    that.checkAjax();
+                }
             });
         },
 
@@ -512,7 +515,9 @@ $(function(){
 
             that.informAjax.bScroll = true;   //许可Ajax加载
             $('.content-page').scroll(function () {
-                that.informAjax();
+                if($('#inform:has(.active)')) {
+                    that.informAjax();
+                }
             });
         },
 
@@ -538,7 +543,9 @@ $(function(){
 
             that.attentionAjax.bScroll = true;   //许可Ajax加载
             $('.content-page').scroll(function () {
-                that.attentionAjax();
+                if($('#attention:has(.active)')) {
+                    that.attentionAjax();
+                }
             });
         },
 
@@ -564,7 +571,9 @@ $(function(){
 
             that.praiseAjax.bScroll = true;   //许可Ajax加载
             $('.content-page').scroll(function () {
-                that.praiseAjax();
+                if($('#praise:has(.active)')) {
+                    that.praiseAjax();
+                }
             });
         },
 
@@ -584,7 +593,6 @@ $(function(){
                         if (response.code==0){
                             $('.user-check-list').append(that.checkTemplate(response.data));
                             that.checkFun();            //绑定“通过”“编辑”“筛除”事件
-                            that.minusNumber(response);       //减去小红点中的数字
                             if (!response.data.isHave) {
                                 $('.user-check-list').append("<p class='no-news'>无更多内容</p>");
                             } else {
@@ -603,8 +611,8 @@ $(function(){
         //通知Ajax
         informAjax: function() {
             var that = this;
-            var nClientH = $(window).height();          
-            var nScrollTop = $('.content-page').scrollTop();
+            var nClientH = $(window).height();     
+            var nScrollTop = $('.content-page').scrollTop(); 
             var nChannelH = $('#inform').height();
             if ((nClientH + nScrollTop >= nChannelH) && (that.informAjax.bScroll == true)) {
                 that.informAjax.bScroll = false;     //禁止Ajax加载
@@ -764,15 +772,15 @@ $(function(){
                 var channelTitle = $('.channel-title[data-id='+dataId+']').text();
                 $('#pass-bookmark-title').text(title);
                 $('#pass-to-channel').text(channelTitle);
-                $('#pass-confirm-ok').data('bookmarkid', dataId);
-                $('#pass-confirm-ok').data('channelid', channelId);
+                $('#pass-confirm-ok').data('bookmarkId', dataId);
+                $('#pass-confirm-ok').data('channelId', channelId);
                 $('#pass-confirm-box').modal('show');
             });
 
             //确认通过当前的书签
             $('#pass-confirm-ok').on('click', function(event){
-                var bookmarkId = $('#pass-confirm-ok').data('bookmarkid');
-                var channelId = $('#pass-confirm-ok').data('channelid');
+                var bookmarkId = $('#pass-confirm-ok').data('bookmarkId');
+                var channelId = $('#pass-confirm-ok').data('channelId');
                 if(!lock.pass){
                     lock.pass = true;
                     $.ajax({
@@ -813,15 +821,15 @@ $(function(){
                 var channelTitle = $('.channel-title[data-id='+dataId+']').text();
                 $('#pass-edit-box-title').val(title);
                 $('#pass-edit-box-description').val(description);
-                $('#pass-edit-ok').data('bookmarkid',dataId);
-                $('#pass-edit-ok').data('channelid',channelId);
+                $('#pass-edit-ok').data('bookmarkId',dataId);
+                $('#pass-edit-ok').data('channelId',channelId);
                 $('#pass-edit-box').modal('show');
             });
 
             //确认通过当前的书签
             $('#pass-edit-ok').on('click', function(event){
-                var bookmarkId = $('#pass-edit-ok').data('bookmarkid');
-                var channelId = $('#pass-edit-ok').data('channelid');
+                var bookmarkId = $('#pass-edit-ok').data('bookmarkId');
+                var channelId = $('#pass-edit-ok').data('channelId');
                 var title = $('#pass-edit-box-title').val();
                 var description = $('#pass-edit-box-description').val();
                 if(!lock.edit){
@@ -859,11 +867,13 @@ $(function(){
             //筛除某个书签
             $('.deleteBookmark').on('click', function(event){
                 var dataId = $(this).attr('data-id');
+                var channelId = $(this).attr('data-channelId');
                 var title = $('.title-link[data-id='+dataId+']').text();
                 var channelTitle = $('.channel-title[data-id='+dataId+']').text();
                 $('#delete-to-channel').text(channelTitle);
                 $('#delete-bookmark-title').text(title);
-                $('#delete-confirm-ok').data('bookmarkid',dataId);
+                $('#delete-confirm-ok').data('channelId', channelId);
+                $('#delete-confirm-ok').data('bookmarkId', dataId);
                 $('#delete-confirm-box').modal('show');
             });
 
@@ -871,8 +881,8 @@ $(function(){
             $('#delete-confirm-ok').on('click', function(event){
                 var reason = $('#delete-result-box').val();
                 if(!reason) return $('#delete-result-box').addClass('error');
-                var bookmarkId = $('#delete-confirm-ok').data('bookmarkid');
-                var channelId = $('#delete-confirm-ok').data('channelid');
+                var bookmarkId = $('#delete-confirm-ok').data('bookmarkId');
+                var channelId = $('#delete-confirm-ok').data('channelId');
                 if(!lock.delete){
                     lock.delete = true;
                     $.ajax({
@@ -1271,7 +1281,6 @@ $(function(){
             App.main.html(view.render().el);
             view.renderAfter();
             $('#check-btn').click();
-            that.redPointAjax();
         },
         discover: function(){
             var view = new ExploreView();

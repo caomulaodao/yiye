@@ -623,9 +623,9 @@
             <div class="footer-part" data-id= <%= msg[i]['_id'] %>>
                 <span class="submit-time">提交于:<%= msg[i]['postTime'] %></span>
                 <span>by <a href="#" data-id= <%= msg[i]['_id'] %>><%= msg[i]['postUser']['username']%></a></a></span>
-                <span><i class="glyphicon glyphicon-ok"></i><a class="passBookmark" href="#" data-channelId=<%= msg[i]['channelId']%> data-id= <%= msg[i]['_id'] %>>通过</a></span>
-                <span><i class="glyphicon glyphicon-pencil"></i><a class="editBookmark" href="#"  data-channelId=<%= msg[i]['channelId']%> data-id= <%= msg[i]['_id'] %>>编辑</a></span>
-                <span><i class="glyphicon glyphicon-trash"></i><a class="deleteBookmark" href="#" data-id= <%= msg[i]['_id'] %>>筛除</a></span>
+                <span><i class="glyphicon glyphicon-ok"></i><a class="passBookmark" href="#" data-channelId=<%= msg[i]['channelId']%> data-id= <%= msg[i]['_id'] %> >通过</a></span>
+                <span><i class="glyphicon glyphicon-pencil"></i><a class="editBookmark" href="#"  data-channelId=<%= msg[i]['channelId']%> data-id= <%= msg[i]['_id'] %> >编辑</a></span>
+                <span><i class="glyphicon glyphicon-trash"></i><a class="deleteBookmark" href="#" data-channelId=<%= msg[i]['channelId']%> data-id= <%= msg[i]['_id'] %> >筛除</a></span>
             </div>
         </div>
     </li>
