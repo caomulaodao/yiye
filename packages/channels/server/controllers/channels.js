@@ -118,7 +118,7 @@ exports.sub = function(req,res){
                         channelId : channelId,
                         userId : req.user._id,
                         username :req.user.username,
-                        userLogo: req.user.avatar
+                        userLogo: req.user.avatar,
                         type : 'follower',
                         name : channel.name,
                         logo : channel.logo

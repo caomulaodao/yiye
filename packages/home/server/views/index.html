@@ -636,12 +636,12 @@
 <script type="text/x-handlebars-template" id="tp-user-inform">
     <% for(var i = 0;i < msg.length; i++){ %>
     <li id="msg-<%= i %>">
-        <% if(msg[i]["checked"] == 3){%>
+        <% if(msg[i]["checked"] == 1 || msg[i]["checked"] == 3){%>
             <div class="status pass">
                 通过
             </div>
         <% } %>
-        <% if(msg[i]["checked"] == 4){ %>
+        <% if(msg[i]["checked"] == 2 || msg[i]["checked"] == 4){ %>
             <div class="status fail">
                 失败
             </div>

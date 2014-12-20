@@ -713,6 +713,40 @@ $(function(){
                 $('.red-point-count').text(nCountResult);
             }
         },
+
+        redPointAjax: function() {
+            $.ajax({
+                url: '/api/home/msgcount',
+                type: 'get',
+                success: function (response) {
+                    var count = response.data.count;
+                    var checkmsg = response.data.checkmsg;
+                    var callmsg = response.data.callmsg;
+                    var remindmsg = response.data.reminding;                
+                    var praisemsg = response.data.praisemsg;
+                    if(count > 0) {
+                        var count = response.data.count;
+                        $('.red-point-count').text(count).show();
+                        if(checkmsg > 0) {
+                            $('#check-btn>a').text('审核('+ checkmsg +')');
+                        }
+                        if(callmsg > 0) {
+                            $('#inform-btn>a').text('通知('+ callmsg +')');
+                        }
+                        if(remindmsg > 0) {
+                            $('#attention-btn>a').text('关注('+ remindmsg +')');
+                        }
+                        if(praisemsg > 0) {
+                            $('#praise-btn>a').text('赞('+ praisemsg +')');
+                        }
+                    }
+                    else {
+                         $('.red-point-count').hide();
+                    }
+                }              
+            });
+        },
+
         //为每个新加载的审核元素绑定事件
         checkFun: function() {
             var lock = {
@@ -1080,8 +1114,9 @@ $(function(){
             var that = this;
             var channelId = $(event.currentTarget).data('id');
             var subChannel = new subChannelModel;
+            subChannel.set({'channelId': channelId});
             subChannel.save({},{
-                url: "/channel/sub/"+ channelId,
+                url: "/channel/sub/",
                 success: function(model, response) {
                     if (response.code==0){
                         $(event.currentTarget).html('已订阅');
@@ -1236,6 +1271,7 @@ $(function(){
             App.main.html(view.render().el);
             view.renderAfter();
             $('#check-btn').click();
+            that.redPointAjax();
         },
         discover: function(){
             var view = new ExploreView();
