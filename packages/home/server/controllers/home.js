@@ -395,9 +395,21 @@ exports.callmsg = function(req,res){
             Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[1,2,3,4]}}).sort({'postTime':1}).limit(1)
             .exec(function(err,doc){if(err){console.log(err);return res.sendError()}callback(err,doc)});
         },
-        //返回的通知消息
+        //自己频道的Id
         function(doc,callback){
-            Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[1,2,3,4]}}).sort({'checked':1,'postTime':-1}).skip((number-1)*limit).limit(limit).exec(function(err,list){
+            var creatorId = [];
+            Channels.find({'creator.userId':req.user._id},function(err,channels){
+                if (err) {console.log(err);return res.sendError();}
+                var i=0;
+                for (i;i<channels.length;i++){
+                    creatorId.push(channels[i]._id+'');
+                }
+                callback(err,doc,creatorId);
+            })
+        },
+        //返回的通知消息
+        function(doc,creatorId,callback){
+            Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[1,2,3,4]},'channelInfo.channelId':{$nin:creatorId}}).sort({'checked':1,'postTime':-1}).skip((number-1)*limit).limit(limit).exec(function(err,list){
                 if (err) {console.log(err);return res.sendError()}
                 var isHave=true;
                 if(doc.length==0) {isHave = false;}
