@@ -4,23 +4,32 @@ var mongoose = require('mongoose'),
     xss =require('xss'),
     moment = require('moment'),
     User = mongoose.model('User'),
-    tool = require('../../../../config/tools/tool');
+    tool = require('../../../../config/tools/tool'),
     Channel2User = mongoose.model('Channel2User'),
     Channels = mongoose.model('Channels'),
     Bookmarks = mongoose.model('Bookmarks'),
-    BookmarkLike = mongoose.model('BookmarkLike');
+    BookmarkLike = mongoose.model('BookmarkLike'),
     Myverify = require('../../../../config/tools/verify');
-//传入用户Id删除某个指定用户 
-exports.deleteUserById = function(req,res){
-    if (!req.user) {return res.sendRuselt("你不是管理员",1002,null);}
-    var userId = req.body.userId;//
-    if (!Myverify.idVerify(userId)) {return res.sendRuselt('userId格式错误',2015,null);}
-    User.findByIdAndRemove(userId,function(doc,err){
-        if (err) {return res.sendError(err);}
-        if (!doc) {return res.sendRuselt('你所查找的用户不存在');}
-        res.sendRuselt('删除成功',0,null);
-    })
-}
+
+    exports.renderMain = function(req,res,Package){
+        Package.render('index',{}, function(err, html) {
+            if(err) {console.log(err);return res.sendError()}
+            res.send(html);
+        });
+    }
+
+    //传入用户Id删除某个指定用户
+    exports.deleteUserById = function(req,res){
+        if (!req.user) {return res.sendRuselt("你不是管理员",1002,null);}
+        var userId = req.body.userId;//
+        if (!Myverify.idVerify(userId)) {return res.sendRuselt('userId格式错误',2015,null);}
+        User.findByIdAndRemove(userId,function(doc,err){
+            if (err) {return res.sendError(err);}
+            if (!doc) {return res.sendRuselt('你所查找的用户不存在');}
+            res.sendRuselt('删除成功',0,null);
+        });
+    }
+
 //指定用户名删除某个用户
 // exports.deleteUserByName = function(req,res){
 //     if (!req.user) {return res.sendRuselt("你不是管理员",1002,null);}

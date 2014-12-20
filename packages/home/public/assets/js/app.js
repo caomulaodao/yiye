@@ -556,7 +556,6 @@ $(function(){
                 data: {'number': 1},
                 success: function (model, response) {
                     if (response.code == 0) {
-                        $('#attention>.no-news').remove();  // 清除上次的“无更多内容”p节点
                         $('.user-attention-list').html(that.noInfModel(response.data));
                         $('.user-attention-list').append(that.attentionTemplate(response.data));
                         that.minusNumber(response);       //减去小红点中的数字
@@ -680,7 +679,7 @@ $(function(){
                             $('.user-attention-list').append(that.attentionTemplate(response.data));
                             that.minusNumber(response);       //减去小红点中的数字
                             if (!response.data.isHave) {
-                                $('#attention').append("<p class='no-news'>无更多内容</p>");
+                                $('.user-attention-list').append("<p class='no-news'>无更多内容</p>");
                             } else {
                                 that.attentionMsg.set("number", ++nNum);
                                 that.attentionAjax.bScroll = true;     //许可Ajax加载
@@ -727,20 +726,22 @@ $(function(){
 
         //每次Ajax后从红点数字中减去checked为0的个数
         minusNumber: function(response) {
-            var count = 0;
-            var countResult = 0;
+            var nCount = 0;
+            var nCountResult = 0;
             var nMsg = response.data.msg;
-            for(var i = 0; i < nMsg.length; i++) {
-                if (nMsg[i]['checked'] == 0) {
-                    count ++;
-                } else {
-
+            var nCurrentCount = $('.red-point-count:first').text();
+            if(nMsg.length > 0) {
+                for(var i = 0; i < nMsg.length; i++) {
+                    if (nMsg[i]['checked'] == 0) {
+                        nCount ++;
+                    }
                 }
             }
-            countResult = $('.red-point-count').text() - count;
-            $('.red-point-count').text(countResult);
-            if($('.red-point-count').text() == 0) {
+            nCountResult = nCurrentCount - nCount;          
+            if(nCountResult == 0) {
                 $('.red-point-count').hide();
+            } else {
+                $('.red-point-count').text(nCountResult);
             }
         },
         //为每个新加载的审核元素绑定事件
@@ -1266,7 +1267,6 @@ $(function(){
             App.main.html(view.render().el);
             view.renderAfter();
             $('#check-btn').click();
-            $('.red-point-count').hide();
         },
         discover: function(){
             var view = new ExploreView();
@@ -1274,7 +1274,7 @@ $(function(){
             view.renderAfter();
         },
         help: function(){
-            window.location.href = "/our/team/";
+            window.location.href = "/our/team/#help";
         },
         set: function(){
             var view = new Setting();

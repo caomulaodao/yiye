@@ -647,8 +647,8 @@
             </div>
         <% } %>
         <div class="main">
-            <div class="user-news-bookmarks" ><a href=<%= msg[i]['url'] %> target="_blank"><%= msg[i]["title"] %></a> <div class="user-news-info"><span>频道:<a href="#"><%= msg[i]["channelInfo"]["channelName"] %></a></span><span>审核:<a href="#"><%= msg[i]["checkUser"]["username"] %></a></span></div></div>
-            <% if(msg[i]["checked"] == 2){ %>
+            <div class="user-news-bookmarks" ><a href=<%= msg[i]['url'] %> target="_blank"><%= msg[i]["title"] %></a> <div class="user-news-info"><span>频道:<a href="/channel/<%=msg[i]['channelId']%>"><%= msg[i]["channelInfo"]["channelName"] %></a></span><span>审核:<a href="/u/<%=msg[i]['postUser']['userId']%>" target="_blank"><%= msg[i]["postUser"]["username"] %></a></span></div></div>
+            <% if(msg[i]["checked"] == 4){ %>
             <div class="user-news-fail-result">
                 <span>原因：</span><%= msg[i]["deleteInfo"] %>
             </div>
@@ -665,12 +665,13 @@
     <li data-id=<%=msg[i]['_id']%> class="attention-box">
         <a href="/u/<%=msg[i]['userId']%>" target="_blank">
             <div class="at-user-avatar">
-                <img src="http://yiye.qiniudn.com/avatar/<%=msg[i]['_id']%>">
+                <img src="http://yiye.qiniudn.com/<%=msg[i]['userLogo']%>">
             </div>
         </a>        
-        <a  href="/u/<%=msg[i]['userId']%>" target="_blank" class="at-user-name"><%=msg[i]['username']%></a><br>
-        <div>关注了</div>
+        <a  href="/u/<%=msg[i]['userId']%>" target="_blank" class="at-user-name"><%=msg[i]['username']%></a>
+        <span>关注了</span>
         <a class="at-channel-name" href="/channel/<%= msg[i]['channelId']%>"target="_blank"><%=msg[i]['name'] %></a>
+        <span class="at-time">时间：<%=msg[i]['followerTime'] %></span>
     </li>
     <% } %>
 </script>
@@ -681,24 +682,21 @@
     <li data-id=<%=msg[i]['_id']%> class="praise-box">
         <a href="/channel/<%= msg[i]['channelId']%>" target="_blank">
             <div class="praise-user-avatar">
-                <img src="http://yiye.qiniudn.com/avatar/<%=msg[i]['_id']%>">
+                <img src="http://yiye.qiniudn.com/<%=msg[i]['userLogo']%>">
             </div>
         </a>
-        <div class="praise-bookmark-img">           
-            <img src="http://yiye.qiniudn.com/bImage/30bb3825e8f631cc5bcbb1fb1b6693f0.png">             
+        <div class="praise-bookmark-footer">
+            <span>频道：</span>
+            <a href="/channel/<%= msg[i]['channelId']%>" target="_blank"><%= msg[i]['channelName']%></a>
+            <span>时间：<%=msg[i]['likeTime'] %></span>
         </div>
         <div class="praise-bookmark-header">
-            <a href="/u/<%=msg[i]['userId']%>" class="praise-user-name">zweipix</a>
+            <a target="_blank" href="/u/<%=msg[i]['userId']%>" class="praise-user-name"><%=msg[i]['username']%></a>
             <span>赞了你的书签</span>
         </div>
         <div class="praise-bookmark">
-            <a href="#">百度一下，百度云因为有你的寸在的我的圣诞节覅扫地福建按时间段覅哦啊接收到奥斯丁就撒旦教</a>
-        </div>
-        <div class="praise-bookmark-footer">
-            <span>所在频道：</span>
-            <a href="/channel/<%= msg[i]['channelId']%>">才不是前端开发呢!</a>
-            <span>时间：<%=msg[i]['likeTime'] %></span>
-        </div>
+            <%=msg[i]['bookmarkName']%>
+        </div>  
     </li>
     <% } %>
 </script>
