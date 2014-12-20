@@ -1707,7 +1707,7 @@ a.ex-creator {float: right;}
 }
 /* praise-style */
 .praise-box {
-    height: 100px;
+    height: 80px;
     padding: 10px;
     min-width: 655px;
     list-style-type: none;
@@ -1715,11 +1715,11 @@ a.ex-creator {float: right;}
 }
 
 .praise-user-avatar {
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     margin-right: 20px;
-    margin-top: 10px;
+    margin-top: 4px;
     overflow: hidden;
     float: left;
 }
@@ -1729,8 +1729,8 @@ a.ex-creator {float: right;}
     margin-right: 10px;
 }
 .praise-user-avatar img {
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
 }
 
 .praise-bookmark-img {
@@ -1740,7 +1740,7 @@ a.ex-creator {float: right;}
     overflow: hidden;
 }
 .praise-bookmark-header {
-    margin-top: 13px;
+    margin-top: 3px;
 }
 .praise-bookmark-header>span {font-size: 1.5em;}
 
