@@ -1507,6 +1507,7 @@ a.ex-creator {float: right;}
 .card-wrapper{
     width: 600px;
     border: 1px solid #ccc;
+    border-radius: 5px;
     box-shadow: 0 0 2px #ccc;
     overflow: hidden;
     padding: 10px 20px;
@@ -1526,10 +1527,10 @@ a.ex-creator {float: right;}
     width: 76px;
 }
 .card-wrapper input,.card-wrapper textarea{
-    background-color: #f1f1f1;
+    background-color: #fff;
     box-shadow: none;
-    border: none;
-    border-radius: 0;
+    border: 1px solid #ccc;
+    border-radius: 3px;
     transition:none;
     margin-bottom: 15px;
 }
@@ -1538,11 +1539,11 @@ a.ex-creator {float: right;}
 }
 
 .card-wrapper input:focus,.card-wrapper textarea:focus{
-    border: none;
+    border: 1px solid #40c192;
     border-color: none;
     outline: 0;
     box-shadow: none;
-    background-color: #fcfcfc;
+    background-color: #fff;
 }
 .card-wrapper #channel-create-logo{
     position: relative;

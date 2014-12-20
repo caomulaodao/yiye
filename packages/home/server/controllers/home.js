@@ -87,7 +87,7 @@ exports.addAdmChannel = function(){
 //新建一个频道
 exports.createChannel = function(req,res){
     if(!req.user) return res.sendResult('请先登录或注册',1000,null);
-    var allCount = 5;
+    var allCount = 5;console.log(req.user.avatar);
     var nameLength=20,descriptionLength=100;
     if (!req.body.name) return res.sendResult('频道名称不能为空',2001,null);
     if (!req.body.logo) return res.sendResult('logo不能为空',2002,null);
@@ -518,6 +518,7 @@ exports.remindmsg = function(req,res){
                 for(i;i<followers.length;i++){
                     channelsId.push(followers[i]['_id']);
                 }
+                console.log(followers,'~~~~~~');
                 callback(null,channelsId,followers);
             })
         }],
@@ -526,7 +527,7 @@ exports.remindmsg = function(req,res){
             Channel2User.update({'_id':{$in:channelsId}},{$set:{'remind':1}},{multi:true}).exec(function(err){
                 if (err){console.log(err);return res.sendError();}
                 var isHave = true;
-                if (followers.length<limit){ isHave = false;}
+                if (followers.length<limit){ isHave = false;}console.log(followers,'=========');
                 res.sendResult('返回消息成功',0,{msg:followers,isHave:isHave});
             });
         })

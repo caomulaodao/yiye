@@ -461,37 +461,6 @@ $(function(){
         praiseTemplate: _.template($('#tp-user-praise').html()),
 
         renderAfter: function () {
-            //频道logo上传
-            var that = this;
-            var cgChLogoUploader = Qiniu.uploader({
-                runtimes: 'html5,flash,html4',
-                browse_button: 'change-user-logo',
-                max_file_size: '2mb',
-                flash_swf_url: '/bower_components/js/plupload/Moxie.swf',
-                dragdrop: true,
-                chunk_size: '1mb',
-                uptoken_url: "/uptoken",
-                domain: "http://yiye.qiniudn.com/",
-                auto_start: true,
-                init: {
-                    'Key': function (up, file, info) {
-                        return  "avatar/" + (md5(Math.floor(Math.random() * 10000))).slice(0, 16) + (md5(file.name + Date.now())).slice(0, 16) + ".png";
-                    },
-                    'FilesAdded': function () {
-                        $('#user-info-logo').addClass('upLoading');
-                    },
-                    'FileUploaded': function (up, file, info) {
-                        var info = JSON.parse(info);
-                        var logo = info.key;
-                        $('#user-change-logo').attr('src', cdnUrl + logo);
-                        $('#user-info-logo').removeClass('upLoading');
-                    },
-                    'Error': function (up, err, errTip) {
-                        console.log(err);
-                    }
-                }
-            });
-            
         },
 
         //审核tab
