@@ -469,8 +469,7 @@ exports.checkmsg = function(req,res){
         },
         //返回未审核和已经审核的书签
         function(channelsId,noCheckedId,noChecked,count,callback){
-            console.log(callback);
-            if (channelsId.length===0) {return callback(null,[],[])}
+            if (channelsId.length ===0) {return callback(null,[],[])}
             if (noChecked.length>=limit){return callback(null,noCheckedId,noChecked)}//如果未审核的数量足够多 则直接返回
             var skipnumber = (number-1)*limit-count>0?(number-1)*limit-count:0;
             Bookmarks.find({'channelId':{$in:channelsId},'checkUser':req.user._id}).sort({postTime:-1}).skip(skipnumber).limit(limit-noChecked.length).exec(function(err,checkedBkms){

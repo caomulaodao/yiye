@@ -1274,7 +1274,7 @@ $(function(){
             view.renderAfter();
         },
         help: function(){
-            window.location.href = "/our/team/";
+            window.location.href = "/our/team/#help";
         },
         set: function(){
             var view = new Setting();

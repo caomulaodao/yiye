@@ -251,12 +251,13 @@ button:focus {outline:0;}
     margin-right: 20px;
     margin-bottom: 20px;
 }
-.part-title {
+#part-title{
     margin-bottom: 25px;
 }
 
-.part-title h3 {
+#part-title h3{
     font-size: 2.0em;
+    text-align: center;
 }
 
 /* ======================================================================================
