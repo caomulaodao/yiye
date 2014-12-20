@@ -21,7 +21,8 @@ function init() {
         bkUp = true;
         var bookmarkId = $(that).data('bookmarkid');
         $.ajax({
-            url: '/api/bookmarks/like/'+bookmarkId,
+            url: '/api/bookmarks/like',
+            data: {'bookmarkId': bookmarkId},
             type:'POST'
         }).done(function ( data ) {
             if(data.code == 0){
@@ -43,7 +44,8 @@ function init() {
         bkDown = true;
         var bookmarkId = $(that).data('bookmarkid');
         $.ajax({
-            url: '/api/bookmarks/hate/'+bookmarkId,
+            url: '/api/bookmarks/hate',
+            data: {'bookmarkId': bookmarkId},
             type:'POST'
         }).done(function ( data ) {
             if(data.code == 0){

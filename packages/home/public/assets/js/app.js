@@ -139,7 +139,7 @@ $(function(){
         });
 
 
-    //书签列表视图
+    //书签列表视图 采用单例模式 防止事件重复绑定
     var newlistView = function (){
         var listView = Backbone.View.extend({
 
@@ -235,7 +235,8 @@ $(function(){
                 var like = new bkLike;
                 var bookmarkId = $(event.currentTarget).data('bookmarkid');
                 var that = this;
-                like.save(null, {url:'/api/bookmarks/like/'+bookmarkId,success:function(model,response){
+                like.set('bookmarkId',bookmarkId);
+                like.save(null, {url:'/api/bookmarks/like',success:function(model,response){
                     if (response.code==0){
                         if(response.data.isLiked == false){
                             var count = $(event.currentTarget).find('span');
@@ -246,7 +247,8 @@ $(function(){
                         console.log(response);
                     }
 
-                }})
+                }});
+                this.lock.bkUp = false;
             },
 
             bkDown: function(event){
@@ -255,7 +257,8 @@ $(function(){
                 var hate = new bkHate;
                 var bookmarkId = $(event.currentTarget).data('bookmarkid');
                 var that = this;
-                hate.save(null, {url:'/api/bookmarks/hate/'+bookmarkId,success:function(model,response){
+                hate.set('bookmarkId', bookmarkId);
+                hate.save(null, {url:'/api/bookmarks/hate',success:function(model,response){
                     if (response.code==0){
                         if(response.data.isLiked == true && response.data.isHated == false){
                             var count = $(event.currentTarget).parent().find('span');
@@ -267,11 +270,13 @@ $(function(){
                         console.log(response);
                     }
 
-                }})
+                }});
+                this.lock.bkDown = false;
             },
             addBookmark: function(event){
-                var submitView = new SubmitView();
-                var that =this;console.log(submitView.lock.submit);
+                if(!this.submitview) {this.submitview = new SubmitView();}
+                var submitView = this.submitview;
+                var that =this;
                 if (!submitView.lock.submit){
                     //第一次点击
                     if (!$('.add-bookmark').hasClass('submit-active')){
@@ -294,12 +299,13 @@ $(function(){
                                 console.log(response);
                                 submitView.$el.html(submitView.initTemplate(response.data));
                                 $('.submit-content').fadeIn('1s');
-                                that.submitbookmark.set({'website':response.data.website,'channel':$('#sub-channel-list .active').data('id')});console.log($('#sub-channel-list .active').html());
+                                that.submitbookmark.set({'website':response.data.website,'channel':$('#sub-channel-list .active').data('id')});
                                 $('.add-bookmark').html('<p class="add-true">确定</p>');
                             }
                         });
                     }
                 }
+                //第三次点击
                 else{ 
                     submitView.lock.submit = false;
                     that.submitbookmark.set({'title':$('.submit-content-title div').text(),'description':$('.submit-content-description div').text(),'image':$('.submit-content-img img').attr('src'),'tags':$('.submit-content-tags input').val()})           
@@ -309,8 +315,10 @@ $(function(){
                         success: function(model,response){
                             console.log(response);                
                             $('.input-url input').val('');
-                            submitView.remove();
-                            submitView=null;
+                            $('.submit-content').fadeOut('1s',function(){
+                                submitView.$el.html("");
+                            })
+                            
                         }
                     });
                 }
@@ -484,7 +492,6 @@ $(function(){
                 }
             });
             
-            that.redPointAjax();
         },
 
         //审核tab
@@ -500,6 +507,7 @@ $(function(){
                         $('.user-check-list').append(that.checkTemplate(response.data));
                         that.checkMsg.set('number', 2);   //设置下次加载的number （滚动ajax加载）
                         that.checkFun();                  //绑定“通过”“编辑”“筛除”事件
+                        that.minusNumber(response);       //减去小红点中的数字
                     }
                     else{
                         console.log(response);
@@ -524,7 +532,8 @@ $(function(){
                     if (response.code == 0){
                         $('.user-inform-list').html(that.noInfModel(response.data));
                         $('.user-inform-list').append(that.informTemplate(response.data));
-                        that.informMsg.set('number', 2);   //设置下次加载的number （滚动ajax加载）                  
+                        that.informMsg.set('number', 2);   //设置下次加载的number （滚动ajax加载）
+                        that.minusNumber(response);       //减去小红点中的数字                 
                     }
                     else{
                         console.log(response);
@@ -547,10 +556,9 @@ $(function(){
                 data: {'number': 1},
                 success: function (model, response) {
                     if (response.code == 0) {
-                        $('#attention>.no-news').remove();  // 清除上次的“无更多内容”p节点
                         $('.user-attention-list').html(that.noInfModel(response.data));
                         $('.user-attention-list').append(that.attentionTemplate(response.data));
-
+                        that.minusNumber(response);       //减去小红点中的数字
                         that.attentionMsg.set('number', 2);   //设置下次加载的number （滚动ajax加载）                  
                     }
                     else{
@@ -576,7 +584,8 @@ $(function(){
                     if (response.code == 0){
                         $('.user-praise-list').html(that.noInfModel(response.data));
                         $('.user-praise-list').append(that.praiseTemplate(response.data));
-                        that.praiseMsg.set('number', 2);   //设置下次加载的number （滚动ajax加载）                  
+                        that.praiseMsg.set('number', 2);   //设置下次加载的number （滚动ajax加载）
+                        that.minusNumber(response);       //减去小红点中的数字                  
                     }
                     else{
                         console.log(response);
@@ -606,6 +615,7 @@ $(function(){
                         if (response.code==0){
                             $('.user-check-list').append(that.checkTemplate(response.data));
                             that.checkFun();            //绑定“通过”“编辑”“筛除”事件
+                            that.minusNumber(response);       //减去小红点中的数字
                             if (!response.data.isHave) {
                                 $('.user-check-list').append("<p class='no-news'>无更多内容</p>");
                             } else {
@@ -624,9 +634,9 @@ $(function(){
         //通知Ajax
         informAjax: function() {
             var that = this;
-            var nClientH = $(window).height();       console.log(nClientH);           
-            var nScrollTop = $('.content-page').scrollTop();   console.log(nScrollTop);
-            var nChannelH = $('#inform').height();     console.log(nClientH);
+            var nClientH = $(window).height();          
+            var nScrollTop = $('.content-page').scrollTop();
+            var nChannelH = $('#inform').height();
             if ((nClientH + nScrollTop >= nChannelH) && (that.informAjax.bScroll == true)) {
                 that.informAjax.bScroll = false;     //禁止Ajax加载
                 var nNum = that.informMsg.get('number');
@@ -636,6 +646,7 @@ $(function(){
                     success: function (model, response) {
                         if (response.code==0){
                             $('.user-check-list').append(that.checkTemplate(response.data));
+                            that.minusNumber(response);       //减去小红点中的数字
                             if (!response.data.isHave) {
                                 $('.user-check-list').append("<p class='no-news'>无更多内容</p>");
                             } else {
@@ -666,8 +677,9 @@ $(function(){
                     success: function (model, response) {
                         if (response.code==0){
                             $('.user-attention-list').append(that.attentionTemplate(response.data));
+                            that.minusNumber(response);       //减去小红点中的数字
                             if (!response.data.isHave) {
-                                $('#attention').append("<p class='no-news'>无更多内容</p>");
+                                $('.user-attention-list').append("<p class='no-news'>无更多内容</p>");
                             } else {
                                 that.attentionMsg.set("number", ++nNum);
                                 that.attentionAjax.bScroll = true;     //许可Ajax加载
@@ -696,6 +708,7 @@ $(function(){
                     success: function (model, response) {
                         if (response.code==0){
                             $('.user-praise-list').append(that.praiseTemplate(response.data));
+                            that.minusNumber(response);       //减去小红点中的数字
                             if (!response.data.isHave) {
                                 $('.user-praise-list').append("<p class='no-news'>无更多内容</p>");
                             } else {
@@ -711,40 +724,26 @@ $(function(){
             }
         },
 
-        //红点提示信息Ajax
-        redPointAjax: function() {
-            $.ajax({
-                url: '/api/home/msgcount',
-                type: 'get',
-                success: function (response) {
-                    var count = response.data.count;
-                    var checkmsg = response.data.checkmsg;
-                    var callmsg = response.data.callmsg;
-                    var remindmsg = response.data.reminding;                
-                    var praisemsg = response.data.praisemsg;
-                    if(count > 0) {
-                        var count = response.data.count;
-                        $('.red-point-count').text(count).show();
-                        if(checkmsg > 0) {
-                            $('#check-btn>a').text('审核('+ checkmsg +')');
-                        }
-                        if(callmsg > 0) {
-                            $('#inform-btn>a').text('通知('+ callmsg +')');
-                        }
-                        if(remindmsg > 0) {
-                            $('#attention-btn>a').text('关注('+ remindmsg +')');
-                        }
-                        if(praisemsg > 0) {
-                            $('#praise-btn>a').text('赞('+ praisemsg +')');
-                        }                    
+        //每次Ajax后从红点数字中减去checked为0的个数
+        minusNumber: function(response) {
+            var nCount = 0;
+            var nCountResult = 0;
+            var nMsg = response.data.msg;
+            var nCurrentCount = $('.red-point-count:first').text();
+            if(nMsg.length > 0) {
+                for(var i = 0; i < nMsg.length; i++) {
+                    if (nMsg[i]['checked'] == 0) {
+                        nCount ++;
                     }
-                    else {
-                         $('.red-point-count').hide();
-                    }
-                }              
-            });
+                }
+            }
+            nCountResult = nCurrentCount - nCount;          
+            if(nCountResult == 0) {
+                $('.red-point-count').hide();
+            } else {
+                $('.red-point-count').text(nCountResult);
+            }
         },
-
         //为每个新加载的审核元素绑定事件
         checkFun: function() {
             var lock = {
@@ -1268,7 +1267,6 @@ $(function(){
             App.main.html(view.render().el);
             view.renderAfter();
             $('#check-btn').click();
-            $('.red-point-count').hide();
         },
         discover: function(){
             var view = new ExploreView();

@@ -15,8 +15,20 @@ var bookmarkLikeSchema = Schema({
         type: Schema.ObjectId,
         required: true
     },
+    channelName: {
+        type: String,
+        required: true
+    },
     bookmarkId :{
         type: Schema.ObjectId,
+        required: true
+    },
+    bookmarkName: {
+        type: String,
+        required: true
+    },
+    bookmarkLogo: {
+        type: String,
         required: true
     },
     userId :{
@@ -24,6 +36,10 @@ var bookmarkLikeSchema = Schema({
         required: true
     },
     username :{
+        type: String,
+        required: true
+    },
+    userLogo: {
         type: String,
         required: true
     },

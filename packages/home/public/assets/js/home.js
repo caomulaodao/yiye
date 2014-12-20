@@ -29,6 +29,41 @@ function initialize() {
             window.location.href = "/home#"+id;
         }
     });
+
+    var redPointAjax = function() {
+        $.ajax({
+            url: '/api/home/msgcount',
+            type: 'get',
+            success: function (response) {
+                var count = response.data.count;
+                var checkmsg = response.data.checkmsg;
+                var callmsg = response.data.callmsg;
+                var remindmsg = response.data.reminding;                
+                var praisemsg = response.data.praisemsg;
+                if(count > 0) {
+                    var count = response.data.count;
+                    $('.red-point-count').text(count).show();
+                    if(checkmsg > 0) {
+                        $('#check-btn>a').text('审核('+ checkmsg +')');
+                    }
+                    if(callmsg > 0) {
+                        $('#inform-btn>a').text('通知('+ callmsg +')');
+                    }
+                    if(remindmsg > 0) {
+                        $('#attention-btn>a').text('关注('+ remindmsg +')');
+                    }
+                    if(praisemsg > 0) {
+                        $('#praise-btn>a').text('赞('+ praisemsg +')');
+                    }
+                }
+                else {
+                     $('.red-point-count').hide();
+                }
+            }              
+        });
+    };
+
+    setInterval(redPointAjax(), 300000);
 }
 
 
