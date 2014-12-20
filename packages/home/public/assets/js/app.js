@@ -556,7 +556,6 @@ $(function(){
                 data: {'number': 1},
                 success: function (model, response) {
                     if (response.code == 0) {
-                        $('#attention>.no-news').remove();  // 清除上次的“无更多内容”p节点
                         $('.user-attention-list').html(that.noInfModel(response.data));
                         $('.user-attention-list').append(that.attentionTemplate(response.data));
                         that.minusNumber(response);       //减去小红点中的数字
@@ -680,7 +679,7 @@ $(function(){
                             $('.user-attention-list').append(that.attentionTemplate(response.data));
                             that.minusNumber(response);       //减去小红点中的数字
                             if (!response.data.isHave) {
-                                $('#attention').append("<p class='no-news'>无更多内容</p>");
+                                $('.user-attention-list').append("<p class='no-news'>无更多内容</p>");
                             } else {
                                 that.attentionMsg.set("number", ++nNum);
                                 that.attentionAjax.bScroll = true;     //许可Ajax加载
@@ -738,7 +737,6 @@ $(function(){
                     }
                 }
             }
-            console.log(nCount);
             nCountResult = nCurrentCount - nCount;          
             if(nCountResult == 0) {
                 $('.red-point-count').hide();
