@@ -138,7 +138,6 @@ exports.createChannel = function(req,res){
                         name: channels.name,
                         type: "creator",
                         logo: channels.logo,
-
                         remind: 1
                     });
                     var channelId = doc._id;
@@ -481,10 +480,10 @@ exports.checkmsg = function(req,res){
             if(err){console.log(err);return res.sendError()}
             var isHave = true;
             if (list.length<limit){isHave = false}
-            Bookmarks.update({'_id':{$in:noCheckedId}},{$set:{'checked':1}},{multi:true}).exec(function(err){
-                if (err) {console.log(err);return res.sendError();}
-                res.sendResult('获取消息成功',0,{msg:list,isHave:isHave});
-            })
+            // Bookmarks.update({'_id':{$in:noCheckedId}},{$set:{'checked':1}},{multi:true}).exec(function(err){
+            //     if (err) {console.log(err);return res.sendError();}
+            res.sendResult('获取消息成功',0,{msg:list,isHave:isHave});
+            // })
         }
     )
 }
@@ -560,7 +559,7 @@ exports.praisemsg = function(req,res){
                 var doc = JSON.stringify(doc);
                 doc = JSON.parse(doc);
                 for (i;i<doc.length;i++){
-                    doc[i].likeTime = moment(doc[i].likeTime).locale('zh-cn');console.log(doc[i].likeTime.diff(nowtime,'days'));
+                    doc[i].likeTime = moment(doc[i].likeTime).locale('zh-cn');
                     if (nowtime.diff(doc[i].likeTime,'days')>7){
                         doc[i].likeTime = doc[i].likeTime.format('llll');
                     }
