@@ -18,11 +18,11 @@
             </a>
             <img src="/home/assets/img/brand_name_green.png" onclick="window.location.assign('/home')">
             <i id="rounded-arrow" class="iconfont">&#x3435</i>
-            <span id="arrow-count"class="red-point-count"style="display:none">0</span>
+            <span id="arrow-count"class="red-point-count"style="display:none" data-number='0'></span>
         </div>
         <div id="function-module">
             <ul id="function-module-ul">
-                <li id='message'><i class="iconfont">&#xf00b5</i><div>消息</div><span id="message-count" class="red-point-count"style="display:none">0</span></li>
+                <li id='message'><i class="iconfont">&#xf00b5</i><div>消息</div><span id="message-count" class="red-point-count"style="display:none" data-number='0'></span></li>
                 <li id='discover' ><i class="iconfont">&#xe684</i><div>发现</div></li>
                 <li id='help'><i class="iconfont">&#xf00b8</i><div>帮助</div></li>
                 <li id='set'><i class="iconfont">&#xf013e</i><div>设置</div></li>
@@ -577,10 +577,10 @@
 <script type="text/x-handlebars-template" id="tp-message-check">
     <div class="personal-center">
         <ul class="nav nav-tabs" role="tablist" id="channel-manage-tab">
-            <li id="check-btn" role="news" class="active"><a href="#check" role="tab" data-toggle="tab">审核</a></li>
-            <li id="inform-btn" role="news"><a href="#inform" role="tab" data-toggle="tab">通知</a></li>
-            <li id="attention-btn" role="news"><a href="#attention" role="tab" data-toggle="tab">关注</a></li>
-            <li id="praise-btn" role="news"><a href="#praise" role="tab" data-toggle="tab">赞</a></li>
+            <li id="check-btn" role="news" class="active"><a href="#check" role="tab" data-number='0' data-toggle="tab">审核</a></li>
+            <li id="inform-btn" role="news"><a href="#inform" role="tab" data-number='0' data-toggle="tab">通知</a></li>
+            <li id="attention-btn" role="news"><a href="#attention" role="tab" data-number='0' data-toggle="tab">关注</a></li>
+            <li id="praise-btn" role="news"><a href="#praise" role="tab" data-number='0' data-toggle="tab">赞</a></li>
         </ul>
         <div class="tab-content">
             <div role="tabpanel" class="tab-pane active" id="check">
