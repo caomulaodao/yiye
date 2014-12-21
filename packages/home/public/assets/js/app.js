@@ -686,7 +686,7 @@ $(function(){
             var nClientH = $(window).height();
             var nScrollTop = $('.content-page').scrollTop();   
             var nChannelH = $('#praise').height();     
-            if ((nClientH + nScrollTop + 100>= nChannelH) && (that.praiseAjax.bScroll == true)) {
+            if ((nClientH + nScrollTop >= nChannelH) && (that.praiseAjax.bScroll == true)) {
                 that.praiseAjax.bScroll = false;     //禁止Ajax加载
                 var nNum = that.praiseMsg.get('number');
                 that.praiseMsg.fetch({
