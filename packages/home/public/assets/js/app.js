@@ -734,11 +734,14 @@ $(function(){
 
         //每次审核部分“通过” 或者 “筛除”后红点和tab括号内数字 减1
         checkMinusOne: function() {
+            var that = this;
             var nPointResult = $('.red-point-count:first').data('number') - 1;
             var nTabResult = $('#check-btn>a').data('number') - 1;
 
             $('.red-point-count').data('number', nPointResult);
             $('#check-btn>a').data('number', nTabResult);
+
+            that.showNum();
         },
 
         //Ajax请求msgcount的数目并装在data-number里
