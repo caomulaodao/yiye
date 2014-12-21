@@ -508,6 +508,8 @@ button:focus {outline:0;}
     width: 38px;
     height: 38px;
     border-radius: 3px;
+    user-select: none;
+    -webkit-user-select: none;
 }
 .channel-name {
     display: inline-block;
@@ -584,8 +586,8 @@ button:focus {outline:0;}
 .create-channel button {
     width: 230px;
     height: 40px;
-    border: solid 1px #40c192;
-    color: #40c192;
+    border: solid 1px #37A2E4;
+    color: #37A2E4;
     border-radius: 30px;
     vertical-align: middle;
     margin-top: 20px;
@@ -594,7 +596,7 @@ button:focus {outline:0;}
 
 .create-channel button:hover {
     color: #fff;
-    background-color: #40c192;
+    background-color: #37A2E4;
 }
 
 /* content page */
@@ -1684,7 +1686,7 @@ a.ex-creator {float: right;}
     display: inline-block;
     margin-top: 17px;
     margin-right: 6px;
-    font-size: 1.7em;
+    font-size: 1.5em;
     line-height: 1em;
     font-weight: bold;
     overflow: hidden;
@@ -1693,7 +1695,7 @@ a.ex-creator {float: right;}
 }
 .at-channel-name {
     display: inline-block;
-    font-size: 1.7em;
+    font-size: 1.5em;
     margin-left: 6px;
     line-height: 1em;
     overflow: hidden;
@@ -1724,7 +1726,7 @@ a.ex-creator {float: right;}
     float: left;
 }
 .praise-user-name {
-    font-size: 1.7em;
+    font-size: 1.5em;
     font-weight: bold;
     margin-right: 10px;
 }
@@ -1740,7 +1742,7 @@ a.ex-creator {float: right;}
     overflow: hidden;
 }
 .praise-bookmark-header {
-    margin-top: 3px;
+    margin-top: 7px;
 }
 .praise-bookmark-header>span {font-size: 1.5em;}
 
