@@ -439,8 +439,8 @@ exports.oneDay = function(req,res){
         ],function(err,results){
             if(!results.day) return res.sendResult('获取书签成功',0,{day:null,nextDay:null,list:[]});
             var dayResult = {};
-            dayResult.day = results.day;
-            dayResult.nextDay = results.nextDay;
+            // dayResult.date = results.day;
+            // dayResult.nextDay = results.nextDay;
             var startDay = moment(day,"YYYY-MM-DD").startOf('day').toDate();
             var endDay = moment().add('days',1).toDate();
             Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]},postTime:{$gte:startDay,$lt:endDay}}).sort({postTime:-1}).exec(function(err,list){
@@ -450,7 +450,8 @@ exports.oneDay = function(req,res){
                     var bRank = b['likeNum'] - b['hateNum'];
                     return aRank > bRank ? -1 : 1;
                 });
-                dayResult.list = list;
+                // dayResult.list = list;
+                dayResult = list;
                 res.sendResult('获取书签成功',0,dayResult);
             });
         });
@@ -465,8 +466,8 @@ exports.oneDay = function(req,res){
                 var nextDay =  moment(doc[0]['postTime']).startOf('day').toDate();
             }
             var dayResult = {};
-            dayResult.date = day;
-            dayResult.nextDay = nextDay;
+            // dayResult.date = day;
+            // dayResult.nextDay = nextDay;
             Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]},postTime:{$gte:startDay,$lt:endDay}}).sort({postTime:-1}).exec(function(err,list){
                 if(err) {console.log(err);return res.sendError()}
                 list.sort(function(a,b){
@@ -474,7 +475,8 @@ exports.oneDay = function(req,res){
                     var bRank = b['likeNum'] - b['hateNum'];
                     return aRank > bRank ? -1 : 1;
                 });
-                dayResult.list = list;
+                // dayResult.list = list;
+                dayResult = list;
                 res.sendResult('获取书签成功',0,dayResult);
             });
         });

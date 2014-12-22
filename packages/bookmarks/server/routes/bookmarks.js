@@ -25,7 +25,7 @@ module.exports = function(Bookmarks, app, auth, database) {
         .post(bookmarks.hate);
 
     //获取离请求日期最近的某天的所有书签 移动端使用
-    app.route('/api/bookmarks/oneDay/)
+    app.route('/api/bookmarks/oneDay/')
         .get(bookmarks.oneDay);
 
     //审核通过某个书签
@@ -39,6 +39,5 @@ module.exports = function(Bookmarks, app, auth, database) {
     //删除并通过某个书签
     app.route('/api/bookmarks/delete/:channelId/:bookmarkId')
         .post(bookmarks.delete);
-    //移动端 查询某个日期某个频道的书签
 
 };
