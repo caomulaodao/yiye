@@ -713,6 +713,7 @@ $(function(){
 
         //每次Ajax后从红点数字中减去checked为0的个数
         minusNumber: function(response) {
+            var that = this;
             var nCount = 0;
             var nPointResult = 0;
             var nTabResult = 0;
@@ -741,6 +742,7 @@ $(function(){
             nTabResult = nTabCount - nCount;
             $('.red-point-count').data('number', nPointResult);
             $('.message-tab.active').children('a').data('number', nTabResult);
+            that.showNum();
         },
 
         //每次审核部分“通过” 或者 “筛除”后红点和tab括号内数字 减1
