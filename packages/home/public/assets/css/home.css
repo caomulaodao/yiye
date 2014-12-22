@@ -793,12 +793,12 @@ a.header-channel-name, a.header-channel-name:hover{
     cursor: pointer;
     z-index: 250; 
 }
-.add-bookmark:hover{
+/*.add-bookmark:hover{
     transform: scale(1.3);
     transition: all 1s ease 0s;
     -webkit-transform: scale(1.3);
     -webkit-transform: all 1s ease 0s;
-}
+}*/
 .add-bookmark p{
     margin:6px 0px;
 }
@@ -807,31 +807,117 @@ p.add-true{
 }
 .input-url{
     position: fixed;
-    top:80%;
-    right:250px;
+    height:50px;
+    width:500px;
+    top:10%;
+    left:0px;
+    right:0px;
+    bottom: 0px;
     display: none;
-    z-index: 200;
+    z-index: 250;
+    margin: 0 auto;
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 0px 30px 50px #888888;
+    box-sizing:content-box;
+
 }
 .input-url input{
     color:#000;
-    font-size: 14px;
-    width: 200px;
+    font-size: 26px;
+    width: 450px;
+    height: 50px;
     padding: 2px 4px;
-
+    outline: none; 
+    border:none;
+    border-radius: 4px;
+    font-weight: 100;
+}
+.input-url button{
+    border:0px;
+    padding: 0px;
+    margin: 0px;
+    border-radius: 0px 4px 4px 0px;
+    border-left: 1px solid #b4b4b4;
+    width: 49px;
+    height: 100%;
+    display: inline-block;
+    float: right;
 }
 .input-url input::-webkit-input-placeholder{
-    color:#eee;
-
+    color:#b4b4b4;
 }
 
 
 /*提交书签表单*/
 .submit-content{
     position: fixed;
-    top: 40%;
-    right: 200px;
-    z-index: 251;
+    top: 10%;    
+    left:0px;
+    right:0px;
+    z-index: 251; 
+    width: 500px;
+    min-height: 200px;   
+    margin: 0 auto;
+    padding: 30px 50px;    
+    background-color: #fff; 
+    transform: translateY(60px);
+    box-sizing: border-box; 
+    box-shadow: 0px 20px 100px #000;
+}
+.submit-background{
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top:0px;
+    left:0px;
+    background-color: rgba(0,0,0,0.3);
+    z-index:249;
     display: none;
+}
+.submit-content-img{
+    display: none;
+}
+.submit-content-title div{
+    font-weight: 600;
+    font-size: 20px;
+}
+.submit-text{
+    max-height: 40px;
+    border:none;
+    border-bottom: 1px solid #000;
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+.submit-text:focus{
+    outline: none;
+}
+.submit-content-tags{
+    width: 400px;  
+}
+.submit-tags{
+    background-color: #e4e4e4;
+    outline: none;
+    height: 30px;
+    width: 400px;
+    line-height: 30px;
+    border-radius: 4px;
+    font-size: 20px;
+    font-weight: 100;
+    border:none;
+    padding: 0px 5px;
+    margin-bottom: 20px;
+}
+.put2channel{
+    border: none;
+    border-radius: 4px;
+    width: 200px;
+    font-size: 20px;
+    font-weight: 200;
+    line-height: 30px;
+    height: 30px;
+    margin-left: 50%;
+    transform:translateX(-100px);
 }
 
 /* date divide */
@@ -1802,4 +1888,68 @@ a.ex-creator {float: right;}
 #channel-explore-tools li span{
     height: 20px;
     color: #A9B7B7;
+}
+/*加载动画*/
+.loading{
+    position: fixed;
+    top:10%;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    margin: 0px auto;
+    height: 60px;
+    width: 50px;
+    z-index: 300;
+    transform:translateY(150px);
+}
+.loading .spinner {
+  width: 50px;
+  height: 60px;
+  text-align: center;
+  font-size: 10px;
+}
+ 
+.loading .spinner > div {
+  background-color: #67CF22;
+  height: 100%;
+  width: 6px;
+  display: inline-block;
+   
+  -webkit-animation: stretchdelay 1.2s infinite ease-in-out;
+  animation: stretchdelay 1.2s infinite ease-in-out;
+}
+ 
+.loading .spinner .rect2 {
+  -webkit-animation-delay: -1.1s;
+  animation-delay: -1.1s;
+}
+ 
+.loading .spinner .rect3 {
+  -webkit-animation-delay: -1.0s;
+  animation-delay: -1.0s;
+}
+ 
+.loading .spinner .rect4 {
+  -webkit-animation-delay: -0.9s;
+  animation-delay: -0.9s;
+}
+ 
+.loading .spinner .rect5 {
+  -webkit-animation-delay: -0.8s;
+  animation-delay: -0.8s;
+}
+ 
+@-webkit-keyframes stretchdelay {
+  0%, 40%, 100% { -webkit-transform: scaleY(0.4) }  
+  20% { -webkit-transform: scaleY(1.0) }
+}
+ 
+@keyframes stretchdelay {
+  0%, 40%, 100% { 
+    transform: scaleY(0.4);
+    -webkit-transform: scaleY(0.4);
+  }  20% { 
+    transform: scaleY(1.0);
+    -webkit-transform: scaleY(1.0);
+  }
 }

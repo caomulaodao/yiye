@@ -87,6 +87,16 @@
 
 <!-- 结果提示弹窗  -->
 <div id="dialog-output"></div>
+<!-- 加载动画 -->
+<div class="load">   
+    <div class="spinner">
+    <div class="rect1"></div>
+    <div class="rect2"></div>
+    <div class="rect3"></div>
+    <div class="rect4"></div>
+    <div class="rect5"></div>
+</div>
+</div>
 
 <!-- 创建频道页面update -->
 <script type="text/template" id="tp-create-channels">
@@ -399,8 +409,9 @@
                     <% } %>
                 <% } %>
             </ul>
+            <div class = 'submit-background'></div>
+            <div class = 'input-url'><input type='text' placeholder='请输入你想添加的书签地址' /><button class= 'input-url-button'>提交</button></div>
             <div class = 'add-bookmark'><p>提交</p><p>书签</p></div>
-            <div class = 'input-url'><input type='text' placeholder='http://' /></div>
             <div class = 'submit-bookmark'></div>
             <div style="height:100px"></div>
         </div>
@@ -790,18 +801,20 @@
     <div class='submit-content'>
         <div class='submit-content-title'>
             <p>标题</p>
-            <div contenteditable="true"><%= title %></div>
+            <div contenteditable="true" class='submit-text'><%= title %></div>
         </div>
         <div class='submit-content-img'>
             <img src='http://placehold.it/200x200'/>
         </div>
         <div class='submit-content-description'>
             <p>描述</p>
-            <div contenteditable='true'><%= description %></div>
+            <div contenteditable='true' class='submit-text'><%= description %></div>
         </div>
         <div class='submit-content-tags'>
-            <input type="search"/>
-        </div> 
+            <p>标签</p>
+            <input type="text" class = "submit-tags" placeholder="多个标签请用,或者空格隔开"/>
+        </div>
+        <button class="put2channel">提交至当前频道</button> 
     </div>
 </script>
 

@@ -19,7 +19,9 @@ function initialize() {
             $('#function-module').addClass('unfold');
         }
     });
-
+    $('.submit-background').scroll(function(){
+        return false;
+    });
     // 绑定切换事件。
     $('#function-module-ul').delegate('li','click',function(e){
         var id = $(e.currentTarget).attr('id');

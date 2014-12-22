@@ -261,6 +261,9 @@ exports.discover = function(req,res){
                     if (channel2userId.indexOf(item._id+'')>-1){
                         results[index]['isAttention'] = true;//已经关注
                     }
+                    else{
+                        results[index]['isAttention']= false;
+                    }
                 });
                 if(results.length==0) {isHave=false;}
                 else{
@@ -407,18 +410,30 @@ exports.callmsg = function(req,res){
                 callback(err,creatorId);
             })
         },
-        //返回的通知消息
+        //返回的未通知消息
         function(creatorId,callback){
-            Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[1,2,3,4]},'channelInfo.channelId':{$nin:creatorId}}).sort({'checked':1,'postTime':-1}).skip((number-1)*limit).limit(limit).exec(function(err,list){
+             Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[1,2]},'channelInfo.channelId':{$nin:creatorId}}).sort({'postTime':-1}).skip((number-1)*limit).limit(limit).exec(function(err,nocallmsg){
+                if (err) {console.log(err);return res.sendError();}
+                callback(null,creatorId,nocallmsg);
+             })
+        },
+        //返回未通知消息的总数
+        function(creatorId,nocallmsg,callback){
+            Bookmarks.count({'postUser.userId':req.user._id,checked:{$in:[1,2]},'channelInfo.channelId':{$nin:creatorId}},function(err,count){
+                if (err) {console.log(err);return res.sendError();}
+                callback(null,creatorId,nocallmsg,count);
+            })
+        },
+        //返回已经通知的消息
+        function(creatorId,nocallmsg,count,callback){
+            var isHave=true;
+            var skipnumber = (number-1)*limit-count>0?(number-1)*limit-count:0;
+            if (nocallmsg.length==limit) {isHave=false;return callback(err,nocallmsg,isHave)}
+            Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[3,4]},'channelInfo.channelId':{$nin:creatorId}}).sort({'postTime':-1}).skip(skipnumber).limit(limit-nocallmsg.length).exec(function(err,list){
                 if (err) {console.log(err);return res.sendError()}
-                var isHave=true;
-                if (list.length==0) {isHave = false; return callback(err,list,isHave);}
-                else{
-                    if(list.length<limit){
-                        isHave=false;
-                    }
-                }
-                callback(err,list,isHave);
+                var results = nocallmsg.concat(list);
+                if (results.length<limit) {isHave = false;}
+                callback(err,results,isHave);
             })
         }],
         function(err,list,isHave){
@@ -529,7 +544,6 @@ exports.remindmsg = function(req,res){
                 for(i;i<followers.length;i++){
                     channelsId.push(followers[i]['_id']);
                 }
-                console.log(followers,'~~~~~~');
                 callback(null,channelsId,followers);
             })
         }],
@@ -538,7 +552,7 @@ exports.remindmsg = function(req,res){
             Channel2User.update({'_id':{$in:channelsId}},{$set:{'remind':1}},{multi:true}).exec(function(err){
                 if (err){console.log(err);return res.sendError();}
                 var isHave = true;
-                if (followers.length<limit){ isHave = false;}console.log(followers,'=========');
+                if (followers.length<limit){ isHave = false;}
                 res.sendResult('返回消息成功',0,{msg:followers,isHave:isHave});
             });
         })

@@ -125,17 +125,18 @@ $(function(){
             el: $('.submit-view'),
 
             initTemplate: _.template($('#tp-submit-bookmark').html()),
-
-            lock:{
-                submit:false
-            },
-
              initialize: function(){
             },       
 
-            // events:{
-            //     "click .add-bookmark": "addBookmark",
-            // },        
+            events:{
+                 "click .put2channel": "put2channel",
+            }, 
+            put2channel: function(){
+                 this.addbookmark();
+            },
+            //提交书签
+            addbookmark: function(){
+            }       
         });
 
 
@@ -165,6 +166,8 @@ $(function(){
                 "click .up" : "bkUp",
                 "click .down": "bkDown",
                 "click .add-bookmark": "addBookmark",
+                "click .submit-background": "removeBackground",
+                "click .input-url-button": "inputUrl"
             },
 
             render: function(channelId){
@@ -273,59 +276,109 @@ $(function(){
                 }});
                 this.lock.bkDown = false;
             },
-            addBookmark: function(event){
-                if(!this.submitview) {this.submitview = new SubmitView();}
-                var submitView = this.submitview;
-                var that =this;
-                if (!submitView.lock.submit){
-                    //第一次点击
-                    if (!$('.add-bookmark').hasClass('submit-active')){
-                        $('.add-bookmark').html('<p class="add-true">确定</p>').addClass('submit-active');
-                        var top = $(window).height()/10*8;
-                        $('.input-url').css({'top':top+$('.add-bookmark').height()/2});
-                        $('.input-url').fadeIn('2s');
-                    }
-                    //第二次点击
-                    else{
-                        that.addbookmark.set({'website':$('.input-url input').val()},{validate:true});
-                        if(that.addbookmark.validationError){return console.log(that.addbookmark.validationError);}
-                        $('.add-bookmark').removeClass('submit-active').html('<p>正在</p><p>获取</p>');
-                        submitView.lock.submit=true;
-                        $('.input-url').fadeOut('2s');
-                        that.addbookmark.save(null,{error: function(model,response){
-                                console.log('网络异常或参数错误');
-                            },
-                            success: function(model,response){
-                                console.log(response);
-                                submitView.$el.html(submitView.initTemplate(response.data));
-                                $('.submit-content').fadeIn('1s');
-                                that.submitbookmark.set({'website':response.data.website,'channel':$('#sub-channel-list .active').data('id')});
-                                $('.add-bookmark').html('<p class="add-true">确定</p>');
-                            }
-                        });
-                    }
+            //点击周围空白则取消输入
+            removeBackground: function(){
+                $('.submit-background').fadeOut('2s');
+                $('.input-url').fadeOut('2s',function(){
+                    $('.input-url input').val('');                   
+                });
+                if(this.submitview){
+                    this.submitview.$el.html('');
                 }
-                //第三次点击
-                else{ 
-                    submitView.lock.submit = false;
-                    that.submitbookmark.set({'title':$('.submit-content-title div').text(),'description':$('.submit-content-description div').text(),'image':$('.submit-content-img img').attr('src'),'tags':$('.submit-content-tags input').val()})           
-                    that.submitbookmark.save(null,{error:function(){
-                            console.log('网络连接异常');
-                        },
-                        success: function(model,response){
-                            console.log(response);                
-                            $('.input-url input').val('');
-                            $('.submit-content').fadeOut('1s',function(){
-                                submitView.$el.html("");
-                            })
-                            
-                        }
-                    });
-                }
+                $('.add-bookmark').fadeIn('2s');
             },
-            loading: function(){
-
-            }
+            //点击提交URL地址按钮
+            inputUrl: function(){
+                $('.load').addClass('loading')
+                var submitView = this.submitview;
+                var that = this;
+                that.addbookmark.set({'website':$('.input-url input').val()},{validate:true});
+                if(that.addbookmark.validationError){return console.log(that.addbookmark.validationError);}                
+                that.addbookmark.save(null,{error: function(model,response){
+                        $('.load').removeClass('loading');
+                        console.log('网络异常或参数错误');
+                    },
+                    success: function(model,response){
+                        console.log(response);
+                        $('.load').removeClass('loading');
+                        submitView.$el.html(submitView.initTemplate(response.data));
+                        $('.submit-content').fadeIn('1s');
+                        that.submitbookmark.set({'website':response.data.website,'channel':$('#sub-channel-list .active').data('id')});
+                        that.submitview.addbookmark = function(){
+                            that.submitbookmark.set({'title':$('.submit-content-title div').text(),'description':$('.submit-content-description div').text(),'image':$('.submit-content-img img').attr('src'),'tags':$('.submit-content-tags input').val()});
+                            $('.load').addClass('loading');                   
+                            that.submitbookmark.save(null,
+                                {'error':function(){
+                                    console.log('网络异常或参数错误');
+                                    $('.load').removeClass('loading');
+                                    },
+                                'success':function(model,response){
+                                    console.log(response);
+                                    $('.load').removeClass('loading');
+                                    $('.submit-background').click();
+                                }
+                                }
+                            )
+                        }
+                    }
+                });          
+            },
+            addBookmark: function(event){
+                if (!this.submitview) {this.submitview = new SubmitView();}                
+                $('.input-url').fadeIn('2s',function(){
+                    $('.input-url input').focus();
+                });
+                $('.submit-background').fadeIn('2s');
+                $('.add-bookmark').fadeOut('2s');
+                // if(!this.submitview) {this.submitview = new SubmitView();}
+                // var submitView = this.submitview;
+                // var that =this;
+                // if (!submitView.lock.submit){
+                //     //第一次点击
+                //     if (!$('.add-bookmark').hasClass('submit-active')){
+                //         $('.add-bookmark').html('<p class="add-true">确定</p>').addClass('submit-active');
+                //         var top = $(window).height()/10*8;
+                //         $('.input-url').css({'top':top+$('.add-bookmark').height()/2});
+                //         $('.input-url').fadeIn('2s');
+                //     }
+                //     //第二次点击
+                //     else{
+                //         that.addbookmark.set({'website':$('.input-url input').val()},{validate:true});
+                //         if(that.addbookmark.validationError){return console.log(that.addbookmark.validationError);}
+                //         $('.add-bookmark').removeClass('submit-active').html('<p>正在</p><p>获取</p>');
+                //         submitView.lock.submit=true;
+                //         $('.input-url').fadeOut('2s');
+                //         that.addbookmark.save(null,{error: function(model,response){
+                //                 console.log('网络异常或参数错误');
+                //             },
+                //             success: function(model,response){
+                //                 console.log(response);
+                //                 submitView.$el.html(submitView.initTemplate(response.data));
+                //                 $('.submit-content').fadeIn('1s');
+                //                 that.submitbookmark.set({'website':response.data.website,'channel':$('#sub-channel-list .active').data('id')});
+                //                 $('.add-bookmark').html('<p class="add-true">确定</p>');
+                //             }
+                //         });
+                //     }
+                // }
+                // //第三次点击
+                // else{ 
+                //     submitView.lock.submit = false;
+                //     that.submitbookmark.set({'title':$('.submit-content-title div').text(),'description':$('.submit-content-description div').text(),'image':$('.submit-content-img img').attr('src'),'tags':$('.submit-content-tags input').val()})           
+                //     that.submitbookmark.save(null,{error:function(){
+                //             console.log('网络连接异常');
+                //         },
+                //         success: function(model,response){
+                //             console.log(response);                
+                //             $('.input-url input').val('');
+                //             $('.submit-content').fadeOut('1s',function(){
+                //                 submitView.$el.html("");
+                //             })
+                            
+                //         }
+                //     });
+                // }
+            },
         });
         if (this.view){return this.view};
         this.view = new listView();

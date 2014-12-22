@@ -507,8 +507,8 @@ exports.edit = function(req,res){
     if(!req.user) return res.sendResult('请先注册或登录',1000,null);
     var channelId = req.params['channelId'];
     var bookmarkId = req.params['bookmarkId'];
-    var title = req.body.title;
-    var description = req.body.description;
+    var title = xss(req.body.title,{whiteList:{}});
+    var description = xss(req.body.description,{whiteList:{}})
     if (title==null){return res.sendResult('标题不能为空',2007,null)}
     if (description==null) {res.sendResult('描述不能为空',2008,null)}
     if(!verify.idVerify(channelId)||!verify.idVerify(bookmarkId)||!verify.isString(title)||!verify.isString(description)) {return res.sendResult('参数类型错误',2000,null)}
@@ -539,7 +539,7 @@ exports.delete = function(req,res){
     if(!req.user) return res.sendResult('请先注册或登录',1000,null);
     var channelId = req.params['channelId'];
     var bookmarkId = req.params['bookmarkId'];
-    var reason = req.body.reason;
+    var reason = xss(req.body.reason,{whiteList:{}});
     if (reason==null) reason='';
     if(!verify.idVerify(channelId)||!verify.idVerify(bookmarkId)||!verify.isString(reason)) {return res.sendResult('参数类型错误',2000,null)}
     Channel2User.findOne({channelId:channelId,userId:req.user._id,type:{$in:['creator','admin']}},function(err,doc){
