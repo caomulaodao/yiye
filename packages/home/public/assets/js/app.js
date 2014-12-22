@@ -492,8 +492,6 @@ $(function(){
             'touch #inform-btn' : 'inform',
             'touch #attention-btn' : 'attention',
             'touch #praise-btn' : 'praise'
-
-
         },
 
         initialize: function () {
@@ -503,7 +501,7 @@ $(function(){
             return this;
         },
 
-        noInfModel: _.template($('#tp-no-info').html()),
+        noInfoModel: _.template($('#tp-no-info').html()),
 
         checkTemplate: _.template($('#tp-user-check').html()),
 
@@ -515,7 +513,7 @@ $(function(){
 
         renderAfter: function () {
             var that = this;
-            that.redPointAjax();
+            that.msgCountAjax();
         },
 
         //审核tab
@@ -527,7 +525,7 @@ $(function(){
                 data: {'number': 1},
                 success: function (model, response) {
                     if (response.code == 0){
-                        $('.user-check-list').html(that.noInfModel(response.data));
+                        $('.user-check-list').html(that.noInfoModel(response.data));
                         $('.user-check-list').append(that.checkTemplate(response.data));
                         that.checkMsg.set('number', 2);   //设置下次加载的number （滚动ajax加载）
                         that.checkFun();                  //绑定“通过”“编辑”“筛除”事件
@@ -537,8 +535,11 @@ $(function(){
                     }
                 }
             });
-
+            
             that.checkAjax.bScroll = true;   //许可Ajax加载
+            that.informAjax.bScroll = false;
+            that.attentionAjax.bScroll = false;
+            that.praiseAjax.bScroll = false;   
             $('.content-page').scroll(function () {
                 if($('#check:has(.active)')) {
                     that.checkAjax();
@@ -548,17 +549,17 @@ $(function(){
 
         //通知tab
         inform: function() {
-            var that = this;            
+            var that = this;
             that.informMsg = new informMsg;
             that.informMsg.fetch({
                 url: 'api/home/callmsg',
                 data: {'number': 1},
                 success: function (model, response) {
                     if (response.code == 0){
-                        $('.user-inform-list').html(that.noInfModel(response.data));
+                        $('.user-inform-list').html(that.noInfoModel(response.data));
                         $('.user-inform-list').append(that.informTemplate(response.data));
                         that.informMsg.set('number', 2);   //设置下次加载的number （滚动ajax加载）
-                        that.minusNumber(response);       //减去小红点中的数字                 
+                        that.minusNumber(response);        //减去小红点&tab中的数字                 
                     }
                     else{
                         console.log(response);
@@ -566,7 +567,10 @@ $(function(){
                 }
             });
 
-            that.informAjax.bScroll = true;   //许可Ajax加载
+            that.checkAjax.bScroll = false;   //许可Ajax加载
+            that.informAjax.bScroll = true;
+            that.attentionAjax.bScroll = false;
+            that.praiseAjax.bScroll = false; 
             $('.content-page').scroll(function () {
                 if($('#inform:has(.active)')) {
                     that.informAjax();
@@ -576,16 +580,16 @@ $(function(){
 
         //关注tab
         attention: function() {
-            var that = this;            
+            var that = this;
             that.attentionMsg = new attentionMsg;
             that.attentionMsg.fetch({
                 url: 'api/home/remind',
                 data: {'number': 1},
                 success: function (model, response) {
                     if (response.code == 0) {
-                        $('.user-attention-list').html(that.noInfModel(response.data));
+                        $('.user-attention-list').html(that.noInfoModel(response.data));
                         $('.user-attention-list').append(that.attentionTemplate(response.data));
-                        that.minusNumber(response);       //减去小红点中的数字
+                        that.minusNumber(response);           //减去小红点&tab中的数字
                         that.attentionMsg.set('number', 2);   //设置下次加载的number （滚动ajax加载）                  
                     }
                     else{
@@ -594,7 +598,10 @@ $(function(){
                 }
             });
 
-            that.attentionAjax.bScroll = true;   //许可Ajax加载
+            that.checkAjax.bScroll = false;   //许可Ajax加载
+            that.informAjax.bScroll = false;
+            that.attentionAjax.bScroll = true;
+            that.praiseAjax.bScroll = false; 
             $('.content-page').scroll(function () {
                 if($('#attention:has(.active)')) {
                     that.attentionAjax();
@@ -604,17 +611,17 @@ $(function(){
 
         //点赞tab
         praise: function() {
-            var that = this;            
+            var that = this;
             that.praiseMsg = new praiseMsg;
             that.praiseMsg.fetch({
                 url: 'api/home/praisemsg',
                 data: {'number': 1},
                 success: function (model, response) {
                     if (response.code == 0){
-                        $('.user-praise-list').html(that.noInfModel(response.data));
+                        $('.user-praise-list').html(that.noInfoModel(response.data));
                         $('.user-praise-list').append(that.praiseTemplate(response.data));
                         that.praiseMsg.set('number', 2);   //设置下次加载的number （滚动ajax加载）
-                        that.minusNumber(response);       //减去小红点中的数字                  
+                        that.minusNumber(response);       //减去小红点 & tab 中的数字                  
                     }
                     else{
                         console.log(response);
@@ -622,7 +629,10 @@ $(function(){
                 }
             });
 
-            that.praiseAjax.bScroll = true;   //许可Ajax加载
+            that.checkAjax.bScroll = false;   //许可Ajax加载
+            that.informAjax.bScroll = false;
+            that.attentionAjax.bScroll = false;
+            that.praiseAjax.bScroll = true; 
             $('.content-page').scroll(function () {
                 if($('#praise:has(.active)')) {
                     that.praiseAjax();
@@ -675,10 +685,10 @@ $(function(){
                     url: "/api/home/callmsg",
                     success: function (model, response) {
                         if (response.code==0){
-                            $('.user-check-list').append(that.checkTemplate(response.data));
-                            that.minusNumber(response);       //减去小红点中的数字
+                            $('.user-inform-list').append(that.informTemplate(response.data));
+                            that.minusNumber(response);       //减去小红点& tab中的数字
                             if (!response.data.isHave) {
-                                $('.user-check-list').append("<p class='no-news'>无更多内容</p>");
+                                $('.user-inform-list').append("<p class='no-news'>无更多内容</p>");
                             } else {
                                 that.informMsg.set("number", ++nNum);
                                 that.informAjax.bScroll = true;     //许可Ajax加载
@@ -707,7 +717,7 @@ $(function(){
                     success: function (model, response) {
                         if (response.code==0){
                             $('.user-attention-list').append(that.attentionTemplate(response.data));
-                            that.minusNumber(response);       //减去小红点中的数字
+                            that.minusNumber(response);       //减去小红点&tab 中的数字
                             if (!response.data.isHave) {
                                 $('.user-attention-list').append("<p class='no-news'>无更多内容</p>");
                             } else {
@@ -738,7 +748,7 @@ $(function(){
                     success: function (model, response) {
                         if (response.code==0){
                             $('.user-praise-list').append(that.praiseTemplate(response.data));
-                            that.minusNumber(response);       //减去小红点中的数字
+                            that.minusNumber(response);       //减去小红点&tab中的数字
                             if (!response.data.isHave) {
                                 $('.user-praise-list').append("<p class='no-news'>无更多内容</p>");
                             } else {
@@ -756,60 +766,114 @@ $(function(){
 
         //每次Ajax后从红点数字中减去checked为0的个数
         minusNumber: function(response) {
+            var that = this;
             var nCount = 0;
-            var nCountResult = 0;
-            var nMsg = response.data.msg;
-            var nCurrentCount = $('.red-point-count:first').text();
-            if(nMsg.length > 0) {
-                for(var i = 0; i < nMsg.length; i++) {
-                    if (nMsg[i]['checked'] == 0) {
-                        nCount ++;
+            var nPointResult = 0;
+            var nTabResult = 0;
+            var aMsg = response.data.msg;
+            var nPointCount = $('.red-point-count:first').data('number');
+            var nTabCount = $('.message-tab.active').children('a').data('number');
+            if(aMsg.length > 0) {
+                //判断是不是  “通知”
+                if(aMsg[0].checked) {
+                    for(var i = 0; i < aMsg.length; i++) {
+                        if (aMsg[i].checked == (1||2)) {
+                            nCount ++;
+                        }
+                    }
+                //“关注”和“赞”
+                } else {
+                    for(var i = 0; i < aMsg.length; i++) {
+                        if (aMsg[i].remind == 0) {
+                            nCount ++;
+                        }
                     }
                 }
+                
             }
-            nCountResult = nCurrentCount - nCount;          
-            if(nCountResult == 0) {
-                $('.red-point-count').hide();
-            } else {
-                $('.red-point-count').text(nCountResult);
-            }
+            nPointResult = nPointCount - nCount;
+            nTabResult = nTabCount - nCount;
+            $('.red-point-count').data('number', nPointResult);
+            $('.message-tab.active').children('a').data('number', nTabResult);
+            that.showNum();
         },
 
-        redPointAjax: function() {
+        //每次审核部分“通过” 或者 “筛除”后红点和tab括号内数字 减1
+        checkMinusOne: function() {
+            var that = this;
+            var nPointResult = $('.red-point-count:first').data('number') - 1;
+            var nTabResult = $('#check-btn>a').data('number') - 1;
+
+            $('.red-point-count').data('number', nPointResult);
+            $('#check-btn>a').data('number', nTabResult);
+
+            that.showNum();
+        },
+
+        //Ajax请求msgcount的数目并装在data-number里
+        msgCountAjax: function() {
+            var that = this;
             $.ajax({
                 url: '/api/home/msgcount',
                 type: 'get',
                 success: function (response) {
-                    var count = response.data.count;
-                    var checkmsg = response.data.checkmsg;
-                    var callmsg = response.data.callmsg;
-                    var remindmsg = response.data.reminding;                
-                    var praisemsg = response.data.praisemsg;
-                    if(count > 0) {
-                        var count = response.data.count;
-                        $('.red-point-count').text(count).show();
-                        if(checkmsg > 0) {
-                            $('#check-btn>a').text('审核('+ checkmsg +')');
-                        }
-                        if(callmsg > 0) {
-                            $('#inform-btn>a').text('通知('+ callmsg +')');
-                        }
-                        if(remindmsg > 0) {
-                            $('#attention-btn>a').text('关注('+ remindmsg +')');
-                        }
-                        if(praisemsg > 0) {
-                            $('#praise-btn>a').text('赞('+ praisemsg +')');
-                        }
-                    }
-                    else {
-                         $('.red-point-count').hide();
-                    }
+                    var nCount = response.data.count;
+                    var nCheckMsg = response.data.checkmsg;
+                    var nCallMsg = response.data.callmsg;
+                    var nRemindMsg = response.data.remindmsg;                
+                    var nPraiseMsg = response.data.praisemsg;
+
+                    $('.red-point-count').data('number', nCount);
+                    $('#check-btn>a').data('number', nCheckMsg);
+                    $('#inform-btn>a').data('number', nCallMsg);
+                    $('#attention-btn>a').data('number', nRemindMsg);
+                    $('#praise-btn>a').data('number', nPraiseMsg);
+
+                    that.showNum();
                 }              
             });
         },
 
+        //控制红点 tab 数字的显示方式
+        showNum: function() {
+            var nCount = $('.red-point-count:first').data('number');
+            var nCheckMsg = $('#check-btn>a').data('number');
+            var nCallMsg = $('#inform-btn>a').data('number');
+            var nRemindMsg = $('#attention-btn>a').data('number');
+            var nPraiseMsg = $('#praise-btn>a').data('number');
+
+            if(nCount > 99) {
+                $('.red-point-count').text('99+');   //数字大于0，显示99+
+            } else if(nCount <= 0) {
+                $('.red-point-count').hide();        //数字等于0，红点消失
+            } else {
+                $('.red-point-count').text(nCount).show();  //数字大于0且小于100，显示红点数字
+            }
+            if(nCheckMsg>0) {
+                $('#check-btn>a').text('审核(' + nCheckMsg +')');
+            } else {
+                $('#check-btn>a').text('审核');
+            }
+            if(nCallMsg>0) {
+                $('#inform-btn>a').text('通知(' + nCallMsg +')');
+            } else {
+                $('#inform-btn>a').text('通知');
+            }
+            if(nRemindMsg>0) {
+                $('#attention-btn>a').text('关注(' + nRemindMsg +')');
+            } else {
+                $('#attention-btn>a').text('关注');
+            }
+            if(nPraiseMsg>0) {
+                $('#praise-btn>a').text('赞(' + nPraiseMsg +')');
+            } else {
+                $('#praise-btn>a').text('赞');
+            }
+        },
+
         //为每个新加载的审核元素绑定事件
         checkFun: function() {
+            var that = this;
             var lock = {
                 pass:false,
                 edit:false,
@@ -848,7 +912,7 @@ $(function(){
                                 $('#result-dialog').modal('hide');
                             },2000);
                             $('.post-item[data-id='+ bookmarkId +']').remove();
-
+                            that.checkMinusOne();            //小红点减去1 && check tab标签减去1
                             lock.pass = false;
                         } else {
                             $('#pass-confirm-box').modal('hide');
@@ -900,7 +964,7 @@ $(function(){
                                 $('#result-dialog').modal('hide');
                             },2000);
                             $('.post-item[data-id='+ bookmarkId +']').remove();
-
+                            that.checkMinusOne();            //小红点减去1 && check tab标签减去1
                             lock.edit = false;
                         } else {
                             $('#pass-edit-box').modal('hide');
@@ -951,6 +1015,7 @@ $(function(){
                                 $('#result-dialog-fail').modal('hide');
                             },2000);
                             $('.post-item[data-id='+ bookmarkId +']').remove();
+                            that.checkMinusOne();            //小红点减去1 && check tab标签减去1
                             lock.delete = false;
                         } else {
                             $('#delete-confirm-box').modal('hide');

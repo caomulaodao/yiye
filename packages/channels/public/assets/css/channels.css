@@ -283,18 +283,19 @@ button:focus {outline:0;}
 #subscribe-btn {
     height: 38px;
     margin-top: 0;
-    border: 1px solid #40c192;
+    border: 1px solid #999;
     padding: 0 20px;
     font-size: 1.6em;
-    background-color: #40c192;
-    color: #fff;
+    background-color: rgba(0, 0, 0, 0);
+    color: #999;
     border-radius: 19px;
     -webkit-transition: all 0.3s ease;
     transition: all 0.3s ease;
 }
-#subscribe-btn.active{
-    background-color: #eb002a;
-    border: 1px solid #eb002a;
+#subscribe-btn:hover {
+    background-color: #E06A6A;
+    border: 1px solid #E06A6A;
+    color: #fff;
     -webkit-transition: all 0.1s ease;
     transition: all 0.1s ease;
 }

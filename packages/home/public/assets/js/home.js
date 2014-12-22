@@ -32,40 +32,31 @@ function initialize() {
         }
     });
 
-    var redPointAjax = function() {
+    function redPointAjax() {
         $.ajax({
             url: '/api/home/msgcount',
             type: 'get',
             success: function (response) {
-                var count = response.data.count;
-                var checkmsg = response.data.checkmsg;
-                var callmsg = response.data.callmsg;
-                var remindmsg = response.data.reminding;                
-                var praisemsg = response.data.praisemsg;
-                if(count > 0) {
-                    var count = response.data.count;
-                    $('.red-point-count').text(count).show();
-                    if(checkmsg > 0) {
-                        $('#check-btn>a').text('审核('+ checkmsg +')');
-                    }
-                    if(callmsg > 0) {
-                        $('#inform-btn>a').text('通知('+ callmsg +')');
-                    }
-                    if(remindmsg > 0) {
-                        $('#attention-btn>a').text('关注('+ remindmsg +')');
-                    }
-                    if(praisemsg > 0) {
-                        $('#praise-btn>a').text('赞('+ praisemsg +')');
-                    }
-                }
-                else {
-                     $('.red-point-count').hide();
-                }
+                var nCount = response.data.count;
+                $('.red-point-count').data('number', nCount);
+                showPointNum();
             }              
         });
     };
 
-    setInterval(redPointAjax(), 300000);
+    //控制红点 tab 数字的显示方式
+    function showPointNum() {
+        var nCount = $('.red-point-count:first').data('number');
+        if(nCount > 99) {
+            $('.red-point-count').text('99+');   //数字大于0，显示99+
+        } else if(nCount <= 0) {
+            $('.red-point-count').hide();        //数字等于0，红点消失
+        } else {
+            $('.red-point-count').text(nCount).show();  //数字大于0且小于100，显示红点数字
+        }
+    }
+    redPointAjax();
+
 }
 
 
