@@ -920,6 +920,8 @@ p.add-true{
     height: 30px;
     margin-left: 50%;
     transform:translateX(-100px);
+    -webkit-transform: translateX(-100px);
+    -ms-transform: teanslateX(-100px);
 }
 
 /* date divide */
@@ -1902,6 +1904,8 @@ a.ex-creator {float: right;}
     width: 50px;
     z-index: 300;
     transform:translateY(150px);
+    -webkit-transform: translateY(150px);
+    -ms-transform: teanslateY(150px);
 }
 .loading .spinner {
   width: 50px;
