@@ -49,7 +49,7 @@ exports.render = function(req, res,Package) {
                     if(err) {consoe.log(err);return res.sendError()}
                         res.send(html);
                     }
-                )
+                );
             }
         })
 

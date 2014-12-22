@@ -1,3 +1,13 @@
-#starter-template{
-    padding-top:50px;
+.starter-template{
+    padding-top:70px;
+}
+.user-title{
+    font-size: 24px;
+    font-weight: bolder;
+}
+.user-table{
+    margin-top: 40px;
+}
+.table.user-table > thead > tr > th{
+    border-bottom: 1px solid #ccc;
 }

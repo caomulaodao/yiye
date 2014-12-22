@@ -404,9 +404,10 @@ exports.hate = function(req,res){
 
 //获取某天的书签
 exports.oneDay = function(req,res){
-    var channelId = req.params['channelId'];
+    var channelId = req.query['channelId'];
     if(!verify.idVerify(channelId)){return res.sendResult('参数格式错误',2001,null)}
-    var day = req.body['day'];
+    var day = req.query['date'];
+    if (!day) {day=""}
     if (!verify.isString(day)) {return res.sendResult('参数类型错误',2000,null)}
     var limit=20;
     //如果没有获取到天数，则默认为最接近的一天  修改bug1(增加频道不存在书签的情况)
@@ -464,7 +465,7 @@ exports.oneDay = function(req,res){
                 var nextDay =  moment(doc[0]['postTime']).startOf('day').toDate();
             }
             var dayResult = {};
-            dayResult.day = day;
+            dayResult.date = day;
             dayResult.nextDay = nextDay;
             Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]},postTime:{$gte:startDay,$lt:endDay}}).sort({postTime:-1}).exec(function(err,list){
                 if(err) {console.log(err);return res.sendError()}
