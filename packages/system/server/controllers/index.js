@@ -22,7 +22,7 @@ exports.render = function(req, res,Package) {
     if (req.user){return res.redirect('/home')}//如果用户已登录 则跳转到home界面
     async.parallel([
         function(cb){
-        User.count({},function(err,user_number){cb(err,user_number)});
+            User.count({},function(err,user_number){cb(err,user_number)});
         },
         function(cb){
             Channels.count({},function(err,channel_number){cb(err,channel_number)});
@@ -33,8 +33,7 @@ exports.render = function(req, res,Package) {
             if(err){
                 console.log(err);
                 res.sendError();
-            }
-            else{
+            }else{
                 var user_number=result[0];
                 var channel_number=result[1];
                 var label_number=result[2];
@@ -43,7 +42,7 @@ exports.render = function(req, res,Package) {
                     if(err) {consoe.log(err);return res.sendError()}
                         res.send(html);
                     }
-                )
+                );
             }
         })
 
