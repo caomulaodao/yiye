@@ -27,13 +27,15 @@ exports.initHome = function(req,res,Home){
             adm: function(callback1){
                 //userId:req.user._id,type:{$in:['creator','admin']}
                 Channel2User.find({userId:req.user._id,type:{$in:['creator','admin']}},'channelId name logo type lastTime news',function(err,admChannels){
-                    if(err) return console.log(err);
+                    if(err) {console.log(err);return res.error();}
                     async.map(admChannels,function(item,callback2){
                         Bookmarks.count({channelId:item.channelId,checked:{$in:[1,3,5]},postTime:{$gte:item.lastTime}},function(err,count){
+                            if (err) {console.log(err);return res.error();}
                             item['news'] = count;
                             callback2(null,item);
                         });
                     },function(err,results){
+                        if (err) {console.log(err);return res.error();}
                         results.sort(function(a,b){
                             return a.news < b.news ? 1 : -1;
                         });
@@ -43,13 +45,15 @@ exports.initHome = function(req,res,Home){
             },
             sub: function(callback1){
                 Channel2User.find({userId:req.user._id,type:'follower'},'channelId name logo type lastTime news',function(err,subChannels){
-                    if(err) return console.log(err);
+                    if(err) {console.log(err);return res.error();}
                     async.map(subChannels,function(item,callback2){
                         Bookmarks.count({channelId:item.channelId,checked:{$in:[1,3,5]},postTime:{$gte:item.lastTime}},function(err,count){
+                            if (err) {console.log(err);return res.error();}
                             item['news'] = count;
                             callback2(null,item);
                         });
                     },function(err,results){
+                        if (err) {console.log(err);return res.error();}
                         results.sort(function(a,b){
                             return a.news < b.news ? 1 : -1;
                         });
@@ -59,21 +63,23 @@ exports.initHome = function(req,res,Home){
             },
             creatNum: function(callback){
                 Channel2User.count({userId:req.user._id,type:'creator'},function(err,count){
+                    if (err) {console.log(err);return res.error();}
                     callback(null,count)
                 });
             },
             news: function(callback){
                 Bookmarks.count({"postUser.userId" : req.user._id,checked:{$in:[1,2]}},function(err,news){
-                    if(err) console.log(err);
+                    if(err) {console.log(err);return res.error();}
                     callback(null,news);
                 });
             }
         },
         function(err, results) {
             //渲染home页面
+            if (err) {console.log(err);return res.error();}
             Home.render('index', {admChannelList:results.adm,subChannelList:results.sub,creatNum:results.creatNum,user:results.user,news:results.news}, function (err, html) {
                 //Rendering a view from the Package server/views
-                if(err) return console.log(err);
+                if(err) {console.log(err);return res.sendError();}
                 res.send(html);
             });
         });
@@ -87,7 +93,7 @@ exports.addAdmChannel = function(){
 //新建一个频道
 exports.createChannel = function(req,res){
     if(!req.user) return res.sendResult('请先登录或注册',1000,null);
-    var allCount = 5;console.log(req.user.avatar);
+    var allCount = 5;
     var nameLength=20,descriptionLength=100;
     if (!req.body.name) return res.sendResult('频道名称不能为空',2001,null);
     if (!req.body.logo) return res.sendResult('logo不能为空',2002,null);
@@ -129,7 +135,7 @@ exports.createChannel = function(req,res){
         function(isCreate,callback){
             if(isCreate){
                 channels.save(function(err,doc){
-                    if(err) {console.log(err);return res.sendResult('服务器内部问题',5000,null)}
+                    if(err) {console.log(err);return res.sendError();}
                     var admChannel = new Channel2User({
                         userId:req.user._id,
                         userLogo:req.user.avatar, 
@@ -142,9 +148,9 @@ exports.createChannel = function(req,res){
                     });
                     var channelId = doc._id;
                     admChannel.save(function(err){
-                        if(err) {console.log(err);return res.sendResult('服务器内部问题',5000,null)}
+                        if(err) {console.log(err);return res.sendError();}
                         User.update({_id:req.user._id},{$inc:{createNum:1}},function(err,num){
-                            if(err) {console.log(err);return res.sendResult('服务器内部问题',5000,null)}
+                            if(err) {console.log(err);return res.sendError()}
                             callback(null,isCreate,channelId);
                         });
                     });
@@ -166,14 +172,15 @@ exports.createChannel = function(req,res){
 exports.getChannelsList = function(req,res){
     if(!req.user) return res.sendResult('请先登录或注册',1000,null);
     Channel2User.find({userId:req.user._id},'channelId name logo type lastTime news',function(err,channels){
-        if(err){console.log(err);return res.sendResult('服务器内部问题',5000,null)}
+        if(err){console.log(err);return res.sendError()}
         async.map(channels,function(item,callback){
             Bookmarks.count({channelId:item.channelId,postTime:{$gte:item.lastTime}},function(err,count){
+                if (err) {console.log(err);return res.sendError();}
                 item['news'] = count;
                 callback(null,item);
             });
         },function(err,results){
-            if(err){console.log(err);return res.sendResult('服务器内部问题',5000,null)}
+            if(err){console.log(err);return res.sendError();}
             results.sort(function(a,b){
                 return a.news < b.news ? 1 : -1;
             });
@@ -186,7 +193,7 @@ exports.getChannelsList = function(req,res){
 exports.check = function(req,res,Home){
     Home.render('check', {}, function (err, html) {
         //Rendering a view from the Package server/views
-        if(err) return console.log(err);
+        if(err) {console.log(err);return res.sendError();}
         res.send(html);
     });
 }
@@ -197,7 +204,7 @@ exports.newsViewed = function(req,res){
     var bookmarkId = req.body.bookmarkId;
     if (!Myverify.idVerify(bookmarkId)) return res.sendResult('请求参数错误',2000,null);//id验证
     Bookmarks.update({_id:bookmarkId},{$inc:{checked:2}},function(err,num){
-        if(err) {console.log(err);return res.sendResult('服务器内部错误',5000,null)}
+        if(err) {console.log(err);return res.sendError();}
         res.sendResult('此信息已经加入历史记录。',0,null);
     });
 }
@@ -235,7 +242,7 @@ exports.discover = function(req,res){
             //获取最后一个频道
             function(results,callback){
                 Channels.find().sort({subNum:1,time:1}).limit(1).exec(function(err,doc){
-                    if (err) { console.log(err);return res.sendResult('服务器内部错误',5000,null)}
+                    if (err) { console.log(err);return res.sendError();}
                     if(doc.length===0) {callback(null,results,[]);}
                     else{
                         callback(null,results,doc[0]);
@@ -245,7 +252,7 @@ exports.discover = function(req,res){
             //是否关注
             function(results,doc,callback){
                 Channel2User.find({userId:req.user._id},function(err,channel2user){
-                    if (err) {console.log(err);return res.sendResult('服务器内部错误',5000,null)}
+                    if (err) {console.log(err);return res.sendError();}
                     var channel2userId=[];
                     channel2user.forEach(function(item){
                         channel2userId.push(item.channelId+'');
@@ -254,7 +261,7 @@ exports.discover = function(req,res){
                 })
             }],
             function(err, results,doc,channel2userId) {
-                if (err) {console.log(err);return res.sendResult('服务器内部错误',5000,null)}
+                if (err) {console.log(err);return res.sendError();}
                 var isHave=true;
                 var  results = JSON.parse(JSON.stringify(results));
                 results.forEach(function(item,index,array){
@@ -290,23 +297,24 @@ exports.ajaxBookmarks = function(req,res){
         list: function(callback){
             //获取对应频道的书签
              Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]},postTime:{$lt:date}}).sort({postTime:-1}).limit(limit).exec(function (err, doc) {
-                if(err) console.log(err);
+                if(err) {console.log(err);return res.sendError();}
                 if(doc.length === 0) return callback(null,[]);
                 var targetTime = doc[doc.length -1]['postTime'];//取出来的最后一天的时间
                 var startDay = moment(doc[doc.length -1]['postTime']).startOf('day').toDate();
                 Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]},postTime:{$gte:startDay,$lt:date}}).sort({postTime:-1}).exec(function(err,list){
-                    if(err) console.log(err);
+                    if(err) {console.log(err);return res.sendError();}
                     callback(null,list);
                 });
             })
         },
         endbookmarkId: function(callback){
             Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]}}).limit(1).sort({postTime:1}).exec(function(err,doc){
-                if(err) return console.log(err);
+                if(err) {console.log(err);return res.sendError();}
                 callback(null,doc)
             })
         }
     },function(err,results){
+        if (err) {console.log(err);return res.sendError();}
         results.isHave=true;//下次是否还进行ajax请求
         results.nextTime=null;//请求加载的书签的时间
         if(results.endbookmarkId.lenght===0) results.isHave=false;
@@ -320,7 +328,7 @@ exports.ajaxBookmarks = function(req,res){
         results.list=tool.listToArray(results.list);
         //更新频道最后访问时间并返回数据
         Channel2User.update({channelId:channelId,userId:req.user._id},{lastTime:Date.now()},function(err){
-            if(err) {console.log(err);return res.sendResult('服务器内部问题',5000,null);}
+            if(err) {console.log(err);return res.sendError();}
             res.sendResult('加载成功',0,results);
         });
     });
@@ -335,11 +343,13 @@ exports.newNews = function(req,res){
     async.waterfall([
         function(callback){
             Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[1,2]}}).sort({postTime:1}).limit(1)
-            .exec(function(err,doc){if(err){console.log(err);return res.sendResult('服务器内部错误',5000,null)}callback(err,doc)});
+            .exec(function(err,doc){
+                if(err){console.log(err);return res.sendError();}
+                callback(err,doc)});
         },
         function(doc,callback){
             Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[1,2]}}).sort({postTime:-1}).skip((number-1)*limit).limit(limit).exec(function(err,list){
-                if (err) {console.log(err);return res.sendResult('服务器内部错误',5000,null)}
+                if (err) {console.log(err);return res.sendError();}
                 var isHave=true;
                 if(list.length==0) {isHave=false;}
                 else{
@@ -351,7 +361,7 @@ exports.newNews = function(req,res){
             })
         }],
         function(err,list,isHave){
-            if(err){console.log(err);return res.sendResult('服务器内部错误',5000,null)}
+            if(err){console.log(err);return res.sendError();}
             res.sendResult('返回成功',0,{news:list,isHave:isHave});
         }
     )
@@ -365,7 +375,9 @@ exports.history = function(req,res){
     async.waterfall([
         function(callback){
             Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[3,4]}}).sort({postTime:1}).limit(1)
-            .exec(function(err,doc){if(err){console.log(err);return res.sendResult('服务器内部错误',5000,null)}callback(err,doc)});
+            .exec(function(err,doc){
+                if(err){console.log(err);return res.sendError();}
+                callback(err,doc)});
         },
         function(doc,callback){
             Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[3,4]}}).sort({postTime:-1}).skip((number-1)*limit).limit(limit).exec(function(err,list){
@@ -381,7 +393,7 @@ exports.history = function(req,res){
             })
         }],
         function(err,list,isHave){
-            if(err){console.log(err);return res.sendResult('服务器内部错误',5000,null)}
+            if(err){console.log(err);return res.sendError();}
             res.sendResult('返回成功',0,{hismes:list,isHave:isHave});
         }
     )

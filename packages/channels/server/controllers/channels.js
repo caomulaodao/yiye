@@ -20,17 +20,18 @@ var mongoose = require('mongoose'),
 
 exports.renderMain = function(req,res,Package){
     var channelId = req.params['channelId'];
-    if(!verify.idVerify(channelId)) {return res.sendResult('参数格式错误',2001,null)}
+    if(!verify.idVerify(channelId)) {return res.redirect('/error');}
     //每页显示的数量
     var limit=10;
     var p=req.query.p||1;
+    if(!verify.isNumber(p)){return res.redirect('/error');}    
     async.waterfall([
         function(callback){
             var type = 'not';
             //判断访问者是否登录
             if(req.user){
                 Channel2User.findOne({channelId: channelId,userId:req.user._id}, function (err, doc) {
-                    if(err){console.log(err);return res.sendError()}
+                    if(err){console.log(err);return res.redirect('/error');}
                     if (doc) {
                         if (doc.type == 'admin' || doc.type == 'creator') {
                             type = 'admin';
@@ -47,14 +48,14 @@ exports.renderMain = function(req,res,Package){
         //对应的频道
         function (type,callback) {
             Channels.findOne({_id: channelId}, function (err, channel) {
-                if(err){console.log(err);return res.sendError();}
+                if(err){console.log(err);return res.redirect('/error');}
                 callback(null,type,channel);
             });
         },
         //书签总数
         function(type,channel,callback){
             Bookmarks.count({channelId:channelId,checked:{$in:[1,3,5]}},function(err,count){
-                if (err) {console.log(err);return res.sendError()}
+                if (err) {console.log(err);return res.redirect('/error')}
                 var pageLength=Math.ceil(count/limit);
                 callback(null,type,channel,pageLength);
             })
@@ -68,12 +69,13 @@ exports.renderMain = function(req,res,Package){
             //防止超过下限
             if (minPage<1){minPage=1;}
             Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]}}).sort({postTime:-1}).skip((minPage-1)*limit).limit(limit).exec(function (err, doc) {
-                if(err) {console.log(err);return res.sendError()}
+                if(err) {console.log(err);return res.redirect('/error')}
                 if(doc.length === 0) return callback(null,type,channel,pageLength,[]);
                 callback(null,type,channel,pageLength,listToArray(doc));
             });
         }],
         function(err,type,channel,pageLength,list){
+            if(err) {console.log(err);return res.redirect('/error');}
             if(!channel) return res.redirect('/');
             var channel = channel;
             var list = list;
@@ -85,7 +87,7 @@ exports.renderMain = function(req,res,Package){
                 page:page,
                 user:req.user
             }, function(err, html) {
-                if(err) {console.log(err);return res.sendError()}
+                if(err) {console.log(err);return res.sendError();}
                 res.send(html);
             });
         });
@@ -155,9 +157,9 @@ exports.sub = function(req,res){
 //展示订阅用户
 exports.renderFollower = function(req,res,Package){
     var channelId = req.params['channelId'];
-    if(!verify.idVerify(channelId)) {return res.sendResult('参数格式错误',2001,null)}
+    if(!verify.idVerify(channelId)) {return res.error()}
     var p=req.query.p||1;
-    if(!verify.isNumber(p)) {return res.sendResult('参数类型错误',2000,null)}
+    if(!verify.isNumber(p)) {return res.error()}
     p=+p;
     var limit=12;
     var min_page;
@@ -166,7 +168,7 @@ exports.renderFollower = function(req,res,Package){
                 var type = 'not';
                 if(req.user){
                     Channel2User.findOne({channelId: channelId,userId:req.user._id}, function (err, doc) {
-                        if (err) {console.log(err);res.sendError()}
+                        if (err) {console.log(err);res.error()}
                         if (doc) {
                             if (doc.type == 'admin' || doc.type == 'creator') {
                                 type = 'admin';
@@ -182,7 +184,7 @@ exports.renderFollower = function(req,res,Package){
             },
             channel:function (callback) {
                 Channels.findOne({_id: channelId}, function (err, channel) {
-                    if (err){console.log(err);res.sendError()}
+                    if (err){console.log(err);res.error()}
                     callback(null,channel);
                 });
             },
@@ -191,6 +193,7 @@ exports.renderFollower = function(req,res,Package){
                         function(callback){
                             //创建者ID
                             Channel2User.findOne({channelId: channelId,type:'creator'},function(err,creator){
+                                if (err) {console.log(err);return res.error();}
                                 var creatorId = creator['userId'];
                                 callback(null,creatorId);
                             });
@@ -198,6 +201,7 @@ exports.renderFollower = function(req,res,Package){
                         //管理员ID
                         function(creatorId,callback){
                             Channel2User.find({channelId: channelId,type:'admin'},function(err,admins){
+                                if (err) {console.log(err);res.error();}
                                 var adminsId = admins.map(function(item){
                                     return item['userId'];
                                 });
@@ -208,7 +212,7 @@ exports.renderFollower = function(req,res,Package){
                             //关注者数量（不包含创建者和管理员）
                             var creator=1;
                             var count = Channel2User.count({channelId:channelId,type:'follower'},function(err,count){
-                                if (err){console.log(err);return res.sendError();}
+                                if (err){console.log(err);return res.error();}
                                 var pageLength=Math.ceil((count+creator+adminsId.length)/limit);
                                 callback(null,creatorId,adminsId,pageLength);
                             });             
@@ -226,7 +230,7 @@ exports.renderFollower = function(req,res,Package){
                             if(minPage===1){followerNum=limit-creator-adminsId.length;skipnumber=0}
                             else{followerNum=limit;skipnumber=limit*(minPage-1)-creator-adminsId.length}
                             Channel2User.find({channelId: channelId,type:'follower'}).sort({followerTime:-1}).skip(skipnumber).limit(followerNum).exec(function (err, followers) {
-                                
+                                if (err) {console.log(err);return res.error();}
                                 var followersId = followers.map(function(item){
                                     return item['userId'];
                                 });
@@ -234,23 +238,23 @@ exports.renderFollower = function(req,res,Package){
                             });
                         }
                     ],function(err,creatorId,adminsId,pageLength,followersId){
-                        if(err) {console.log(err);return res.sendError()}
+                        if(err) {console.log(err);return res.error();}
                         async.parallel({
                                 creator: function(callback){
                                     User.findOne({_id:creatorId},function(err,creator){
-                                        if(err) {console.log(err);return res.sendError()}
+                                        if(err) {console.log(err);return res.error()}
                                         callback(null,creator);
                                     });
                                 },
                                 admins: function(callback){
                                     User.find({_id:{$in:adminsId}},function(err,admins){
-                                        if(err) {console.log(err);return res.sendError()}
+                                        if(err) {console.log(err);return res.error()}
                                         callback(null,admins);
                                     });
                                 },
                                  followers: function(callback){
                                      User.find({_id:{$in:followersId}}).sort({postNum:-1}).exec(function(err,followers){
-                                         if(err) {console.log(err);return res.sendError()}
+                                         if(err) {console.log(err);return res.error()}
                                          callback(null,followers);
                                      });
                                  },
@@ -259,14 +263,14 @@ exports.renderFollower = function(req,res,Package){
                                  }
                         },
                         function(err, results) {
-                            if(err) {console.log(err);return res.sendError()}
+                            if(err) {console.log(err);return res.error()}
                             callback(null,results);
                         });
                     });
             }
         },
         function(err,results){
-            if(err) {console.log(err);return res.sendError()}
+            if(err) {console.log(err);return res.error()}
             if(!results.channel) return res.redirect('/');
             var channel = results.channel;
             channel.userType = results.userType;
@@ -288,17 +292,17 @@ exports.renderFollower = function(req,res,Package){
 //展示未审核内容
 exports.renderCheck = function(req,res,Package){
     var channelId = req.params['channelId'];
-    if(!Myverify.idVerify(channelId)) {return res.sendResult('参数格式错误',2001,null)}
+    if(!Myverify.idVerify(channelId)) {return res.error();}
     var limit=6;
     var p=req.query.p||1;
-    if(!Myverify.isNumber(p)) {return res.sendResult('参数类型错误',2000,null)}
+    if(!Myverify.isNumber(p)) {return res.error();}
     p=+p;
     async.waterfall([
             function(callback){
                 var type = 'not';
                 if(req.user){
                     Channel2User.findOne({channelId: channelId,userId:req.user._id}, function (err, doc) {
-                        if (err) {console.log(err);return res.sendError();}
+                        if (err) {console.log(err);return res.error();}
                         if (doc) {
                             if (doc.type == 'admin' || doc.type == 'creator') {
                                 type = 'admin';
@@ -314,13 +318,13 @@ exports.renderCheck = function(req,res,Package){
             },
             function (type,callback) {
                 Channels.findOne({_id: channelId}, function (err, channel) {
-                    if (err) {console.log(err);return res.sendError();}
+                    if (err) {console.log(err);return res.error();}
                     callback(null,type,channel);
                 });
             },
             function(type,channel,callback){
                 Bookmarks.count({channelId:channelId,checked:0},function(err,count){
-                    if (err) {console.log(err);res.sendError()}
+                    if (err) {console.log(err);res.error()}
                     callback(null,type,channel,count);
                 })
             },
@@ -333,12 +337,13 @@ exports.renderCheck = function(req,res,Package){
                 //防止超过下限
                 if (minPage<1){minPage=1;}           
                 Bookmarks.find({channelId:channelId,checked:0}).sort({postTime:-1}).skip(limit*(minPage-1)).limit(limit).exec(function (err, doc) {
-                    if(err) {console.log(err);res.sendError()}
+                    if(err) {console.log(err);res.error()}
                     if(doc.length === 0) return callback(null,type,channel,pageLength,[]);
                     callback(null,type,channel,pageLength,doc);
                 });
             }],
         function(err,type,channel,pageLength,doc){
+            if (err) {console.log(err);return res.error();}
             if(!channel) return res.redirect('/');
             var channel = channel;
             var list = doc;

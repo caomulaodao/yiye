@@ -22,17 +22,23 @@ exports.render = function(req, res,Package) {
     if (req.user){return res.redirect('/home')}//如果用户已登录 则跳转到home界面
     async.parallel([
         function(cb){
-        User.count({},function(err,user_number){cb(err,user_number)});
+        User.count({},function(err,user_number){
+            if (err) {console.log(err);return res.error();}
+            cb(err,user_number)});
         },
         function(cb){
-            Channels.count({},function(err,channel_number){cb(err,channel_number)});
+            Channels.count({},function(err,channel_number){if(err){console.log(err);return res.error();}
+                cb(err,channel_number);
+            });
         },
         function(cb){
-            Bookmarks.count({checked:{$in:[1,3,5]}},function(err,label_number){cb(err,label_number)});
+            Bookmarks.count({checked:{$in:[1,3,5]}},function(err,label_number){
+                if (err) {console.log(err);return res.error();}
+                cb(err,label_number)});
         }],function(err,result){
             if(err){
                 console.log(err);
-                res.sendError();
+                return res.error();
             }
             else{
                 var user_number=result[0];
@@ -59,7 +65,7 @@ exports.bugs = function(req,res){
   }
   bug.save(function(err){
         if(err){
-            return res.sendResult("提交错误",err,null);
+            return res.sendResult("提交错误",3000,null);
         }
   },function(){
     return res.sendResult("提交成功","0",null);
@@ -73,7 +79,7 @@ exports.explore = function(req, res,Package){
     if (!myVerify.isNumber(p)){p=1;}//判断参数是否合法
     async.waterfall([function(cb){
         Channels.count({},function(err,count){
-            if (err){console.log(err);return sendError()}
+            if (err){console.log(err);return res.error()}
             cb(err,count);
         })
     },
@@ -87,7 +93,7 @@ exports.explore = function(req, res,Package){
         //防止超过下限
         if (minPage<1){minPage=1;}
         Channels.find().sort({subNum:-1,bmkNum:-1}).skip(limit*(minPage-1)).limit(limit).exec(function (err, channels) {
-            if(err) {console.log(err);return res.sendError()}
+            if(err) {console.log(err);return res.error()}
             callback(err,channels,page);
         });
     },
@@ -95,7 +101,7 @@ exports.explore = function(req, res,Package){
     function(channels,page,callback){
         if (!req.user) return callback(null,channels,page,[]);
         Channel2User.find({'userId':req.user._id},function(err,channel2user){
-            if (err) {console.log(err);return res.sendError()}
+            if (err) {console.log(err);return res.error()}
             var channel2userId=[];
             channel2user.forEach(function(item){
                 channel2userId.push(item.channelId+'');
@@ -104,12 +110,12 @@ exports.explore = function(req, res,Package){
         })
     }
     ],function(err,channels,page,channel2userId){
-        if (err) {console.log(err);return res.sendError()}
+        if (err) {console.log(err);return res.error()}
         channels.forEach(function(item,index,array){
             if (channel2userId.indexOf(item._id+'')>-1){
                 array[index].isAttention=true;//已经关注
             }
-        });console.log(channels);
+        });
             Package.render('explore', {
                 channels:channels,user:req.user,page:page
             }, function(err, html) {
@@ -128,7 +134,7 @@ exports.query = function(req,res,Package){
     var searchMax=15;
     var search = req.query.q;
     var searchPage=req.query.p||1;
-    if (!myVerify.isNumber(searchPage)) {return res.sendResult('参数类型错误',2000,null)}
+    if (!myVerify.isNumber(searchPage)) {return res.error();}
     searchPage=+searchPage;
     var limit=30;//单页显示数
     if(search.length>=searchMax){
@@ -139,7 +145,7 @@ exports.query = function(req,res,Package){
         //返回频道总数count
         function(cb){
             Channels.count({name:new RegExp(search,'i')},function(err,count){
-                if (err) {console.log(err);return res.sendError()}
+                if (err) {console.log(err);return res.error()}
                 cb(err,count);
             });
         },
@@ -152,15 +158,15 @@ exports.query = function(req,res,Package){
             //防止超过下限
             if (minPage<1){minPage=1;}
             Channels.find({name:new RegExp(search,'i')}).sort({subNum:1}).skip(limit*(minPage-1)).limit(limit).exec(function(err,channels){
+                if (err) {console.log(err);return res.error()}
                 var page=tool.skipPage(minPage,pageLength);
-                if (err) {console.log(err);return res.sendError()}
                 callback(err,page,channels);
             });
         },
         function(page,channels,callback){
             if (!req.user) return callback(null,page,channels,[]);
             Channel2User.find({'userId':req.user._id},function(err,channel2user){
-                if (err) {console.log(err);return res.sendError()}
+                if (err) {console.log(err);return res.error()}
                 var channel2userId=[];
                 channel2user.forEach(function(item){
                     channel2userId.push(item.channelId+'');
@@ -169,7 +175,7 @@ exports.query = function(req,res,Package){
             })
         }],
         function(err,page,channels,channel2userId){
-            if (err) {console.log(err);return res.sendError()}//bug
+            if (err) {console.log(err);return res.error()}//bug
             channels.forEach(function(item,index,array){
                 array[index].isAttention=false;
                 if (channel2userId.indexOf(item._id+'')>-1){
@@ -182,6 +188,7 @@ exports.query = function(req,res,Package){
         });       
     })
 };
+//爬虫
 exports.scraper = function(req,res){
     if (!req.user){return res.sendResult('请先登陆或注册',1000,null);}
     var userUrl = req.body.website;console.log(req.body);
@@ -189,11 +196,10 @@ exports.scraper = function(req,res){
     if (userUrl==null) {return res.sendResult('url地址不能为空',2012,null);}
     if (typeof userUrl!=='string') {return res.sendResult('url地址格式错误',2013,null);}
     var url = tool.safeUrl(userUrl);
-    if (!url) return res.sendResult('url地址格式错误',2013,null);console.log(url);
+    if (!url) return res.sendResult('url地址格式错误',2013,null);
 //开始爬指定url
 
     //请求头部设定
-    console.log(url);
     var options = {
         'url': url,
         'headers': {
@@ -232,6 +238,12 @@ exports.scraper = function(req,res){
     }
     request(options,callback);
 
+}
+exports.error = function(req,res,Package){
+    Package.render('500',{},function(err,result){
+        if (err) {console.log();return res.send('服务器挂了...');}
+        res.send(result);
+    })
 }
 
 
