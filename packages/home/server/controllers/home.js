@@ -619,7 +619,7 @@ exports.msgcount = function(req,res){
             Bookmarks.count({'postUser.userId':req.user._id,checked:{$in:[1,2]}}).exec(function(err,count){
                 if (err) {console.log(err);return res.sendError()}
                 callback(null,count);
-            })           
+            });
         },
         //受理别人提交书签的通知
         checkmsg:function(callback){

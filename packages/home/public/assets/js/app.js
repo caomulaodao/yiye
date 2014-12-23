@@ -64,20 +64,23 @@ $(function(){
     var checkMsg = Backbone.Model.extend({
         defaults: {number: 0}
     });
+
     //通知model
     var informMsg = Backbone.Model.extend({
         defaults: {number: 0}
     });
+
     //关注model
     var attentionMsg = Backbone.Model.extend({
         defaults: {number: 0}
     });
+
     //点赞model
     var praiseMsg = Backbone.Model.extend({
         defaults: {number: 0}
     });
 
-
+    //频道列表
     var channelList = Backbone.Model.extend({
     });
 
@@ -89,6 +92,7 @@ $(function(){
     var newBookmarkModel = Backbone.Model.extend({
 
     });
+
     //提交书签的url
     var addBookmarkModel = Backbone.Model.extend({
         url: "/system/scraper",
@@ -102,6 +106,7 @@ $(function(){
             if (!result) return '请填写正确的地址';
         }
     });
+
     //抓取到的书签信息
     var submitBookmarkModel = Backbone.Model.extend({
         url: "/api/bookmarks/scraper/post",
@@ -121,6 +126,8 @@ $(function(){
 
         }
     });
+
+    //
     var SubmitView = Backbone.View.extend({
             el: $('.submit-view'),
 
@@ -129,7 +136,7 @@ $(function(){
             },       
 
             events:{
-                 "click .put2channel": "put2channel",
+                 "click .put2channel": "put2channel"
             }, 
             put2channel: function(){
                  this.addbookmark();
@@ -804,6 +811,10 @@ $(function(){
             var nPointResult = $('.red-point-count:first').data('number') - 1;
             var nTabResult = $('#check-btn>a').data('number') - 1;
 
+            console.log(nPointResult);
+            console.log(nTabResult);
+
+
             $('.red-point-count').data('number', nPointResult);
             $('#check-btn>a').data('number', nTabResult);
 
@@ -847,6 +858,7 @@ $(function(){
             } else if(nCount <= 0) {
                 $('.red-point-count').hide();        //数字等于0，红点消失
             } else {
+                console.log(nCount);
                 $('.red-point-count').text(nCount).show();  //数字大于0且小于100，显示红点数字
             }
             if(nCheckMsg>0) {
@@ -1355,7 +1367,7 @@ $(function(){
     //实例化
     var App = new AppView;
 
-        //爱屁屁的路由
+    //爱屁屁的路由
     var AppRouter = Backbone.Router.extend({
         routes:{
             'sub' : 'subControl',
@@ -1416,6 +1428,8 @@ $(function(){
 
 
     })
+
+    //实例化路由
     var Router = new AppRouter;
     Backbone.history.start();
 

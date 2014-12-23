@@ -18,7 +18,7 @@
             </a>
             <img src="/home/assets/img/brand_name_green.png" onclick="window.location.assign('/home')">
             <i id="rounded-arrow" class="iconfont">&#x3435</i>
-            <span id="arrow-count"class="red-point-count"style="display:none" data-number='0'></span>
+            <span id="arrow-count" class="red-point-count" style="display:none" data-number='0'></span>
         </div>
         <div id="function-module">
             <ul id="function-module-ul">
@@ -410,8 +410,15 @@
                 <% } %>
             </ul>
             <div class = 'submit-background'></div>
-            <div class = 'input-url'><input type='text' placeholder='请输入你想添加的书签地址' /><button class= 'input-url-button'>提交</button></div>
-            <div class = 'add-bookmark'><p>提交</p><p>书签</p></div>
+            <div class = 'input-url'>
+                <div class="input-group">
+                      <input type="text" class="form-control">
+                      <span class="input-group-btn">
+                        <button class="btn btn-default" type="button">获取书签</button>
+                      </span>
+                </div>
+            </div>
+            <div class = 'add-bookmark'><p>提&nbsp;&nbsp;交</p><p>书&nbsp;&nbsp;签</p></div>
             <div class = 'submit-bookmark'></div>
             <div style="height:100px"></div>
         </div>
@@ -624,15 +631,15 @@
     <li class="post-item" data-id= <%= msg[i]['_id'] %>>
         <div class="link-part-content">
             <div class="bookmark-pic"><img src="http://yiye.qiniudn.com/<%= msg[i]['image']%>"/></div>
-            <a class="link title-link"  href=<%= msg[i]['url'] %> data-id= <%= msg[i]['_id'] %> target="_blank" > <%= msg[i]['title']%> </a>
+            <a class="link title-link"  href=<%= msg[i]['url'] %> data-id= <%= msg[i]['_id'] %> target="_blank" > <%= msg[i]['title']%> </a><span>提交至：</span><img src="http://yiye.qiniudn.com/<%= msg[i]['channelInfo']['channelLogo']%>"/><a target="_blank" class="channel-title" data-id= <%= msg[i]['_id'] %> href="/channel/<%=msg[i]['channelId'] %>"><%= msg[i]['channelInfo']['channelName']%></a>
+
             <div class="to-channel">
-                <span>提交到：</span><a target="_blank" class="channel-title" data-id= <%= msg[i]['_id'] %> href="/channel/<%=msg[i]['channelId'] %>"><%= msg[i]['channelInfo']['channelName']%></a>
             </div>
             <div class="description" data-id= <%= msg[i]['_id'] %>>
                 <span>描述：</span><b data-id= <%= msg[i]['_id'] %> ><%= msg[i]['description']%></b>
             </div>
             <div class="footer-part" data-id= <%= msg[i]['_id'] %>>
-                <span class="submit-time">提交于:<%= msg[i]['postTime'] %></span>
+                <span class="submit-time">提交于:<%=  moment(''+msg[i]['postTime']).format('YYYY-M-D H:mm:ss') %></span>
                 <span>by <a href="#" data-id= <%= msg[i]['_id'] %>><%= msg[i]['postUser']['username']%></a></a></span>
                 <span><i class="glyphicon glyphicon-ok"></i><a class="passBookmark" href="#" data-channelId=<%= msg[i]['channelId']%> data-id= <%= msg[i]['_id'] %> >通过</a></span>
                 <span><i class="glyphicon glyphicon-pencil"></i><a class="editBookmark" href="#"  data-channelId=<%= msg[i]['channelId']%> data-id= <%= msg[i]['_id'] %> >编辑</a></span>
@@ -675,14 +682,12 @@
     <% for(var i = 0; i < msg.length; i++) { %>
     <li data-id=<%=msg[i]['_id']%> class="attention-box">
         <a href="/u/<%=msg[i]['userId']%>" target="_blank">
-            <div class="at-user-avatar">
-                <img src="http://yiye.qiniudn.com/<%=msg[i]['userLogo']%>">
-            </div>
-        </a>        
+                <img src="http://yiye.qiniudn.com/<%=msg[i]['userLogo']%>" class="at-user-avatar">
+        </a>
         <a  href="/u/<%=msg[i]['userId']%>" target="_blank" class="at-user-name"><%=msg[i]['username']%></a>
         <span>关注了</span>
         <a class="at-channel-name" href="/channel/<%= msg[i]['channelId']%>"target="_blank"><%=msg[i]['name'] %></a>
-        <span class="at-time">时间：<%=msg[i]['followerTime'] %></span>
+        <span class="at-time">时间：<%= moment(''+msg[i]['followerTime']).format('YYYY-M-D H:mm:ss') %></span>
     </li>
     <% } %>
 </script>
