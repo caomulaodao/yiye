@@ -168,7 +168,7 @@ exports.renderFollower = function(req,res,Package){
                 var type = 'not';
                 if(req.user){
                     Channel2User.findOne({channelId: channelId,userId:req.user._id}, function (err, doc) {
-                        if (err) {console.log(err);res.error()}
+                        if (err) {console.log(err);return res.error()}
                         if (doc) {
                             if (doc.type == 'admin' || doc.type == 'creator') {
                                 type = 'admin';
@@ -273,7 +273,7 @@ exports.renderFollower = function(req,res,Package){
             if(err) {console.log(err);return res.error()}
             if(!results.channel) return res.redirect('/');
             var channel = results.channel;
-            channel.userType = results.userType;
+            channel.userType = results.userType;//
             var users = results.users;
             var page=tool.skipPage(p,results.users.pageLength);
             if (min_page>1){users.creator=null;users.admins=null}
@@ -417,14 +417,13 @@ exports.update = function(req,res){
 
 }
 
-//取消订阅某个频道
+//取消订阅某个频道 如果是频道管理者 则 无法删除
 exports.noSub = function(req,res){
     var channelId = req.body['channelId'];
     if(!verify.idVerify(channelId)) {return res.sendResult('参数格式错误',2001,null)}
-    if(!req.user) return res.redirect('/');
-    
+    if(!req.user) return res.redirect('/');   
     //删除频道用户关系表
-    Channel2User.remove({channelId:channelId,userId:req.user._id},function(err,num){
+    Channel2User.remove({'channelId':channelId,'userId':req.user._id,'type':'follower'},function(err,num){
         if(err) { console.log(err);return res.sendError()}
         if(num>0){
 
@@ -437,13 +436,13 @@ exports.noSub = function(req,res){
                     if(err) {console.log(err);return res.sendError()}
 
                     //刷新页面
-                    res.redirect('/channel/'+channelId);
+                    res.sendResult('取消订阅成功',0,null);
                 });
 
             });
 
         }else{
-            res.redirect('/channel/'+channelId);
+             res.sendResult('创建者不能取消关注',3000,null);
         }
     });
 }
