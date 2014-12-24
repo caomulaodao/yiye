@@ -12,7 +12,7 @@ function init() {
     });
     var bkUp = false;
     var bkDown = false;
-    var subDown = false;
+    // var subDown = false;
 
     //按钮点赞
     $("#sub-channel-list").on("click",".up",function(){
@@ -63,22 +63,32 @@ function init() {
     //订阅频道
 
     $('#subscribe-btn').click(function(event){
-        if(subDown) return false;
+        // if(subDown) return false;
         var channelId = $('#control-body').data('channelid');
-        subDown = true;
+        // subDown = true;
         $.ajax({
             url: '/channel/sub/',
             type:'POST',
             data:{'channelId':channelId}
         }).done(function(data){
-            if(data.code == 0){
+            window.location.href = window.location.href;
+            // subDown = false;
+        });
+    });
 
-                $('#channel-sub').text('已订阅').attr("id","channel-subed");
+    //取消订阅频道
 
-            }else{
-
-            }
-            subDown = false;
+    $('#nosubscribe-btn').click(function(event){
+        // if(subDown) return false;
+        var channelId = $('#control-body').data('channelid');
+        // subDown = true;
+        $.ajax({
+            url: '/channel/noSub/',
+            type:'POST',
+            data:{'channelId':channelId}
+        }).done(function(data){
+            window.location.href = window.location.href;
+            // subDown = false;
         });
     });
 

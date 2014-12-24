@@ -279,8 +279,8 @@ button:focus {outline:0;}
     margin-top: 20px;
     text-align: center;
 }
-
-#subscribe-btn {
+/*点击按钮*/
+.sub-btn,.nosub-btn,.creator-btn {
     height: 38px;
     margin-top: 0;
     border: 1px solid #999;
@@ -292,9 +292,23 @@ button:focus {outline:0;}
     -webkit-transition: all 0.3s ease;
     transition: all 0.3s ease;
 }
-#subscribe-btn:hover {
+.nosub-btn:hover {
     background-color: #E06A6A;
     border: 1px solid #E06A6A;
+    color: #fff;
+    -webkit-transition: all 0.1s ease;
+    transition: all 0.1s ease;
+}
+.sub-btn:hover {
+    background-color: #40c192;
+    border: 1px solid #40c192;
+    color: #fff;
+    -webkit-transition: all 0.1s ease;
+    transition: all 0.1s ease;
+}
+.creator-btn:hover {
+    background-color: #65CFFB;
+    border: 1px solid #65CFFB;
     color: #fff;
     -webkit-transition: all 0.1s ease;
     transition: all 0.1s ease;

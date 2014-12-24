@@ -54,5 +54,8 @@ module.exports = function(System, app, auth, database) {
   //url爬虫接口
   app.route('/system/scraper')
      .post(index.scraper);
+  //500服务器错误界面
+  app.route('/error')
+     .get(index.error);
 
 };

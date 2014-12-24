@@ -108,11 +108,14 @@ var mongoose = require('mongoose'),
         }else{
             console.log(type);
             switch(type){
-                case 'username':
-                    var query =  { username : new RegExp(search,'i') };
+                case 'name':
+                    var query =  { name : new RegExp(search,'i') };
                     break;
-                case 'email':
-                    var query =  { email : new RegExp(search,'i') };
+                case 'id':
+                    var query =  { _id : search };
+                    break;
+                case 'creator':
+                    var query =  { 'creator.userName' : new RegExp(search,'i') };
                     break;
                 default:
                     var query =  {};

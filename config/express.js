@@ -83,6 +83,9 @@ module.exports = function(app, passport, db) {
             data:null
         });
       };
+      res.error = function(){
+        res.redirect('/error');
+      }
       next();
   });
   //包装返回服务器错误函数

@@ -24,8 +24,8 @@ module.exports = function(Bookmarks, app, auth, database) {
     app.route('/api/bookmarks/hate/')
         .post(bookmarks.hate);
 
-    //获取离请求日期最近的某天的所有书签
-    app.route('/api/bookmarks/oneDay/:channelId')
+    //获取离请求日期最近的某天的所有书签 移动端使用
+    app.route('/api/bookmarks/oneDay/')
         .get(bookmarks.oneDay);
 
     //审核通过某个书签

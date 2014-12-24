@@ -144,7 +144,7 @@ exports.scraperReceive = function(req,res){
     if(req.body.title==null){return res.sendResult('标题不能为空',3001,null);}
     if(req.body.description==null){return res.sendResult('描述不能为空',3002,null);}
     if(req.body.website==null){return res.sendResult('书签地址不能为空',3003,null);}
-    if(req.body.image==null){return res.sendResult('图片不能为空',3004,null);}
+    if(req.body.image==null){return res.sendResult('图片不能为空',3004,null);}console.log(req.body.channel);
     if(req.body.channel==null||(!verify.idVerify(req.body.channel))){return res.sendResult('频道ID格式错误',3006,null);}
     if(!(
         verify.isString(req.body.title)&&verify.isString(req.body.description)&&verify.isString(req.body.website)
@@ -404,9 +404,10 @@ exports.hate = function(req,res){
 
 //获取某天的书签
 exports.oneDay = function(req,res){
-    var channelId = req.params['channelId'];
+    var channelId = req.query['channelId'];
     if(!verify.idVerify(channelId)){return res.sendResult('参数格式错误',2001,null)}
-    var day = req.body['day'];
+    var day = req.query['date'];
+    if (!day) {day=""}
     if (!verify.isString(day)) {return res.sendResult('参数类型错误',2000,null)}
     var limit=20;
     //如果没有获取到天数，则默认为最接近的一天  修改bug1(增加频道不存在书签的情况)
@@ -438,8 +439,8 @@ exports.oneDay = function(req,res){
         ],function(err,results){
             if(!results.day) return res.sendResult('获取书签成功',0,{day:null,nextDay:null,list:[]});
             var dayResult = {};
-            dayResult.day = results.day;
-            dayResult.nextDay = results.nextDay;
+            // dayResult.date = results.day;
+            // dayResult.nextDay = results.nextDay;
             var startDay = moment(day,"YYYY-MM-DD").startOf('day').toDate();
             var endDay = moment().add('days',1).toDate();
             Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]},postTime:{$gte:startDay,$lt:endDay}}).sort({postTime:-1}).exec(function(err,list){
@@ -449,7 +450,8 @@ exports.oneDay = function(req,res){
                     var bRank = b['likeNum'] - b['hateNum'];
                     return aRank > bRank ? -1 : 1;
                 });
-                dayResult.list = list;
+                // dayResult.list = list;
+                dayResult = list;
                 res.sendResult('获取书签成功',0,dayResult);
             });
         });
@@ -464,8 +466,8 @@ exports.oneDay = function(req,res){
                 var nextDay =  moment(doc[0]['postTime']).startOf('day').toDate();
             }
             var dayResult = {};
-            dayResult.day = day;
-            dayResult.nextDay = nextDay;
+            // dayResult.date = day;
+            // dayResult.nextDay = nextDay;
             Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]},postTime:{$gte:startDay,$lt:endDay}}).sort({postTime:-1}).exec(function(err,list){
                 if(err) {console.log(err);return res.sendError()}
                 list.sort(function(a,b){
@@ -473,7 +475,8 @@ exports.oneDay = function(req,res){
                     var bRank = b['likeNum'] - b['hateNum'];
                     return aRank > bRank ? -1 : 1;
                 });
-                dayResult.list = list;
+                // dayResult.list = list;
+                dayResult = list;
                 res.sendResult('获取书签成功',0,dayResult);
             });
         });

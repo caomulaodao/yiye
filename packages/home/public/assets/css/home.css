@@ -30,7 +30,7 @@ button:focus {outline:0;}
     webkit-placeholder-color-set
    ============================================================== */
 ::-webkit-input-placeholder { /* WebKit browsers */
-    color: #fff;
+    color: #CCCCCC;
 }
 
 .danger-info {
@@ -782,11 +782,11 @@ a.header-channel-name, a.header-channel-name:hover{
 /*提交书签按钮*/
 .add-bookmark{
     position: fixed;
-    bottom: 30px;
+    bottom: 50px;
     right: 100px;
     background-color: #00C995;
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     border: 3px solid #00C995;
     color: #ffffff;
@@ -804,11 +804,11 @@ a.header-channel-name, a.header-channel-name:hover{
 }*/
 .add-bookmark p:first-child{
     height: 25px;
-    margin: 20px 0px 5px 0px;
+    margin: 12px 0px 3px 0px;
 }
 .add-bookmark p:last-child{
     height: 25px;
-    margin: 5px 0px 20px 0px;
+    margin: 3px 0px 12px 0px;
 }
 p.add-true{
     margin-top:16px;
@@ -816,22 +816,29 @@ p.add-true{
 .input-url{
     position: fixed;
     width:500px;
-    top:30px;
+    top:100px;
     left:0px;
     right:0px;
     display: none;
     z-index: 250;
     margin: 0 auto;
     border-radius: 4px;
-    box-shadow: 0px 30px 50px #888888;
     box-sizing:content-box;
 }
-
+.input-url .input-group input,.input-url .input-group button{
+    height: 40px;
+}
+.input-url p{
+    margin-bottom: 30px;
+    font-size: 20px;
+    color: #ffffff;
+    text-align: center;
+}
 
 /*提交书签表单*/
 .submit-content{
     position: fixed;
-    top: 10%;    
+    top: 150px;
     left:0px;
     right:0px;
     z-index: 251; 
@@ -841,8 +848,8 @@ p.add-true{
     padding: 30px 50px;    
     background-color: #fff; 
     transform: translateY(60px);
-    box-sizing: border-box; 
-    box-shadow: 0px 20px 100px #000;
+    box-sizing: border-box;
+    border-radius: 3px;
 }
 .submit-background{
     position: fixed;
@@ -862,9 +869,8 @@ p.add-true{
     font-size: 20px;
 }
 .submit-text{
-    max-height: 40px;
     border:none;
-    border-bottom: 1px solid #000;
+    border-bottom: 1px solid #ccc;
     margin-bottom: 20px;
     overflow: hidden;
 }
@@ -875,30 +881,30 @@ p.add-true{
     width: 400px;  
 }
 .submit-tags{
-    background-color: #e4e4e4;
     outline: none;
     height: 30px;
+    line-height: 30px;
     width: 400px;
     line-height: 30px;
     border-radius: 4px;
-    font-size: 20px;
     font-weight: 100;
-    border:none;
+    border:solid 1px #CCCCCC;
     padding: 0px 5px;
     margin-bottom: 20px;
+    font-size: 14px;
 }
 .put2channel{
-    border: none;
-    border-radius: 4px;
-    width: 200px;
-    font-size: 20px;
-    font-weight: 200;
-    line-height: 30px;
-    height: 30px;
-    margin-left: 50%;
-    transform:translateX(-100px);
+    height: 40px;
+    width: 100%;
+    font-size: 16px;
+    letter-spacing: 3px;
+    color: #fff;
+    font-family: "微软雅黑";
+    background-color: #40C192;
 }
-
+.btn.put2channel:hover{
+    color: #fff;
+}
 /* date divide */
 .date-divide {
     margin-top: 20px;
@@ -1867,6 +1873,8 @@ a.ex-creator {float: right;}
     width: 50px;
     z-index: 300;
     transform:translateY(150px);
+    -webkit-transform: translateY(150px);
+    -ms-transform: teanslateY(150px);
 }
 .loading .spinner {
   width: 50px;

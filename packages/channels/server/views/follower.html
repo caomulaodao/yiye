@@ -68,11 +68,14 @@
                 </div>
             </div>
             <div id="subscribe">
-                {% if channel.userType == 'not' %}
-                    <button id="subscribe-btn">订阅</button>
+                {% if channel.userType === 'not' %}
+                    <button id="subscribe-btn" class="sub-btn">订阅</button>
                 {% endif %}
-                {% if channel.userType =！ 'not' %}
-                    <button id="subscribe-btn">取消订阅</button>
+                {% if channel.userType === 'follower' %}
+                    <button id="nosubscribe-btn" class="active nosub-btn">取消订阅</button>
+                {% endif %}
+                {% if channel.userType === 'admin' %}
+                    <button id="creator-btn" class ="active creator-btn">管理</button>
                 {% endif %}
             </div>
         </div>
