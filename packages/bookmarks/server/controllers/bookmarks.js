@@ -187,7 +187,7 @@ exports.scraperReceive = function(req,res){
                     bookmark.postUser = {userId:req.user._id,username:req.user.username};
                     bookmark.save(function(err){
                         if(err) {console.log(err);return res.sendError()}
-                        if(pass){
+                        if(pass){console.log(item,'item');
                             Channels.update({_id:item},{$inc:{bmkNum:1}},function(err,doc){
                                 if(err) {console.log(err);return res.sendError()}
                                 callback(null,true);
@@ -504,7 +504,10 @@ exports.pass = function(req,res){
             var checkUser = {userId:req.user._id,username:req.user.username,avatar:req.user.avatar};
             Bookmarks.update({_id:bookmarkId},{checked:1,checkUser:checkUser},function(err,doc){
                 if(err) {console.log(err);return res.sendError()}
-                res.sendResult('书签已通过',0,null);
+                Channels.update({"_id":channelId},{$inc:{bmkNum:1}},function(err){
+                    if (err) {console.log(err);return res.sendError();}
+                    res.sendResult('书签已通过',0,null);
+                })
             });
         }else
         {
@@ -529,15 +532,20 @@ exports.edit = function(req,res){
             if(title && description){
                 Bookmarks.update({_id:bookmarkId},{checked:1,title:title,description:description,checkUser:checkUser},function(err,doc){
                     if(err) {console.log(err);return res.sendError()}
-                    res.sendResult('书签编辑并通过',0,null);
+                    Channels.update({'_id':channelId},{$inc:{'bmkNum':1}},function(err){
+                        if (err) {console.log(err);return res.sendError();}
+                        res.sendResult('书签编辑并通过',0,null);
+                    });
                 });
             }else{
                 Bookmarks.update({_id:bookmarkId},{checked:1,checkUser:checkUser},function(err,doc){
                     if(err) {console.log(err);return res.sendError()}
-                    res.sendResult('书签编辑并通过',0,null);
+                    Channels.update({'_id':channelId},{$inc:{'bmkNum':1}},function(err){
+                        if (err) {console.log(err);return res.sendError();}
+                        res.sendResult('书签编辑并通过',0,null);
+                    });
                 });
             }
-
         }else
         {
             return res.sendResult('你不是该频道管理员',3000,null);
@@ -558,7 +566,10 @@ exports.delete = function(req,res){
             var checkUser = {userId:req.user._id,username:req.user.username,avatar:req.user.avatar};
             Bookmarks.update({_id:bookmarkId},{checked:2,deleteInfo:reason,checkUser:checkUser},function(err,doc){
                 if(err) {console.log(err);return res.sendError()}
-                res.sendResult('书签已经被筛除',0,null);
+                Channels.update({'_id':channelId},{$inc:{'bmkNum':-1}},function(err){
+                    if (err) {console.log(err);return res.sendError();}
+                    res.sendResult('书签已经被筛除',0,null);
+                });              
             });
         }else
         {
