@@ -301,55 +301,59 @@ exports.like = function(req,res){
     if(!req.user) return res.sendResult('请先注册或登录',1000,null);
     var bookmarkId = req.body['bookmarkId'];
     if(!verify.idVerify(bookmarkId)){return res.sendResult('参数类型错误',2000,null)}
-    async.parallel({
-        isHated:function(callback){
-            BookmarkHate.remove({bookmarkId: bookmarkId, userId: req.user._id}, function (err, doc) {
-                if (err) {console.log(err);return res.sendError()}
-                if (doc > 0) {
-                    Bookmarks.update({_id: bookmarkId}, {$inc: {hateNum: -1}}, function (err, doc) {
-                        if (err) {console.log(err);return res.sendError()}
-                        callback(null, true);
-                    });
-                } else {
-                    callback(null, false);
-                }
-            });
-        },
-        isLiked:function (callback) {
-            BookmarkLike.find({bookmarkId: bookmarkId, userId: req.user._id}, function (err, doc) {
-                if (err) { console.log(err);return res.sendError()}
-                if (doc.length > 0) {
-                    callback(null, true);
-                }else{
-                    //查询获取bookmarkId
-                    Bookmarks.findOne({_id: bookmarkId}, function (err, bookmark) {
-                        if (err) {console.log(err);return res.sendError()}
-                        var like = BookmarkLike({});
-                        like.bookmarkId = bookmarkId;
-                        like.userId = req.user._id;
-                        like.username = req.user.username;
-                        like.channelId = bookmark.channelId;
-                        like.channelName = bookmark.channelInfo.channelName,
-                        like.bookmarkLogo = bookmark.image,
-                        like.bookmarkName = bookmark.title,
-                        like.userLogo = req.user.avatar,
-                        //保存点赞数据
-                        like.save(function (err) {
+    Bookmarks.findOne({'_id':bookmarkId,'postUser.userId':req.user._id},function(err,bk){
+        if (err) {console.log(err);return res.sendError();}
+        if (bk) {return res.sendResult('操作未成功',3000,null);}
+        async.parallel({
+            isHated:function(callback){
+                BookmarkHate.remove({'bookmarkId': bookmarkId, 'userId': req.user._id,'type':{$ne:'admin'}}, function (err, doc) {
+                    if (err) {console.log(err);return res.sendError()}
+                    if (doc > 0) {
+                        Bookmarks.update({_id: bookmarkId}, {$inc: {hateNum: -1}}, function (err, doc) {
                             if (err) {console.log(err);return res.sendError()}
-                            //更新书签数据
-                            Bookmarks.update({_id: bookmarkId}, {$inc: {likeNum: 1}}, function (err, doc) {
+                            callback(null, true);
+                        });
+                    } else {
+                        callback(null, false);
+                    }
+                });
+            },
+            isLiked:function (callback) {
+                BookmarkLike.find({'bookmarkId': bookmarkId, 'userId': req.user._id,'type':{$ne:'admin'}}, function (err, doc) {
+                    if (err) { console.log(err);return res.sendError()}
+                    if (doc.length > 0) {
+                        callback(null, true);
+                    }else{
+                        //查询获取bookmarkId
+                        Bookmarks.findOne({_id: bookmarkId}, function (err, bookmark) {
+                            if (err) {console.log(err);return res.sendError()}
+                            var like = BookmarkLike({});
+                            like.bookmarkId = bookmarkId;
+                            like.userId = req.user._id;
+                            like.username = req.user.username;
+                            like.channelId = bookmark.channelId;
+                            like.channelName = bookmark.channelInfo.channelName,
+                            like.bookmarkLogo = bookmark.image,
+                            like.bookmarkName = bookmark.title,
+                            like.userLogo = req.user.avatar,
+                            //保存点赞数据
+                            like.save(function (err) {
                                 if (err) {console.log(err);return res.sendError()}
-                                callback(null,false);
+                                //更新书签数据
+                                Bookmarks.update({_id: bookmarkId}, {$inc: {likeNum: 1}}, function (err, doc) {
+                                    if (err) {console.log(err);return res.sendError()}
+                                    callback(null,false);
+                                });
                             });
                         });
-                    });
 
-                }
-            });
-        }
-    },function(err,results){
-        if(err) {console.log(err);return res.sendError()}
-        return res.sendResult('已经点赞',0,results);
+                    }
+                });
+            }
+        },function(err,results){
+            if(err) {console.log(err);return res.sendError()}
+            return res.sendResult('已经点赞',0,results);
+        });
     });
 }
 
@@ -359,46 +363,50 @@ exports.hate = function(req,res){
     if(!req.user) return res.sendResult('请先注册或登录',1000,null);
     var bookmarkId = req.body['bookmarkId'];
     if(!verify.idVerify(bookmarkId)){return res.sendResult('参数类型错误',2000,null)}
-    async.parallel({
-        isLiked:function(callback){
-            BookmarkLike.remove({bookmarkId:bookmarkId,userId:req.user._id},function(err,doc){
-                if(err) { console.log(err);return res.sendError()}
-                if(doc > 0){
-                    Bookmarks.update({_id:bookmarkId},{$inc:{likeNum:-1}},function(err,doc){
-                        if(err) {console.log(err);return res.sendError()}
-                        callback(null,true);
-                    });
-                }else{
-                    callback(null,false);
-                }
-            });
-        },
-        isHated:function(callback){
-            BookmarkHate.find({bookmarkId:bookmarkId,userId:req.user._id},function(err,doc){
-                if(err)  {console.log(err);return res.sendError()}
-                if(doc.length > 0){
-                    callback(null,true);
-                }else{
-                    Bookmarks.find({_id: bookmarkId}, function (err, bookmark) {
-                        var hate = BookmarkHate({});
-                        hate.bookmarkId = bookmarkId;
-                        hate.userId = req.user._id;
-                        hate.username = req.user.username;
-                        hate.channelId = bookmark.channelId;
-                        hate.save(function(err){
+    Bookmarks.findOne({'_id':bookmarkId,'postUser.userId':req.user._id},function(err,bk){
+        if (err) {console.log(err);return res.sendError();}
+        if (bk) {return res.sendResult('操作未成功',3000,null);}        
+        async.parallel({
+            isLiked:function(callback){
+                BookmarkLike.remove({bookmarkId:bookmarkId,userId:req.user._id},function(err,doc){
+                    if(err) { console.log(err);return res.sendError()}
+                    if(doc > 0){
+                        Bookmarks.update({_id:bookmarkId},{$inc:{likeNum:-1}},function(err,doc){
                             if(err) {console.log(err);return res.sendError()}
-                            Bookmarks.update({_id:bookmarkId},{$inc:{hateNum:1}},function(err,doc){
+                            callback(null,true);
+                        });
+                    }else{
+                        callback(null,false);
+                    }
+                });
+            },
+            isHated:function(callback){
+                BookmarkHate.find({bookmarkId:bookmarkId,userId:req.user._id},function(err,doc){
+                    if(err)  {console.log(err);return res.sendError()}
+                    if(doc.length > 0){
+                        callback(null,true);
+                    }else{
+                        Bookmarks.find({_id: bookmarkId}, function (err, bookmark) {
+                            var hate = BookmarkHate({});
+                            hate.bookmarkId = bookmarkId;
+                            hate.userId = req.user._id;
+                            hate.username = req.user.username;
+                            hate.channelId = bookmark.channelId;
+                            hate.save(function(err){
                                 if(err) {console.log(err);return res.sendError()}
-                                callback(null,false);
+                                Bookmarks.update({_id:bookmarkId},{$inc:{hateNum:1}},function(err,doc){
+                                    if(err) {console.log(err);return res.sendError()}
+                                    callback(null,false);
+                                });
                             });
                         });
-                    });
-                }
-            });
-        }
-    },function(err,results){
-        if(err) {console.log(err);return res.sendError()}
-        return res.sendResult("已经反对",0,results);
+                    }
+                });
+            }
+        },function(err,results){
+            if(err) {console.log(err);return res.sendError()}
+            return res.sendResult("已经反对",0,results);
+        });
     });
 }
 

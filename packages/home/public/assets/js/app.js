@@ -296,14 +296,17 @@ $(function(){
             },
             //点击提交URL地址按钮
             inputUrl: function(){
-                $('.load').addClass('loading')
                 var submitView = this.submitview;
                 var that = this;
                 that.addbookmark.set({'website':$('.input-url input').val()},{validate:true});
-                if(that.addbookmark.validationError){return console.log(that.addbookmark.validationError);}                
+                if(that.addbookmark.validationError){
+                    return  $(".input-url p.error").text(that.addbookmark.validationError).show();
+                }
+                $(".input-url p.error").hide();
+                $('.load').addClass('loading');
                 that.addbookmark.save(null,{error: function(model,response){
                         $('.load').removeClass('loading');
-                        console.log('网络异常或参数错误');
+                        return  $(".input-url p.error").text('网络异常或参数错误').show();
                     },
                     success: function(model,response){
                         console.log(response);
@@ -312,17 +315,22 @@ $(function(){
                         $('.submit-content').fadeIn('1s');
                         that.submitbookmark.set({'website':response.data.website,'channel':$('#sub-channel-list .active').data('id')||$('#admin-channel-list .active').data('id')});
                         that.submitview.addbookmark = function(){
-                            that.submitbookmark.set({'title':$('.submit-content-title div').text(),'description':$('.submit-content-description div').text(),'image':$('.submit-content-img img').attr('src'),'tags':$('.submit-content-tags input').val()});
-                            $('.load').addClass('loading');                   
+
+                            that.submitbookmark.set({'title':$('.submit-content-title div').text(),'description':$('.submit-content-description div').text(),'image':$('.submit-content-img img').attr('src'),'tags':$('.submit-content-tags input').val()},{validate:true});
+                            if(that.submitbookmark.validationError){
+                                return  $("#channeInfoError").text(that.submitbookmark.validationError).show();
+                            }
+                            $('.load').addClass('loading');
                             that.submitbookmark.save(null,
-                                {'error':function(){
-                                    console.log('网络异常或参数错误');
-                                    $('.load').removeClass('loading');
+                                {
+                                    'error':function(){
+                                        $('.load').removeClass('loading');
+                                        return  $(".input-url p.error").text('网络异常或参数错误').show();
                                     },
-                                'success':function(model,response){
-                                    $('.load').removeClass('loading');
-                                    $('.submit-background').click();
-                                }
+                                    'success':function(model,response){
+                                        $('.load').removeClass('loading');
+                                        $('.submit-background').click();
+                                    }
                                 }
                             )
                         }

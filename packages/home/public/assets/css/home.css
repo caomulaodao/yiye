@@ -828,11 +828,18 @@ p.add-true{
 .input-url .input-group input,.input-url .input-group button{
     height: 40px;
 }
-.input-url p{
+.input-url p.title{
     margin-bottom: 30px;
     font-size: 20px;
     color: #ffffff;
     text-align: center;
+}
+.input-url p.error{
+    margin-top: 30px;
+    font-size: 20px;
+    color: #D82323;
+    text-align: center;
+    display: none;
 }
 
 /*提交书签表单*/
@@ -882,10 +889,9 @@ p.add-true{
 }
 .submit-tags{
     outline: none;
-    height: 30px;
-    line-height: 30px;
+    height: 40px;
     width: 400px;
-    line-height: 30px;
+    line-height: 40px;
     border-radius: 4px;
     font-weight: 100;
     border:solid 1px #CCCCCC;
@@ -902,7 +908,7 @@ p.add-true{
     font-family: "微软雅黑";
     background-color: #40C192;
 }
-.btn.put2channel:hover{
+.btn.put2channel:hover,.btn.put2channel:focus{
     color: #fff;
 }
 /* date divide */
@@ -1864,7 +1870,7 @@ a.ex-creator {float: right;}
 /*加载动画*/
 .loading{
     position: fixed;
-    top:10%;
+    top:100px;
     bottom: 0px;
     left: 0px;
     right: 0px;
@@ -1930,4 +1936,15 @@ a.ex-creator {float: right;}
 
 .channel-title{
     font-size: 16px;
+}
+.danger-info {
+    height: 40px;
+    line-height: 40px;
+    margin-bottom: 20px;
+    padding: 0px 20px;
+    font-size: 16px;
+    border: solid 1px #FAC4C4;
+    border-radius: 6px;
+    color: #DB5757;
+    display: none;
 }

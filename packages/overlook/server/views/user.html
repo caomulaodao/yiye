@@ -66,17 +66,25 @@
                 <th>创建频道</th>
                 <th>关注频道</th>
                 <th>提交书签</th>
+                {% if role == 'system' %}<th>操作</th>{% endif %}
             </tr>
             </thead>
             <tbody>
             {% for user in users %}
             <tr>
-                <td>{{ user.username }}</td>
+                <td><a href="/u/{{''+user._id}}" target="_blank">{{ user.username }}</a></td>
                 <td>{{ user.email }}</td>
                 <td>{{ ''+user.createTime | date('Y-m-d H:m:s') }}</td>
                 <td>{{ user.createNum }}</td>
                 <td>{{ user.subNum }}</td>
                 <td>{{ user.postNum }}</td>
+                {% if role == 'system' %}
+                    {% if user.roles.length == 1 %}
+                        <td><button type="button" class="btn btn-primary setAdmin" data-userid="{{''+user._id}}">后台权限</button></td>
+                    {% else  %}
+                        <td><button type="button" class="btn btn-danger cancelAdmin" data-userid="{{''+user._id}}">取消权限</button></td>
+                    {% endif %}
+                {% endif %}
             </tr>
             {% endfor %}
             </tbody>

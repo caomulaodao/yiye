@@ -411,13 +411,14 @@
             </ul>
             <div class = 'submit-background'></div>
             <div class = 'input-url'>
-                <p>请输入你需要添加书签的url地址。</p>
+                <p class="title">请输入你需要添加书签的url地址。</p>
                 <div class="input-group">
                       <input type="text" class="form-control" placeholder="http://">
                       <span class="input-group-btn">
                         <button class="btn btn-default input-url-button" type="button" >添加书签</button>
                       </span>
                 </div>
+                <p class="error">error</p>
             </div>
             <div class = 'add-bookmark'><p>提&nbsp;&nbsp;交</p><p>书&nbsp;&nbsp;签</p></div>
             <div class = 'submit-bookmark'></div>
@@ -820,6 +821,7 @@
             <p>标签</p>
             <input type="text" class = "submit-tags" placeholder="多个标签请用,或者空格隔开"/>
         </div>
+        <p class="bg-danger danger-info" id="channeInfoError"></p>
         <button class="btn put2channel">提交至当前频道</button>
     </div>
 </script>
