@@ -32,7 +32,7 @@ var bookmarksSchema = Schema({
     },
     image:{
         type: String,
-        required: true
+        default: 'bImage/f60ce002e5182e7b772ee130ef6c7705.png'
     },
     postTime: {
         type:Date,

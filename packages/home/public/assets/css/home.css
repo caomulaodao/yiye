@@ -1674,7 +1674,6 @@ a.ex-creator {float: right;}
 
 .post-item .link-part-content{
     padding-left:0px;
-    border-bottom: 1px solid #E8E8E8
 }
 
 .bookmark-pic{
@@ -1937,7 +1936,7 @@ a.ex-creator {float: right;}
 }
 
 .channel-title{
-    font-size: 16px;
+    font-size: 12px;
 }
 .danger-info {
     height: 40px;
