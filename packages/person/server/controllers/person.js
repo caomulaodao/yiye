@@ -52,7 +52,7 @@ exports.renderPost = function(req,res,Package){
         function(err,user,pageLength,list){
             if (err) {console.log(err);return res.error();}
             var page=tool.skipPage(p,pageLength);
-            Package.render('index', {
+            Package.render('post', {
                 user:user,
                 list:list,
                 page:page
