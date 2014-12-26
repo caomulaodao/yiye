@@ -22,8 +22,8 @@
         </div>
         <div id="function-module">
             <ul id="function-module-ul">
-                <li id='message'><i class="iconfont">&#xf00b5</i><div>消息</div><span id="message-count" class="red-point-count"style="display:none" data-number='0'></span></li>
                 <li id='discover' ><i class="iconfont">&#xe684</i><div>发现</div></li>
+                <li id='message'><i class="iconfont">&#xf00b5</i><div>消息</div><span id="message-count" class="red-point-count"style="display:none" data-number='0'></span></li>
                 <li id='help'><i class="iconfont">&#xf00b8</i><div>帮助</div></li>
                 <li id='set'><i class="iconfont">&#xf013e</i><div>设置</div></li>
             </ul>
@@ -633,7 +633,7 @@
     <li class="post-item" data-id= <%= msg[i]['_id'] %>>
         <div class="link-part-content">
             <div class="bookmark-pic"><img src="http://yiye.qiniudn.com/<%= msg[i]['image']%>"/></div>
-            <a class="link title-link"  href=<%= msg[i]['url'] %> data-id= <%= msg[i]['_id'] %> target="_blank" > <%= msg[i]['title']%> </a><span>提交至：</span><img src="http://yiye.qiniudn.com/<%= msg[i]['channelInfo']['channelLogo']%>"/><a target="_blank" class="channel-title" data-id= <%= msg[i]['_id'] %> href="/channel/<%=msg[i]['channelId'] %>"><%= msg[i]['channelInfo']['channelName']%></a>
+            <a class="link title-link"  href=<%= msg[i]['url'] %> data-id= <%= msg[i]['_id'] %> target="_blank" > <%= msg[i]['title']%> </a>
 
             <div class="to-channel">
             </div>
@@ -641,11 +641,12 @@
                 <span>描述：</span><b data-id= <%= msg[i]['_id'] %> ><%= msg[i]['description']%></b>
             </div>
             <div class="footer-part" data-id= <%= msg[i]['_id'] %>>
-                <span class="submit-time">提交于:<%=  moment(''+msg[i]['postTime']).format('YYYY-M-D H:mm:ss') %></span>
-                <span>by <a href="#" data-id= <%= msg[i]['_id'] %>><%= msg[i]['postUser']['username']%></a></a></span>
+                <span>提交至：</span><img src="http://yiye.qiniudn.com/<%= msg[i]['channelInfo']['channelLogo']%>"/><a target="_blank" class="channel-title" data-id= <%= msg[i]['_id'] %> href="/channel/<%=msg[i]['channelId'] %>"><%= msg[i]['channelInfo']['channelName']%></a>
                 <span><i class="glyphicon glyphicon-ok"></i><a class="passBookmark" href="#" data-channelId=<%= msg[i]['channelId']%> data-id= <%= msg[i]['_id'] %> >通过</a></span>
                 <span><i class="glyphicon glyphicon-pencil"></i><a class="editBookmark" href="#"  data-channelId=<%= msg[i]['channelId']%> data-id= <%= msg[i]['_id'] %> >编辑</a></span>
                 <span><i class="glyphicon glyphicon-trash"></i><a class="deleteBookmark" href="#" data-channelId=<%= msg[i]['channelId']%> data-id= <%= msg[i]['_id'] %> >筛除</a></span>
+                <span class="submit-time">提交于:<%=  moment(''+msg[i]['postTime']).format('YYYY-M-D H:mm:ss') %></span>
+                <span>by <a href="#" data-id= <%= msg[i]['_id'] %>><%= msg[i]['postUser']['username']%></a></a></span>
             </div>
         </div>
     </li>

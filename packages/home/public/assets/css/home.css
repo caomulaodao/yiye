@@ -525,11 +525,13 @@ button:focus {outline:0;}
     display: inline-block;
     margin-top: 12px;
     margin-right: 0;
-    padding: 0 5px;
+    padding: 0 10px;
     height: 20px;
+    line-height: 20px;
+    font-size: 14px;
     color: #FFF;
     background: #E06A6A;
-    border-radius: 5px;
+    border-radius: 10px;
     text-align: center;
 }
 

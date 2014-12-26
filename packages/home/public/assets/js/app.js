@@ -818,10 +818,6 @@ $(function(){
             var nPointResult = $('.red-point-count:first').data('number') - 1;
             var nTabResult = $('#check-btn>a').data('number') - 1;
 
-            console.log(nPointResult);
-            console.log(nTabResult);
-
-
             $('.red-point-count').data('number', nPointResult);
             $('#check-btn>a').data('number', nTabResult);
 
@@ -865,7 +861,6 @@ $(function(){
             } else if(nCount <= 0) {
                 $('.red-point-count').hide();        //数字等于0，红点消失
             } else {
-                console.log(nCount);
                 $('.red-point-count').text(nCount).show();  //数字大于0且小于100，显示红点数字
             }
             if(nCheckMsg>0) {
@@ -921,7 +916,7 @@ $(function(){
                     lock.pass = true;
                     $.ajax({
                         url: '/api/bookmarks/pass/'+channelId+'/'+bookmarkId,
-                        type:'post',
+                        type:'post'
                     }).done(function(response) {
                         if(response.code == 0) {
                             $('#pass-confirm-box').modal('hide');
@@ -931,6 +926,7 @@ $(function(){
                                 $('#result-dialog').modal('hide');
                             },2000);
                             $('.post-item[data-id='+ bookmarkId +']').remove();
+                            console.log("通过");
                             that.checkMinusOne();            //小红点减去1 && check tab标签减去1
                             lock.pass = false;
                         } else {
@@ -962,7 +958,7 @@ $(function(){
                 $('#pass-edit-box').modal('show');
             });
 
-            //确认通过当前的书签
+            //确认通过当前被编辑后的书签
             $('#pass-edit-ok').on('click', function(event){
                 var bookmarkId = $('#pass-edit-ok').data('bookmarkId');
                 var channelId = $('#pass-edit-ok').data('channelId');
@@ -983,6 +979,7 @@ $(function(){
                                 $('#result-dialog').modal('hide');
                             },2000);
                             $('.post-item[data-id='+ bookmarkId +']').remove();
+                            console.log("编辑");
                             that.checkMinusOne();            //小红点减去1 && check tab标签减去1
                             lock.edit = false;
                         } else {
@@ -1034,6 +1031,7 @@ $(function(){
                                 $('#result-dialog-fail').modal('hide');
                             },2000);
                             $('.post-item[data-id='+ bookmarkId +']').remove();
+                            console.log("删除");
                             that.checkMinusOne();            //小红点减去1 && check tab标签减去1
                             lock.delete = false;
                         } else {
