@@ -13,9 +13,9 @@ module.exports = function(Channels, app, auth, database) {
     app.get('/channel/:channelId/follower', function(req, res, next) {
         channels.renderFollower(req,res,Channels);
     });
-    //审核频道新提交的内容
-    app.get('/channel/:channelId/check', function(req, res, next) {
-        channels.renderCheck(req,res,Channels);
+    //管理界面
+    app.get('/channel/:channelId/manage', function(req, res, next) {
+        channels.renderManage(req,res,Channels);
     });
     //订阅某个频道
     app.post('/channel/sub/',channels.sub);

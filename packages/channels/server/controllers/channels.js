@@ -289,8 +289,8 @@ exports.renderFollower = function(req,res,Package){
         });
 };
 
-//展示未审核内容
-exports.renderCheck = function(req,res,Package){
+//管理者界面
+exports.renderManage = function(req,res,Package){
     var channelId = req.params['channelId'];
     if(!Myverify.idVerify(channelId)) {return res.error();}
     var limit=6;
@@ -344,15 +344,17 @@ exports.renderCheck = function(req,res,Package){
             }],
         function(err,type,channel,pageLength,doc){
             if (err) {console.log(err);return res.error();}
+            if (type!='creator'&&type!='admin') {return res.redirect('/');}
             if(!channel) return res.redirect('/');
             var channel = channel;
             var list = doc;
             var page=tool.skipPage(p,pageLength);
-            channel.userType = type;
+            channel.userType = type;console.log(channel.userType);
             Package.render('manage', {
                 channel:channel,
                 list:list,
-                page:page
+                page:page,
+                user:req.user
             }, function(err, html) {
                 if(err) {console.log(err);res.sendError()}
                 res.send(html);
