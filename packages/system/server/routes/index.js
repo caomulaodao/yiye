@@ -55,7 +55,8 @@ module.exports = function(System, app, auth, database) {
   app.route('/system/scraper')
      .post(index.scraper);
   //500服务器错误界面
-  app.route('/error')
-     .get(index.error);
+  app.get('/error',function(req,res,next){
+      index.error(req,res,System);
+  })
 
 };

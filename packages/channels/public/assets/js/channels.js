@@ -91,6 +91,12 @@ function init() {
             // subDown = false;
         });
     });
+    $('#creator-btn').click(function(event){
+        var channelId = $('#control-body').data('channelid');   //alert(window.location.host+'/channel/'+channelId+'/manager');     
+        var destination = 'http://'+location.host+'/channel/'+channelId+'/manage';
+        location.href = destination;alert(destination);
+        alert(location.href);
+    })
 
 //取消订阅频道
     // $('#subscribe-btn').click(function(event){

@@ -191,7 +191,7 @@ exports.query = function(req,res,Package){
 //爬虫
 exports.scraper = function(req,res){
     if (!req.user){return res.sendResult('请先登陆或注册',1000,null);}
-    var userUrl = req.body.website;console.log(req.body);
+    var userUrl = req.body.website;
     //参数检测
     if (userUrl==null) {return res.sendResult('url地址不能为空',2012,null);}
     if (typeof userUrl!=='string') {return res.sendResult('url地址格式错误',2013,null);}
@@ -209,6 +209,7 @@ exports.scraper = function(req,res){
     //传入dom后的处理函数
     var callback = function(err,response,content){
         if (err) {console.log(err);return res.sendResult('访问该网站出错',3001,null);}
+        console.log(response.statusCode);
         if (!err&&response.statusCode == 200){
             // var bufferhelper = new BufferHelper();
             // var str = iconv.decode(content, 'GBK'); //return unicode string from GBK encoded bytes
@@ -223,16 +224,19 @@ exports.scraper = function(req,res){
         if (!description){
             description = $('p').text().substr(0,100);
         }
-        var imgUrl = $('p img').attr('src')||$('img').attr('src');
+        var imgUrl =""; //$('p img').attr('src')||$('img').attr('src');
         //判断是相对路径还是绝对路径
         if (!myVerify.isUrl(imgUrl)){
             imgUrl = url+'/'+imgUrl;
         }
+        var isEmpty = true;
+        if (title.length>0){isEmpty = false}
         var result = {
             title:title,
             description:description,
             imgUrl:imgUrl,
-            website: url
+            website: url,
+            isEmpty:isEmpty
         };console.log(result);
         res.sendResult('返回网站信息成功',0,result);
     }
