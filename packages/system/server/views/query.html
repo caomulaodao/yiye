@@ -45,26 +45,31 @@
 </div>
 <h1 id="index-query-top-title">{{query}}</h1>
 <!--water fall-->
-<ul id="water-fall-main">
-    {% for channel in channels %}
-    <li class="channel-showcase">
-        <div class="channel-logo">
-            <img src="http://yiye.qiniudn.com/{{ channel.logo }}"/>
-        </div>
-        <div class="channel-main">
-            <div class="channel-showcase-head">
-                <a href="#">{{ channel.name }}</a>
-                <span><a href="#">{% if channel.isAttention %}已关注{% else %}+关注{% endif %}</a></span>
+<div id="water-fall">
+    <ul id="water-fall-main">
+        {% for channel in channels %}
+        <li class="channel-showcase">
+            <div class="channel-logo">
+                <img src="http://yiye.qiniudn.com/{{ channel.logo }}"/>
             </div>
-            <p class="channel-showcase-description">{{ channel.description }}</p>
-            <div class="channel-showcase-footer">
-              <span>{{ channel.bmkNum}}书签</span><span>{{ channel.subNum}}关注者</span>
-              <a href="/u/{{ ''+channel.creator.userId }}" target="_blank"><img src="http://yiye.qiniudn.com/{{ channel.creator.userLogo }}"/></a>
+            <div class="channel-main">
+                <div class="channel-showcase-head">
+                    <a class="channel-name" href="/channel/{{ channel.id }}">{{ channel.name }}</a>
+                    <span>
+                        <a class="have-subed" href="javascript:;">{% if channel.isAttention %}已订阅{% else %}</a>
+                        <a class="to-sub" data-id= {{ channel.id }} href="javascript:;">+订阅{% endif %}</a>
+                    </span>
+                </div>
+                <p class="channel-showcase-description">{{ channel.description }}</p>
+                <div class="channel-showcase-footer">
+                  <span>{{ channel.bmkNum}}书签</span><span>{{ channel.subNum}}关注者</span>
+                  <a class="ex-creator" target="_blank" href="/u/{{ ''+channel.creator.userId }}" data-toggle="tooltip" data-placement="left" title={{ channel.creator.userName}} ><img src="http://yiye.qiniudn.com/{{ channel.creator.userLogo }}"/></a>
+                </div>
             </div>
-        </div>
-    </li>
-    {% endfor %}
-</ul>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
 {% if page.show.length!=0 %}
 <div id="pagination-part">
     <ul class="pagination">
@@ -95,11 +100,6 @@
 <!--explore footer-->
 <div id="explore-footer">
     <div>
-        <span>关注我们:</span>
-        <a href="javascript:;" id="weibo" class="icon-weibo"></a>
-        <a href="javascript:;" id="wechat" class="icon-wechat"></a>
-    </div>
-    <div>
         <a href="javascript:;">关于我们</a>
         <a href="javascript:;">加入我们</a>
         <a href="javascript:;">帮助</a>
@@ -108,6 +108,7 @@
 
 <!--javascript-->
 <script rel="script" src="/bower_components/jquery/dist/jquery.js"></script>
+<script rel="script" src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
 <script type="text/javascript"  src="/system/assets/js/explore.js"></script>
 
 

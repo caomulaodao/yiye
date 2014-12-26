@@ -18,12 +18,12 @@
             </a>
             <img src="/home/assets/img/brand_name_green.png" onclick="window.location.assign('/home')">
             <i id="rounded-arrow" class="iconfont">&#x3435</i>
-            <span id="arrow-count"class="red-point-count"style="display:none" data-number='0'></span>
+            <span id="arrow-count" class="red-point-count" style="display:none" data-number='0'></span>
         </div>
         <div id="function-module">
             <ul id="function-module-ul">
-                <li id='message'><i class="iconfont">&#xf00b5</i><div>消息</div><span id="message-count" class="red-point-count"style="display:none" data-number='0'></span></li>
                 <li id='discover' ><i class="iconfont">&#xe684</i><div>发现</div></li>
+                <li id='message'><i class="iconfont">&#xf00b5</i><div>消息</div><span id="message-count" class="red-point-count"style="display:none" data-number='0'></span></li>
                 <li id='help'><i class="iconfont">&#xf00b8</i><div>帮助</div></li>
                 <li id='set'><i class="iconfont">&#xf013e</i><div>设置</div></li>
             </ul>
@@ -410,8 +410,17 @@
                 <% } %>
             </ul>
             <div class = 'submit-background'></div>
-            <div class = 'input-url'><input type='text' placeholder='请输入你想添加的书签地址' /><button class= 'input-url-button'>提交</button></div>
-            <div class = 'add-bookmark'><p>提交</p><p>书签</p></div>
+            <div class = 'input-url'>
+                <p class="title">请输入你需要添加书签的url地址。</p>
+                <div class="input-group">
+                      <input type="text" class="form-control" placeholder="http://">
+                      <span class="input-group-btn">
+                        <button class="btn btn-default input-url-button" type="button" >添加书签</button>
+                      </span>
+                </div>
+                <p class="error">error</p>
+            </div>
+            <div class = 'add-bookmark'><p>提&nbsp;&nbsp;交</p><p>书&nbsp;&nbsp;签</p></div>
             <div class = 'submit-bookmark'></div>
             <div style="height:100px"></div>
         </div>
@@ -625,18 +634,19 @@
         <div class="link-part-content">
             <div class="bookmark-pic"><img src="http://yiye.qiniudn.com/<%= msg[i]['image']%>"/></div>
             <a class="link title-link"  href=<%= msg[i]['url'] %> data-id= <%= msg[i]['_id'] %> target="_blank" > <%= msg[i]['title']%> </a>
+
             <div class="to-channel">
-                <span>提交到：</span><a target="_blank" class="channel-title" data-id= <%= msg[i]['_id'] %> href="/channel/<%=msg[i]['channelId'] %>"><%= msg[i]['channelInfo']['channelName']%></a>
             </div>
             <div class="description" data-id= <%= msg[i]['_id'] %>>
                 <span>描述：</span><b data-id= <%= msg[i]['_id'] %> ><%= msg[i]['description']%></b>
             </div>
             <div class="footer-part" data-id= <%= msg[i]['_id'] %>>
-                <span class="submit-time">提交于:<%= msg[i]['postTime'] %></span>
-                <span>by <a href="#" data-id= <%= msg[i]['_id'] %>><%= msg[i]['postUser']['username']%></a></a></span>
+                <span>提交至：</span><img src="http://yiye.qiniudn.com/<%= msg[i]['channelInfo']['channelLogo']%>"/><a target="_blank" class="channel-title" data-id= <%= msg[i]['_id'] %> href="/channel/<%=msg[i]['channelId'] %>"><%= msg[i]['channelInfo']['channelName']%></a>
                 <span><i class="glyphicon glyphicon-ok"></i><a class="passBookmark" href="#" data-channelId=<%= msg[i]['channelId']%> data-id= <%= msg[i]['_id'] %> >通过</a></span>
                 <span><i class="glyphicon glyphicon-pencil"></i><a class="editBookmark" href="#"  data-channelId=<%= msg[i]['channelId']%> data-id= <%= msg[i]['_id'] %> >编辑</a></span>
                 <span><i class="glyphicon glyphicon-trash"></i><a class="deleteBookmark" href="#" data-channelId=<%= msg[i]['channelId']%> data-id= <%= msg[i]['_id'] %> >筛除</a></span>
+                <span class="submit-time">提交于:<%=  moment(''+msg[i]['postTime']).format('YYYY-M-D H:mm:ss') %></span>
+                <span>by <a href="#" data-id= <%= msg[i]['_id'] %>><%= msg[i]['postUser']['username']%></a></a></span>
             </div>
         </div>
     </li>
@@ -675,14 +685,12 @@
     <% for(var i = 0; i < msg.length; i++) { %>
     <li data-id=<%=msg[i]['_id']%> class="attention-box">
         <a href="/u/<%=msg[i]['userId']%>" target="_blank">
-            <div class="at-user-avatar">
-                <img src="http://yiye.qiniudn.com/<%=msg[i]['userLogo']%>">
-            </div>
-        </a>        
+                <img src="http://yiye.qiniudn.com/<%=msg[i]['userLogo']%>" class="at-user-avatar">
+        </a>
         <a  href="/u/<%=msg[i]['userId']%>" target="_blank" class="at-user-name"><%=msg[i]['username']%></a>
         <span>关注了</span>
         <a class="at-channel-name" href="/channel/<%= msg[i]['channelId']%>"target="_blank"><%=msg[i]['name'] %></a>
-        <span class="at-time">时间：<%=msg[i]['followerTime'] %></span>
+        <span class="at-time">时间：<%= moment(''+msg[i]['followerTime']).format('YYYY-M-D H:mm:ss') %></span>
     </li>
     <% } %>
 </script>
@@ -814,7 +822,8 @@
             <p>标签</p>
             <input type="text" class = "submit-tags" placeholder="多个标签请用,或者空格隔开"/>
         </div>
-        <button class="put2channel">提交至当前频道</button> 
+        <p class="bg-danger danger-info" id="channeInfoError"></p>
+        <button class="btn put2channel">提交至当前频道</button>
     </div>
 </script>
 

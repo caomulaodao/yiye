@@ -25,7 +25,7 @@ exports.renderPost = function(req,res,Package){
     p=+p;
     var limit=20;//每页显示的数量
     async.waterfall([//被访问者的信息
-                function (callback) {
+        function (callback) {
                 User.findOne({_id:userId}, function (err, user) {
                     if(err) {console.log(err);return res.error();}
                     callback(null,user);
@@ -52,7 +52,7 @@ exports.renderPost = function(req,res,Package){
         function(err,user,pageLength,list){
             if (err) {console.log(err);return res.error();}
             var page=tool.skipPage(p,pageLength);
-            Package.render('index', {
+            Package.render('post', {
                 user:user,
                 list:list,
                 page:page

@@ -144,18 +144,18 @@ exports.scraperReceive = function(req,res){
     if(req.body.title==null){return res.sendResult('标题不能为空',3001,null);}
     if(req.body.description==null){return res.sendResult('描述不能为空',3002,null);}
     if(req.body.website==null){return res.sendResult('书签地址不能为空',3003,null);}
-    if(req.body.image==null){return res.sendResult('图片不能为空',3004,null);}console.log(req.body.channel);
+    //if(req.body.image==null){return res.sendResult('图片不能为空',3004,null);}
     if(req.body.channel==null||(!verify.idVerify(req.body.channel))){return res.sendResult('频道ID格式错误',3006,null);}
     if(!(
         verify.isString(req.body.title)&&verify.isString(req.body.description)&&verify.isString(req.body.website)
-        &&verify.isString(req.body.image)&&verify.isString(req.body.tags)
+        &&verify.isString(req.body.tags)
         )){ return res.sendResult('参数类型错误',2000,null)};//判断数据格式
     if (!verify.isUrl(req.body.website)){return res.sendResult('url格式错误',2010,null);}
     var bookmarks ={
         title:xss(req.body.title,{whiteList:{}}),
         description:xss(req.body.description,{whiteList:{}}),
         url:encodeURI(xss(req.body.website,{whiteList:{}})),
-        image:xss(req.body.image,{whiteList:{}}),
+        //image:xss(req.body.image,{whiteList:{}}),
         channels:req.body.channel,
         tags:xss(req.body.tags,{whiteList:{}})
     };

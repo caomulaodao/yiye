@@ -45,17 +45,17 @@
                 频道管理
             </div>
             <div class="col-xs-3">
-                <input type="text" class="form-control" placeholder="搜索频道">
+                <input type="text" class="form-control"  id="channel-info" placeholder="搜索频道">
             </div>
             <div class="col-xs-2">
-                <select class="form-control">
-                    <option value="">频道名称</option>
-                    <option value="">频道id</option>
-                    <option value="">频道创建者</option>
+                <select class="form-control" id="channel-type">
+                    <option value="name">频道名称</option>
+                    <option value="id">频道id</option>
+                    <option value="creator">频道创建者</option>
                 </select>
             </div>
             <div class="col-xs-1">
-                <button type="button" class="btn btn-primary">搜索</button>
+                <button type="button" class="btn btn-primary" id="channel-search">搜索</button>
             </div>
         </div>
         <table class="table user-table">
@@ -67,19 +67,19 @@
                 <th>创建时间</th>
                 <th>订阅人数</th>
                 <th>书签数量</th>
-                <th>操作</th>
+                {% if role == 'system' %}<th>操作</th>{% endif %}
             </tr>
             </thead>
             <tbody>
             {% for channel in channels %}
             <tr>
                 <td>{{ ''+channel._id }}</td>
-                <td>{{ channel.name }}</td>
-                <td>{{ channel.creator.userName }}</td>
+                <td><a href="/channel/{{ ''+channel._id }}" target="_blank">{{ channel.name }}</a></td>
+                <td><a href="/u/{{ ''+channel.creator.userId }}">{{ channel.creator.userName }}</a></td>
                 <td>{{ ''+channel.time | date('Y-m-d H:m:s')}}</td>
                 <td>{{ channel.subNum }}</td>
                 <td>{{ channel.bmkNum }}</td>
-                <td>删除</td>
+                {% if role == 'system' %} <td><button type="button" class="btn btn-danger channelDelece"  data-channelid="{{ ''+channel._id }}">删除</button></td>{% endif %}
             </tr>
             {% endfor %}
             </tbody>
@@ -112,5 +112,6 @@
 
 <script rel="script" src="/bower_components/jquery/dist/jquery.js"></script>
 <script rel="script" src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<script rel="script" src="/overlook/assets/js/overlook.channel.js"></script>
 </body>
 </html>

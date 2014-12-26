@@ -13,6 +13,10 @@ var mongoose = require('mongoose'),
 
     //渲染主页
     exports.renderMain = function(req,res,Package){
+        //只有roles中添加了admin 或是 system的用户可以访问后台
+        if(!(req.user && (req.user.roles.indexOf('admin')>-1 || req.user.roles.indexOf('system')>-1))){
+            return res.redirect('/');
+        }
         async.parallel([
             function(cb){
                 User.count({},function(err,user_number){cb(err,user_number)});
@@ -41,6 +45,9 @@ var mongoose = require('mongoose'),
 
     //渲染用户管理页面
     exports.renderUser = function(req,res,Package){
+        if(!(req.user && (req.user.roles.indexOf('admin')>-1 || req.user.roles.indexOf('system')>-1))){
+            return res.redirect('/');
+        }
         var limit = 2;//每页限制显示数
         var p=req.query.p||1;
         var search = req.query.q || '';
@@ -63,7 +70,12 @@ var mongoose = require('mongoose'),
                     var query =  {};
             }
         }
-
+        //获取用户权限
+        if(req.user.roles.indexOf('system') > -1){
+            var role = 'system';
+        }else{
+            var role = 'admin';
+        }
         async.waterfall([
             function(cb){
                 User.count(query,function(err,count){
@@ -87,7 +99,7 @@ var mongoose = require('mongoose'),
                 });
             }
         ],function(err,users,page){
-            Package.render('user',{users:users,page:page,type:type,search:search}, function(err, html) {
+            Package.render('user',{users:users,page:page,type:type,search:search,role:role}, function(err, html) {
                 if(err) {console.log(err);return res.sendError()}
                 res.send(html);
             });
@@ -96,10 +108,19 @@ var mongoose = require('mongoose'),
 
     //渲染频道管理页面
     exports.renderChannel = function(req,res,Package){
+        if(!(req.user && (req.user.roles.indexOf('admin')>-1 || req.user.roles.indexOf('system')>-1))){
+            return res.redirect('/');
+        }
         var limit = 2;//每页限制显示数
         var p=req.query.p||1;
         var search = req.query.q || '';
         var type = req.query.type || 'name';
+        //获取用户权限
+        if(req.user.roles.indexOf('system') > -1){
+            var role = 'system';
+        }else{
+            var role = 'admin';
+        }
 
         if (!myVerify.isNumber(p)){p=1;}//判断参数是否合法
 
@@ -108,11 +129,14 @@ var mongoose = require('mongoose'),
         }else{
             console.log(type);
             switch(type){
-                case 'username':
-                    var query =  { username : new RegExp(search,'i') };
+                case 'name':
+                    var query =  { name : new RegExp(search,'i') };
                     break;
-                case 'email':
-                    var query =  { email : new RegExp(search,'i') };
+                case 'id':
+                    var query =  { _id : search };
+                    break;
+                case 'creator':
+                    var query =  { 'creator.userName' : new RegExp(search,'i') };
                     break;
                 default:
                     var query =  {};
@@ -142,7 +166,7 @@ var mongoose = require('mongoose'),
                 });
             }
         ],function(err,channels,page){
-            Package.render('channel',{channels:channels,page:page,type:type,search:search}, function(err, html) {
+            Package.render('channel',{channels:channels,page:page,type:type,search:search,role:role}, function(err, html) {
                 if(err) {console.log(err);return res.sendError()}
                 res.send(html);
             });
@@ -150,15 +174,86 @@ var mongoose = require('mongoose'),
     };
 
 
-    //传入用户Id删除某个指定用户
-    exports.deleteUserById = function(req,res){
-        if (!req.user) {return res.sendRuselt("你不是管理员",1002,null);}
+    //删除某个频道
+    exports.channelDelece = function(req,res){
+        if(!(req.user &&  req.user.roles.indexOf('system')>-1)){
+            return res.sendResult('对不起，无权限',2001,{});
+        }
+        var channelId = req.body.channelId;
+
+        async.parallel({
+          channelDel: function(callback){
+              Channels.remove({_id:channelId},function(err){
+                    callback(err,true);
+              });
+          },
+          creatorDel: function(callback){
+              Channel2User.remove({channelId:channelId,type:"creator"},function(err,doc){
+                  //删除创建者，并且删除创建者user表中的数量
+                  if(doc.length > 0){
+                      async.map(doc,function(item,callback){
+                          User.update({_id:req.user._id},{$inc:{createNum:-1}},{},function(err,num){
+                              if(err) {console.log(err);}
+                              callback();
+                          });
+                      },function(err,results){
+                          if (err) {console.log(err);return res.error();}
+                          callback(err,true);
+                      });
+
+                  }else{
+                      callback(err,true);
+                  }
+              });
+          },
+          followerDel: function(callback){
+              Channel2User.remove({channelId:channelId,type:"follower"},function(err,doc){
+                  //删除关注者，并且删除关注者user表中的数量
+                  if(doc.length > 0){
+                      async.map(doc,function(item,callback){
+                          User.update({_id:req.user._id},{$inc:{subNum:-1}},{},function(err,num){
+                              if(err){console.log(err);}
+                              callback();
+                          });
+                      },function(err,results){
+                          if (err) {console.log(err);return res.error();}
+                          callback(err,true);
+                      });
+
+                  }else{
+                      callback(err,true);
+                  }
+              });
+          }
+        },function(err,result){
+            if (err) {console.log(err);return res.error();}
+            return res.sendResult('频道删除成功',0,{});
+        })
+    };
+
+    //设置用户管理员权限
+    exports.setAdmin = function(req,res){
+        if(!(req.user &&  req.user.roles.indexOf('system')>-1)){
+            return res.sendResult('对不起，无权限',2001,{});
+        }
         var userId = req.body.userId;//
         if (!Myverify.idVerify(userId)) {return res.sendRuselt('userId格式错误',2015,null);}
-        User.findByIdAndRemove(userId,function(doc,err){
+        User.update({_id:userId},{ $addToSet: { roles: "admin" }},function(err,num){
             if (err) {return res.sendError(err);}
-            if (!doc) {return res.sendRuselt('你所查找的用户不存在');}
-            res.sendRuselt('删除成功',0,null);
+            res.sendResult('添加成功',0,null);
+        });
+    }
+
+    //取消用户后台权限
+    exports.cancelAdmin = function(req,res){
+        if(!(req.user &&  req.user.roles.indexOf('system')>-1)){
+            return res.sendResult('对不起，无权限',2001,{});
+        }
+        var userId = req.body.userId;//
+        if (!Myverify.idVerify(userId)) {return res.sendRuselt('userId格式错误',2015,null);}
+        User.update({_id:userId},{ $pull: { roles: "admin" } },function(err,num){
+            if (err) {return res.sendError(err);}
+            res.sendResult('取消权限成功',0,null);
         });
     }
 

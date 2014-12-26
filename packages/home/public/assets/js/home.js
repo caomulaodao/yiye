@@ -55,6 +55,8 @@ function initialize() {
             $('.red-point-count').text(nCount).show();  //数字大于0且小于100，显示红点数字
         }
     }
+
+    //消息ajax
     redPointAjax();
 
 }

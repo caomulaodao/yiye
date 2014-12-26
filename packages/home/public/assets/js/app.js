@@ -64,20 +64,23 @@ $(function(){
     var checkMsg = Backbone.Model.extend({
         defaults: {number: 0}
     });
+
     //通知model
     var informMsg = Backbone.Model.extend({
         defaults: {number: 0}
     });
+
     //关注model
     var attentionMsg = Backbone.Model.extend({
         defaults: {number: 0}
     });
+
     //点赞model
     var praiseMsg = Backbone.Model.extend({
         defaults: {number: 0}
     });
 
-
+    //频道列表
     var channelList = Backbone.Model.extend({
     });
 
@@ -89,6 +92,7 @@ $(function(){
     var newBookmarkModel = Backbone.Model.extend({
 
     });
+
     //提交书签的url
     var addBookmarkModel = Backbone.Model.extend({
         url: "/system/scraper",
@@ -102,6 +106,7 @@ $(function(){
             if (!result) return '请填写正确的地址';
         }
     });
+
     //抓取到的书签信息
     var submitBookmarkModel = Backbone.Model.extend({
         url: "/api/bookmarks/scraper/post",
@@ -121,6 +126,8 @@ $(function(){
 
         }
     });
+
+    //
     var SubmitView = Backbone.View.extend({
             el: $('.submit-view'),
 
@@ -129,7 +136,7 @@ $(function(){
             },       
 
             events:{
-                 "click .put2channel": "put2channel",
+                 "click .put2channel": "put2channel"
             }, 
             put2channel: function(){
                  this.addbookmark();
@@ -289,14 +296,17 @@ $(function(){
             },
             //点击提交URL地址按钮
             inputUrl: function(){
-                $('.load').addClass('loading')
                 var submitView = this.submitview;
                 var that = this;
                 that.addbookmark.set({'website':$('.input-url input').val()},{validate:true});
-                if(that.addbookmark.validationError){return console.log(that.addbookmark.validationError);}                
+                if(that.addbookmark.validationError){
+                    return  $(".input-url p.error").text(that.addbookmark.validationError).show();
+                }
+                $(".input-url p.error").hide();
+                $('.load').addClass('loading');
                 that.addbookmark.save(null,{error: function(model,response){
                         $('.load').removeClass('loading');
-                        console.log('网络异常或参数错误');
+                        return  $(".input-url p.error").text('网络异常或参数错误').show();
                     },
                     success: function(model,response){
                         console.log(response);
@@ -305,17 +315,22 @@ $(function(){
                         $('.submit-content').fadeIn('1s');
                         that.submitbookmark.set({'website':response.data.website,'channel':$('#sub-channel-list .active').data('id')||$('#admin-channel-list .active').data('id')});
                         that.submitview.addbookmark = function(){
-                            that.submitbookmark.set({'title':$('.submit-content-title div').text(),'description':$('.submit-content-description div').text(),'image':$('.submit-content-img img').attr('src'),'tags':$('.submit-content-tags input').val()});
-                            $('.load').addClass('loading');                   
+
+                            that.submitbookmark.set({'title':$('.submit-content-title div').text(),'description':$('.submit-content-description div').text(),'image':$('.submit-content-img img').attr('src'),'tags':$('.submit-content-tags input').val()},{validate:true});
+                            if(that.submitbookmark.validationError){
+                                return  $("#channeInfoError").text(that.submitbookmark.validationError).show();
+                            }
+                            $('.load').addClass('loading');
                             that.submitbookmark.save(null,
-                                {'error':function(){
-                                    console.log('网络异常或参数错误');
-                                    $('.load').removeClass('loading');
+                                {
+                                    'error':function(){
+                                        $('.load').removeClass('loading');
+                                        return  $(".input-url p.error").text('网络异常或参数错误').show();
                                     },
-                                'success':function(model,response){
-                                    $('.load').removeClass('loading');
-                                    $('.submit-background').click();
-                                }
+                                    'success':function(model,response){
+                                        $('.load').removeClass('loading');
+                                        $('.submit-background').click();
+                                    }
                                 }
                             )
                         }
@@ -901,7 +916,7 @@ $(function(){
                     lock.pass = true;
                     $.ajax({
                         url: '/api/bookmarks/pass/'+channelId+'/'+bookmarkId,
-                        type:'post',
+                        type:'post'
                     }).done(function(response) {
                         if(response.code == 0) {
                             $('#pass-confirm-box').modal('hide');
@@ -911,6 +926,7 @@ $(function(){
                                 $('#result-dialog').modal('hide');
                             },2000);
                             $('.post-item[data-id='+ bookmarkId +']').remove();
+                            console.log("通过");
                             that.checkMinusOne();            //小红点减去1 && check tab标签减去1
                             lock.pass = false;
                         } else {
@@ -942,7 +958,7 @@ $(function(){
                 $('#pass-edit-box').modal('show');
             });
 
-            //确认通过当前的书签
+            //确认通过当前被编辑后的书签
             $('#pass-edit-ok').on('click', function(event){
                 var bookmarkId = $('#pass-edit-ok').data('bookmarkId');
                 var channelId = $('#pass-edit-ok').data('channelId');
@@ -963,6 +979,7 @@ $(function(){
                                 $('#result-dialog').modal('hide');
                             },2000);
                             $('.post-item[data-id='+ bookmarkId +']').remove();
+                            console.log("编辑");
                             that.checkMinusOne();            //小红点减去1 && check tab标签减去1
                             lock.edit = false;
                         } else {
@@ -1014,6 +1031,7 @@ $(function(){
                                 $('#result-dialog-fail').modal('hide');
                             },2000);
                             $('.post-item[data-id='+ bookmarkId +']').remove();
+                            console.log("删除");
                             that.checkMinusOne();            //小红点减去1 && check tab标签减去1
                             lock.delete = false;
                         } else {
@@ -1354,7 +1372,7 @@ $(function(){
     //实例化
     var App = new AppView;
 
-        //爱屁屁的路由
+    //爱屁屁的路由
     var AppRouter = Backbone.Router.extend({
         routes:{
             'sub' : 'subControl',
@@ -1415,6 +1433,8 @@ $(function(){
 
 
     })
+
+    //实例化路由
     var Router = new AppRouter;
     Backbone.history.start();
 
