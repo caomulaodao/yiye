@@ -226,17 +226,15 @@ exports.scraper = function(req,res){
         }
         var imgUrl =""; //$('p img').attr('src')||$('img').attr('src');
         //判断是相对路径还是绝对路径
-        if (!myVerify.isUrl(imgUrl)){
-            imgUrl = url+'/'+imgUrl;
-        }
-        var isEmpty = true;
+        // if (!myVerify.isUrl(imgUrl)){
+        //     imgUrl = url+'/'+imgUrl;
+        // }
         if (title.length>0){isEmpty = false}
         var result = {
             title:title,
             description:description,
             imgUrl:imgUrl,
             website: url,
-            isEmpty:isEmpty
         };console.log(result);
         res.sendResult('返回网站信息成功',0,result);
     }

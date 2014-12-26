@@ -92,10 +92,9 @@ function init() {
         });
     });
     $('#creator-btn').click(function(event){
-        var channelId = $('#control-body').data('channelid');   //alert(window.location.host+'/channel/'+channelId+'/manager');     
+        var channelId = $('#control-body').data('channelid');     
         var destination = 'http://'+location.host+'/channel/'+channelId+'/manage';
-        location.href = destination;alert(destination);
-        alert(location.href);
+        location.href = destination;
     })
 
 //取消订阅频道
