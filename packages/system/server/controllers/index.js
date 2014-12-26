@@ -226,19 +226,19 @@ exports.scraper = function(req,res){
         }
         var imgUrl =""; //$('p img').attr('src')||$('img').attr('src');
         //判断是相对路径还是绝对路径
-        if (!myVerify.isUrl(imgUrl)){
-            imgUrl = url+'/'+imgUrl;
-        }
-        var isEmpty = true;
-        if (title.length>0){isEmpty = false}
+        // if (!myVerify.isUrl(imgUrl)){
+        //     imgUrl = url+'/'+imgUrl;
+        // }
         var result = {
             title:title,
             description:description,
             imgUrl:imgUrl,
             website: url,
-            isEmpty:isEmpty
-        };console.log(result);
-        res.sendResult('返回网站信息成功',0,result);
+        };
+        if (title.length>0) {res.sendResult('返回网站信息成功',0,result);}
+        else{
+            res.sendResult('获取网站失败',3000,null);
+        }
     }
     request(options,callback);
 
