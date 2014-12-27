@@ -60,7 +60,7 @@ exports.receive = function(req,res){
     var bookmarks ={
         title:xss(req.body.title,{whiteList:{}}),
         description:xss(req.body.description,{whiteList:{}}),
-        url:encodeURI(xss(req.body.url,{whiteList:{}})),
+        url:xss(req.body.url,{whiteList:{}}),
         image:xss(req.body.image,{whiteList:{}}),
         channels:req.body.channels,
         tags:xss(req.body.tags,{whiteList:{}})
@@ -154,7 +154,7 @@ exports.scraperReceive = function(req,res){
     var bookmarks ={
         title:xss(req.body.title,{whiteList:{}}),
         description:xss(req.body.description,{whiteList:{}}),
-        url:encodeURI(xss(req.body.website,{whiteList:{}})),
+        url:xss(req.body.website,{whiteList:{}}),
         //image:xss(req.body.image,{whiteList:{}}),
         channels:req.body.channel,
         tags:xss(req.body.tags,{whiteList:{}})
