@@ -460,7 +460,8 @@ exports.oneDay = function(req,res){
                 });
                 // dayResult.list = list;
                 dayResult = list;
-                Channel2User.update({channelId:channelId,userId:req.user._id},{lastTime:Date.now()},function(err){
+                var userId = req.user ? req.user._id : null;
+                Channel2User.update({channelId:channelId,userId:userId},{lastTime:Date.now()},function(err){
                     if(err) { console.log(err);return res.sendError()}
                     res.sendResult('获取书签成功',0,dayResult);
                 });
