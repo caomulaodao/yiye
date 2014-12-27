@@ -1441,7 +1441,7 @@ $(function(){
             view.renderAfter();
         },
         help: function(){
-            window.location.href = "/our/team/#help";
+            window.location.href = "/our/team";
         },
         set: function(){
             var view = new Setting();
