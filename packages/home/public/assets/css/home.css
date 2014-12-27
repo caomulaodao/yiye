@@ -59,7 +59,44 @@ button:focus {outline:0;}
     url('../../../../system/assets/icons/nav/iconfont.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
     url('../../../../system/assets/icons/nav/iconfont.svg#uxiconfont') format('svg'); /* iOS 4.1- */
 }
+#rounded-arrow,#rounded-right{
+    font-size: 4.0em;
+    margin-top: 2px;
+    float: right;
+    color: #ccc;
+    position: relative;
+    -webkit-transition: all 300ms;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select:none;
+}
+
+#rounded-arrow:hover,#rounded-right:hover,#rounded-left:hover {
+    cursor: pointer;
+    color: #40c192;
+}
+
+#rounded-arrow.active {
+    color: #40c192;
+    -webkit-transform: rotate(180deg);
+    -webkit-transition: all 300ms;
+}
 #rounded-arrow{
+    font-family: "nav" !important;    
+}
+#rounded-right{
+    margin-top: 10px;
+    font-size: 3.0em;
+}
+#rounded-left{
+    float: left;
+    color: #ccc;
+    font-size: 3.7em;
+    cursor: pointer;
+    margin-top: 5px;
+    margin-left: 15px;
+}
+#rounded-left,#rounded-right{
     font-family: "nav" !important;    
 }
 /* personal-center */
@@ -367,28 +404,7 @@ button:focus {outline:0;}
     cursor: pointer;
 }
 
-#rounded-arrow {
-    font-size: 4.0em;
-    margin-top: 2px;
-    float: right;
-    color: #ccc;
-    position: relative;
-    -webkit-transition: all 300ms;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    user-select:none;
-}
 
-#rounded-arrow:hover {
-    cursor: pointer;
-    color: #40c192;
-}
-
-#rounded-arrow.active {
-    color: #40c192;
-    -webkit-transform: rotate(180deg);
-    -webkit-transition: all 300ms;
-}
 /* red-point-count */
 .red-point-count {
     background: #d33;

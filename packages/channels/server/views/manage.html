@@ -17,15 +17,19 @@
     </div>
     <div id="control-page-content">
             <div class="control-header" >
-                {% if user %}
-                <a class="avatar" id="user-center">
+                 {% if user %}
+                <a class="avatar" id="user-center"  onclick="window.location.assign('/u/{{''+user._id}}')">
                     <img src="http://yiye.qiniudn.com/{{ user.avatar }}">
                 </a>
-                {% endif %}
-                <img src="/home/assets/img/brand_name_white.png" onclick="window.location.assign('/home')">
-                 {% if user %}
+                {% else %}
+                <i  id="rounded-left" class='iconfont'  onclick="window.location.assign('/')">&#xe61b;</i>
+            {% endif %}
+            <img src="/home/assets/img/brand_name_white.png" onclick="window.location.assign('/home')">
+            {% if user %}
                 <i id="rounded-arrow" class="iconfont">&#x3434</i>
-                {% endif %}
+                {% else %}
+                <i id="rounded-right" class="iconfont" onclick="window.location.assign('/signin')">&#xe625;</i>
+            {% endif %}
                 
             </div>
                 <div id="function-module">
