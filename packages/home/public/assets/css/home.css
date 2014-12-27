@@ -843,6 +843,13 @@ p.add-true{
     text-align: center;
     display: none;
 }
+.input-url p.info{
+    margin-top: 30px;
+    font-size: 20px;
+    color: #249E5F;
+    text-align: center;
+    display: none;
+}
 
 /*提交书签表单*/
 .submit-content{
@@ -1948,4 +1955,9 @@ a.ex-creator {float: right;}
     border-radius: 6px;
     color: #DB5757;
     display: none;
+}
+.footer-part .divide{
+    margin: 0px 8px;
+    color: #BBBBBB;
+    font-size: 16px;
 }
