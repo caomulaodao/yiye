@@ -12,13 +12,13 @@ $(function(){
         location.href = "/overlook/channel?type="+userType+"&q="+userInfo;
     });
     //频道删除
-    $(".channelDelece").click(function(){
+    $(".channelDelete").click(function(){
         if(DeLock) return false;
         var channelId = $(this).data("channelid");
         if(confirm("确定删除此频道？")){
             DeLock = true;
             $.ajax({
-                url: '/api/overlook/channelDelece',
+                url: '/api/overlook/channelDelete',
                 data: {'channelId': channelId},
                 type:'POST'
             }).done(function ( data ) {

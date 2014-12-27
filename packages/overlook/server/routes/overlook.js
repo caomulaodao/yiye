@@ -20,9 +20,15 @@ module.exports = function(Overlook, app, auth, database) {
     app.get('/overlook/channel', function(req, res, next) {
         overlook.renderChannel(req, res, Overlook);
     });
+    //管理Bugs
+    app.get('/overlook/bugs', function(req, res, next) {
+        overlook.renderBugs(req, res, Overlook);
+    });
+    //删除某个频道
+    app.post('/api/overlook/channelDelete',overlook.channelDelete);
 
-    //删除某个用户
-    app.post('/api/overlook/channelDelece',overlook.channelDelece);
+    //删除某个Bug
+    app.post('/api/overlook/bugDelete',overlook.bugDelete);
 
     //设置用户后台权限
     app.post('/api/overlook/setAdmin',overlook.setAdmin);
