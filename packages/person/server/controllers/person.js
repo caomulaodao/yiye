@@ -55,7 +55,8 @@ exports.renderPost = function(req,res,Package){
             Package.render('post', {
                 user:user,
                 list:list,
-                page:page
+                page:page,
+                visitor:req.user
             }, function(err, html) {
                 if(err) {console.log(err);return res.sendError()}
                 res.send(html);
@@ -119,7 +120,8 @@ exports.renderCreate = function(req,res,Package){
             Package.render('create', {
                 user:user,
                 list:channels,
-                page:page
+                page:page,
+                visitor:req.user
             }, function(err, html) {
                 if(err) {console.log(err);res.sendError()}
                 res.send(html);
@@ -137,6 +139,7 @@ exports.renderCreate = function(req,res,Package){
     var limit=24;//每页显示的数量
     async.waterfall([
         function (callback) {
+        //目标用户信息
         User.findOne({_id:userId}, function (err, user) {
             if(err){console.log(err);return res.error();}
             callback(null,user);
@@ -182,7 +185,14 @@ exports.renderCreate = function(req,res,Package){
                 });
                 callback(err,user,pageLength,channels,channel2userId);
             })
-        }
+        },
+        // function(user,pageLength,channels,channel2userId,callback){
+        //     if (!req.user){return callback(err,user,pageLength,channels,channel2userId,null)}
+        //     User.findOne({'id':req.user._id},function(err,visitor){
+        //         if (err) {console.log(err);return res.sendError();}
+        //         callback(err,user,pageLength,channels,channel2userId,visitor);
+        //     })
+        // }
         ],
         function(err,user,pageLength,channels,channel2userId){
             if (err) {console.log(err);return res.error()}
@@ -196,7 +206,8 @@ exports.renderCreate = function(req,res,Package){
             Package.render('watch', {
                 user:user,
                 list:channels,
-                page:page
+                page:page,
+                visitor:req.user
             }, function(err, html) {
                 if(err) {console.log(err);return res.sendError()}
                 res.send(html);
