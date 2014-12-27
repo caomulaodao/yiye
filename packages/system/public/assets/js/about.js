@@ -32,6 +32,8 @@
 				return '-300vh';
             case '#help':
                 return '-400vh';
+            case '#extendInstall':
+                return '-500vh';
 			default:
 				return 0;	
 		}
