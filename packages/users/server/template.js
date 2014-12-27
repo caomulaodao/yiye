@@ -14,7 +14,7 @@ module.exports = {
   },
   verify_register_email:function(user,req,token,mailOptions){
       mailOptions.html = [
-          '<h1>' + user.username + '欢迎加入一叶书签<h1>',
+          '<h1>' + user.username + '，欢迎加入一叶书签<h1>',
           '为了你可以正常使用一叶书签，点击链接地址，完成邮箱认证：<br/>',
           'http://' + req.headers.host + '/verified/' + token+'<br/>',
           '一叶书签，发现网络之美'
