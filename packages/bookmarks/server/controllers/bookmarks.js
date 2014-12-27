@@ -607,7 +607,7 @@ function listToArray(list){
         item['dList'].sort(function(a,b){
             var aRank = a['likeNum'] - a['hateNum'];
             var bRank = b['likeNum'] - b['hateNum'];
-            return aRank < bRank ? -1 : 1;
+            return aRank > bRank ? -1 : 1;
         })
     });
     return result;

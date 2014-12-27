@@ -38,7 +38,7 @@ function skipPage(searchPage,listLength){
         }
 }
 
-//将一个bookmarks列表格式化为按时间集合排序的数组。 
+//将一个bookmarks列表格式化为按时间集合排序的数组。 按天排序 再按照点赞排序
 function listToArray(list){
     if(list.length==0) return [];
     var result = [];
@@ -64,7 +64,7 @@ function listToArray(list){
         item['dList'].sort(function(a,b){
             var aRank = a['likeNum'] - a['hateNum'];
             var bRank = b['likeNum'] - b['hateNum'];
-            return aRank < bRank ? -1 : 1;
+            return aRank > bRank ? -1 : 1;
         })
     });
     return result;
