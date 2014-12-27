@@ -132,7 +132,8 @@ $(function(){
             el: $('.submit-view'),
 
             initTemplate: _.template($('#tp-submit-bookmark').html()),
-             initialize: function(){
+
+            initialize: function(){
             },       
 
             events:{
@@ -154,7 +155,9 @@ $(function(){
             el: $('.content-page'),
 
             initTemplate: _.template($('#tp-channels-main').html()),
-            //添加书签 视图
+
+            successTemplate: _.template($('#tp-channels-submit-success').html()),
+
             // submitbkmTemplate: _.template($('#tp-submit-bookmark').html()),
 
             lock:{
@@ -221,7 +224,7 @@ $(function(){
                                 $('.content-body>ul').append(that.channelTemplate(response.data));
                                 if(!response.data.isHave){
                                     $('.content-body>ul').append("<p class='no-news'>无更多内容</p>");
-                                } else {
+                                }else{
                                     var nextDate = response.data.nextTime;   //将下次日期赋值给nextDate变量
                                     that.list.set("date", nextDate);         //记录下次Ajax日期
                                     that.channelAjax.bScroll = true;         //许可Ajax加载
@@ -269,14 +272,13 @@ $(function(){
                 var that = this;
                 hate.set('bookmarkId', bookmarkId);
                 hate.save(null, {url:'/api/bookmarks/hate',success:function(model,response){
-                    if (response.code==0){
+                    if(response.code==0){
                         if(response.data.isLiked == true && response.data.isHated == false){
                             var count = $(event.currentTarget).parent().find('span');
                             count.text(+count.text()-1);
                         }
                         that.lock.bkDown = false;  
-                    }
-                    else{
+                    }else{
                         console.log(response);
                     }
 
@@ -299,6 +301,8 @@ $(function(){
                 var submitView = this.submitview;
                 var that = this;
                 that.addbookmark.set({'website':$('.input-url input').val()},{validate:true});
+                $('.load').removeClass('loading');
+                submitView.$el.html("");
                 if(that.addbookmark.validationError){
                     return  $(".input-url p.error").text(that.addbookmark.validationError).show();
                 }
@@ -309,30 +313,33 @@ $(function(){
                         return  $(".input-url p.error").text('网络异常或参数错误').show();
                     },
                     success: function(model,response){
-                        console.log(response);
                         $('.load').removeClass('loading');
-                        submitView.$el.html(submitView.initTemplate(response.data));
-                        $('.submit-content').fadeIn('1s');
-                        that.submitbookmark.set({'website':response.data.website,'channel':$('#sub-channel-list .active').data('id')||$('#admin-channel-list .active').data('id')});
-                        that.submitview.addbookmark = function(){
+                        if(response.code == 0){
+                            submitView.$el.html(submitView.initTemplate(response.data));
+                            $('.submit-content').fadeIn('1s');
+                            that.submitbookmark.set({'website':response.data.website,'channel':$('#sub-channel-list .active').data('id')||$('#admin-channel-list .active').data('id')});
+                            that.submitview.addbookmark = function(){
 
-                            that.submitbookmark.set({'title':$('.submit-content-title div').text(),'description':$('.submit-content-description div').text(),'image':$('.submit-content-img img').attr('src'),'tags':$('.submit-content-tags input').val()},{validate:true});
-                            if(that.submitbookmark.validationError){
-                                return  $("#channeInfoError").text(that.submitbookmark.validationError).show();
-                            }
-                            $('.load').addClass('loading');
-                            that.submitbookmark.save(null,
-                                {
-                                    'error':function(){
-                                        $('.load').removeClass('loading');
-                                        return  $(".input-url p.error").text('网络异常或参数错误').show();
-                                    },
-                                    'success':function(model,response){
-                                        $('.load').removeClass('loading');
-                                        $('.submit-background').click();
-                                    }
+                                that.submitbookmark.set({'title':$('.submit-content-title div').text(),'description':$('.submit-content-description div').text(),'image':$('.submit-content-img img').attr('src'),'tags':$('.submit-content-tags input').val()},{validate:true});
+                                if(that.submitbookmark.validationError){
+                                    return  $("#channeInfoError").text(that.submitbookmark.validationError).show();
                                 }
-                            )
+                                $('.load').addClass('loading');
+                                that.submitbookmark.save(null,
+                                    {
+                                        'error':function(){
+                                            $('.load').removeClass('loading');
+                                            return  $(".input-url p.error").text('提交失败，网络异常或参数错误').show();
+                                        },
+                                        'success':function(model,response){
+                                            $('.load').removeClass('loading');
+                                            submitView.$el.html("提交成功");
+                                        }
+                                    }
+                                )
+                            }
+                        }else{
+                            $(".input-url p.error").text(response.msg).show();
                         }
                     }
                 });          
@@ -392,7 +399,7 @@ $(function(){
                 //         }
                 //     });
                 // }
-            },
+            }
         });
         if (this.view){return this.view};
         this.view = new listView();

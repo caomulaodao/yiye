@@ -226,7 +226,6 @@ function getTags(str){
 
 //ajax加载'发现'页面内容
 exports.discover = function(req,res){
-    if(!req.user) return res.sendResult('请先登录或注册',1000,null);
     //number为请求次数 limit为每次返回的数量
     var number=req.query.number||1;
     var limit=12;
@@ -251,7 +250,8 @@ exports.discover = function(req,res){
             },
             //是否关注
             function(results,doc,callback){
-                Channel2User.find({userId:req.user._id},function(err,channel2user){
+                var userId = req.user ? req.user._id : null;
+                Channel2User.find({userId:userId},function(err,channel2user){
                     if (err) {console.log(err);return res.sendError();}
                     var channel2userId=[];
                     channel2user.forEach(function(item){
@@ -267,8 +267,7 @@ exports.discover = function(req,res){
                 results.forEach(function(item,index,array){
                     if (channel2userId.indexOf(item._id+'')>-1){
                         results[index]['isAttention'] = true;//已经关注
-                    }
-                    else{
+                    }else{
                         results[index]['isAttention']= false;
                     }
                 });
@@ -277,7 +276,7 @@ exports.discover = function(req,res){
                     if (results[0]['time']+''==doc['time']+''){
                         isHave=false;
                     }
-                }//
+                }
                 res.sendResult('加载成功',0,{list:results,isHave:isHave})
             });
 }
