@@ -16,5 +16,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-yonghu:before { content: "\e625"; }
+
+.icon-shouye:before { content: "\e61b"; }
+
 .icon-xiangxia:before { content: "\3434"; }
 

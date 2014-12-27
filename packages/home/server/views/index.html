@@ -13,6 +13,19 @@
 <div class="control-page">
     <div class="control-page-content">
         <div class="control-header" >
+           <!--  {% if user %}
+                <a class="avatar" id="user-center"  onclick="window.location.assign('/u/{{''+user._id}}')">
+                    <img src="http://yiye.qiniudn.com/{{ user.avatar }}">
+                </a>
+                {% else %}
+                <i  id="rounded-left" class='iconfont'  onclick="window.location.assign('/signin')">&#xe61b;</i>
+            {% endif %}
+            <img src="/home/assets/img/brand_name_green.png" onclick="window.location.assign('/home')">
+            {% if user %}
+                <i id="rounded-arrow" class="iconfont">&#x3434</i>
+                {% else %}
+                <i id="rounded-right" class="iconfont" onclick="window.location.assign('/')">&#xe625;</i>
+            {% endif %} -->
             <a class="avatar" id="user-center" onclick="window.location.assign('/u/{{''+user._id}}')">
                 <img src="http://yiye.qiniudn.com/{{ user.avatar }}">
             </a>
@@ -24,7 +37,7 @@
             <ul id="function-module-ul">
                 <li id='discover' ><i class="iconfont">&#xe684</i><div>发现</div></li>
                 <li id='message'><i class="iconfont">&#xf00b5</i><div>消息</div><span id="message-count" class="red-point-count"style="display:none" data-number='0'></span></li>
-                <li id='help'><i class="iconfont">&#xf00b8</i><div>帮助</div></li>
+                <li id='help'><i class="iconfont">&#xf00b8</i><div>关于</div></li>
                 <li id='set'><i class="iconfont">&#xf013e</i><div>设置</div></li>
             </ul>
         </div>

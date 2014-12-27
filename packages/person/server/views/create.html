@@ -20,19 +20,26 @@
         <div class="bg-opacity"></div>
     </div>
     <div class="control-page-content">
-        <!-- <div class="control-header">
-            <a href="javascript:;" class="yiye-logo">
+        <div class="control-header">
+          <!--   <a href="javascript:;" class="yiye-logo">
                 <img src="/system/assets/img/logo_white1.png">
             </a>
-            <a  href="/home" title="我的主页" class="glyphicon glyphicon-home"></a>
-        </div> -->
-        <div class="control-header" >
-            <a class="avatar" id="user-center" onclick="window.location.assign('/u/{{''+user._id}}/create')">
-                <img src="http://yiye.qiniudn.com/{{ user.avatar }}">
-            </a>
+            <a  href="/home" title="我的主页" class="glyphicon glyphicon-home"></a> -->
+             {% if visitor %}
+                <a class="avatar" id="user-center"  onclick="window.location.assign('/u/{{''+visitor._id}}')">
+                    <img src="http://yiye.qiniudn.com/{{ visitor.avatar }}">
+                </a>
+                {% else %}
+                <i  id="rounded-left" class='iconfont'  onclick="window.location.assign('/')">&#xe61b;</i>
+            {% endif %}
             <img src="/home/assets/img/brand_name_white.png" onclick="window.location.assign('/home')">
-            <i id="rounded-arrow" class="iconfont">&#x3434</i>
+            {% if visitor %}
+                <i id="rounded-arrow" class="iconfont">&#x3434</i>
+                {% else %}
+                <i id="rounded-right" class="iconfont" onclick="window.location.assign('/signin')">&#xe625;</i>
+            {% endif %}
         </div>
+        
         <div id="function-module">
             <ul id="function-module-ul">
                 <li id='discover' ><i class="iconfont">&#xe684</i><div>发现</div></li>

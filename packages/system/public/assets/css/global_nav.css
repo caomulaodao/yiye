@@ -109,7 +109,19 @@
     url('../icons/nav/iconfont.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
     url('../icons/nav/iconfont.svg#uxiconfont') format('svg'); /* iOS 4.1- */
 }
-.control-header>#rounded-arrow{
+.control-header #rounded-left{
+    font-size: 3.7em;
+    cursor: pointer;
+    margin-top: 5px;
+    margin-left: 15px;
+    color: #ccc;
+    float: left;
+    -webkit-transition: all 300ms;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select:none;
+}
+.control-header #rounded-arrow,.control-header #rounded-right{
     font-size: 4.0em;
     margin-top: 2px;
     float: right;
@@ -123,6 +135,11 @@
     -webkit-text-stroke-width: 0.2px;
     -moz-osx-font-smoothing: grayscale;
 }
-.control-header>#rounded-arrow:hover{
+.control-header #rounded-right{
+    margin-top: 10px;
+    font-size: 3.0em;
+}
+.control-header #rounded-arrow:hover,.control-header #rounded-left:hover,.control-header #rounded-right:hover{
+    cursor: pointer;
     color:#40c192;
 }

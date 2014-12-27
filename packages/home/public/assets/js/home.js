@@ -37,6 +37,7 @@ function initialize() {
             url: '/api/home/msgcount',
             type: 'get',
             success: function (response) {
+                if(response.code>0) return;
                 var nCount = response.data.count;
                 $('.red-point-count').data('number', nCount);
                 showPointNum();
