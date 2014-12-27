@@ -9,6 +9,7 @@ var mongoose = require('mongoose'),
     Channels = mongoose.model('Channels'),
     Bookmarks = mongoose.model('Bookmarks'),
     BookmarkLike = mongoose.model('BookmarkLike'),
+    Bugs = mongoose.model('Bugs'),
     myVerify = require('../../../../config/tools/verify');
 
     //渲染主页
@@ -173,9 +174,88 @@ var mongoose = require('mongoose'),
         });
     };
 
+    exports.renderBugs = function (req, res, Package) {
+      if(!(req.user && (req.user.roles.indexOf('admin')>-1 || req.user.roles.indexOf('system')>-1))){
+        return res.redirect('/');
+      }
+      var limit = 2;//每页限制显示数
+      var p=req.query.p||1;
+      var search = req.query.q || '';
+      var type = req.query.type || 'email';
+      var role = '';
+      var query = {};
+      //获取用户权限
+      if(req.user.roles.indexOf('system') > -1){
+        role = 'system';
+      }else{
+        role = 'admin';
+      }
 
+      if (!myVerify.isNumber(p)){p=1;}//判断参数是否合法
+
+      if(search == '' || type == ''){
+        query =  {};
+      }else{
+        console.log(type);
+        switch(type){
+          case 'email':
+            query =  { email: new RegExp(search,'i') };
+            break;
+          case 'bugzone':
+            query =  { bugzone: new RegExp(search,'i') };
+            break;
+          default:
+            query =  {};
+        }
+      }
+
+      async.waterfall([
+        function (cb) {
+          Bugs.count(query, function (err, count) {
+            if (err) {
+              console.log(err);
+              return res.sendError()
+            }
+            cb(err, count);
+          });
+        },
+        function(count,callback){
+          var pageLength = Math.ceil(count/limit),
+            page = tool.skipPage(p,pageLength);
+          var minPage;
+          //防止大于翻页上限
+          if(p>pageLength&&pageLength>0) minPage=pageLength;
+          else minPage=p;
+          //防止超过下限
+          if (minPage<1){minPage=1;}
+          Bugs.find(query).sort({time: 1}).skip(limit*(minPage-1)).limit(limit).exec(function (err, bugs){
+            if(err) {console.log(err);return res.sendError()}
+            callback(err,bugs,page);
+          });
+        }
+      ],function(err, bugs, page){
+        Package.render('bugs',{bugs:bugs,page:page,type:type,search:search,role:role}, function(err, html) {
+          if(err) {console.log(err);return res.sendError()}
+          res.send(html);
+        });
+      });
+    };
+    //删除某个Bug
+    exports.bugDelete = function(req, res) {
+      if(!(req.user &&  req.user.roles.indexOf('system')>-1)){
+        return res.sendResult('对不起，无权限',2001,{});
+      }
+      var bugId = req.body.bugId;
+      Bugs.remove({_id: bugId}, function (err) {
+        if (err) {
+          console.log(err);
+          return res.error();
+        }
+        return res.sendResult('Bug删除成功', 0, {});
+      })
+    };
     //删除某个频道
-    exports.channelDelece = function(req,res){
+    exports.channelDelete = function(req,res){
         if(!(req.user &&  req.user.roles.indexOf('system')>-1)){
             return res.sendResult('对不起，无权限',2001,{});
         }

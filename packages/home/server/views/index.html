@@ -672,7 +672,7 @@
             </div>
         <% } %>
         <div class="main">
-            <div class="user-news-bookmarks" ><a href=<%= msg[i]['url'] %> target="_blank"><%= msg[i]["title"] %></a> <div class="user-news-info"><span>频道:<a href="/channel/<%=msg[i]['channelId']%>"><%= msg[i]["channelInfo"]["channelName"] %></a></span><span>审核:<a href="/u/<%=msg[i]['postUser']['userId']%>" target="_blank"><%= msg[i]["postUser"]["username"] %></a></span></div></div>
+            <div class="user-news-bookmarks" ><a href=<%= msg[i]['url'] %> target="_blank"><%= msg[i]["title"] %></a> <div class="user-news-info"><span>频道:<a href="/channel/<%=msg[i]['channelId']%>"><%= msg[i]["channelInfo"]["channelName"] %></a></span><span>审核:<a href="/u/<%=msg[i]['checkUser']['userId']%>" target="_blank"><%= msg[i]["checkUser"]["username"] %></a></span></div></div>
             <% if(msg[i]["checked"] == 4){ %>
             <div class="user-news-fail-result">
                 <span>原因：</span><%= msg[i]["deleteInfo"] %>
