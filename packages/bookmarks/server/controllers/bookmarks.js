@@ -460,7 +460,10 @@ exports.oneDay = function(req,res){
                 });
                 // dayResult.list = list;
                 dayResult = list;
-                res.sendResult('获取书签成功',0,dayResult);
+                Channel2User.update({channelId:channelId,userId:req.user._id},{lastTime:Date.now()},function(err){
+                    if(err) { console.log(err);return res.sendError()}
+                    res.sendResult('获取书签成功',0,dayResult);
+                });
             });
         });
     }else{

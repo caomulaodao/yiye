@@ -132,7 +132,8 @@ $(function(){
             el: $('.submit-view'),
 
             initTemplate: _.template($('#tp-submit-bookmark').html()),
-             initialize: function(){
+
+            initialize: function(){
             },       
 
             events:{
@@ -154,7 +155,9 @@ $(function(){
             el: $('.content-page'),
 
             initTemplate: _.template($('#tp-channels-main').html()),
-            //添加书签 视图
+
+            successTemplate: _.template($('#tp-channels-submit-success').html()),
+
             // submitbkmTemplate: _.template($('#tp-submit-bookmark').html()),
 
             lock:{
@@ -221,7 +224,7 @@ $(function(){
                                 $('.content-body>ul').append(that.channelTemplate(response.data));
                                 if(!response.data.isHave){
                                     $('.content-body>ul').append("<p class='no-news'>无更多内容</p>");
-                                } else {
+                                }else{
                                     var nextDate = response.data.nextTime;   //将下次日期赋值给nextDate变量
                                     that.list.set("date", nextDate);         //记录下次Ajax日期
                                     that.channelAjax.bScroll = true;         //许可Ajax加载
@@ -269,14 +272,13 @@ $(function(){
                 var that = this;
                 hate.set('bookmarkId', bookmarkId);
                 hate.save(null, {url:'/api/bookmarks/hate',success:function(model,response){
-                    if (response.code==0){
+                    if(response.code==0){
                         if(response.data.isLiked == true && response.data.isHated == false){
                             var count = $(event.currentTarget).parent().find('span');
                             count.text(+count.text()-1);
                         }
                         that.lock.bkDown = false;  
-                    }
-                    else{
+                    }else{
                         console.log(response);
                     }
 
@@ -327,11 +329,11 @@ $(function(){
                                     {
                                         'error':function(){
                                             $('.load').removeClass('loading');
-                                            return  $(".input-url p.error").text('网络异常或参数错误').show();
+                                            return  $(".input-url p.error").text('提交失败，网络异常或参数错误').show();
                                         },
                                         'success':function(model,response){
                                             $('.load').removeClass('loading');
-                                            $('.submit-background').click();
+                                            submitView.$el.html("提交成功");
                                         }
                                     }
                                 )
@@ -397,7 +399,7 @@ $(function(){
                 //         }
                 //     });
                 // }
-            },
+            }
         });
         if (this.view){return this.view};
         this.view = new listView();
