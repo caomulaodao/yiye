@@ -250,7 +250,7 @@ exports.discover = function(req,res){
             },
             //是否关注
             function(results,doc,callback){
-                var userId = req.user ? req.user._id : 0;
+                var userId = req.user ? req.user._id : null;
                 Channel2User.find({userId:userId},function(err,channel2user){
                     if (err) {console.log(err);return res.sendError();}
                     var channel2userId=[];
