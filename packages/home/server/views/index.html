@@ -571,7 +571,7 @@
                 <span>原因：</span><%= hismes[i].deleteInfo %>
             </div>
             <% } %>
-            <div class="user-history-footer"><span>时间：</span><%=  ''+hismes[i].postTime %></div>
+            <div class="user-history-footer"><span>时间：</span><%=  moment(''+hismes[i]['postTime']).format('YYYY-M-D H:mm:ss') %></div>
         </div>
     </li>
     <% } %>
@@ -604,7 +604,7 @@
                 <span>原因：</span><%= news[i]["deleteInfo"] %>
             </div>
             <% } %>
-            <div class="user-news-footer"><span>时间：</span><%=  ''+news[i]["postTime"] %>  <a href="#" class="sure" data-bookmarkid="<%= ''+news[i]["_id"] %>" data-index="<%= i %>">确定</a></div>
+            <div class="user-news-footer"><span>时间：</span><%=  moment(''+news[i]['postTime']).format('YYYY-M-D H:mm:ss') %>  <a href="#" class="sure" data-bookmarkid="<%= ''+news[i]["_id"] %>" data-index="<%= i %>">确定</a></div>
         </div>
     </li>
     <% } %>
@@ -691,7 +691,7 @@
                 <span>原因：</span><%= msg[i]["deleteInfo"] %>
             </div>
             <% } %>
-            <div class="user-news-footer"><span>时间：</span><%=  ''+msg[i]["postTime"] %></div>
+            <div class="user-news-footer"><span>时间：</span><%=  moment(''+msg[i]['postTime']).format('YYYY-M-D H:mm:ss') %></div>
         </div>
     </li>
     <% } %>

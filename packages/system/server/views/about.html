@@ -28,28 +28,26 @@
                 {% else %}
                 <i id="rounded-right" class="iconfont" onclick="window.location.assign('/signin')">&#xe625;</i>
             {% endif %}
+        </div>
+        <div class="control-body">
             {% if user%}
                 <div id="function-module">
                     <ul id="function-module-ul">
-                        <li id='message'><i class="iconfont">&#xf00b5</i><div>消息</div></li>
                         <li id='discover' ><i class="iconfont">&#xe684</i><div>发现</div></li>
+                        <li id='message'><i class="iconfont">&#xf00b5</i><div>消息</div></li>
                         <li id='help'><i class="iconfont">&#xf00b8</i><div>帮助</div></li>
                         <li id='set'><i class="iconfont">&#xf013e</i><div>设置</div></li>
                     </ul>
                 </div>
             {% endif %}
-        </div>
-
-
-        <div class="control-body">
-                <ul class='about-item'>
+            <ul class='about-item'>
                    <li><a href="#staff">关于我们</a></li>
                    <li><a href="#joinUs">加入我们</a></li>     
                    <li><a href="#bugReporter">bug反馈</a></li>     
                    <li><a href="#followUs">关注我们</a></li>
                    <li><a href="#help">使用帮助</a></li>
                    <li><a href="#extendInstall">插件安装</a></li>
-                </ul>
+            </ul>
         </div>
     </div>
 </div>
@@ -57,96 +55,110 @@
 
 <!--content page-->
 <div class="content-page content-page-right">
-    <!-- 关于我们 -->
     <div id='content-manage'>
-         <div class='one-page' >
-        <div class='staff ab-center'>
-            <h1>关于我们</h1>
-            <p>一叶书签是一个基于兴趣的内容聚合与分享应用。通过一叶书签，你可以与他人一起收集和分享你感兴趣的事物，并且发现更多你关心的内容。</p>
-            <p>一叶书签团队成立于2014年9月份。在团队绝大多数同学大学即将毕业的最后一年。我们希望通过我们的想法和努力，做一款有意思的产品。可能它远远无法改变世界，但真的会有人喜欢它，因为它而生活多了一份趣味。所以我们开始做一款产品,一个更容易让人们分享和发现自己感兴趣内容的应用。那便是一叶书签。</p>
-            <p>我们的联系方式:dao@yiye.me</p>
-            <p>一叶书签，发现网络之美</p>
-        </div>
-    </div>
-    <!-- 加入我们 -->
-    <div class='one-page' >
-        <div class='joinus ab-center' id='joinus'>
-            <h1>加入我们</h1>
-            <p>我们目前寻找web前端工程师，node.js工程师，安卓开发工程师，ios开发工程师，ui设计师，产品运营。</p>
-            <p>每个职位我们不会强求你必须会什么，除了你需要热爱它，并且愿意学习和努力。</p>
-            <p>那么，请联系我们：hr@yiye.me</p>
-        </div>
-    </div>
-    <!-- bug反馈 -->
-    <div class='one-page' >
-        <div class='bug-reporter ab-center'>
-            <h1>bug提交</h1>
-            <form action='/api/bugs' method='post' class="form-horizontal" name='form'>
-              <!-- 直接填充现有的nickname/如果没有则提示 -->
-              <div class="form-group form-group-lg">
-                <label  class='col-sm-4 control-label'>你的邮箱</label>
-                <div class="col-sm-6">
-                  <input class="form-control" name='email' type="email" id="email-input" placeholder="邮箱">
-                </div>
-              </div>
-              <div class="form-group form-group-lg">
-                <label class="col-sm-4 control-label" >bug反馈</label>
-                <div class="col-sm-6">
-                    <textarea name="bugzone" id='bugzone' class="form-control" rows="6" placeholder="问题描述"></textarea>
-                </div>
-              </div>
-             <!-- 问题 -->
-            </form>
-          <button id="bug-submit-btn" class="btn-bug-reporter btn btn-success">提交</button>
-     </div>
-    </div>
-    <!-- 关注我们 -->
-    <div class='one-page' >
-        <div class='follow-us ab-center'>
-            <div class="sponsor-friend">
-                <div class="friend-img">
-                    <a href="#"><span  id="qq-icon" class='iconfont'>&#xe82e;</span></a>
-                </div>
-                <div class="friend-name">官方QQ群</div>
-            </div>
-            <div class="sponsor-friend">
-                <div class="friend-img">
-                    <a href="#"><i id="weibo-icon" class='iconfont'>&#x349f;</i></a>
-                </div>
-                <div class="friend-name">微博</div>
-            </div>
-            <div class="sponsor-friend">
-                <div class="friend-img">
-                    <a href="#"><i id="wechat-icon" class='iconfont'>&#xe63c;</i></a>
-                </div>
-                <div class="friend-name">微信</div>
-            </div>              
-            <div class="sponsor-friend">
-                <div class="friend-img">
-                    <a href="#"><i id="douban-icon" class='iconfont'>&#xe64e;</i></a>
-                </div>
-                <div class="friend-name">豆瓣</div>
-            </div>
-            <div class="sponsor-friend">
-                <div class="friend-img">
-                    <a href="#"><i id="facebook-icon"class='iconfont'>&#xe613;</i></a>
-                </div>
-                <div class="friend-name">Facebook</div>
-            </div>
-            <div class="sponsor-friend">
-                <div class="friend-img">
-                    <a href="#"><i id="twitter-icon" class='iconfont'>&#xe628;</i></a>
-                </div>
-                <div class="friend-name">Twitter</div>
+        <!-- 关于我们 -->
+        <div class='one-page' >
+            <div class='staff ab-center'>
+                <h1>关于我们</h1>
+                <p>一叶书签是一个基于兴趣的内容聚合与分享应用。通过一叶书签，你可以与他人一起收集和分享你感兴趣的事物，并且发现更多你关心的内容。</p>
+                <p>一叶书签团队成立于2014年9月份。在团队绝大多数同学大学即将毕业的最后一年。我们希望通过我们的想法和努力，做一款有意思的产品。可能它远远无法改变世界，但真的会有人喜欢它，因为它而生活多了一份趣味。所以我们开始做一款产品,一个更容易让人们分享和发现自己感兴趣内容的应用。那便是一叶书签。</p>
+                <p>我们的联系方式:dao@yiye.me</p>
+                <p>一叶书签，发现网络之美</p>
             </div>
         </div>
-    </div>
-    <!-- bug反馈 -->
-    <div class='one-page' >
-        <div class='ab-center help'>
-            this help
+        <!-- 加入我们 -->
+        <div class='one-page' >
+            <div class='joinus ab-center' id='joinus'>
+                <h1>加入我们</h1>
+                <p>我们目前寻找web前端工程师，node.js工程师，安卓开发工程师，ios开发工程师，ui设计师，产品运营。</p>
+                <p>每个职位我们不会强求你必须会什么，除了你需要热爱它，并且愿意学习和努力。</p>
+                <p>那么，请联系我们：hr@yiye.me</p>
+            </div>
         </div>
-    </div>
+        <!-- bug反馈 -->
+        <div class='one-page' >
+            <div class='bug-reporter ab-center'>
+                <h1>bug提交</h1>
+                <form action='/api/bugs' method='post' class="form-horizontal" name='form'>
+                  <!-- 直接填充现有的nickname/如果没有则提示 -->
+                  <div class="form-group form-group-lg">
+                    <label  class='col-sm-4 control-label'>你的邮箱</label>
+                    <div class="col-sm-6">
+                      <input class="form-control" name='email' type="email" id="email-input" placeholder="邮箱">
+                    </div>
+                  </div>
+                  <div class="form-group form-group-lg">
+                    <label class="col-sm-4 control-label" >bug反馈</label>
+                    <div class="col-sm-6">
+                        <textarea name="bugzone" id='bugzone' class="form-control" rows="6" placeholder="问题描述"></textarea>
+                    </div>
+                  </div>
+                 <!-- 问题 -->
+                </form>
+                <button id="bug-submit-btn" class="btn-bug-reporter btn btn-success">提交</button>
+            </div>
+        </div>
+        <!-- 关注我们 -->
+        <div class='one-page' >
+            <div class='follow-us ab-center'>
+                <div class="sponsor-friend">
+                    <div class="friend-img">
+                        <a href="#"><span  id="qq-icon" class='iconfont'>&#xe82e;</span></a>
+                    </div>
+                    <div class="friend-name">官方QQ群</div>
+                </div>
+                <div class="sponsor-friend">
+                    <div class="friend-img">
+                        <a href="#"><i id="weibo-icon" class='iconfont'>&#x349f;</i></a>
+                    </div>
+                    <div class="friend-name">微博</div>
+                </div>
+                <div class="sponsor-friend">
+                    <div class="friend-img">
+                        <a href="#"><i id="wechat-icon" class='iconfont'>&#xe63c;</i></a>
+                    </div>
+                    <div class="friend-name">微信</div>
+                </div>
+                <div class="sponsor-friend">
+                    <div class="friend-img">
+                        <a href="#"><i id="douban-icon" class='iconfont'>&#xe64e;</i></a>
+                    </div>
+                    <div class="friend-name">豆瓣</div>
+                </div>
+                <div class="sponsor-friend">
+                    <div class="friend-img">
+                        <a href="#"><i id="facebook-icon"class='iconfont'>&#xe613;</i></a>
+                    </div>
+                    <div class="friend-name">Facebook</div>
+                </div>
+                <div class="sponsor-friend">
+                    <div class="friend-img">
+                        <a href="#"><i id="twitter-icon" class='iconfont'>&#xe628;</i></a>
+                    </div>
+                    <div class="friend-name">Twitter</div>
+                </div>
+            </div>
+        </div>
+        <!-- bug反馈 -->
+        <div class='one-page' >
+            <div class='ab-center help'>
+                帮助请联系: dao@yiy.me
+            </div>
+        </div>
+        <!-- 插件安装 -->
+        <div class='one-page' >
+            <div class='extend-install ab-center'>
+                <h1>从chrome应用商店下载安装</h1>
+                <div>
+                    如果你的电脑可以翻墙访问谷歌等网站，请直接从chrome应用商店下载安装浏览器插件。
+                    <button class="btn gotoChromeStore" onclick="window.open('https://chrome.google.com/webstore/detail/一叶书签/hlahagafhhglgfefflokbaidlneedghl')" >从chrome应用商店安装</button>
+                </div>
+                <h1>本地下载安装</h1>
+                <div>
+                    如果你无法访问chrome应用商店，可以点击下载<a href="http://yiye.qiniudn.com/一叶书签_v1.0.5.crx">离线版chrome插件安装包</a>。并根据下图提示进行安装。
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -176,8 +188,4 @@
         });
     });
 </script>
-<!--<script rel="script" src="/system/assets/js/system.about.js"></script>
-<script rel="script" src="/system/assets/js/system.about1.js"></script>
-<script rel="script" src="/system/assets/js/system.about2.js"></script>
-<script rel="script" src='/system/assets/js/system.about3.js'></script> -->
 </html>
