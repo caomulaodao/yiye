@@ -361,21 +361,19 @@
                     <a href="javascript:;"><img src="http://yiye.qiniudn.com/<%= info.logo %>"></a>
                 </div>
                 <a class="header-channel-name" target="_blank" href="/channel/<%= info._id %>"><%= info.name %></a>
-                <div class="channel-info-iten">
-                    <a href="/channel/<%= info._id %>" target="_blank">主页</a>
-                </div>
-                <div class="channel-info-iten">
-                    <a href="/channel/<%= info._id %>/follower" target="_blank">设置</a>
-                </div>
             </div>
             <div class="header-component">
-                <div class="channel-info-iten">
-                    <strong>书签</strong>
-                    <a href="/channel/<%= info._id %>" target="_blank"><%= info.bmkNum %></a>
+                <div class="channel-info-item">
+                    <a href="/channel/<%= info._id %>" target="_blank">主页</a>
                 </div>
-                <div class="channel-info-iten">
-                    <strong>订阅者</strong>
-                    <a href="/channel/<%= info._id %>/follower" target="_blank"><%= info.subNum %></a>
+                <div class="channel-info-item">
+                    <a href="/channel/<%= info._id %>" target="_blank">书签(<%= info.bmkNum %>)</a>
+                </div>
+                <div class="channel-info-item">
+                    <a href="/channel/<%= info._id %>/follower" target="_blank">订阅者(<%= info.subNum %>)</a>
+                </div>
+                <div class="channel-info-item">
+                    <a href="/channel/<%= info._id %>" target="_blank">设置</a>
                 </div>
             </div>
         </div>

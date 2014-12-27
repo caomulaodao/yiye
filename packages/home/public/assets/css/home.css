@@ -658,27 +658,16 @@ a.header-channel-name, a.header-channel-name:hover{
 .header-component {
     height: 100%;
     float: right;
-    margin-right: 40px;
+    margin-right: 20px;
 }
-.channel-info-iten{
-    height: 100%;
+.channel-info-item{
+    height: 58px;
     text-align: center;
     display: inline-block;
-    line-height: 23px;
-    font-size: 14px;
-}
-.channel-info-iten strong{
-    display: block;
-    margin: 7px 10px 0px;
-    font-weight: normal;
+    line-height: 58px;
     font-size: 15px;
-    color: #66757F;
+    margin-right: 10px;
 }
-.channel-info-iten a{
-    font-size: 19px;
-}
-
-
 
 .single-list {
     height: 100px;
