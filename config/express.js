@@ -62,17 +62,18 @@ module.exports = function(app, passport, db) {
       if (str.indexOf('Android')>-1) return "Android";
       if (str.indexOf('iPhone')>-1) return "iPhone";
     }
-    if (req.url=='/please/use/chrome'||staticFile1.test(req.url)||staticFile2.test(req.url)){
+    if (req.url=='/system/ios'||req.url=='/system/android'||req.url=='/please/use/chrome'||staticFile1.test(req.url)||staticFile2.test(req.url)){
         next();
     }
     else{
       //如果是安卓 重定向到下载界面
+      console.log(userPhone(header));
       if (userPhone(header)=="Android"){
-        return res.redirect('/please/use/chrome');
+        return res.redirect('/system/android');
       }
       //如果是iPhone
       if (userPhone(header)=="iPhone"){
-        return res.redirect('/please/use/chrome');
+        return res.redirect('/system/ios');
       }
       //如果是非webkite内核
       if(!isChrome(header)){
