@@ -101,3 +101,28 @@
     cursor: pointer;
     color: #fff;
 }
+@font-face {
+    font-family: 'iconfont';
+    src: url('../icons/nav/iconfont.eot'); /* IE9*/
+    src: url('../icons/nav/iconfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+    url('../icons/nav/iconfont.woff') format('woff'), /* chrome、firefox */
+    url('../icons/nav/iconfont.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+    url('../icons/nav/iconfont.svg#uxiconfont') format('svg'); /* iOS 4.1- */
+}
+.control-header>#rounded-arrow{
+    font-size: 4.0em;
+    margin-top: 2px;
+    float: right;
+    color: #ccc;
+    position: relative;
+    -webkit-transition: all 300ms;
+    -webkit-user-select: none;
+    font-family:"iconfont" !important;
+    font-style:normal;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-stroke-width: 0.2px;
+    -moz-osx-font-smoothing: grayscale;
+}
+.control-header>#rounded-arrow:hover{
+    color:#40c192;
+}

@@ -4,10 +4,13 @@
 .form-unit button{
 	background-color: #00C995!important;
 	color:#ffffff;		
-	margin: auto;
 }
 @media(max-width:480px){
+	.form-unit button{
+		font-size: 16px;
+		padding: 8px 12px;
 
+	}
 	.form-unit{
 		width: 90%;
 	}

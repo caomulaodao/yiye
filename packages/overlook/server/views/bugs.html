@@ -32,8 +32,8 @@
             <ul class="nav navbar-nav">
                 <li><a href="/overlook">统计</a></li>
                 <li><a href="/overlook/user">用户</a></li>
-                <li class="active" ><a href="/overlook/channel">频道</a></li>
-                <li><a href="/overlook/bugs">Bugs</a></li>
+                <li><a href="/overlook/channel">频道</a></li>
+                <li class="active" ><a href="/overlook/bugs">Bugs</a></li>
             </ul>
         </div><!--/.nav-collapse -->
     </div>
@@ -43,44 +43,37 @@
     <div class="starter-template">
         <div class="row">
             <div class="col-xs-6 user-title">
-                频道管理
+                Bugs管理
             </div>
             <div class="col-xs-3">
-                <input type="text" class="form-control"  id="channel-info" placeholder="搜索频道">
+                <input type="text" class="form-control"  id="bug-info" placeholder="搜索Bugs">
             </div>
             <div class="col-xs-2">
-                <select class="form-control" id="channel-type">
-                    <option value="name">频道名称</option>
-                    <option value="id">频道id</option>
-                    <option value="creator">频道创建者</option>
+                <select class="form-control" id="bug-type">
+                    <option value="email">email</option>
+                    <option value="bugzone">内容</option>
                 </select>
             </div>
             <div class="col-xs-1">
-                <button type="button" class="btn btn-primary" id="channel-search">搜索</button>
+                <button type="button" class="btn btn-primary" id="bug-search">搜索</button>
             </div>
         </div>
         <table class="table user-table">
             <thead>
             <tr>
-                <th>频道id</th>
-                <th>频道名称</th>
-                <th>创建者</th>
+                <th>email</th>
+                <th>内容</th>
                 <th>创建时间</th>
-                <th>订阅人数</th>
-                <th>书签数量</th>
                 {% if role == 'system' %}<th>操作</th>{% endif %}
             </tr>
             </thead>
             <tbody>
-            {% for channel in channels %}
+            {% for bug in bugs %}
             <tr>
-                <td>{{ ''+channel._id }}</td>
-                <td><a href="/channel/{{ ''+channel._id }}" target="_blank">{{ channel.name }}</a></td>
-                <td><a href="/u/{{ ''+channel.creator.userId }}">{{ channel.creator.userName }}</a></td>
-                <td>{{ ''+channel.time | date('Y-m-d H:m:s')}}</td>
-                <td>{{ channel.subNum }}</td>
-                <td>{{ channel.bmkNum }}</td>
-                {% if role == 'system' %} <td><button type="button" class="btn btn-danger channelDelete"  data-channelid="{{ ''+channel._id }}">删除</button></td>{% endif %}
+                <td>{{ bug.email }}</a></td>
+                <td>{{ bug.bugzone }}</td>
+                <td>{{ ''+bug.time | date('Y-m-d H:m:s')}}</td>
+                {% if role == 'system' %} <td><button type="button" class="btn btn-danger bugDelete"  data-bugid="{{ ''+bug._id }}">删除</button></td>{% endif %}
             </tr>
             {% endfor %}
             </tbody>
@@ -113,6 +106,6 @@
 
 <script rel="script" src="/bower_components/jquery/dist/jquery.js"></script>
 <script rel="script" src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
-<script rel="script" src="/overlook/assets/js/overlook.channel.js"></script>
+<script rel="script" src="/overlook/assets/js/overlook.bug.js"></script>
 </body>
 </html>

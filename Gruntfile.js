@@ -28,7 +28,9 @@ module.exports = function(grunt) {
           {expand: true, cwd: 'packages/home/public', src: ['**'], dest: 'static_files/home', nonull: true},
           {expand: true, cwd: 'packages/person/public', src: ['**'], dest: 'static_files/person', nonull: true},
           {expand: true, cwd: 'packages/system/public', src: ['**'], dest: 'static_files/system', nonull: true},
-          {expand: true, cwd: 'packages/users/public', src: ['**'], dest: 'static_files/users', nonull: true}
+          {expand: true, cwd: 'packages/users/public', src: ['**'], dest: 'static_files/users', nonull: true},
+          {expand: true, cwd: 'packages/overlook/public', src: ['**'], dest: 'static_files/public', nonull: true}
+
         ]
       }
     },

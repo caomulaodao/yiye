@@ -52,7 +52,16 @@ button:focus {outline:0;}
     url('iconfont.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
     url('iconfont.svg#uxiconfont') format('svg'); /* iOS 4.1- */
 }
-
+@font-face {font-family: 'nav';
+    src: url('../../../../system/assets/icons/nav/iconfont.eot'); /* IE9*/
+    src: url('../../../../system/assets/icons/nav/iconfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+    url('../../../../system/assets/icons/nav/iconfont.woff') format('woff'), /* chrome、firefox */
+    url('../../../../system/assets/icons/nav/iconfont.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+    url('../../../../system/assets/icons/nav/iconfont.svg#uxiconfont') format('svg'); /* iOS 4.1- */
+}
+#rounded-arrow{
+    font-family: "nav" !important;    
+}
 /* personal-center */
 .personal-center {
     padding: 20px;
