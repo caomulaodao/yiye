@@ -10,7 +10,7 @@ var BugsSchema = Schema({
         type: String,
         required: true
     },
-    description: {
+    bugzone: {
         type: String,
         required: true
     },
