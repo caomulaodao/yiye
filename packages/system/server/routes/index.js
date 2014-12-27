@@ -49,7 +49,7 @@ module.exports = function(System, app, auth, database) {
         if(err) {consoe.log(err);return res.sendError()}
         res.send(html);
       });
-  })
+  });
 
   //url爬虫接口
   app.route('/system/scraper')
@@ -57,6 +57,13 @@ module.exports = function(System, app, auth, database) {
   //500服务器错误界面
   app.get('/error',function(req,res,next){
       index.error(req,res,System);
+  });
+  //安卓手机浏览器访问
+  app.get('/system/android',function(req,res){
+    res.render('android');
+  })
+  app.get('/system/ios',function(req,res){
+    res.render('ios');
   })
 
 };
