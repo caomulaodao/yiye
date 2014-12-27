@@ -67,9 +67,11 @@ exports.bugs = function(req,res){
         if(err){
             return res.sendResult("提交错误",3000,null);
         }
-  },function(){
-    return res.sendResult("提交成功","0",null);
-  });
+        else {
+          return res.sendResult("提交成功", 0, null);
+        }
+  }
+  );
 
 }
 //渲染发现页面
