@@ -156,7 +156,6 @@ $(function(){
 
             initTemplate: _.template($('#tp-channels-main').html()),
 
-            successTemplate: _.template($('#tp-channels-submit-success').html()),
 
             // submitbkmTemplate: _.template($('#tp-submit-bookmark').html()),
 
@@ -333,7 +332,19 @@ $(function(){
                                         },
                                         'success':function(model,response){
                                             $('.load').removeClass('loading');
-                                            submitView.$el.html("提交成功");
+                                            if(response.code == 0){
+                                                if(response.data[0]['type']['type'] == "creator"){
+                                                    var successMsg = "书签提交成功！";
+                                                    submitView.$el.html("");
+                                                    $(".input-url p.info").text(successMsg).show();
+                                                }else{
+                                                    var waitMsg = "书签提交成功，等待审核中。";
+                                                    submitView.$el.html("");
+                                                    $(".input-url p.info").text(waitMsg).show();
+                                                }
+                                            }else{
+                                                return $(".input-url p.error").text(response.msg).show();
+                                            }
                                         }
                                     }
                                 )
@@ -1390,7 +1401,7 @@ $(function(){
             'message' : 'message',
             'discover' : 'discover',
             'help' : 'help',
-            'set' : 'set',
+            'set' : 'set'
         },
         defaultRoute : function(){
         },

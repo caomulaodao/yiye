@@ -26,18 +26,18 @@
             <img src="/home/assets/img/brand_name_green.png" onclick="window.location.assign('/home')">
             <!-- -->
             {% if user%}
-            <i id="rounded-arrow" class="iconfont">&#x3435</i>
-        </div>
-        <div id="function-module">
-            <ul id="function-module-ul">
-                <li id='message'><i class="iconfont">&#xf00b5</i><div>消息</div></li>
-                <li id='discover' ><i class="iconfont">&#xe684</i><div>发现</div></li>
-                <li id='help'><i class="iconfont">&#xf00b8</i><div>帮助</div></li>
-                <li id='set'><i class="iconfont">&#xf013e</i><div>设置</div></li>
-            </ul>
-        </div>
+                <i id="rounded-arrow" class="iconfont">&#x3435</i>
+                <div id="function-module">
+                    <ul id="function-module-ul">
+                        <li id='message'><i class="iconfont">&#xf00b5</i><div>消息</div></li>
+                        <li id='discover' ><i class="iconfont">&#xe684</i><div>发现</div></li>
+                        <li id='help'><i class="iconfont">&#xf00b8</i><div>帮助</div></li>
+                        <li id='set'><i class="iconfont">&#xf013e</i><div>设置</div></li>
+                    </ul>
+                </div>
             {% endif %}
-       
+        </div>
+
 
         <div class="control-body">
                 <ul class='about-item'>
@@ -46,8 +46,8 @@
                    <li><a href="#bugReporter">bug反馈</a></li>     
                    <li><a href="#followUs">关注我们</a></li>
                    <li><a href="#help">使用帮助</a></li>
+                   <li><a href="#extendInstall">插件安装</a></li>
                 </ul>
-            </div>
         </div>
     </div>
 </div>
@@ -82,13 +82,13 @@
             <form action='/api/bugs' method='post' class="form-horizontal" name='form'>
               <!-- 直接填充现有的nickname/如果没有则提示 -->
               <div class="form-group form-group-lg">
-                <label for="exampleInputEmail1 " class='col-sm-4 control-label'>你的邮箱</label>
+                <label  class='col-sm-4 control-label'>你的邮箱</label>
                 <div class="col-sm-6">
                   <input class="form-control" name='email' type="email" id="email-input" placeholder="邮箱">
                 </div>
               </div>
               <div class="form-group form-group-lg">
-                <label class="col-sm-4 control-label" for="formGroupInputSmall">bug反馈</label>
+                <label class="col-sm-4 control-label" >bug反馈</label>
                 <div class="col-sm-6">
                     <textarea name="bugzone" id='bugzone' class="form-control" rows="6" placeholder="问题描述"></textarea>
                 </div>

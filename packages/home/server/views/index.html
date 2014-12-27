@@ -363,13 +363,17 @@
                 <a class="header-channel-name" target="_blank" href="/channel/<%= info._id %>"><%= info.name %></a>
             </div>
             <div class="header-component">
-                <div class="channel-info-iten">
-                    <strong>书签</strong>
-                    <a href="/channel/<%= info._id %>" target="_blank"><%= info.bmkNum %></a>
+                <div class="channel-info-item">
+                    <a href="/channel/<%= info._id %>" target="_blank">主页</a>
                 </div>
-                <div class="channel-info-iten">
-                    <strong>订阅者</strong>
-                    <a href="/channel/<%= info._id %>/follower" target="_blank"><%= info.subNum %></a>
+                <div class="channel-info-item">
+                    <a href="/channel/<%= info._id %>" target="_blank">书签(<%= info.bmkNum %>)</a>
+                </div>
+                <div class="channel-info-item">
+                    <a href="/channel/<%= info._id %>/follower" target="_blank">订阅者(<%= info.subNum %>)</a>
+                </div>
+                <div class="channel-info-item">
+                    <a href="/channel/<%= info._id %>" target="_blank">设置</a>
                 </div>
             </div>
         </div>
@@ -400,7 +404,6 @@
                                     <div class="footer-part">
                                         <span class="submit-time">提交于:<%= moment(''+list[i]['dList'][j]['postTime']).format('H:mm:ss') %></span>
                                         <span>by <a href="/u/<%= list[i]['dList'][j]['postUser']['userId']%>" data-userId="<%= list[i]['dList'][j]['postUser']['userId']%>"><%= list[i]['dList'][j]['postUser']['username'] %></a></a></span>
-
                                     </div>
                                 </div>
 
@@ -419,6 +422,7 @@
                       </span>
                 </div>
                 <p class="error">error</p>
+                <p class="info">error</p>
             </div>
             <div class = 'add-bookmark'><p>提&nbsp;&nbsp;交</p><p>书&nbsp;&nbsp;签</p></div>
             <div class = 'submit-bookmark'></div>
@@ -469,7 +473,7 @@
 <script type="text/x-handlebars-template" id="tp-channel-explore">
     <div id="channel-explore">
         <h1 id="channel-explore-title">发现书签频道 · 发现网络之美</h1>
-        <ul id="channel-explore-tools"><a href="/explore"><li><i id="search"></i><span>频道搜索</span></li></a><li><i id="extends"></i><span>插件安装</span></li><li><i id="android"></i><span>app下载</span></li><a href="/our/team/#help"><li><i id="userHelp"></i><span>使用帮助</span></li></a><a href="/our/team/#bugReporter"><li><i id="postBug"></i><span>bug反馈</span></li></a></ul>
+        <ul id="channel-explore-tools"><a href="/explore"><li><i id="search"></i><span>频道搜索</span></li></a><a href="/our/team/#extendInstall"><li><i id="extends"></i><span>插件安装</span></li></a><a href="http://yiye.qiniudn.com/yiye-release.apk"><li><i id="android"></i><span>app下载</span></li></a><a href="/our/team/#help"><li><i id="userHelp"></i><span>使用帮助</span></li></a><a href="/our/team/#bugReporter"><li><i id="postBug"></i><span>bug反馈</span></li></a></ul>
         <ul>
             <% for(var i = 0;i < list.length; i++){ %>
                 <li class="channel-showcase">
@@ -641,10 +645,10 @@
                 <span>描述：</span><b data-id= <%= msg[i]['_id'] %> ><%= msg[i]['description']%></b>
             </div>
             <div class="footer-part" data-id= <%= msg[i]['_id'] %>>
-                <span>提交至：</span><img src="http://yiye.qiniudn.com/<%= msg[i]['channelInfo']['channelLogo']%>"/><a target="_blank" class="channel-title" data-id= <%= msg[i]['_id'] %> href="/channel/<%=msg[i]['channelId'] %>"><%= msg[i]['channelInfo']['channelName']%></a>
+                <span>提交至：</span><a target="_blank" class="channel-title" data-id= <%= msg[i]['_id'] %> href="/channel/<%=msg[i]['channelId'] %>"><%= msg[i]['channelInfo']['channelName']%></a><span class="divide">|</span>
                 <span><i class="glyphicon glyphicon-ok"></i><a class="passBookmark" href="#" data-channelId=<%= msg[i]['channelId']%> data-id= <%= msg[i]['_id'] %> >通过</a></span>
                 <span><i class="glyphicon glyphicon-pencil"></i><a class="editBookmark" href="#"  data-channelId=<%= msg[i]['channelId']%> data-id= <%= msg[i]['_id'] %> >编辑</a></span>
-                <span><i class="glyphicon glyphicon-trash"></i><a class="deleteBookmark" href="#" data-channelId=<%= msg[i]['channelId']%> data-id= <%= msg[i]['_id'] %> >筛除</a></span>
+                <span><i class="glyphicon glyphicon-trash"></i><a class="deleteBookmark" href="#" data-channelId=<%= msg[i]['channelId']%> data-id= <%= msg[i]['_id'] %> >筛除</a></span><span class="divide">|</span>
                 <span class="submit-time">提交于:<%=  moment(''+msg[i]['postTime']).format('YYYY-M-D H:mm:ss') %></span>
                 <span>by <a href="#" data-id= <%= msg[i]['_id'] %>><%= msg[i]['postUser']['username']%></a></a></span>
             </div>

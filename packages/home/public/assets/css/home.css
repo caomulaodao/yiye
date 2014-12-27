@@ -658,27 +658,16 @@ a.header-channel-name, a.header-channel-name:hover{
 .header-component {
     height: 100%;
     float: right;
-    margin-right: 40px;
+    margin-right: 20px;
 }
-.channel-info-iten{
-    height: 100%;
+.channel-info-item{
+    height: 58px;
     text-align: center;
     display: inline-block;
-    line-height: 23px;
-    font-size: 14px;
-}
-.channel-info-iten strong{
-    display: block;
-    margin: 7px 10px 0px;
-    font-weight: normal;
+    line-height: 58px;
     font-size: 15px;
-    color: #66757F;
+    margin-right: 10px;
 }
-.channel-info-iten a{
-    font-size: 19px;
-}
-
-
 
 .single-list {
     height: 100px;
@@ -840,6 +829,13 @@ p.add-true{
     margin-top: 30px;
     font-size: 20px;
     color: #D82323;
+    text-align: center;
+    display: none;
+}
+.input-url p.info{
+    margin-top: 30px;
+    font-size: 20px;
+    color: #249E5F;
     text-align: center;
     display: none;
 }
@@ -1948,4 +1944,9 @@ a.ex-creator {float: right;}
     border-radius: 6px;
     color: #DB5757;
     display: none;
+}
+.footer-part .divide{
+    margin: 0px 8px;
+    color: #BBBBBB;
+    font-size: 16px;
 }

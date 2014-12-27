@@ -4,9 +4,10 @@ var mean = require('meanio');
 
 var mongoose = require('mongoose'),
     async = require('async'),
-    jquery = require('jquery'),
+    // jquery = require('jquery'),
     request = require('request'),
-    jsdom = require ('jsdom'),
+    cheerio = require('cheerio'),
+    // jsdom = require ('jsdom'),
     iconv = require ('iconv-lite'),//应对gbk的网址
     BufferHelper = require('bufferhelper'),
     User = mongoose.model('User'),
@@ -191,7 +192,7 @@ exports.query = function(req,res,Package){
     })
 };
 //爬虫
-exports.scraper = function(req,res){
+exports.scraper = function(req,res){console.log(req.body);
     if (!req.user){return res.sendResult('请先登陆或注册',1000,null);}
     var userUrl = req.body.website;
     //参数检测
@@ -199,30 +200,36 @@ exports.scraper = function(req,res){
     if (typeof userUrl!=='string') {return res.sendResult('url地址格式错误',2013,null);}
     var url = tool.safeUrl(userUrl);
     if (!url) return res.sendResult('url地址格式错误',2013,null);
-//开始爬指定url
+    //开始爬指定url
 
     //请求头部设定
     var options = {
         'url': url,
         'headers': {
             'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'
-        }
+        },
+        encoding:null
     };
     //传入dom后的处理函数
-    var callback = function(err,response,content){
+    var callback = function(err,response,content){console.log(content);
         if (err) {console.log(err);return res.sendResult('访问该网站出错',3001,null);}
-        console.log(response.statusCode);
-        if (!err&&response.statusCode == 200){
-            // var bufferhelper = new BufferHelper();
-            // var str = iconv.decode(content, 'GBK'); //return unicode string from GBK encoded bytes
-            // str = bufferhelper.concat(str);
-            // str = bufferhelper.toBuffer().toString('UTF8');
-            // console.log(str);
-            var window = jsdom.jsdom(content).parentWindow;
-            var $ =jquery(window);
+        var re1 = /gb2312/i;
+        var re2 = /GBK/i;
+        //如果头部表明编码是gbk
+        if (re1.test(response.headers['content-type'])||re2.test(response.headers['content-type'])){
+            content = iconv.decode(content,'gb2312');
+        }
+        var $ = cheerio.load(content);
+        var title,description,imgUrl="";
+        //如果meta标签表明编码内容是gbk
+        if ($('meta[content]')){
+            if(re1.test($('meta[content]').attr('content'))||re2.test($('meta[content]').attr('content'))){
+                content = iconv.decode(content,'gb2312');
+                $ = cheerio.load(content);
+            }
         }
         var title=$('title').text();
-        var description=$('meta[name=description]').attr('content');
+        var description=$('meta[name=description]').attr('content');console.log(3);
         if (!description){
             description = $('p').text().substr(0,100);
         }
