@@ -385,9 +385,11 @@
                 <div class="channel-info-item">
                     <a href="/channel/<%= info._id %>/follower" target="_blank">订阅者(<%= info.subNum %>)</a>
                 </div>
+                <% if (owner) {%>
                 <div class="channel-info-item">
                     <a href="/channel/<%= info._id %>" target="_blank">设置</a>
                 </div>
+                <% }%>
             </div>
         </div>
         <div class="content-body">

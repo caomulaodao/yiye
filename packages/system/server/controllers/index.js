@@ -16,6 +16,7 @@ var mongoose = require('mongoose'),
     Channels = mongoose.model('Channels'),
     Bookmarks = mongoose.model('Bookmarks'),
     tool=require('../../../../config/tools/tool'),
+    xss = require('xss'),
     myVerify=require('../../../../config/tools/verify');
 
 //渲染首页 注入用户数量,频道数量,标签数量
@@ -59,6 +60,9 @@ exports.bugs = function(req,res){
   if (!myVerify.isEmail(req.body.email)){
       return res.sendResult("含有非法字符",2001,null);
   }
+  //xss过滤
+  req.body.email = xss(req.body.email,{whiteList:{}});
+  req.body.bugzone = xss(req.body.bugzone,{whiteList:{}});
   var bug = new Bugs(req.body);
   var errors = req.validationErrors();
   if (errors) {

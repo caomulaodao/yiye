@@ -279,6 +279,11 @@ exports.init  =  function(req,res){
         //更新频道最后访问时间并返回数据
         results.isHave=true;//下次是否进行ajax请求
         results.nextTime=null;//请求加载对应时间的书签
+        //是否频道拥有者
+        results.owner = false;
+        if (results.info.creator.userId+""==req.user._id){
+            results.owner = true;
+        }
         //数据库里对应频道一条书签也没有的情况
         if (results.endbookmarkId==null) {results.isHave=false;}
         //取出来书签的最后一条的ID和数据库里最后一条ID相等的时候则isHave为false
