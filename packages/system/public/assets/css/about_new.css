@@ -231,3 +231,10 @@
     color: #40c192;
     font-size: 30px;
 }
+.step{
+    margin-top: 20px;
+}
+.step img{
+    width: 250px;
+    margin-right: 10px;
+}
