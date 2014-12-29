@@ -575,10 +575,7 @@ exports.delete = function(req,res){
             var checkUser = {userId:req.user._id,username:req.user.username,avatar:req.user.avatar};
             Bookmarks.update({_id:bookmarkId},{checked:2,deleteInfo:reason,checkUser:checkUser},function(err,doc){
                 if(err) {console.log(err);return res.sendError()}
-                Channels.update({'_id':channelId},{$inc:{'bmkNum':-1}},function(err){
-                    if (err) {console.log(err);return res.sendError();}
                     res.sendResult('书签已经被筛除',0,null);
-                });              
             });
         }else
         {
