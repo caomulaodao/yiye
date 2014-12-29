@@ -1338,9 +1338,9 @@ $(function(){
 
         //展示创建频道弹出页
         createChannels : function(){
-            var view = new NewChannelView();
+            /*var view = new NewChannelView();
             this.main.html(view.render().el);
-            view.renderAfter();
+            view.renderAfter();*/
             Router.navigate('create',true);
         },
         

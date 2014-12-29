@@ -117,13 +117,13 @@
         <h3 id="create-channel-title">创建书签频道</h3>
         <div id="create-channel-discription" >
         书签频道是一个书签的集合，你可以基于某个话题和兴趣去创建。之后，你便可以向这个书签频道提交与它相关的书签了。
-        对了，你的书签频道也可以被其他人订阅哦。这些订阅用户也可以向你的书签频道提交书签哦，不过需要你审核哦。
+        对了，你的书签频道也可以被其他人订阅。这些订阅用户也可以向你的书签频道提交书签，不过需要你审核哦。
         </div>
         <div class='card-wrapper'>
             <div id="channel-info-wrapper">
                 <div class='image-wrapper'>
                     <div id="channel-create-logo">
-                            <img src="http://yiye.qiniudn.com/cLogo/7647966b7343c2906d3f341cf255be6b.png" id="channel-logo">
+                            <img src="http://yiye.qiniudn.com/cLogo/a869dd919b898aff4a626cfac3003816.png" id="channel-logo">
                             <p><span id="change-channel-logo">上传</span></p>
                     </div>
                     <div id="channel-new-logo-info">
@@ -385,9 +385,11 @@
                 <div class="channel-info-item">
                     <a href="/channel/<%= info._id %>/follower" target="_blank">订阅者(<%= info.subNum %>)</a>
                 </div>
+                <% if (owner) {%>
                 <div class="channel-info-item">
                     <a href="/channel/<%= info._id %>" target="_blank">设置</a>
                 </div>
+                <% }%>
             </div>
         </div>
         <div class="content-body">

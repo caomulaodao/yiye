@@ -279,6 +279,11 @@ exports.init  =  function(req,res){
         //更新频道最后访问时间并返回数据
         results.isHave=true;//下次是否进行ajax请求
         results.nextTime=null;//请求加载对应时间的书签
+        //是否频道拥有者
+        results.owner = false;
+        if (results.info.creator.userId+""==req.user._id){
+            results.owner = true;
+        }
         //数据库里对应频道一条书签也没有的情况
         if (results.endbookmarkId==null) {results.isHave=false;}
         //取出来书签的最后一条的ID和数据库里最后一条ID相等的时候则isHave为false
@@ -570,10 +575,7 @@ exports.delete = function(req,res){
             var checkUser = {userId:req.user._id,username:req.user.username,avatar:req.user.avatar};
             Bookmarks.update({_id:bookmarkId},{checked:2,deleteInfo:reason,checkUser:checkUser},function(err,doc){
                 if(err) {console.log(err);return res.sendError()}
-                Channels.update({'_id':channelId},{$inc:{'bmkNum':-1}},function(err){
-                    if (err) {console.log(err);return res.sendError();}
                     res.sendResult('书签已经被筛除',0,null);
-                });              
             });
         }else
         {

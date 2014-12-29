@@ -16,6 +16,7 @@ var mongoose = require('mongoose'),
     Channels = mongoose.model('Channels'),
     Bookmarks = mongoose.model('Bookmarks'),
     tool=require('../../../../config/tools/tool'),
+    xss = require('xss'),
     myVerify=require('../../../../config/tools/verify');
 
 //渲染首页 注入用户数量,频道数量,标签数量
@@ -59,6 +60,9 @@ exports.bugs = function(req,res){
   if (!myVerify.isEmail(req.body.email)){
       return res.sendResult("含有非法字符",2001,null);
   }
+  //xss过滤
+  req.body.email = xss(req.body.email,{whiteList:{}});
+  req.body.bugzone = xss(req.body.bugzone,{whiteList:{}});
   var bug = new Bugs(req.body);
   var errors = req.validationErrors();
   if (errors) {
@@ -192,7 +196,7 @@ exports.query = function(req,res,Package){
     })
 };
 //爬虫
-exports.scraper = function(req,res){console.log(req.body);
+exports.scraper = function(req,res){
     if (!req.user){return res.sendResult('请先登陆或注册',1000,null);}
     var userUrl = req.body.website;
     //参数检测
@@ -211,25 +215,28 @@ exports.scraper = function(req,res){console.log(req.body);
         encoding:null
     };
     //传入dom后的处理函数
-    var callback = function(err,response,content){console.log(content);
+    var callback = function(err,response,content){
         if (err) {console.log(err);return res.sendResult('访问该网站出错',3001,null);}
         var re1 = /gb2312/i;
         var re2 = /GBK/i;
+        //是否已经格式转换
+        var isTransform = false;
         //如果头部表明编码是gbk
         if (re1.test(response.headers['content-type'])||re2.test(response.headers['content-type'])){
             content = iconv.decode(content,'gb2312');
+            isTransform = true;
         }
         var $ = cheerio.load(content);
         var title,description,imgUrl="";
         //如果meta标签表明编码内容是gbk
-        if ($('meta[content]')){
+        if (!isTransform&&$('meta[content]')){
             if(re1.test($('meta[content]').attr('content'))||re2.test($('meta[content]').attr('content'))){
                 content = iconv.decode(content,'gb2312');
                 $ = cheerio.load(content);
             }
         }
         var title=$('title').text();
-        var description=$('meta[name=description]').attr('content');console.log(3);
+        var description=$('meta[name=description]').attr('content');
         if (!description){
             description = $('p').text().substr(0,100);
         }
@@ -254,7 +261,7 @@ exports.scraper = function(req,res){console.log(req.body);
 }
 exports.error = function(req,res,Package){
     Package.render('500',{},function(err,result){
-        if (err) {console.log();return res.send('服务器挂了...');}
+        if (err) {console.log(err);return res.send('服务器挂了...');}
         res.send(result);
     })
 }
