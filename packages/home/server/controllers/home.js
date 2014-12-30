@@ -228,7 +228,7 @@ function getTags(str){
 exports.discover = function(req,res){
     //number为请求次数 limit为每次返回的数量
     var number=req.query.number||1;
-    var limit=12;
+    var limit=24;
     if (!Myverify.isNumber(number)){return res.sendResult('请求参数错误',2000,null)}//传入参数格式进行判断
     if (number==1){limit=24}
     async.waterfall([

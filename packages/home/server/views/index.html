@@ -387,13 +387,13 @@
                 </div>
                 <% if (owner) {%>
                 <div class="channel-info-item">
-                    <a href="/channel/<%= info._id %>" target="_blank">设置</a>
+                    <a href="/channel/<%= info._id %>/manage" target="_blank">管理</a>
                 </div>
                 <% }%>
             </div>
         </div>
         <div class="content-body">
-            <ul>
+            <ul id = "content-body-ul">
                 <% for(var i = 0;i< list.length; i++){ %>
                 <div class="date-divide">
                     <div><%= list[i]['day']%></div>
