@@ -489,7 +489,7 @@
     <div id="channel-explore">
         <h1 id="channel-explore-title">发现书签频道 · 发现网络之美</h1>
         <ul id="channel-explore-tools"><a href="/explore"><li><i id="search"></i><span>频道搜索</span></li></a><a href="/our/team/#extendInstall"><li><i id="extends"></i><span>插件安装</span></li></a><a href="http://yiye.qiniudn.com/yiye-release.apk"><li><i id="android"></i><span>app下载</span></li></a><a href="/our/team/#help"><li><i id="userHelp"></i><span>使用帮助</span></li></a><a href="/our/team/#bugReporter"><li><i id="postBug"></i><span>bug反馈</span></li></a></ul>
-        <ul>
+        <ul id = "channel-content">
             <% for(var i = 0;i < list.length; i++){ %>
                 <li class="channel-showcase">
                     <div class="channel-logo">
@@ -524,7 +524,7 @@
     <% for(var i = 0;i < list.length; i++){ %>
     <li class="channel-showcase">
         <div class="channel-logo">
-            <img src="<%= list[i]['logo'] %>"/>
+            <img src="http://yiye.qiniudn.com/<%= list[i]['logo'] %>"/>
         </div>
         <div class="channel-main">
             <div class="channel-showcase-head">
@@ -541,7 +541,7 @@
             <p class="channel-showcase-description"><%= list[i]['description']  %></p>
             <div class="channel-showcase-footer">
                 <span><%=list[i]['bmkNum']%>书签</span><span><%= list[i]['subNum']%>关注者</span>
-                <a class="ex-creator" href="/u/<%= list[i]['creator']['userId'] %>" data-toggle="tooltip" data-placement="left" title=<%= list[i]['creator']['userName'] %>target="_blank"><img src="http://yiye.qiniudn.com<%= list[i]['creator']['userLogo']  %>"/></a>
+                <a class="ex-creator" href="/u/<%= list[i]['creator']['userId'] %>" data-toggle="tooltip" data-placement="left" target="_blank" title=<%= list[i]['creator']['userName'] %> ><img src="http://yiye.qiniudn.com/<%= list[i]['creator']['userLogo']  %>"/></a>
             </div>
         </div>
     </li>

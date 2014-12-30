@@ -49,7 +49,7 @@ var mongoose = require('mongoose'),
         if(!(req.user && (req.user.roles.indexOf('admin')>-1 || req.user.roles.indexOf('system')>-1))){
             return res.redirect('/');
         }
-        var limit = 2;//每页限制显示数
+        var limit = 50;//每页限制显示数
         var p=req.query.p||1;
         var search = req.query.q || '';
         var type = req.query.type || 'username';
@@ -112,7 +112,7 @@ var mongoose = require('mongoose'),
         if(!(req.user && (req.user.roles.indexOf('admin')>-1 || req.user.roles.indexOf('system')>-1))){
             return res.redirect('/');
         }
-        var limit = 2;//每页限制显示数
+        var limit = 50;//每页限制显示数
         var p=req.query.p||1;
         var search = req.query.q || '';
         var type = req.query.type || 'name';
@@ -178,7 +178,7 @@ var mongoose = require('mongoose'),
       if(!(req.user && (req.user.roles.indexOf('admin')>-1 || req.user.roles.indexOf('system')>-1))){
         return res.redirect('/');
       }
-      var limit = 2;//每页限制显示数
+      var limit = 50;//每页限制显示数
       var p=req.query.p||1;
       var search = req.query.q || '';
       var type = req.query.type || 'email';
