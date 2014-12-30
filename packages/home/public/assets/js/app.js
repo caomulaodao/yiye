@@ -220,9 +220,9 @@ $(function(){
                         url: "/api/home/bookmark",
                         success: function(model, response){
                             if (response.code==0){
-                                $('#channel-content').append(that.channelTemplate(response.data));
+                                $('#content-body-ul').append(that.channelTemplate(response.data));
                                 if(!response.data.isHave){
-                                    $('#channel-content').append("<p class='no-news'>无更多内容</p>");
+                                    $('#content-body-ul').append("<p class='no-news'>无更多内容</p>");
                                 }else{
                                     var nextDate = response.data.nextTime;   //将下次日期赋值给nextDate变量
                                     that.list.set("date", nextDate);         //记录下次Ajax日期
@@ -233,7 +233,7 @@ $(function(){
                                 console.log(response);
                             }
 
-                        }
+                 }
                     });
                 }
 

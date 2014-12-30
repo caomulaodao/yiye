@@ -28,7 +28,7 @@ exports.signout = function(req, res) {
 /**
  * Logout web API (by coolbit.in@gmail.com)
  */
-exports.web_api_logout = function(req, res) {
+ exports.web_api_logout = function(req, res) {
   if(req.isAuthenticated()){
     req.logout();
     if (req.isUnauthenticated())
