@@ -49,12 +49,14 @@ module.exports = function(app, passport, db) {
   app.set('view engine', 'html');
   //浏览器头部检测中间件
   app.use(function(req,res,next){
-    var header=req.headers['user-agent'];
+    var header=req.headers['user-agent'];console.log(header);
     if(typeof header !='string') header='';//如果获取的头部不包含user-agent;
     var staticFile1 = new RegExp('/.*?/assets/.*');
     var staticFile2 = new RegExp('/bower_components/.*')
-    function isChrome(str){
-       if (str.indexOf('WebKit')>-1) return true;
+    function enable(str){
+      var chrome = /WebKit/i;
+      var firefox = /moz/i;
+       if (chrome.test(str)||firefox.test(str)) return true;
        return false;
     }
     //手机判断
@@ -67,7 +69,6 @@ module.exports = function(app, passport, db) {
     }
     else{
       //如果是安卓 重定向到下载界面
-      console.log(userPhone(header));
       if (userPhone(header)=="Android"){
         return res.redirect('/system/android');
       }
@@ -76,7 +77,7 @@ module.exports = function(app, passport, db) {
         return res.redirect('/system/ios');
       }
       //如果是非webkite内核
-      if(!isChrome(header)){
+      if(!enable(header)){
         return res.redirect('/please/use/chrome');
       }
       next();
