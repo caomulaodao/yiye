@@ -1242,7 +1242,7 @@ $(function(){
             var that = this;
             var nClientH = $(window).height();
             var nScrollTop = $('#channel-explore').scrollTop();
-            var nChannelH = $('#channel-explore ul').height();
+            var nChannelH = $('#channel-content').height();
             if((nClientH + nScrollTop - 80 >= nChannelH) && (that.exploreAjax.bScroll == true)) {
                 that.exploreAjax.bScroll = false;   //禁止Ajax加载
                 var nNum = that.cList.get('number');
