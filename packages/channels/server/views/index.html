@@ -37,7 +37,7 @@
                 <ul id="function-module-ul">
                     <li id='discover' ><i class="iconfont">&#xe684</i><div>发现</div></li>
                     <li id='message'><i class="iconfont">&#xf00b5</i><div>消息</div></li>
-                    <li id='help'><i class="iconfont">&#xf00b8</i><div>帮助</div></li>
+                    <li id='help'><i class="iconfont">&#xf00b8</i><div>关于</div></li>
                     <li id='set'><i class="iconfont">&#xf013e</i><div>设置</div></li>
                 </ul>
             </div>
@@ -124,7 +124,7 @@
                             <span>描述：</span>{{ bookmark['description'] }}
                         </div>
                         <div class="footer-part">
-                            <span class="submit-time">提交于:{{ ''+bookmark['postTime']|date('H:m:s') }}</span>
+                            <span class="submit-time">提交于:{{ ''+bookmark['postTime']|date('H:i:s', -480, 'CCT') }}</span>
                             <span>by <a href="/u/{{ ''+bookmark['postUser']['userId']}}" data-userId="{{ bookmark['postUser']['userId'] }}">{{ bookmark['postUser']['username'] }}</a></a></span>
                             <!-- <span><i class="glyphicon glyphicon-star"></i><a class="collect" href="#">收藏</a></span> -->
                         </div>
@@ -162,6 +162,7 @@
 </div>
 </div>
 <script rel="script" src="/bower_components/jquery/dist/jquery.js"></script>
+<script rel="script" src="/bower_components/moment/moment.js"></script>
 <script rel="script" src="/channels/assets/js/channels.js"></script>
 <script rel="script" src="/home/assets/js/home.js"></script>
 </body>
