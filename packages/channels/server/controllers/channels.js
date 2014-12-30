@@ -386,7 +386,7 @@ exports.update = function(req,res){
             var update = {
                 logo:xss(req.body.logo,{whiteList:{}}),
                 name:xss(req.body.name,{whiteList:{}}),
-                description:xss(req.body.tags,{whiteList:{}}),
+                description:xss(req.body.description,{whiteList:{}}),
                 type:xss(req.body.type,{whiteList:{}}),
                 tags:xss(req.body.tags,{whiteList:{}})
             };
