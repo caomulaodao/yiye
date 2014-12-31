@@ -56,7 +56,9 @@ module.exports = function(app, passport, db) {
     function enable(str){
       var chrome = /WebKit/i;
       var firefox = /moz/i;
-       if (chrome.test(str)||firefox.test(str)) return true;
+      var googlebot = /google/i;
+      var baidubot = /baidu/i;
+       if (chrome.test(str)||firefox.test(str)||googlebot.test(str)||baidubot(str)) return true;
        return false;
     }
     //手机判断
