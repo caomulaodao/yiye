@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>一叶书签管理后台</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/overlook/assets/css/overlook.css">
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">一叶后台</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">一叶后台</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="/overlook">统计</a></li>
+                <li class="active"><a href="/overlook/user">用户</a></li>
+                <li><a href="/overlook/channel">频道</a></li>
+                <li><a href="/overlook/bugs">Bugs</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/">回到首页</a></li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+
+<div class="container">
+    <div class="starter-template">
+        <div class="row">
+            <div class="col-xs-6 user-title">
+               用户管理
+            </div>
+            <div class="col-xs-3">
+                <input type="text" class="form-control" placeholder="搜索用户" id="user-info">
+            </div>
+            <div class="col-xs-2">
+                <select class="form-control" id="user-type">
+                    <option value="username">用户名</option>
+                    <option value="email">邮箱</option>
+                </select>
+            </div>
+            <div class="col-xs-1">
+                <button type="button" class="btn btn-primary" id="user-search">搜索</button>
+            </div>
+        </div>
+        <table class="table user-table">
+            <thead>
+            <tr>
+                <th>用户名</th>
+                <th>邮箱</th>
+                <th>注册时间</th>
+                <th>创建频道</th>
+                <th>关注频道</th>
+                <th>提交书签</th>
+                {% if role == 'system' %}<th>操作</th>{% endif %}
+            </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+            <tr>
+                <td><a href="/u/{{''+user._id}}" target="_blank">{{ user.username }}</a></td>
+                <td>{{ user.email }}</td>
+                <td>{{ ''+user.createTime | date('Y-m-d H:m:s') }}</td>
+                <td>{{ user.createNum }}</td>
+                <td>{{ user.subNum }}</td>
+                <td>{{ user.postNum }}</td>
+                {% if role == 'system' %}
+                    {% if user.roles.length == 1 %}
+                        <td><button type="button" class="btn btn-primary setAdmin" data-userid="{{''+user._id}}">后台权限</button></td>
+                    {% else  %}
+                        <td><button type="button" class="btn btn-danger cancelAdmin" data-userid="{{''+user._id}}">取消权限</button></td>
+                    {% endif %}
+                {% endif %}
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% if page.show.length!=0 %}
+    <nav>
+        <ul class="pagination">
+            {% if page.before<page.show[0] %}
+                <li class="disabled"><a href="#">&laquo;</a></li>
+            {% else %}
+                <li><a href="{{'?type='+type+'&q='+search+'&p='+page.before}}">&laquo;</a></li>
+            {% endif %}
+            {% for i in page.show %}
+            {% if i==page.now %}
+                <li class="active"><a href="#">{{i}} <span class="sr-only">(current)</span></a></li>
+            {% else%}
+                <li><a href="{{'?type='+type+'&q='+search+'&p='+i}}">{{i}}</a></li>
+            {% endif %}
+            {% endfor %}
+            {% if page.after>page.show[page.show.length-1] %}
+                <li class="disabled"><a href="#">&raquo;</a></li>
+            {% else %}
+                <li><a href="{{'?type='+type+'&q='+search+'&p='+page.after}}">&raquo;</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+
+</div>
+
+<script rel="script" src="/bower_components/jquery/dist/jquery.js"></script>
+<script rel="script" src="/bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<script rel="script" src="/overlook/assets/js/overlook.user.js"></script>
+</body>
+</html>

@@ -32,7 +32,7 @@ var bookmarksSchema = Schema({
     },
     image:{
         type: String,
-        required: true
+        default: 'avatar/4607f7fff0dce694da3a006d576bffcb.png'
     },
     postTime: {
         type:Date,
@@ -72,6 +72,9 @@ var bookmarksSchema = Schema({
         userId:Schema.ObjectId,
         username:String,
         avatar:String
+    },
+    checkedTime:{
+        type:Date
     }
 });
 

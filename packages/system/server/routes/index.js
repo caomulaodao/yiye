@@ -41,9 +41,29 @@ module.exports = function(System, app, auth, database) {
   app.get('/please/use/chrome',function(req,res){
     res.render('useChrome');
   });
-  
+  //提交bug
+  app.route('/api/bugs').post(index.bugs);
   // 关于我们
   app.get('/our/team',function(req,res){
-    res.render('about');
+      System.render('about',req,function(err,html){
+        if(err) {consoe.log(err);return res.sendError()}
+        res.send(html);
+      });
+  });
+
+  //url爬虫接口
+  app.route('/system/scraper')
+     .post(index.scraper);
+  //500服务器错误界面
+  app.get('/error',function(req,res,next){
+      index.error(req,res,System);
+  });
+  //安卓手机浏览器访问
+  app.get('/system/android',function(req,res){
+    res.render('android');
   })
+  app.get('/system/ios',function(req,res){
+    res.render('ios');
+  })
+
 };

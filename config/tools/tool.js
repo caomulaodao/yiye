@@ -38,7 +38,7 @@ function skipPage(searchPage,listLength){
         }
 }
 
-//将一个bookmarks列表格式化为按时间集合排序的数组。
+//将一个bookmarks列表格式化为按时间集合排序的数组。 按天排序 再按照点赞排序
 function listToArray(list){
     if(list.length==0) return [];
     var result = [];
@@ -76,8 +76,21 @@ function stripscript(s) {
         rs = s.replace(pattern, '');
     return rs;
 }
+//将用户输入的url转换为可以访问的url 如果匹配不成功就返回false 否则返回 服务器可以访问的链接
+function safeUrl(url){
+    var RegUrl = new RegExp();
+    RegUrl.compile("^(https?://)?[A-Za-z0-9-_]+\\.[A-Za-z0-9-_%&\?\/.=]+$",'g');
+    var result = RegUrl.test(url,'$1');
+    if (!result) return false;
+    if(RegExp.$1) return url;
+    return 'http://'+url;
+}
 
-
+//分页
 exports.skipPage = skipPage;
+//日期的文档排序成数组
 exports.listToArray=listToArray;
+//过滤非法字符
 exports.stripscript = stripscript;
+//将用户输入的url转换为可访问的url
+exports.safeUrl = safeUrl;

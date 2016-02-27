@@ -11,6 +11,7 @@
     -ms-user-select: none; 
 }
 .about-item{
+	margin-top: 30px;
 	width: 100%;
 }
 .about-item li{
@@ -23,14 +24,15 @@
 	text-decoration: none;
 	font-size: 16px;
 	width: 100%;
-	color:#40c192;
+	color:#333;
 	display: block;
 	border-left:4px solid transparent;
 }
-.about-item a:hover{
-	background: #ddd;
-	border-left:4px solid #40c192;
+.about-item a:hover,.about-item a.active{
+	color: #0091ea;
+	border-left:4px solid #0091ea;
 }
+.about-item a:hover {background-color: #eee;}
 /*rights */
 .ab-center{
 	width:800px;
@@ -109,11 +111,21 @@
 .staff-info-txt:after{
 	content:"」";
 }
+.staff h1,#joinus h1,.bug-reporter h1{
+    font-size: 30px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #40c192;
+}
+.staff p,#joinus p{
+    font-size: 16px;
+}
 /*join us*/
 .joinus h2{
 	margin: 0;
 	text-align: center;
 	line-height:400px;
+    color: #40c192;
 	/*display: none;*/
 }
 @font-face {
@@ -124,13 +136,13 @@
     url('../icons/fonts/iconfont.ttf') format('truetype'), 
     url('../icons/fonts/iconfont.svg#uxiconfont') format('svg'); 
 }
-.iconfont{
+.sponsor-friend .iconfont{
     font-family:"iconfont" !important;
     font-size:60px;font-style:normal;
     -webkit-font-smoothing: antialiased;
     -webkit-text-stroke-width: 0.2px;
     -moz-osx-font-smoothing: grayscale;
-    color:rgba(23,20,15,1);
+    color:#40c192;
 }
 .sponsor{
     text-align: center;
@@ -152,11 +164,26 @@
     font-weight: 100;
     line-height: 30px;
 }
-.iconfont:hover{
-    color:rgba(128,76,28,0.68);
-}
+#bug-submit-btn {background-color: #40c192;}
+
+#qq-icon:hover {color: #333;}
+
+#weibo-icon:hover {color: #e6162d;}
+
+#wechat-icon:hover {color: #51c332;}
+
+#douban-icon:hover {color: #2e963d;}
+
+#facebook-icon:hover {color: #44619d;}
+
+#twitter-icon:hover {color: #55acee;}
+
+
 .sponsor-friend{
 	display: inline-block;
+}
+.sponsor-friend a{
+	text-decoration: none;
 }
 /*bug reporter*/
 .bug-reporter{
@@ -177,4 +204,37 @@
 	width: 100%;
 	height: 100vh;
 }
-/*follow us */
+.extend-install h1{
+    color: #40c192;
+    font-size: 30px;
+}
+.extend-install{
+    font-size: 16px;
+}
+.gotoChromeStore{
+    background-color: #1abc9c;
+    color: #ffffff;
+}
+.gotoChromeStore:hover{
+    background-color: #1abc9c;
+    color: #ffffff;
+}
+.offlineInstallationPackage{
+    background-color: #1abc9c;
+    color: #ffffff;
+}
+.offlineInstallationPackage:hover{
+    background-color: #1abc9c;
+    color: #ffffff;
+}
+.help h1{
+    color: #40c192;
+    font-size: 30px;
+}
+.step{
+    margin-top: 20px;
+}
+.step img{
+    width: 250px;
+    margin-right: 10px;
+}

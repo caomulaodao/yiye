@@ -16,10 +16,14 @@ function subChannelAjax() {
         var that = this;
         var channelId = $(that).attr('data-id');
         $.ajax({
-            type: "get",
+            type: "POST",
             url: '/channel/sub/' + channelId
         }).done(function(){
-            $(that).addClass('have-subed').removeClass('to-sub').html('已订阅');
+            if(data.code == 0){
+                $(that).addClass('have-subed').removeClass('to-sub').html('已订阅');
+            }else{
+                alert("请先登录");
+            }
         });
     });
 }

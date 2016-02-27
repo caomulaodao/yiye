@@ -51,15 +51,16 @@ exports.receive = function(req,res){
     if(req.body.description==null){return res.sendResult('描述不能为空',3002,null);}
     if(req.body.url==null){return res.sendResult('书签地址不能为空',3003,null);}
     if(req.body.image==null){return res.sendResult('图片不能为空',3004,null);}
-    if(req.body.channels==null||(verify.isArray(req.body.channels)&&req.body.channels.length==0)){return res.sendResult('提交频道不能为空',3006,null);}
+    if(req.body.channels==null||(!verify.isArray(req.body.channels)&&req.body.channels.length==0)){return res.sendResult('提交频道不能为空',3006,null);}
     if(!(
         verify.isString(req.body.title)&&verify.isString(req.body.description)&&verify.isString(req.body.url)
         &&verify.isString(req.body.image)&&verify.isString(req.body.tags)&&verify.isArray(req.body.channels)
         )){ return res.sendResult('参数类型错误',2000,null)};//判断数据格式
+    if (!verify.isUrl(req.body.url)){return res.sendResult('url格式错误',2010,null);}
     var bookmarks ={
         title:xss(req.body.title,{whiteList:{}}),
         description:xss(req.body.description,{whiteList:{}}),
-        url:escape(xss(req.body.url,{whiteList:{}})),
+        url:xss(req.body.url,{whiteList:{}}),
         image:xss(req.body.image,{whiteList:{}}),
         channels:req.body.channels,
         tags:xss(req.body.tags,{whiteList:{}})
@@ -134,10 +135,103 @@ exports.receive = function(req,res){
             return res.sendResult('提交成功!',0,channels);
         });
     });
-
-
-
 }
+//频道界面添加书签插件的接口
+exports.scraperReceive = function(req,res){
+    if(!req.user) return res.sendResult('请先注册或登录',1000,null);
+    var titleLength=100,descriptionLength=200;//限制长度
+    if(req.body.tags==null) req.body.tags='';
+    if(req.body.title==null){return res.sendResult('标题不能为空',3001,null);}
+    if(req.body.description==null){return res.sendResult('描述不能为空',3002,null);}
+    if(req.body.website==null){return res.sendResult('书签地址不能为空',3003,null);}
+    //if(req.body.image==null){return res.sendResult('图片不能为空',3004,null);}
+    if(req.body.channel==null||(!verify.idVerify(req.body.channel))){return res.sendResult('频道ID格式错误',3006,null);}
+    if(!(
+        verify.isString(req.body.title)&&verify.isString(req.body.description)&&verify.isString(req.body.website)
+        &&verify.isString(req.body.tags)
+        )){ return res.sendResult('参数类型错误',2000,null)};//判断数据格式
+    if (!verify.isUrl(req.body.website)){return res.sendResult('url格式错误',2010,null);}
+    var bookmarks ={
+        title:xss(req.body.title,{whiteList:{}}),
+        description:xss(req.body.description,{whiteList:{}}),
+        url:xss(req.body.website,{whiteList:{}}),
+        //image:xss(req.body.image,{whiteList:{}}),
+        channels:req.body.channel,
+        tags:xss(req.body.tags,{whiteList:{}})
+    };
+    if(bookmarks.title.length>titleLength){bookmarks.title=bookmarks.title.substr(0,titleLength);}
+    if(bookmarks.description.length>descriptionLength){bookmarks.description=bookmarks.description.substr(0,descriptionLength);}
+    bookmarks.tags = getTags(bookmarks.tags);
+    var channels = [];
+    channels[0] =req.body.channel;
+    bookmarks.channels = undefined;
+
+    async.parallel([
+        function(callback){
+            async.map(channels,function(item,callback){
+                //查看用户是否是管理员？
+                Channel2User.findOne({channelId:item,userId:req.user._id},function(err,doc){
+                    if(err) {console.log(err);return res.sendError()}
+                    var bookmark = Bookmarks(bookmarks);
+                    //向书签中加入所在频道的信息
+                    bookmark.channelInfo.channelId = doc.channelId;
+                    bookmark.channelInfo.channelName = doc.name;
+                    bookmark.channelInfo.channelLogo = doc.logo;
+                    var pass = false;
+                    //如果是管理员或创始人，则直接审核通过
+                    if(doc.type == "creator" || doc.type == "admin"){
+                        pass = true;
+                        bookmark.checked = 5;
+                    }
+                    bookmark.channelId = item;
+                    bookmark.postUser = {userId:req.user._id,username:req.user.username};
+                    bookmark.save(function(err){
+                        if(err) {console.log(err);return res.sendError()}
+                        if(pass){console.log(item,'item');
+                            Channels.update({_id:item},{$inc:{bmkNum:1}},function(err,doc){
+                                if(err) {console.log(err);return res.sendError()}
+                                callback(null,true);
+                            });
+                        }else{
+                            callback(null,true);
+                        }
+                    });
+                });
+            }, function(err, results){
+                if(err) {console.log(err);return res.sendError()}
+                callback(null,true);
+            });
+        },
+        function(callback){
+            // 添加用户自己留底的书签记录
+            var bookmark = Bookmarks(bookmarks);
+            bookmark.checked = 6;
+            bookmark.channelId =  undefined;
+            bookmark.postUser = {userId:req.user._id,username:req.user.username};
+            bookmark.save(function(err){
+                if(err) {console.log(err);return res.sendError()}
+                User.update({_id:req.user._id},{$inc:{postNum:1}},function(err,doc){
+                    if(err) {console.log(err);return res.sendError()}
+                    callback(null,true);
+                })
+            });
+        }
+    ]
+    ,function(err,results){
+        //返回频道信息
+        Channel2User.find({userId:req.user._id,channelId:{$in:channels}},'channelId name logo type',function(err,channels){
+            if(err) {console.log(err);return res.sendError();}
+            return res.sendResult('提交成功!',0,channels);
+        });
+    });
+}
+
+
+
+
+
+
+
 //获取频道内的书签
 exports.init  =  function(req,res){
     var limit=20;
@@ -185,6 +279,11 @@ exports.init  =  function(req,res){
         //更新频道最后访问时间并返回数据
         results.isHave=true;//下次是否进行ajax请求
         results.nextTime=null;//请求加载对应时间的书签
+        //是否频道拥有者
+        results.owner = false;
+        if (results.info.creator.userId+""==req.user._id){
+            results.owner = true;
+        }
         //数据库里对应频道一条书签也没有的情况
         if (results.endbookmarkId==null) {results.isHave=false;}
         //取出来书签的最后一条的ID和数据库里最后一条ID相等的时候则isHave为false
@@ -205,45 +304,61 @@ exports.init  =  function(req,res){
 exports.like = function(req,res){
 
     if(!req.user) return res.sendResult('请先注册或登录',1000,null);
-    var bookmarkId = req.params['bookmarkId'];
+    var bookmarkId = req.body['bookmarkId'];
     if(!verify.idVerify(bookmarkId)){return res.sendResult('参数类型错误',2000,null)}
-    async.parallel({
-        isHated:function(callback){
-            BookmarkHate.remove({bookmarkId: bookmarkId, userId: req.user._id}, function (err, doc) {
-                if (err) {console.log(err);return res.sendError()}
-                if (doc > 0) {
-                    Bookmarks.update({_id: bookmarkId}, {$inc: {hateNum: -1}}, function (err, doc) {
-                        if (err) {console.log(err);return res.sendError()}
-                        callback(null, true);
-                    });
-                } else {
-                    callback(null, false);
-                }
-            });
-        },
-        isLiked:function (callback) {
-            BookmarkLike.find({bookmarkId: bookmarkId, userId: req.user._id}, function (err, doc) {
-                if (err) { console.log(err);return res.sendError()}
-                if (doc.length > 0) {
-                    callback(null, true);
-                }else{
-                    var like = BookmarkLike({});
-                    like.bookmarkId = bookmarkId;
-                    like.userId = req.user._id;
-                    like.username = req.user.username;
-                    like.save(function (err) {
-                        if (err) {console.log(err);return res.sendError()}
-                        Bookmarks.update({_id: bookmarkId}, {$inc: {likeNum: 1}}, function (err, doc) {
+    Bookmarks.findOne({'_id':bookmarkId,'postUser.userId':req.user._id},function(err,bk){
+        if (err) {console.log(err);return res.sendError();}
+        if (bk) {return res.sendResult('操作未成功',3000,null);}
+        async.parallel({
+            isHated:function(callback){
+                BookmarkHate.remove({'bookmarkId': bookmarkId, 'userId': req.user._id,'type':{$ne:'admin'}}, function (err, doc) {
+                    if (err) {console.log(err);return res.sendError()}
+                    if (doc > 0) {
+                        Bookmarks.update({_id: bookmarkId}, {$inc: {hateNum: -1}}, function (err, doc) {
                             if (err) {console.log(err);return res.sendError()}
-                            callback(null,false);
+                            callback(null, true);
                         });
-                    });
-                }
-            });
-        }
-    },function(err,results){
-        if(err) {console.log(err);return res.sendError()}
-        return res.sendResult('已经点赞',0,results);
+                    } else {
+                        callback(null, false);
+                    }
+                });
+            },
+            isLiked:function (callback) {
+                BookmarkLike.find({'bookmarkId': bookmarkId, 'userId': req.user._id,'type':{$ne:'admin'}}, function (err, doc) {
+                    if (err) { console.log(err);return res.sendError()}
+                    if (doc.length > 0) {
+                        callback(null, true);
+                    }else{
+                        //查询获取bookmarkId
+                        Bookmarks.findOne({_id: bookmarkId}, function (err, bookmark) {
+                            if (err) {console.log(err);return res.sendError()}
+                            var like = BookmarkLike({});
+                            like.bookmarkId = bookmarkId;
+                            like.userId = req.user._id;
+                            like.username = req.user.username;
+                            like.channelId = bookmark.channelId;
+                            like.channelName = bookmark.channelInfo.channelName,
+                            like.bookmarkLogo = bookmark.image,
+                            like.bookmarkName = bookmark.title,
+                            like.userLogo = req.user.avatar,
+                            //保存点赞数据
+                            like.save(function (err) {
+                                if (err) {console.log(err);return res.sendError()}
+                                //更新书签数据
+                                Bookmarks.update({_id: bookmarkId}, {$inc: {likeNum: 1}}, function (err, doc) {
+                                    if (err) {console.log(err);return res.sendError()}
+                                    callback(null,false);
+                                });
+                            });
+                        });
+
+                    }
+                });
+            }
+        },function(err,results){
+            if(err) {console.log(err);return res.sendError()}
+            return res.sendResult('已经点赞',0,results);
+        });
     });
 }
 
@@ -251,53 +366,61 @@ exports.like = function(req,res){
 exports.hate = function(req,res){
 
     if(!req.user) return res.sendResult('请先注册或登录',1000,null);
-    var bookmarkId = req.params['bookmarkId'];
+    var bookmarkId = req.body['bookmarkId'];
     if(!verify.idVerify(bookmarkId)){return res.sendResult('参数类型错误',2000,null)}
-    async.parallel({
-        isLiked:function(callback){
-            BookmarkLike.remove({bookmarkId:bookmarkId,userId:req.user._id},function(err,doc){
-                if(err) { console.log(err);return res.sendError()}
-                if(doc > 0){
-                    Bookmarks.update({_id:bookmarkId},{$inc:{likeNum:-1}},function(err,doc){
-                        if(err) {console.log(err);return res.sendError()}
-                        callback(null,true);
-                    });
-                }else{
-                    callback(null,false);
-                }
-            });
-        },
-        isHated:function(callback){
-            BookmarkHate.find({bookmarkId:bookmarkId,userId:req.user._id},function(err,doc){
-                if(err)  {console.log(err);return res.sendError()}
-                if(doc.length > 0){
-                    callback(null,true);
-                }else{
-                    var hate = BookmarkHate({});
-                    hate.bookmarkId = bookmarkId;
-                    hate.userId = req.user._id;
-                    hate.username = req.user.username;
-                    hate.save(function(err){
-                        if(err) {console.log(err);return res.sendError()}
-                        Bookmarks.update({_id:bookmarkId},{$inc:{hateNum:1}},function(err,doc){
+    Bookmarks.findOne({'_id':bookmarkId,'postUser.userId':req.user._id},function(err,bk){
+        if (err) {console.log(err);return res.sendError();}
+        if (bk) {return res.sendResult('操作未成功',3000,null);}        
+        async.parallel({
+            isLiked:function(callback){
+                BookmarkLike.remove({bookmarkId:bookmarkId,userId:req.user._id},function(err,doc){
+                    if(err) { console.log(err);return res.sendError()}
+                    if(doc > 0){
+                        Bookmarks.update({_id:bookmarkId},{$inc:{likeNum:-1}},function(err,doc){
                             if(err) {console.log(err);return res.sendError()}
-                            callback(null,false);
+                            callback(null,true);
                         });
-                    });
-                }
-            });
-        }
-    },function(err,results){
-        if(err) {console.log(err);return res.sendError()}
-        return res.sendResult("已经反对",0,results);
+                    }else{
+                        callback(null,false);
+                    }
+                });
+            },
+            isHated:function(callback){
+                BookmarkHate.find({bookmarkId:bookmarkId,userId:req.user._id},function(err,doc){
+                    if(err)  {console.log(err);return res.sendError()}
+                    if(doc.length > 0){
+                        callback(null,true);
+                    }else{
+                        Bookmarks.find({_id: bookmarkId}, function (err, bookmark) {
+                            var hate = BookmarkHate({});
+                            hate.bookmarkId = bookmarkId;
+                            hate.userId = req.user._id;
+                            hate.username = req.user.username;
+                            hate.channelId = bookmark.channelId;
+                            hate.save(function(err){
+                                if(err) {console.log(err);return res.sendError()}
+                                Bookmarks.update({_id:bookmarkId},{$inc:{hateNum:1}},function(err,doc){
+                                    if(err) {console.log(err);return res.sendError()}
+                                    callback(null,false);
+                                });
+                            });
+                        });
+                    }
+                });
+            }
+        },function(err,results){
+            if(err) {console.log(err);return res.sendError()}
+            return res.sendResult("已经反对",0,results);
+        });
     });
 }
 
 //获取某天的书签
 exports.oneDay = function(req,res){
-    var channelId = req.params['channelId'];
+    var channelId = req.query['channelId'];
     if(!verify.idVerify(channelId)){return res.sendResult('参数格式错误',2001,null)}
-    var day = req.body['day'];
+    var day = req.query['date'];
+    if (!day) {day=""}
     if (!verify.isString(day)) {return res.sendResult('参数类型错误',2000,null)}
     var limit=20;
     //如果没有获取到天数，则默认为最接近的一天  修改bug1(增加频道不存在书签的情况)
@@ -329,8 +452,8 @@ exports.oneDay = function(req,res){
         ],function(err,results){
             if(!results.day) return res.sendResult('获取书签成功',0,{day:null,nextDay:null,list:[]});
             var dayResult = {};
-            dayResult.day = results.day;
-            dayResult.nextDay = results.nextDay;
+            // dayResult.date = results.day;
+            // dayResult.nextDay = results.nextDay;
             var startDay = moment(day,"YYYY-MM-DD").startOf('day').toDate();
             var endDay = moment().add('days',1).toDate();
             Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]},postTime:{$gte:startDay,$lt:endDay}}).sort({postTime:-1}).exec(function(err,list){
@@ -340,8 +463,13 @@ exports.oneDay = function(req,res){
                     var bRank = b['likeNum'] - b['hateNum'];
                     return aRank > bRank ? -1 : 1;
                 });
-                dayResult.list = list;
-                res.sendResult('获取书签成功',0,dayResult);
+                // dayResult.list = list;
+                dayResult = list;
+                var userId = req.user ? req.user._id : null;
+                Channel2User.update({channelId:channelId,userId:userId},{lastTime:Date.now()},function(err){
+                    if(err) { console.log(err);return res.sendError()}
+                    res.sendResult('获取书签成功',0,dayResult);
+                });
             });
         });
     }else{
@@ -355,8 +483,8 @@ exports.oneDay = function(req,res){
                 var nextDay =  moment(doc[0]['postTime']).startOf('day').toDate();
             }
             var dayResult = {};
-            dayResult.day = day;
-            dayResult.nextDay = nextDay;
+            // dayResult.date = day;
+            // dayResult.nextDay = nextDay;
             Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]},postTime:{$gte:startDay,$lt:endDay}}).sort({postTime:-1}).exec(function(err,list){
                 if(err) {console.log(err);return res.sendError()}
                 list.sort(function(a,b){
@@ -364,7 +492,8 @@ exports.oneDay = function(req,res){
                     var bRank = b['likeNum'] - b['hateNum'];
                     return aRank > bRank ? -1 : 1;
                 });
-                dayResult.list = list;
+                // dayResult.list = list;
+                dayResult = list;
                 res.sendResult('获取书签成功',0,dayResult);
             });
         });
@@ -384,7 +513,10 @@ exports.pass = function(req,res){
             var checkUser = {userId:req.user._id,username:req.user.username,avatar:req.user.avatar};
             Bookmarks.update({_id:bookmarkId},{checked:1,checkUser:checkUser},function(err,doc){
                 if(err) {console.log(err);return res.sendError()}
-                res.sendResult('书签已通过',0,null);
+                Channels.update({"_id":channelId},{$inc:{bmkNum:1}},function(err){
+                    if (err) {console.log(err);return res.sendError();}
+                    res.sendResult('书签已通过',0,null);
+                })
             });
         }else
         {
@@ -398,26 +530,31 @@ exports.edit = function(req,res){
     if(!req.user) return res.sendResult('请先注册或登录',1000,null);
     var channelId = req.params['channelId'];
     var bookmarkId = req.params['bookmarkId'];
-    var title = req.body.title;
-    var description = req.body.description;
+    var title = xss(req.body.title,{whiteList:{}});
+    var description = xss(req.body.description,{whiteList:{}})
     if (title==null){return res.sendResult('标题不能为空',2007,null)}
     if (description==null) {res.sendResult('描述不能为空',2008,null)}
-    if(!verify.idVerify(channelId)||!verify.idVerify(bookmarkId)||!verify.isString(title)||!verify.isString(description)) {return res.sendResult('参数格式错误',2000,null)}
+    if(!verify.idVerify(channelId)||!verify.idVerify(bookmarkId)||!verify.isString(title)||!verify.isString(description)) {return res.sendResult('参数类型错误',2000,null)}
     Channel2User.findOne({channelId:channelId,userId:req.user._id,type:{$in:['creator','admin']}},function(err,doc){
         if(doc){
             var checkUser = {userId:req.user._id,username:req.user.username,avatar:req.user.avatar};
             if(title && description){
                 Bookmarks.update({_id:bookmarkId},{checked:1,title:title,description:description,checkUser:checkUser},function(err,doc){
                     if(err) {console.log(err);return res.sendError()}
-                    res.sendResult('书签编辑并通过',0,null);
+                    Channels.update({'_id':channelId},{$inc:{'bmkNum':1}},function(err){
+                        if (err) {console.log(err);return res.sendError();}
+                        res.sendResult('书签编辑并通过',0,null);
+                    });
                 });
             }else{
                 Bookmarks.update({_id:bookmarkId},{checked:1,checkUser:checkUser},function(err,doc){
                     if(err) {console.log(err);return res.sendError()}
-                    res.sendResult('书签编辑并通过',0,null);
+                    Channels.update({'_id':channelId},{$inc:{'bmkNum':1}},function(err){
+                        if (err) {console.log(err);return res.sendError();}
+                        res.sendResult('书签编辑并通过',0,null);
+                    });
                 });
             }
-
         }else
         {
             return res.sendResult('你不是该频道管理员',3000,null);
@@ -430,7 +567,7 @@ exports.delete = function(req,res){
     if(!req.user) return res.sendResult('请先注册或登录',1000,null);
     var channelId = req.params['channelId'];
     var bookmarkId = req.params['bookmarkId'];
-    var reason = req.body.reason;
+    var reason = xss(req.body.reason,{whiteList:{}});
     if (reason==null) reason='';
     if(!verify.idVerify(channelId)||!verify.idVerify(bookmarkId)||!verify.isString(reason)) {return res.sendResult('参数类型错误',2000,null)}
     Channel2User.findOne({channelId:channelId,userId:req.user._id,type:{$in:['creator','admin']}},function(err,doc){
@@ -438,7 +575,7 @@ exports.delete = function(req,res){
             var checkUser = {userId:req.user._id,username:req.user.username,avatar:req.user.avatar};
             Bookmarks.update({_id:bookmarkId},{checked:2,deleteInfo:reason,checkUser:checkUser},function(err,doc){
                 if(err) {console.log(err);return res.sendError()}
-                res.sendResult('书签已经被筛除',0,null);
+                    res.sendResult('书签已经被筛除',0,null);
             });
         }else
         {

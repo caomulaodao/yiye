@@ -6,12 +6,13 @@ var mongoose = require('mongoose'),
     async = require('async'),
     bookmarks = require('../../../bookmarks/server/controllers/bookmarks'),
     xss =require('xss'),
-    moment = require('moment');
+    moment = require('moment'),
     User = mongoose.model('User'),
     tool = require('../../../../config/tools/tool');
     Channel2User = mongoose.model('Channel2User'),
     Channels = mongoose.model('Channels'),
-    Bookmarks = mongoose.model('Bookmarks');
+    Bookmarks = mongoose.model('Bookmarks'),
+    BookmarkLike = mongoose.model('BookmarkLike');
     Myverify = require('../../../../config/tools/verify');
 
 //渲染Home页面
@@ -26,13 +27,15 @@ exports.initHome = function(req,res,Home){
             adm: function(callback1){
                 //userId:req.user._id,type:{$in:['creator','admin']}
                 Channel2User.find({userId:req.user._id,type:{$in:['creator','admin']}},'channelId name logo type lastTime news',function(err,admChannels){
-                    if(err) return console.log(err);
+                    if(err) {console.log(err);return res.error();}
                     async.map(admChannels,function(item,callback2){
                         Bookmarks.count({channelId:item.channelId,checked:{$in:[1,3,5]},postTime:{$gte:item.lastTime}},function(err,count){
+                            if (err) {console.log(err);return res.error();}
                             item['news'] = count;
                             callback2(null,item);
                         });
                     },function(err,results){
+                        if (err) {console.log(err);return res.error();}
                         results.sort(function(a,b){
                             return a.news < b.news ? 1 : -1;
                         });
@@ -42,13 +45,15 @@ exports.initHome = function(req,res,Home){
             },
             sub: function(callback1){
                 Channel2User.find({userId:req.user._id,type:'follower'},'channelId name logo type lastTime news',function(err,subChannels){
-                    if(err) return console.log(err);
+                    if(err) {console.log(err);return res.error();}
                     async.map(subChannels,function(item,callback2){
                         Bookmarks.count({channelId:item.channelId,checked:{$in:[1,3,5]},postTime:{$gte:item.lastTime}},function(err,count){
+                            if (err) {console.log(err);return res.error();}
                             item['news'] = count;
                             callback2(null,item);
                         });
                     },function(err,results){
+                        if (err) {console.log(err);return res.error();}
                         results.sort(function(a,b){
                             return a.news < b.news ? 1 : -1;
                         });
@@ -58,22 +63,23 @@ exports.initHome = function(req,res,Home){
             },
             creatNum: function(callback){
                 Channel2User.count({userId:req.user._id,type:'creator'},function(err,count){
+                    if (err) {console.log(err);return res.error();}
                     callback(null,count)
                 });
             },
             news: function(callback){
                 Bookmarks.count({"postUser.userId" : req.user._id,checked:{$in:[1,2]}},function(err,news){
-                    if(err) console.log(err);
+                    if(err) {console.log(err);return res.error();}
                     callback(null,news);
                 });
             }
         },
         function(err, results) {
             //渲染home页面
-            console.log(req.headers);
+            if (err) {console.log(err);return res.error();}
             Home.render('index', {admChannelList:results.adm,subChannelList:results.sub,creatNum:results.creatNum,user:results.user,news:results.news}, function (err, html) {
                 //Rendering a view from the Package server/views
-                if(err) return console.log(err);
+                if(err) {console.log(err);return res.sendError();}
                 res.send(html);
             });
         });
@@ -104,7 +110,7 @@ exports.createChannel = function(req,res){
     var newchannel={
         logo:xss(req.body.logo,{whiteList:{}}),
         name:xss(req.body.name,{whiteList:{}}),
-        description:xss(req.body.tags,{whiteList:{}}),
+        description:xss(req.body.description,{whiteList:{}}),
         type:xss(req.body.type,{whiteList:{}}),
         tags:xss(req.body.tags,{whiteList:{}}),
         banner:xss(req.body.banner,{whiteList:{}})
@@ -113,6 +119,7 @@ exports.createChannel = function(req,res){
     if(newchannel.description.length>descriptionLength) {return res.sendResult('描述限制100字',2007,null)}//描述长度限制
     var channels = new Channels(newchannel);
     channels.tags = getTags(channels.tags);
+    if (channels.tags.length>10) {return res.sendResult('标签不能超过10个',2008,null);}
     channels.creator = {userId:req.user._id,userName:req.user.username,userLogo:req.user.avatar};
     async.waterfall([
         function(callback){
@@ -128,19 +135,23 @@ exports.createChannel = function(req,res){
         function(isCreate,callback){
             if(isCreate){
                 channels.save(function(err,doc){
-                    if(err) {console.log(err);return res.sendResult('服务器内部问题',5000,null)}
+                    if(err) {console.log(err);return res.sendError();}
                     var admChannel = new Channel2User({
                         userId:req.user._id,
+                        userLogo:req.user.avatar, 
+                        username:req.user.username,                      
                         channelId:doc._id,
                         name: channels.name,
                         type: "creator",
-                        logo: channels.logo
+                        logo: channels.logo,
+                        remind: 1
                     });
+                    var channelId = doc._id;
                     admChannel.save(function(err){
-                        if(err) {console.log(err);return res.sendResult('服务器内部问题',5000,null)}
+                        if(err) {console.log(err);return res.sendError();}
                         User.update({_id:req.user._id},{$inc:{createNum:1}},function(err,num){
-                            if(err) {console.log(err);return res.sendResult('服务器内部问题',5000,null)}
-                            callback(null,isCreate);
+                            if(err) {console.log(err);return res.sendError()}
+                            callback(null,isCreate,channelId);
                         });
                     });
                 });
@@ -148,9 +159,9 @@ exports.createChannel = function(req,res){
                 callback(null,isCreate);
             }
         }
-    ],function(err,isCreate){
+    ],function(err,isCreate,channelId){
            if(isCreate){
-                res.sendResult("频道创建成功",0,null);
+                res.sendResult("频道创建成功",0,{channelId:channelId});
            }else{
                res.sendResult("创建数量已达上限，无法创建新频道。",3000,null);
            }
@@ -161,14 +172,15 @@ exports.createChannel = function(req,res){
 exports.getChannelsList = function(req,res){
     if(!req.user) return res.sendResult('请先登录或注册',1000,null);
     Channel2User.find({userId:req.user._id},'channelId name logo type lastTime news',function(err,channels){
-        if(err){console.log(err);return res.sendResult('服务器内部问题',5000,null)}
+        if(err){console.log(err);return res.sendError()}
         async.map(channels,function(item,callback){
             Bookmarks.count({channelId:item.channelId,postTime:{$gte:item.lastTime}},function(err,count){
+                if (err) {console.log(err);return res.sendError();}
                 item['news'] = count;
                 callback(null,item);
             });
         },function(err,results){
-            if(err){console.log(err);return res.sendResult('服务器内部问题',5000,null)}
+            if(err){console.log(err);return res.sendError();}
             results.sort(function(a,b){
                 return a.news < b.news ? 1 : -1;
             });
@@ -181,7 +193,7 @@ exports.getChannelsList = function(req,res){
 exports.check = function(req,res,Home){
     Home.render('check', {}, function (err, html) {
         //Rendering a view from the Package server/views
-        if(err) return console.log(err);
+        if(err) {console.log(err);return res.sendError();}
         res.send(html);
     });
 }
@@ -192,7 +204,7 @@ exports.newsViewed = function(req,res){
     var bookmarkId = req.body.bookmarkId;
     if (!Myverify.idVerify(bookmarkId)) return res.sendResult('请求参数错误',2000,null);//id验证
     Bookmarks.update({_id:bookmarkId},{$inc:{checked:2}},function(err,num){
-        if(err) {console.log(err);return res.sendResult('服务器内部错误',5000,null)}
+        if(err) {console.log(err);return res.sendError();}
         res.sendResult('此信息已经加入历史记录。',0,null);
     });
 }
@@ -214,10 +226,9 @@ function getTags(str){
 
 //ajax加载'发现'页面内容
 exports.discover = function(req,res){
-    if(!req.user) return res.sendResult('请先登录或注册',1000,null);
     //number为请求次数 limit为每次返回的数量
     var number=req.query.number||1;
-    var limit=12;
+    var limit=24;
     if (!Myverify.isNumber(number)){return res.sendResult('请求参数错误',2000,null)}//传入参数格式进行判断
     if (number==1){limit=24}
     async.waterfall([
@@ -230,7 +241,7 @@ exports.discover = function(req,res){
             //获取最后一个频道
             function(results,callback){
                 Channels.find().sort({subNum:1,time:1}).limit(1).exec(function(err,doc){
-                    if (err) { console.log(err);return res.sendResult('服务器内部错误',5000,null)}
+                    if (err) { console.log(err);return res.sendError();}
                     if(doc.length===0) {callback(null,results,[]);}
                     else{
                         callback(null,results,doc[0]);
@@ -239,8 +250,9 @@ exports.discover = function(req,res){
             },
             //是否关注
             function(results,doc,callback){
-                Channel2User.find({userId:req.user._id},function(err,channel2user){
-                    if (err) {console.log(err);return res.sendResult('服务器内部错误',5000,null)}
+                var userId = req.user ? req.user._id : null;
+                Channel2User.find({userId:userId},function(err,channel2user){
+                    if (err) {console.log(err);return res.sendError();}
                     var channel2userId=[];
                     channel2user.forEach(function(item){
                         channel2userId.push(item.channelId+'');
@@ -249,12 +261,14 @@ exports.discover = function(req,res){
                 })
             }],
             function(err, results,doc,channel2userId) {
-                if (err) {console.log(err);return res.sendResult('服务器内部错误',5000,null)}
+                if (err) {console.log(err);return res.sendError();}
                 var isHave=true;
                 var  results = JSON.parse(JSON.stringify(results));
                 results.forEach(function(item,index,array){
                     if (channel2userId.indexOf(item._id+'')>-1){
                         results[index]['isAttention'] = true;//已经关注
+                    }else{
+                        results[index]['isAttention']= false;
                     }
                 });
                 if(results.length==0) {isHave=false;}
@@ -262,8 +276,7 @@ exports.discover = function(req,res){
                     if (results[0]['time']+''==doc['time']+''){
                         isHave=false;
                     }
-                }//
-                console.log(results);
+                }
                 res.sendResult('加载成功',0,{list:results,isHave:isHave})
             });
 }
@@ -283,23 +296,24 @@ exports.ajaxBookmarks = function(req,res){
         list: function(callback){
             //获取对应频道的书签
              Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]},postTime:{$lt:date}}).sort({postTime:-1}).limit(limit).exec(function (err, doc) {
-                if(err) console.log(err);
+                if(err) {console.log(err);return res.sendError();}
                 if(doc.length === 0) return callback(null,[]);
                 var targetTime = doc[doc.length -1]['postTime'];//取出来的最后一天的时间
                 var startDay = moment(doc[doc.length -1]['postTime']).startOf('day').toDate();
                 Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]},postTime:{$gte:startDay,$lt:date}}).sort({postTime:-1}).exec(function(err,list){
-                    if(err) console.log(err);
+                    if(err) {console.log(err);return res.sendError();}
                     callback(null,list);
                 });
             })
         },
         endbookmarkId: function(callback){
             Bookmarks.find({channelId:channelId,checked:{$in:[1,3,5]}}).limit(1).sort({postTime:1}).exec(function(err,doc){
-                if(err) return console.log(err);
+                if(err) {console.log(err);return res.sendError();}
                 callback(null,doc)
             })
         }
     },function(err,results){
+        if (err) {console.log(err);return res.sendError();}
         results.isHave=true;//下次是否还进行ajax请求
         results.nextTime=null;//请求加载的书签的时间
         if(results.endbookmarkId.lenght===0) results.isHave=false;
@@ -313,7 +327,7 @@ exports.ajaxBookmarks = function(req,res){
         results.list=tool.listToArray(results.list);
         //更新频道最后访问时间并返回数据
         Channel2User.update({channelId:channelId,userId:req.user._id},{lastTime:Date.now()},function(err){
-            if(err) {console.log(err);return res.sendResult('服务器内部问题',5000,null);}
+            if(err) {console.log(err);return res.sendError();}
             res.sendResult('加载成功',0,results);
         });
     });
@@ -328,11 +342,13 @@ exports.newNews = function(req,res){
     async.waterfall([
         function(callback){
             Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[1,2]}}).sort({postTime:1}).limit(1)
-            .exec(function(err,doc){if(err){console.log(err);return res.sendResult('服务器内部错误',5000,null)}callback(err,doc)});
+            .exec(function(err,doc){
+                if(err){console.log(err);return res.sendError();}
+                callback(err,doc)});
         },
         function(doc,callback){
             Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[1,2]}}).sort({postTime:-1}).skip((number-1)*limit).limit(limit).exec(function(err,list){
-                if (err) {console.log(err);return res.sendResult('服务器内部错误',5000,null)}
+                if (err) {console.log(err);return res.sendError();}
                 var isHave=true;
                 if(list.length==0) {isHave=false;}
                 else{
@@ -344,7 +360,7 @@ exports.newNews = function(req,res){
             })
         }],
         function(err,list,isHave){
-            if(err){console.log(err);return res.sendResult('服务器内部错误',5000,null)}
+            if(err){console.log(err);return res.sendError();}
             res.sendResult('返回成功',0,{news:list,isHave:isHave});
         }
     )
@@ -358,13 +374,15 @@ exports.history = function(req,res){
     async.waterfall([
         function(callback){
             Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[3,4]}}).sort({postTime:1}).limit(1)
-            .exec(function(err,doc){if(err){console.log(err);return res.sendResult('服务器内部错误',5000,null)}callback(err,doc)});
+            .exec(function(err,doc){
+                if(err){console.log(err);return res.sendError();}
+                callback(err,doc)});
         },
         function(doc,callback){
             Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[3,4]}}).sort({postTime:-1}).skip((number-1)*limit).limit(limit).exec(function(err,list){
-                if (err) {return console.log(err);}
+                if (err) {console.log(err);return res.sendError()}
                 var isHave=true;
-                if(list.length==0) {isHave=false;}
+                if(doc.length==0) {isHave=false;}
                 else{
                     if(doc[0]['postTime']+''==list[list.length-1]['postTime']+''){
                         isHave=false;
@@ -374,8 +392,334 @@ exports.history = function(req,res){
             })
         }],
         function(err,list,isHave){
-            if(err){console.log(err);return res.sendResult('服务器内部错误',5000,null)}
+            if(err){console.log(err);return res.sendError();}
             res.sendResult('返回成功',0,{hismes:list,isHave:isHave});
         }
     )
 }
+//向别人频道提交书签的反馈信息 反馈的同时将消息的状态标记为通知
+exports.callmsg = function(req,res){
+    if(!req.user) return res.sendResult('请先注册或登录',1000,null);
+    var limit=10;
+    var number = req.query.number||1;
+    if(!Myverify.isNumber(number)) {return res.sendResult('请求参数格式错误',2000,null)}
+    async.waterfall([
+        // //最后一条通知消息
+        // function(callback){
+        //     Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[1,2,3,4]}}).sort({'postTime':1}).limit(1)
+        //     .exec(function(err,doc){if(err){console.log(err);return res.sendError()}callback(err,doc)});
+        // },
+        //自己频道的Id
+        function(callback){
+            var creatorId = [];
+            Channels.find({'creator.userId':req.user._id},function(err,channels){
+                if (err) {console.log(err);return res.sendError();}
+                var i=0;
+                for (i;i<channels.length;i++){
+                    creatorId.push(channels[i]._id+'');
+                }
+                callback(err,creatorId);
+            })
+        },
+        //返回的未通知消息
+        function(creatorId,callback){
+             Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[1,2]},'channelInfo.channelId':{$nin:creatorId}}).sort({'postTime':-1}).skip((number-1)*limit).limit(limit).exec(function(err,nocallmsg){
+                if (err) {console.log(err);return res.sendError();}
+                callback(null,creatorId,nocallmsg);
+             })
+        },
+        //返回未通知消息的总数
+        function(creatorId,nocallmsg,callback){
+            Bookmarks.count({'postUser.userId':req.user._id,checked:{$in:[1,2]},'channelInfo.channelId':{$nin:creatorId}},function(err,count){
+                if (err) {console.log(err);return res.sendError();}
+                callback(null,creatorId,nocallmsg,count);
+            })
+        },
+        //返回已经通知的消息
+        function(creatorId,nocallmsg,count,callback){
+            var isHave=true;
+            var skipnumber = (number-1)*limit-count>0?(number-1)*limit-count:0;
+            if (nocallmsg.length==limit) {isHave=false;return callback(err,nocallmsg,isHave)}
+            Bookmarks.find({'postUser.userId':req.user._id,checked:{$in:[3,4]},'channelInfo.channelId':{$nin:creatorId}}).sort({'postTime':-1}).skip(skipnumber).limit(limit-nocallmsg.length).exec(function(err,list){
+                if (err) {console.log(err);return res.sendError()}
+                var results = nocallmsg.concat(list);
+                if (results.length<limit) {isHave = false;}
+                callback(err,results,isHave);
+            })
+        }],
+        function(err,list,isHave){
+            if(err){console.log(err);return res.sendError()}
+            var updateList=[];//未通知的消息
+            var i;
+            for(i=0;i<list.length;i++){
+                if (+list[i]['checked']<3){
+                    updateList.push(list[i]['_id']);
+                }
+            }
+            Bookmarks.update({'_id':{$in:updateList}},{$inc:{checked:2}},{ multi: true }).exec(function(err,doc){
+                if (err) {console.log(err);return res.sendError();}
+                res.sendResult('返回成功',0,{msg:list,isHave:isHave});
+            })
+        }
+    )
+}
+//审核别人提交书签的提示信息
+exports.checkmsg = function(req,res){
+    if(!req.user) return res.sendResult('请先注册或登录',1000,null);
+    var limit=10;
+    var number = req.query.number||1;
+    if(!Myverify.isNumber(number)) {return res.sendResult('请求参数格式错误',2000,null)}
+    async.waterfall([
+        //创建或管理的频道id
+        function(callback){
+            Channel2User.find({'userId':req.user._id,'type':{$in:['creator','admin']}},function(err,channels){
+                if(err) {console.log(err);return res.sendError();}
+                if (channels.length==0) {return callback(err,[]);}
+                var channelsId = [];
+                var i = 0;
+                for(i;i<channels.length;i++){
+                    channelsId.push(channels[i]['channelId']+'');//将idObject转换为字符串
+                }
+                callback(err,channelsId);
+            })
+        },
+        //未审核的书签总数
+        function(channelsId,callback){
+            if (channelsId.length===0){return callback(null,[],0);}
+            Bookmarks.count({'channelId':{$in:channelsId},'checked':0}).exec(function(err,count){
+                if (err){console.log(err);return res.sendError();}
+                callback(null,channelsId,count);
+            })
+        },
+        //先返回未审核的书签
+        function(channelsId,count,callback){
+            var noCheckedId = [],i=0;
+            if (channelsId.length==0){return callback(null,[],[],[],0)}
+            Bookmarks.find({'channelId':{$in:channelsId},'checked':0}).sort({postTime:-1}).skip((number-1)*limit).limit(limit).exec(function(err,list){
+                console.log(list.length);
+                for(i;i<list.length;i++){
+                    noCheckedId.push(list[i]._id+'');
+                }
+                if (err) {console.log(err);return res.sendError()}
+                callback(null,channelsId,noCheckedId,list,count);
+            })
+        },
+        //返回未审核和已经审核的书签
+        function(channelsId,noCheckedId,noChecked,count,callback){
+            if (channelsId.length ===0) {return callback(null,[],[])}
+            if (noChecked.length>=limit){return callback(null,noCheckedId,noChecked)}//如果未审核的数量足够多 则直接返回
+            var skipnumber = (number-1)*limit-count>0?(number-1)*limit-count:0;
+            Bookmarks.find({'channelId':{$in:channelsId},'checkUser':req.user._id}).sort({postTime:-1}).skip(skipnumber).limit(limit-noChecked.length).exec(function(err,checkedBkms){
+                if(err) {console.log(err);return res.sendError();}
+                callback(null,noCheckedId,noChecked.concat(checkedBkms));
+            })
+        }],
+        function(err,noCheckedId,list){
+            if(err){console.log(err);return res.sendError()}
+            var isHave = true;
+            if (list.length<limit){isHave = false}
+            // Bookmarks.update({'_id':{$in:noCheckedId}},{$set:{'checked':1}},{multi:true}).exec(function(err){
+            //     if (err) {console.log(err);return res.sendError();}
+            res.sendResult('获取消息成功',0,{msg:list,isHave:isHave});
+            // })
+        }
+    )
+}
+//别人关注频道时提醒 只提醒创建者
+exports.remindmsg = function(req,res){
+    if(!req.user){return res.sendResult('请先登录或注册',1000,null)}
+    var limit = 10;
+    var number = req.query.number||1;
+    if (!Myverify.isNumber(number)){ return res.sendResult('参数类型错误',2000,null)}
+    async.waterfall([
+        //创建者的频道Id
+        function(callback){
+            Channel2User.find({'userId':req.user._id,'type':'creator'},function(err,channels){
+                if(err) {console.log(err);return res.sendError();}
+                if (channels.length==0) {return callback(err,[]);}
+                var channelsId = [];
+                var i = 0;
+                for(i;i<channels.length;i++){
+                    channelsId.push(channels[i]['channelId']+'');//将idObject转换为字符串
+                }
+                callback(err,channelsId);
+            })
+        },
+        //关注者 并且按时间排序
+        function(channelsId,callback){
+            if (channelsId.length==0) {return callback(null,[],[]);}
+            Channel2User.find({'channelId':{$in:channelsId},'type':'follower'}).sort({'remind':1,'followerTime':-1}).skip((number-1)*limit).limit(limit).exec(function(err,followers){
+                if (err) {console.log(err);return res.sendError();}
+                var channelsId =[],i=0;
+                if (followers.length==0) {return callback(err,channelsId,[]);}
+                for(i;i<followers.length;i++){
+                    channelsId.push(followers[i]['_id']);
+                }
+                callback(null,channelsId,followers);
+            })
+        }],
+        function(err,channelsId,followers){
+            if (err){console.log(err);return res.sendError();}
+            Channel2User.update({'_id':{$in:channelsId}},{$set:{'remind':1}},{multi:true}).exec(function(err){
+                if (err){console.log(err);return res.sendError();}
+                var isHave = true;
+                if (followers.length<limit){ isHave = false;}
+                res.sendResult('返回消息成功',0,{msg:followers,isHave:isHave});
+            });
+        })
+}
+
+//提交的书签被点赞的消息
+exports.praisemsg = function(req,res){
+    if(!req.user) return res.sendResult('请先注册或登录',1000,null);
+    var number = req.query.number||1;
+    var limit = 10;
+    if (!Myverify.isNumber(number)){return res.sendResult('请求参数类型错误',2000,null);}
+    async.waterfall([
+        //自己提交的所有书签id 
+        function(callback){
+            Bookmarks.find({'postUser.userId':req.user._id},function(err,doc){
+                if (err) {console.log(err);return res.sendError();}
+                if (doc.length==0){return callback(null,[]);}
+                var i=0,bookmarkId=[],channelsId=[];
+                for (i;i<doc.length;i++){
+                    bookmarkId.push(doc[i].id+'');
+                }
+                callback(null,bookmarkId);
+            })
+        },
+        //找到消息并按照时间排序
+        function(bookmarkId,callback){
+            BookmarkLike.find({'bookmarkId':{$in:bookmarkId}}).sort({'remind':1,'likeTime':-1}).skip((number-1)*limit).limit(limit).exec(function(err,doc){
+                if (err) {console.log(err);return res.sendError();}
+                var i=0,nowtime = moment(new Date()).locale('zh-cn');
+                var doc = JSON.stringify(doc);
+                doc = JSON.parse(doc);
+                for (i;i<doc.length;i++){
+                    doc[i].likeTime = moment(doc[i].likeTime).locale('zh-cn');
+                    if (nowtime.diff(doc[i].likeTime,'days')>7){
+                        doc[i].likeTime = doc[i].likeTime.format('llll');
+                    }
+                    else{
+                        doc[i].likeTime = doc[i].likeTime.fromNow();
+                    }
+                }
+                callback(null,bookmarkId,doc);
+            })
+        }
+        ],
+        //
+        function(err,bookmarkId,doc){
+           if(err) {console.log(err);return res.sendError();}
+           var isHave= true;
+           if (doc.length<limit) {isHave=false;}
+           BookmarkLike.update({'bookmarkId':{$in:bookmarkId}},{$set:{'remind':1}},{multi:true}).exec(function(err,number){
+                if (err) {console.log(err);return res.sendError();}
+                res.sendResult('返回成功',0,{msg:doc,isHave:isHave});
+           })
+           
+       })
+}
+
+//消息总数
+exports.msgcount = function(req,res){
+    if(!req.user) return res.sendResult('请先注册或登录',1000,null);
+    async.parallel({
+        //提交书签被受理后的通知
+        callmsg:function(callback){
+            Bookmarks.count({'postUser.userId':req.user._id,checked:{$in:[1,2]}}).exec(function(err,count){
+                if (err) {console.log(err);return res.sendError()}
+                callback(null,count);
+            });
+        },
+        //受理别人提交书签的通知
+        checkmsg:function(callback){
+            async.waterfall([
+                //获取自己创建或管理的频道ID
+                function(callback1){
+                    Channel2User.find({'userId':req.user._id,'type':{$in:['creator','admin']}},function(err,channels){
+                        if(err) {console.log(err);return res.sendError();}
+                        if (channels.length==0) {return callback1(err,[]);}
+                        var channelsId = [];
+                        var i = 0;
+                        for(i;i<channels.length;i++){
+                            channelsId.push(channels[i]['channelId']+'');//将idObject转换为字符串
+                        }
+                        callback1(null,channelsId);                   
+                    })
+                },
+                //获取自己或管理的频道新提交未审核额书签
+                function(channelsId,callback1){
+                    Bookmarks.count({'channelId':{$in:channelsId},'checked':0}).exec(function(err,count){
+                        if (err){console.log(err);return res.sendError();}
+                        callback1(null,count);
+                    })
+                }
+            ],function(err,count){
+                if (err) {console.log(err);res.sendError();}
+                callback(null,count);
+            })
+        },
+        //别人点赞的通知
+        praisemsg: function(callback){
+            async.waterfall([
+                //访问者提交的所有书签的id
+                function(callback1){
+                    Bookmarks.find({'postUser.userId':req.user._id},function(err,doc){
+                        if (err) {console.log(err);return res.sendError();}
+                        if (doc.length==0){return callback1(null,[]);}
+                        var i=0,bookmarkId=[]
+                        for (i;i<doc.length;i++){
+                            bookmarkId.push(doc[i].id+'');
+                        }
+                        callback1(null,bookmarkId);
+                    })
+                },
+                //找到未提示的总数
+                function(bookmarkId,callback1){
+                    BookmarkLike.count({'bookmarkId':{$in:bookmarkId},'remind':0}).exec(function(err,count){
+                        if (err) {console.log(err);return res.sendError();}
+                        callback1(null,count);
+                    })
+                }
+            ],function(err,count){
+                if (err) {console.log(err);return res.sendError();}
+                callback(null,count);
+            })
+        },
+        //创建的频道被关注时的通知信息
+        remindmsg: function(callback){
+            async.waterfall([
+                //创建者的频道id
+            function(callback1){
+                Channel2User.find({'userId':req.user._id,'type':'creator'},function(err,channels){
+                    if(err) {console.log(err);return res.sendError();}
+                    if (channels.length==0) {return callback1(err,[]);}
+                    var channelsId = [];
+                    var i = 0;
+                    for(i;i<channels.length;i++){
+                        channelsId.push(channels[i]['channelId']+'');//将idObject转换为字符串
+                    }
+                    callback1(err,channelsId);
+                })
+            }],
+            function(err,channelsId){
+                if (err) {console.log(err);return res.sendError();}
+                if (channelsId.length==0){return callback(null,0);}
+                Channel2User.count({'channelId':{$in:channelsId},'type':'follower','remind':0},function(err,count){
+                    if (err) {console.log(err);return res.sendError();}
+                    callback(null,count);
+                })
+            })
+        }
+    },
+    function(err,results){
+        if(err){consoel.log(err);return res.sendError();}
+        var i,count = 0;
+        for(i  in results){
+            count = count+results[i];
+        }
+        results.count = count;
+        res.sendResult('返回成功',0,results)
+    })
+} 

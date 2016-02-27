@@ -19,20 +19,20 @@ var mongoose = require('mongoose'),
 //展示用户提交的书签
 exports.renderPost = function(req,res,Package){
     var userId = req.params['userId'];//被访问者id
-    if(!verify.idVerify(userId)) {return res.sendResult('参数格式错误',2001,null)}
+    if(!verify.idVerify(userId)) {return res.error();}
     var p=req.query.p||1;
-    if(!verify.isNumber(p)) {return res.sendResult('参数类型错误',2000,null)}
+    if(!verify.isNumber(p)) {return res.error();}
     p=+p;
     var limit=20;//每页显示的数量
     async.waterfall([//被访问者的信息
-                function (callback) {
+        function (callback) {
                 User.findOne({_id:userId}, function (err, user) {
-                    if(err) {console.log(err);return res.sendError();}
+                    if(err) {console.log(err);return res.error();}
                     callback(null,user);
                 });},
                 function(user,callback){//取出被访问者提交的书签总数
                 Bookmarks.count({checked:6,'postUser.userId':userId},function(err,count){
-                    if(err) {console.log(err);return res.sendError()}
+                    if(err) {console.log(err);return res.error()}
                     var pageLength=Math.ceil(count/limit);
                     callback(err,user,pageLength);
                 });},
@@ -44,17 +44,19 @@ exports.renderPost = function(req,res,Package){
                     //防止超过下限
                     if (minPage<1){minPage=1;}
                 Bookmarks.find({checked:6,"postUser.userId":userId}).sort({postTime:-1}).skip(limit*(minPage-1)).limit(limit).exec(function (err, doc) {
-                    if(err) {console.log(err);return res.sendError()}
+                    if(err) {console.log(err);return res.error()}
                     if(doc.length === 0) return callback(null,user,pageLength,[]);
                     callback(null,user,pageLength,listToArray(doc));
                 });}
                 ],
         function(err,user,pageLength,list){
+            if (err) {console.log(err);return res.error();}
             var page=tool.skipPage(p,pageLength);
-            Package.render('index', {
+            Package.render('post', {
                 user:user,
                 list:list,
-                page:page
+                page:page,
+                visitor:req.user
             }, function(err, html) {
                 if(err) {console.log(err);return res.sendError()}
                 res.send(html);
@@ -65,20 +67,20 @@ exports.renderPost = function(req,res,Package){
 //展示用户创建的的频道
 exports.renderCreate = function(req,res,Package){
     var userId = req.params['userId'];
-    if(!verify.idVerify(userId)) {return res.sendResult('参数格式错误',2001,null)}
+    if(!verify.idVerify(userId)) {return res.error();}
     var p=req.query.p||1;
-    if(!verify.isNumber(p)) {return res.sendResult('参数类型错误',2000,null)}
+    if(!verify.isNumber(p)) {return res.error();}
     p=+p;
     var limit=24;//每页显示的数量
     async.waterfall([
         function (callback) {
         User.findOne({_id:userId}, function (err, user) {
-            if (err){console.log(err);return res.sendError()}
+            if (err){console.log(err);return res.error()}
             callback(null,user);
         });},
         function(user,callback){
         Channels.count({'creator.userId':userId},function(err,count){
-            if(err) {console.log(err);return res.sendError()}
+            if(err) {console.log(err);return res.error()}
             var pageLength=Math.ceil(count/limit);
             callback(err,user,pageLength);
         });},
@@ -90,14 +92,14 @@ exports.renderCreate = function(req,res,Package){
             //防止超过下限
             if (minPage<1){minPage=1;}
             Channels.find({"creator.userId":userId}).sort({postTime:-1}).skip(limit*(minPage-1)).limit(limit).exec(function (err, doc) {
-                if(err) {console.log(err);res.sendError()}
+                if(err) {console.log(err);res.error()}
                 if(doc.length === 0) return callback(null,user,pageLength,[]);
                 callback(null,user,pageLength,doc);
             });},
             function(user,pageLength,doc,callback){
                 if (!req.user) return callback(null,user,pageLength,doc,[]);
                 Channel2User.find({'userId':req.user._id},function(err,channel2user){
-                    if (err) {console.log(err);return res.sendError()}
+                    if (err) {console.log(err);return res.error()}
                     var channel2userId=[];
                     channel2user.forEach(function(item){
                         channel2userId.push(item.channelId+'');
@@ -107,6 +109,7 @@ exports.renderCreate = function(req,res,Package){
             }
         ],
         function(err,user,pageLength,channels,channel2userId){
+            if (err) {console.log(err);return res.error();}
             var  channels = JSON.parse(JSON.stringify(channels)); 
             channels.forEach(function(item,index,array){               
                 if (channel2userId.indexOf(item._id+'')>-1){
@@ -117,7 +120,8 @@ exports.renderCreate = function(req,res,Package){
             Package.render('create', {
                 user:user,
                 list:channels,
-                page:page
+                page:page,
+                visitor:req.user
             }, function(err, html) {
                 if(err) {console.log(err);res.sendError()}
                 res.send(html);
@@ -128,20 +132,21 @@ exports.renderCreate = function(req,res,Package){
 //展示用户订阅的频道
  exports.renderWatch = function(req,res,Package){
     var userId = req.params['userId'];
-    if(!verify.idVerify(userId)) {return res.sendResult('参数格式错误',2001,null)}
+    if(!verify.idVerify(userId)) {return res.error();}
     var p=req.query.p||1;
-    if(!verify.isNumber(p)) {return res.sendResult('参数类型错误',2000,null)}
+    if(!verify.isNumber(p)) {return res.error();}
     p=+p;
     var limit=24;//每页显示的数量
     async.waterfall([
         function (callback) {
+        //目标用户信息
         User.findOne({_id:userId}, function (err, user) {
-            if(err){console.log(err);return res.sendError()}
+            if(err){console.log(err);return res.error();}
             callback(null,user);
         });},
         function(user,callback){
         Channel2User.count({'userId':userId,type:{$in:['follower','admin']}},function(err,count){
-            if(err) {console.log(err);return res.sendError()}
+            if(err) {console.log(err);return res.error();}
             var pageLength=Math.ceil(count/limit);
             callback(err,user,pageLength);
         });},
@@ -154,7 +159,7 @@ exports.renderCreate = function(req,res,Package){
             if (minPage<1){minPage=1;}
             //对应用户找到频道
             Channel2User.find({"userId":userId,type:{$in:['follower','admin']}}).sort({lastTime:-1}).skip(limit*(minPage-1)).limit(limit).exec(function (err, doc) {
-                if(err) {console.log(err);return res.sendError()}
+                if(err) {console.log(err);return res.error()}
                 if(doc.length === 0) return callback(null,user,pageLength,[]);
                 var docIdArry=[];
                 doc.forEach(function(item){
@@ -165,7 +170,7 @@ exports.renderCreate = function(req,res,Package){
             //找到channels中详细信息
         function(user,pageLength,docIdArry,callback){
             Channels.find({'_id':{$in:docIdArry}},function(err,channels){
-                if (err) {console.log(err);return res.sendError()}
+                if (err) {console.log(err);return res.error()}
                 callback(err,user,pageLength,channels);
             })
         },
@@ -173,17 +178,24 @@ exports.renderCreate = function(req,res,Package){
         function(user,pageLength,channels,callback){
             if (!req.user) return callback(null,user,pageLength,channels,[]);
             Channel2User.find({'userId':req.user._id},function(err,channel2user){
-                if (err) { console.log(err);return res.sendError()}
+                if (err) { console.log(err);return res.error()}
                 var channel2userId=[];
                 channel2user.forEach(function(item){
                     channel2userId.push(item.channelId+'');
                 });
                 callback(err,user,pageLength,channels,channel2userId);
             })
-        }
+        },
+        // function(user,pageLength,channels,channel2userId,callback){
+        //     if (!req.user){return callback(err,user,pageLength,channels,channel2userId,null)}
+        //     User.findOne({'id':req.user._id},function(err,visitor){
+        //         if (err) {console.log(err);return res.sendError();}
+        //         callback(err,user,pageLength,channels,channel2userId,visitor);
+        //     })
+        // }
         ],
         function(err,user,pageLength,channels,channel2userId){
-            if (err) {console.log(err);return res.sendError()}
+            if (err) {console.log(err);return res.error()}
             var  channels = JSON.parse(JSON.stringify(channels)); 
             channels.forEach(function(item,index,array){               
                 if (channel2userId.indexOf(item._id+'')>-1){
@@ -194,7 +206,8 @@ exports.renderCreate = function(req,res,Package){
             Package.render('watch', {
                 user:user,
                 list:channels,
-                page:page
+                page:page,
+                visitor:req.user
             }, function(err, html) {
                 if(err) {console.log(err);return res.sendError()}
                 res.send(html);

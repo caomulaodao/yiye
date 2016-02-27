@@ -60,6 +60,27 @@ $(function(){
         defaults: {number: 1}    //Ajax加载次数
     });
 
+    //审核model
+    var checkMsg = Backbone.Model.extend({
+        defaults: {number: 0}
+    });
+
+    //通知model
+    var informMsg = Backbone.Model.extend({
+        defaults: {number: 0}
+    });
+
+    //关注model
+    var attentionMsg = Backbone.Model.extend({
+        defaults: {number: 0}
+    });
+
+    //点赞model
+    var praiseMsg = Backbone.Model.extend({
+        defaults: {number: 0}
+    });
+
+    //频道列表
     var channelList = Backbone.Model.extend({
     });
 
@@ -72,130 +93,329 @@ $(function(){
 
     });
 
+    //提交书签的url
+    var addBookmarkModel = Backbone.Model.extend({
+        url: "/system/scraper",
+        validate: function(attrs, options) {
+            if (!attrs.website){
+                return '请填写需要添加的网址';
+            }
+            var RegUrl = new RegExp();
+            RegUrl.compile("^(https?://)?[A-Za-z0-9-_]+\\.[A-Za-z0-9-_%&\?\/.=]+$",'g');
+            var result = RegUrl.test(attrs.website,'head');
+            if (!result) return '请填写正确的地址';
+        }
+    });
+
+    //抓取到的书签信息
+    var submitBookmarkModel = Backbone.Model.extend({
+        url: "/api/bookmarks/scraper/post",
+        validate: function(attrs,options) {
+            if (!attrs.title){
+                return "请填写书签标题";
+            }
+            if (attrs.title.length>100) {
+                return "标题字数不能超过100字";
+            }
+            if (!attrs.description){
+                return "请填写描述";
+            }
+            if (attrs.description.length>200) {
+                return "描述字数不能超过200字";
+            }
+
+        }
+    });
+
+    //
+    var SubmitView = Backbone.View.extend({
+            el: $('.submit-view'),
+
+            initTemplate: _.template($('#tp-submit-bookmark').html()),
+
+            initialize: function(){
+            },       
+
+            events:{
+                 "click .put2channel": "put2channel"
+            }, 
+            put2channel: function(){
+                 this.addbookmark();
+            },
+            //提交书签
+            addbookmark: function(){
+            }       
+        });
 
 
-    //书签列表视图
-    var listView = Backbone.View.extend({
-        el: $('.content-page'),
+    //书签列表视图 采用单例模式 防止事件重复绑定
+    var newlistView = function (){
+        var listView = Backbone.View.extend({
 
-        initTemplate: _.template($('#tp-channels-main').html()),
+            el: $('.content-page'),
 
-        lock:{
-            bkUp:false,
-            bkDown:false
-        },
+            initTemplate: _.template($('#tp-channels-main').html()),
 
-        initialize: function(){
-        },
 
-        events:{
-            "click .up" : "bkUp",
-            "click .down": "bkDown"
-        },
+            // submitbkmTemplate: _.template($('#tp-submit-bookmark').html()),
 
-        render: function(channelId){
-            var that = this;
-            that.list = new bkListInit;
-            that.list.fetch({
-                url:'/api/bookmarks/init?channelId='+channelId,
-                success:function(model,response){
-                    if(response.code==0){
-                        that.$el.html(that.initTemplate(response.data));
-                        that.list.date = response.data.nextTime;
-                        that.list.channelId =  response.data.info._id;
-                        that.renderAfter();
-                    }
-                    else{
-                        console.log(response);
-                    }
-                }
-            })
-        },
+            lock:{
+                bkUp:false,
+                bkDown:false
+            },
 
-        renderAfter : function(){
-            var that = this;
-            that.channelAjax.bScroll = true; //许可Ajax加载
-            $(".content-page-content").scroll(function(){
-                that.channelAjax();
-            });
-        },
+            initialize: function(){
+            },
 
-        channelAjax: function() {
-            var that = this;
-            var nClientH = $(window).height();
-            var nScrollTop = $('.content-page-content').scrollTop();
-            var nChannelH = $('.content-body').height();
-            if((nClientH + nScrollTop + 100 >= nChannelH) && (that.channelAjax.bScroll == true)) {
-                that.channelAjax.bScroll = false;   //禁止Ajax加载
-                var sDate = that.list.date;
-                var sChannelId = that.list.channelId;
+            addbookmark:  new addBookmarkModel(),
+
+            submitbookmark: new submitBookmarkModel(),
+
+            events:{
+                "click .up" : "bkUp",
+                "click .down": "bkDown",
+                "click .add-bookmark": "addBookmark",
+                "click .submit-background": "removeBackground",
+                "click .input-url-button": "inputUrl"
+            },
+
+            render: function(channelId){
+                var that = this;
+                that.list = new bkListInit;
                 that.list.fetch({
-                    data: {date: sDate, channelId: sChannelId},
-                    url: "/api/home/bookmark",
-                    success: function(model, response){
-                        if (response.code==0){
-                            $('.content-body>ul').append(that.channelTemplate(response.data));
-                            if(!response.data.isHave){
-                                $('.content-body>ul').append("<p class='no-news'>无新内容了</p>");
-                            } else {
-                                var nextDate = response.data.nextTime;   //将下次日期赋值给nextDate变量
-                                that.list.set("date", nextDate);         //记录下次Ajax日期
-                                that.channelAjax.bScroll = true;         //许可Ajax加载
-                            }                           
+                    url:'/api/bookmarks/init?channelId='+channelId,
+                    success:function(model,response){
+                        if(response.code==0){
+                            that.$el.html(that.initTemplate(response.data));
+                            that.list.date = response.data.nextTime;
+                            that.list.channelId =  response.data.info._id;
+                            that.renderAfter();
                         }
                         else{
                             console.log(response);
                         }
-
                     }
+                })
+            },
+
+            renderAfter : function(){
+                var that = this;
+                that.channelAjax.bScroll = true; //许可Ajax加载
+                $(".content-page-content").scroll(function(){
+                    that.channelAjax();
                 });
+            },
+
+            channelAjax: function() {
+                var that = this;
+                var nClientH = $(window).height();
+                var nScrollTop = $('.content-page-content').scrollTop();
+                var nChannelH = $('.content-body').height();
+                if((nClientH + nScrollTop + 100 >= nChannelH) && (that.channelAjax.bScroll == true)) {
+                    that.channelAjax.bScroll = false;   //禁止Ajax加载
+                    var sDate = that.list.date;
+                    var sChannelId = that.list.channelId;
+                    that.list.fetch({
+                        data: {date: sDate, channelId: sChannelId},
+                        url: "/api/home/bookmark",
+                        success: function(model, response){
+                            if (response.code==0){
+                                $('#content-body-ul').append(that.channelTemplate(response.data));
+                                if(!response.data.isHave){
+                                    $('#content-body-ul').append("<p class='no-news'>无更多内容</p>");
+                                }else{
+                                    var nextDate = response.data.nextTime;   //将下次日期赋值给nextDate变量
+                                    that.list.set("date", nextDate);         //记录下次Ajax日期
+                                    that.channelAjax.bScroll = true;         //许可Ajax加载
+                                }                           
+                            }
+                            else{
+                                console.log(response);
+                            }
+
+                 }
+                    });
+                }
+
+            },
+
+            channelTemplate: _.template($('#tp-bookmarks-oneday').html()),
+
+            bkUp: function(event) {
+                if(this.lock.bkUp) return false;
+                this.lock.bkUp = true;
+                var like = new bkLike;
+                var bookmarkId = $(event.currentTarget).data('bookmarkid');
+                var that = this;
+                like.set('bookmarkId',bookmarkId);
+                like.save(null, {url:'/api/bookmarks/like',success:function(model,response){
+                    if (response.code==0){
+                        if(response.data.isLiked == false){
+                            var count = $(event.currentTarget).find('span');
+                            count.text(+count.text()+1);
+                        }
+                        that.lock.bkUp = false;  
+                    } else {
+                        console.log(response);
+                    }
+
+                }});
+                this.lock.bkUp = false;
+            },
+
+            bkDown: function(event){
+                if(this.lock.bkDown) return false;
+                this.lock.bkDown = true;
+                var hate = new bkHate;
+                var bookmarkId = $(event.currentTarget).data('bookmarkid');
+                var that = this;
+                hate.set('bookmarkId', bookmarkId);
+                hate.save(null, {url:'/api/bookmarks/hate',success:function(model,response){
+                    if(response.code==0){
+                        if(response.data.isLiked == true && response.data.isHated == false){
+                            var count = $(event.currentTarget).parent().find('span');
+                            count.text(+count.text()-1);
+                        }
+                        that.lock.bkDown = false;  
+                    }else{
+                        console.log(response);
+                    }
+
+                }});
+                this.lock.bkDown = false;
+            },
+            //点击周围空白则取消输入
+            removeBackground: function(){
+                $('.submit-background').fadeOut('2s');
+                $('.input-url').fadeOut('2s',function(){
+                    $('.input-url input').val('');                   
+                });
+                if(this.submitview){
+                    this.submitview.$el.html('');
+                }
+                $('.add-bookmark').fadeIn('2s');
+            },
+            //点击提交URL地址按钮
+            inputUrl: function(){
+                var submitView = this.submitview;
+                var that = this;
+                that.addbookmark.set({'website':$('.input-url input').val()},{validate:true});
+                $('.load').removeClass('loading');
+                submitView.$el.html("");
+                if(that.addbookmark.validationError){
+                    return  $(".input-url p.error").text(that.addbookmark.validationError).show();
+                }
+                $(".input-url p.error").hide();
+                $('.load').addClass('loading');
+                that.addbookmark.save(null,{error: function(model,response){
+                        $('.load').removeClass('loading');
+                        return  $(".input-url p.error").text('网络异常或参数错误').show();
+                    },
+                    success: function(model,response){
+                        $('.load').removeClass('loading');
+                        if(response.code == 0){
+                            submitView.$el.html(submitView.initTemplate(response.data));
+                            $('.submit-content').fadeIn('1s');
+                            that.submitbookmark.set({'website':response.data.website,'channel':$('#sub-channel-list .active').data('id')||$('#admin-channel-list .active').data('id')});
+                            that.submitview.addbookmark = function(){
+
+                                that.submitbookmark.set({'title':$('.submit-content-title div').text(),'description':$('.submit-content-description div').text(),'image':$('.submit-content-img img').attr('src'),'tags':$('.submit-content-tags input').val()},{validate:true});
+                                if(that.submitbookmark.validationError){
+                                    return  $("#channeInfoError").text(that.submitbookmark.validationError).show();
+                                }
+                                $('.load').addClass('loading');
+                                that.submitbookmark.save(null,
+                                    {
+                                        'error':function(){
+                                            $('.load').removeClass('loading');
+                                            return  $(".input-url p.error").text('提交失败，网络异常或参数错误').show();
+                                        },
+                                        'success':function(model,response){
+                                            $('.load').removeClass('loading');
+                                            if(response.code == 0){
+                                                if(response.data[0]['type']['type'] == "creator"){
+                                                    var successMsg = "书签提交成功！";
+                                                    submitView.$el.html("");
+                                                    $(".input-url p.info").text(successMsg).show();
+                                                }else{
+                                                    var waitMsg = "书签提交成功，等待审核中。";
+                                                    submitView.$el.html("");
+                                                    $(".input-url p.info").text(waitMsg).show();
+                                                }
+                                            }else{
+                                                return $(".input-url p.error").text(response.msg).show();
+                                            }
+                                        }
+                                    }
+                                )
+                            }
+                        }else{
+                            $(".input-url p.error").text(response.msg).show();
+                        }
+                    }
+                });          
+            },
+            addBookmark: function(event){
+                if (!this.submitview) {this.submitview = new SubmitView();}                
+                $('.input-url').fadeIn('2s',function(){
+                    $('.input-url input').focus();
+                });
+                $('.submit-background').fadeIn('2s');
+                $('.add-bookmark').fadeOut('2s');
+                // if(!this.submitview) {this.submitview = new SubmitView();}
+                // var submitView = this.submitview;
+                // var that =this;
+                // if (!submitView.lock.submit){
+                //     //第一次点击
+                //     if (!$('.add-bookmark').hasClass('submit-active')){
+                //         $('.add-bookmark').html('<p class="add-true">确定</p>').addClass('submit-active');
+                //         var top = $(window).height()/10*8;
+                //         $('.input-url').css({'top':top+$('.add-bookmark').height()/2});
+                //         $('.input-url').fadeIn('2s');
+                //     }
+                //     //第二次点击
+                //     else{
+                //         that.addbookmark.set({'website':$('.input-url input').val()},{validate:true});
+                //         if(that.addbookmark.validationError){return console.log(that.addbookmark.validationError);}
+                //         $('.add-bookmark').removeClass('submit-active').html('<p>正在</p><p>获取</p>');
+                //         submitView.lock.submit=true;
+                //         $('.input-url').fadeOut('2s');
+                //         that.addbookmark.save(null,{error: function(model,response){
+                //                 console.log('网络异常或参数错误');
+                //             },
+                //             success: function(model,response){
+                //                 console.log(response);
+                //                 submitView.$el.html(submitView.initTemplate(response.data));
+                //                 $('.submit-content').fadeIn('1s');
+                //                 that.submitbookmark.set({'website':response.data.website,'channel':$('#sub-channel-list .active').data('id')});
+                //                 $('.add-bookmark').html('<p class="add-true">确定</p>');
+                //             }
+                //         });
+                //     }
+                // }
+                // //第三次点击
+                // else{ 
+                //     submitView.lock.submit = false;
+                //     that.submitbookmark.set({'title':$('.submit-content-title div').text(),'description':$('.submit-content-description div').text(),'image':$('.submit-content-img img').attr('src'),'tags':$('.submit-content-tags input').val()})           
+                //     that.submitbookmark.save(null,{error:function(){
+                //             console.log('网络连接异常');
+                //         },
+                //         success: function(model,response){
+                //             console.log(response);                
+                //             $('.input-url input').val('');
+                //             $('.submit-content').fadeOut('1s',function(){
+                //                 submitView.$el.html("");
+                //             })
+                            
+                //         }
+                //     });
+                // }
             }
-        },
-
-        channelTemplate: _.template($('#tp-bookmarks-oneday').html()),
-
-        bkUp: function(event){
-            if(this.lock.bkUp) return false;
-            this.lock.bkUp = true;
-            var like = new bkLike;
-            var bookmarkId = $(event.currentTarget).data('bookmarkid');
-            var that = this;
-            like.fetch({url:'/api/bookmarks/like/'+bookmarkId,success:function(model,response){
-                if (response.code==0){
-                    if(response.data.isLiked == false){
-                        var count = $(event.currentTarget).find('span');
-                        count.text(+count.text()+1);
-                    }
-                    that.lock.bkUp = false;  
-                }
-                else{
-                    console.log(response);
-                }
-
-            }})
-        },
-
-        bkDown: function(event){
-            if(this.lock.bkDown) return false;
-            this.lock.bkDown = true;
-            var hate = new bkHate;
-            var bookmarkId = $(event.currentTarget).data('bookmarkid');
-            var that = this;
-            hate.fetch({url:'/api/bookmarks/hate/'+bookmarkId,success:function(model,response){
-                if (response.code==0){
-                    if(response.data.isLiked == true && response.data.isHated == false){
-                        var count = $(event.currentTarget).parent().find('span');
-                        count.text(+count.text()-1);
-                    }
-                    that.lock.bkDown = false;  
-                }
-                else{
-                    console.log(response);
-                }
-
-            }})
-        }
-    });
+        });
+        if (this.view){return this.view};
+        this.view = new listView();
+        return this.view;
+    }
 
     //创建频道视图
     var NewChannelView = Backbone.View.extend({
@@ -281,28 +501,29 @@ $(function(){
 
     });
 
-
-    //用户个人中心视图
-    var PersonView = Backbone.View.extend({
-        el: $('#tp-personal-center').html(),
+    //消息界面（审核，通知，关注，赞）
+    var MessageView = Backbone.View.extend({
+        el: $('#tp-message-check').html(),
 
         layer: $('#home-popup-layer'),
 
         lock: {
             info: false,
-            password: false,
             viewed: false
         },
 
         layerShadow: $('.shadow'),
 
-        //向主视图绑定事件
+        //向视图绑定事件
         events: {
-            'click #user-info-button': "upUserInfo",
-            'click #password-change-button': "changePassword",
-            'click .sure': "viewed",
-            'click #news-tab': 'newMessage',
-            'click #history-tab': "history"
+            'click #check-btn' : 'check',
+            'click #inform-btn' : 'inform',
+            'click #attention-btn' : 'attention',
+            'click #praise-btn' : 'praise',
+            'touch #check-btn' : 'check',
+            'touch #inform-btn' : 'inform',
+            'touch #attention-btn' : 'attention',
+            'touch #praise-btn' : 'praise'
         },
 
         initialize: function () {
@@ -312,10 +533,570 @@ $(function(){
             return this;
         },
 
-        newMesTemplate: _.template($('#tp-user-news').html()),
+        noInfoModel: _.template($('#tp-no-info').html()),
 
-        historyTemplate: _.template($('#tp-user-history').html()),
+        checkTemplate: _.template($('#tp-user-check').html()),
 
+        informTemplate: _.template($('#tp-user-inform').html()),
+
+        attentionTemplate: _.template($('#tp-user-attention').html()),
+
+        praiseTemplate: _.template($('#tp-user-praise').html()),
+
+        renderAfter: function () {
+            var that = this;
+            that.msgCountAjax();
+        },
+
+        //审核tab
+        check: function() {
+            var that = this;            
+            that.checkMsg = new checkMsg;
+            that.checkMsg.fetch({
+                url: 'api/home/checkmsg',
+                data: {'number': 1},
+                success: function (model, response) {
+                    if (response.code == 0){
+                        $('.user-check-list').html(that.noInfoModel(response.data));
+                        $('.user-check-list').append(that.checkTemplate(response.data));
+                        that.checkMsg.set('number', 2);   //设置下次加载的number （滚动ajax加载）
+                        that.checkFun();                  //绑定“通过”“编辑”“筛除”事件
+                    }
+                    else{
+                        console.log(response);
+                    }
+                }
+            });
+            
+            that.checkAjax.bScroll = true;   //许可Ajax加载
+            that.informAjax.bScroll = false;
+            that.attentionAjax.bScroll = false;
+            that.praiseAjax.bScroll = false;   
+            $('.content-page').scroll(function () {
+                if($('#check:has(.active)')) {
+                    that.checkAjax();
+                }
+            });
+        },
+
+        //通知tab
+        inform: function() {
+            var that = this;
+            that.informMsg = new informMsg;
+            that.informMsg.fetch({
+                url: 'api/home/callmsg',
+                data: {'number': 1},
+                success: function (model, response) {
+                    if (response.code == 0){
+                        $('.user-inform-list').html(that.noInfoModel(response.data));
+                        $('.user-inform-list').append(that.informTemplate(response.data));
+                        that.informMsg.set('number', 2);   //设置下次加载的number （滚动ajax加载）
+                        that.minusNumber(response);        //减去小红点&tab中的数字                 
+                    }
+                    else{
+                        console.log(response);
+                    }
+                }
+            });
+
+            that.checkAjax.bScroll = false;   //许可Ajax加载
+            that.informAjax.bScroll = true;
+            that.attentionAjax.bScroll = false;
+            that.praiseAjax.bScroll = false; 
+            $('.content-page').scroll(function () {
+                if($('#inform:has(.active)')) {
+                    that.informAjax();
+                }
+            });
+        },
+
+        //关注tab
+        attention: function() {
+            var that = this;
+            that.attentionMsg = new attentionMsg;
+            that.attentionMsg.fetch({
+                url: 'api/home/remind',
+                data: {'number': 1},
+                success: function (model, response) {
+                    if (response.code == 0) {
+                        $('.user-attention-list').html(that.noInfoModel(response.data));
+                        $('.user-attention-list').append(that.attentionTemplate(response.data));
+                        that.minusNumber(response);           //减去小红点&tab中的数字
+                        that.attentionMsg.set('number', 2);   //设置下次加载的number （滚动ajax加载）                  
+                    }
+                    else{
+                        console.log(response);
+                    }
+                }
+            });
+
+            that.checkAjax.bScroll = false;   //许可Ajax加载
+            that.informAjax.bScroll = false;
+            that.attentionAjax.bScroll = true;
+            that.praiseAjax.bScroll = false; 
+            $('.content-page').scroll(function () {
+                if($('#attention:has(.active)')) {
+                    that.attentionAjax();
+                }
+            });
+        },
+
+        //点赞tab
+        praise: function() {
+            var that = this;
+            that.praiseMsg = new praiseMsg;
+            that.praiseMsg.fetch({
+                url: 'api/home/praisemsg',
+                data: {'number': 1},
+                success: function (model, response) {
+                    if (response.code == 0){
+                        $('.user-praise-list').html(that.noInfoModel(response.data));
+                        $('.user-praise-list').append(that.praiseTemplate(response.data));
+                        that.praiseMsg.set('number', 2);   //设置下次加载的number （滚动ajax加载）
+                        that.minusNumber(response);       //减去小红点 & tab 中的数字                  
+                    }
+                    else{
+                        console.log(response);
+                    }
+                }
+            });
+
+            that.checkAjax.bScroll = false;   //许可Ajax加载
+            that.informAjax.bScroll = false;
+            that.attentionAjax.bScroll = false;
+            that.praiseAjax.bScroll = true; 
+            $('.content-page').scroll(function () {
+                if($('#praise:has(.active)')) {
+                    that.praiseAjax();
+                }
+            });
+        },
+
+        //审核Ajax
+        checkAjax: function() {
+            var that = this;
+            var nClientH = $(window).height();
+            var nScrollTop = $('.content-page').scrollTop();
+            var nChannelH = $('#check').height();
+            if ((nClientH + nScrollTop >= nChannelH) && (that.checkAjax.bScroll == true)) {
+                that.checkAjax.bScroll = false;     //禁止Ajax加载
+                var nNum = that.checkMsg.get('number');
+                that.checkMsg.fetch({
+                    data: {number: nNum},
+                    url: "/api/home/checkmsg",
+                    success: function (model, response) {
+                        if (response.code==0){
+                            $('.user-check-list').append(that.checkTemplate(response.data));
+                            that.checkFun();            //绑定“通过”“编辑”“筛除”事件
+                            if (!response.data.isHave) {
+                                $('.user-check-list').append("<p class='no-news'>无更多内容</p>");
+                            } else {
+                                that.checkMsg.set("number", ++nNum);
+                                that.checkAjax.bScroll = true;     //许可Ajax加载
+                            }                           
+                        }
+                        else {
+                            console.log(response);
+                        }   
+                    }
+                });
+            }
+        },
+
+        //通知Ajax
+        informAjax: function() {
+            var that = this;
+            var nClientH = $(window).height();     
+            var nScrollTop = $('.content-page').scrollTop(); 
+            var nChannelH = $('#inform').height();
+            if ((nClientH + nScrollTop >= nChannelH) && (that.informAjax.bScroll == true)) {
+                that.informAjax.bScroll = false;     //禁止Ajax加载
+                var nNum = that.informMsg.get('number');
+                that.informMsg.fetch({
+                    data: {number: nNum},
+                    url: "/api/home/callmsg",
+                    success: function (model, response) {
+                        if (response.code==0){
+                            $('.user-inform-list').append(that.informTemplate(response.data));
+                            that.minusNumber(response);       //减去小红点& tab中的数字
+                            if (!response.data.isHave) {
+                                $('.user-inform-list').append("<p class='no-news'>无更多内容</p>");
+                            } else {
+                                that.informMsg.set("number", ++nNum);
+                                that.informAjax.bScroll = true;     //许可Ajax加载
+                            }                           
+                        }
+                        else {
+                            console.log(response);
+                        }   
+                    }
+                });
+            }
+        },
+
+        //关注Ajax
+        attentionAjax: function() {
+            var that = this;
+            var nClientH = $(window).height();                  
+            var nScrollTop = $('.content-page').scrollTop();   
+            var nChannelH = $('#attention').height();     
+            if ((nClientH + nScrollTop >= nChannelH) && (that.attentionAjax.bScroll == true)) {
+                that.attentionAjax.bScroll = false;     //禁止Ajax加载
+                var nNum = that.attentionMsg.get('number');
+                that.attentionMsg.fetch({
+                    data: {number: nNum},
+                    url: "/api/home/remind",
+                    success: function (model, response) {
+                        if (response.code==0){
+                            $('.user-attention-list').append(that.attentionTemplate(response.data));
+                            that.minusNumber(response);       //减去小红点&tab 中的数字
+                            if (!response.data.isHave) {
+                                $('.user-attention-list').append("<p class='no-news'>无更多内容</p>");
+                            } else {
+                                that.attentionMsg.set("number", ++nNum);
+                                that.attentionAjax.bScroll = true;     //许可Ajax加载
+                            }                           
+                        }
+                        else {
+                            console.log(response);
+                        }   
+                    }
+                });
+            }
+        },
+
+        //点赞Ajax
+        praiseAjax: function() {
+            var that = this;
+            var nClientH = $(window).height();
+            var nScrollTop = $('.content-page').scrollTop();   
+            var nChannelH = $('#praise').height();     
+            if ((nClientH + nScrollTop >= nChannelH) && (that.praiseAjax.bScroll == true)) {
+                that.praiseAjax.bScroll = false;     //禁止Ajax加载
+                var nNum = that.praiseMsg.get('number');
+                that.praiseMsg.fetch({
+                    data: {number: nNum},
+                    url: "/api/home/praisemsg",
+                    success: function (model, response) {
+                        if (response.code==0){
+                            $('.user-praise-list').append(that.praiseTemplate(response.data));
+                            that.minusNumber(response);       //减去小红点&tab中的数字
+                            if (!response.data.isHave) {
+                                $('.user-praise-list').append("<p class='no-news'>无更多内容</p>");
+                            } else {
+                                that.praiseMsg.set("number", ++nNum);
+                                that.praiseAjax.bScroll = true;     //许可Ajax加载
+                            }                           
+                        }
+                        else {
+                            console.log(response);
+                        }   
+                    }
+                });
+            }
+        },
+
+        //每次Ajax后从红点数字中减去checked为0的个数
+        minusNumber: function(response) {
+            var that = this;
+            var nCount = 0;
+            var nPointResult = 0;
+            var nTabResult = 0;
+            var aMsg = response.data.msg;
+            var nPointCount = $('.red-point-count:first').data('number');
+            var nTabCount = $('.message-tab.active').children('a').data('number');
+            if(aMsg.length > 0) {
+                //判断是不是  “通知”
+                if(aMsg[0].checked) {
+                    for(var i = 0; i < aMsg.length; i++) {
+                        if (aMsg[i].checked == (1||2)) {
+                            nCount ++;
+                        }
+                    }
+                //“关注”和“赞”
+                } else {
+                    for(var i = 0; i < aMsg.length; i++) {
+                        if (aMsg[i].remind == 0) {
+                            nCount ++;
+                        }
+                    }
+                }
+                
+            }
+            nPointResult = nPointCount - nCount;
+            nTabResult = nTabCount - nCount;
+            $('.red-point-count').data('number', nPointResult);
+            $('.message-tab.active').children('a').data('number', nTabResult);
+            that.showNum();
+        },
+
+        //每次审核部分“通过” 或者 “筛除”后红点和tab括号内数字 减1
+        checkMinusOne: function() {
+            var that = this;
+            var nPointResult = $('.red-point-count:first').data('number') - 1;
+            var nTabResult = $('#check-btn>a').data('number') - 1;
+
+            $('.red-point-count').data('number', nPointResult);
+            $('#check-btn>a').data('number', nTabResult);
+
+            that.showNum();
+        },
+
+        //Ajax请求msgcount的数目并装在data-number里
+        msgCountAjax: function() {
+            var that = this;
+            $.ajax({
+                url: '/api/home/msgcount',
+                type: 'get',
+                success: function (response) {
+                    var nCount = response.data.count;
+                    var nCheckMsg = response.data.checkmsg;
+                    var nCallMsg = response.data.callmsg;
+                    var nRemindMsg = response.data.remindmsg;                
+                    var nPraiseMsg = response.data.praisemsg;
+
+                    $('.red-point-count').data('number', nCount);
+                    $('#check-btn>a').data('number', nCheckMsg);
+                    $('#inform-btn>a').data('number', nCallMsg);
+                    $('#attention-btn>a').data('number', nRemindMsg);
+                    $('#praise-btn>a').data('number', nPraiseMsg);
+
+                    that.showNum();
+                }              
+            });
+        },
+
+        //控制红点 tab 数字的显示方式
+        showNum: function() {
+            var nCount = $('.red-point-count:first').data('number');
+            var nCheckMsg = $('#check-btn>a').data('number');
+            var nCallMsg = $('#inform-btn>a').data('number');
+            var nRemindMsg = $('#attention-btn>a').data('number');
+            var nPraiseMsg = $('#praise-btn>a').data('number');
+
+            if(nCount > 99) {
+                $('.red-point-count').text('99+');   //数字大于0，显示99+
+            } else if(nCount <= 0) {
+                $('.red-point-count').hide();        //数字等于0，红点消失
+            } else {
+                $('.red-point-count').text(nCount).show();  //数字大于0且小于100，显示红点数字
+            }
+            if(nCheckMsg>0) {
+                $('#check-btn>a').text('审核(' + nCheckMsg +')');
+            } else {
+                $('#check-btn>a').text('审核');
+            }
+            if(nCallMsg>0) {
+                $('#inform-btn>a').text('通知(' + nCallMsg +')');
+            } else {
+                $('#inform-btn>a').text('通知');
+            }
+            if(nRemindMsg>0) {
+                $('#attention-btn>a').text('关注(' + nRemindMsg +')');
+            } else {
+                $('#attention-btn>a').text('关注');
+            }
+            if(nPraiseMsg>0) {
+                $('#praise-btn>a').text('赞(' + nPraiseMsg +')');
+            } else {
+                $('#praise-btn>a').text('赞');
+            }
+        },
+
+        //为每个新加载的审核元素绑定事件
+        checkFun: function() {
+            var that = this;
+            var lock = {
+                pass:false,
+                edit:false,
+                delete:false,
+                update:false
+            };
+
+            //通过某个书签 弹出确认对话框
+            $('.passBookmark').on('click', function(event){
+                var dataId = $(this).attr('data-id');
+                var channelId = $(this).attr('data-channelId');
+                var title = $('.title-link[data-id='+dataId+']').text();
+                var channelTitle = $('.channel-title[data-id='+dataId+']').text();
+                $('#pass-bookmark-title').text(title);
+                $('#pass-to-channel').text(channelTitle);
+                $('#pass-confirm-ok').data('bookmarkId', dataId);
+                $('#pass-confirm-ok').data('channelId', channelId);
+                $('#pass-confirm-box').modal('show');
+            });
+
+            //确认通过当前的书签
+            $('#pass-confirm-ok').on('click', function(event){
+                var bookmarkId = $('#pass-confirm-ok').data('bookmarkId');
+                var channelId = $('#pass-confirm-ok').data('channelId');
+                if(!lock.pass){
+                    lock.pass = true;
+                    $.ajax({
+                        url: '/api/bookmarks/pass/'+channelId+'/'+bookmarkId,
+                        type:'post'
+                    }).done(function(response) {
+                        if(response.code == 0) {
+                            $('#pass-confirm-box').modal('hide');
+                            //结果提示
+                            $('#result-dialog').modal('show');
+                            setTimeout(function(){
+                                $('#result-dialog').modal('hide');
+                            },2000);
+                            $('.post-item[data-id='+ bookmarkId +']').remove();
+                            console.log("通过");
+                            that.checkMinusOne();            //小红点减去1 && check tab标签减去1
+                            lock.pass = false;
+                        } else {
+                            $('#pass-confirm-box').modal('hide');
+                            //结果提示
+                            $('#result-dialog').modal('show');
+                            setTimeout(function(){
+                                $('#result-dialog').modal('hide');
+                            },2000);
+
+                            lock.pass = false;
+                        }
+                    });
+                }
+
+            });
+
+            //编辑某个书签，并且添加到频道中
+            $('.editBookmark').on('click', function(event){
+                var dataId = $(this).attr('data-id');
+                var channelId = $(this).attr('data-channelId');
+                var title = $('.title-link[data-id='+dataId+']').text();
+                var description = $('.description[data-id='+ dataId +']').children('b').text();
+                var channelTitle = $('.channel-title[data-id='+dataId+']').text();
+                $('#pass-edit-box-title').val(title);
+                $('#pass-edit-box-description').val(description);
+                $('#pass-edit-ok').data('bookmarkId',dataId);
+                $('#pass-edit-ok').data('channelId',channelId);
+                $('#pass-edit-box').modal('show');
+            });
+
+            //确认通过当前被编辑后的书签
+            $('#pass-edit-ok').on('click', function(event){
+                var bookmarkId = $('#pass-edit-ok').data('bookmarkId');
+                var channelId = $('#pass-edit-ok').data('channelId');
+                var title = $('#pass-edit-box-title').val();
+                var description = $('#pass-edit-box-description').val();
+                if(!lock.edit){
+                    lock.edit = true;
+                    $.ajax({
+                        url: '/api/bookmarks/edit/'+channelId+'/'+bookmarkId,
+                        type:'post',
+                        data:{title:title,description:description},
+                    }).done(function(response){
+                        if(response.code == 0) {
+                            $('#pass-edit-box').modal('hide');
+                            //结果提示
+                            $('#result-dialog').modal('show');
+                            setTimeout(function(){
+                                $('#result-dialog').modal('hide');
+                            },2000);
+                            $('.post-item[data-id='+ bookmarkId +']').remove();
+                            console.log("编辑");
+                            that.checkMinusOne();            //小红点减去1 && check tab标签减去1
+                            lock.edit = false;
+                        } else {
+                            $('#pass-edit-box').modal('hide');
+                            //结果提示
+                            $('#result-dialog').modal('show');
+                            setTimeout(function(){
+                                $('#result-dialog').modal('hide');
+                            },2000);
+
+                            lock.edit = false;
+                        }
+                    });
+                }
+
+            });
+
+            //筛除某个书签
+            $('.deleteBookmark').on('click', function(event){
+                var dataId = $(this).attr('data-id');
+                var channelId = $(this).attr('data-channelId');
+                var title = $('.title-link[data-id='+dataId+']').text();
+                var channelTitle = $('.channel-title[data-id='+dataId+']').text();
+                $('#delete-to-channel').text(channelTitle);
+                $('#delete-bookmark-title').text(title);
+                $('#delete-confirm-ok').data('channelId', channelId);
+                $('#delete-confirm-ok').data('bookmarkId', dataId);
+                $('#delete-confirm-box').modal('show');
+            });
+
+            //确认删除某个书签
+            $('#delete-confirm-ok').on('click', function(event){
+                var reason = $('#delete-result-box').val();
+                if(!reason) return $('#delete-result-box').addClass('error');
+                var bookmarkId = $('#delete-confirm-ok').data('bookmarkId');
+                var channelId = $('#delete-confirm-ok').data('channelId');
+                if(!lock.delete){
+                    lock.delete = true;
+                    $.ajax({
+                        url: '/api/bookmarks/delete/'+channelId+'/'+bookmarkId,
+                        type:'post',
+                        data:{reason:reason}
+                    }).done(function(response){
+                        if(response.code == 0){
+                            $('#delete-confirm-box').modal('hide');
+                            //结果提示
+                            $('#result-dialog-fail').modal('show');
+                            setTimeout(function(){
+                                $('#result-dialog-fail').modal('hide');
+                            },2000);
+                            $('.post-item[data-id='+ bookmarkId +']').remove();
+                            console.log("删除");
+                            that.checkMinusOne();            //小红点减去1 && check tab标签减去1
+                            lock.delete = false;
+                        } else {
+                            $('#delete-confirm-box').modal('hide');
+                            //结果提示
+                            $('#result-dialog-fail').modal('show');
+                            setTimeout(function(){
+                                $('#result-dialog-fail').modal('hide');
+                            },2000);
+
+                            lock.delete = false;
+                        }
+                    });
+                }
+            });
+
+        }
+    });
+
+
+    //设置界面
+    var Setting = Backbone.View.extend({
+        el: $('#tp-personal-setting').html(),
+
+        layer: $('#home-popup-layer'),
+        lock: {
+            info: false,
+            password: false,
+            viewed: false
+        },
+        layerShadow: $('.shadow'),
+        initialize: function() {
+            this.channel.on("invalid", function(model, error) {
+                $('#Channel-Create-Error').text(error).show();
+            });
+        },
+        events: {
+            'click #user-info-button': "upUserInfo",
+            'click #password-change-button': "changePassword",
+            'click .sure': "viewed",
+        },
+        initialize: function () {
+        },
+
+        render: function () {
+            return this;
+        },  
 
         renderAfter: function () {
             //频道logo上传
@@ -348,6 +1129,7 @@ $(function(){
                     }
                 }
             });
+            
         },
 
 
@@ -362,21 +1144,6 @@ $(function(){
                     url: '/api/account/update',
                     type: 'post',
                     data: user,
-                    // statusCode: {
-                    //     401: function () {
-                    //         //结果提示
-                    //         popup("个人信息更新失败");
-
-                    //         that.lock.info = false;
-                    //     },
-                    //     200: function () {
-                    //         //结果提示
-                    //         popup("个人信息更新成功");
-
-                    //         that.lock.info = false;
-                    //     }
-                    // }
-
                     success: function (response) {
                             //结果提示
                                 if(response.code==0){
@@ -414,21 +1181,6 @@ $(function(){
                     url: '/api/account/changePassword',
                     type: 'post',
                     data: password,
-                    // statusCode: {
-                    //     401: function (jq) {
-                    //         //结果提示
-                    //         console.log(jq);
-                    //         $('#User-Change-Error').text(jq.responseJSON.info).show();
-
-                    //         that.lock.password = false;
-                    //     },
-                    //     200: function () {
-                    //         //结果提示
-                    //         popup("密码修改成功");
-
-                    //         that.lock.password = false;
-                    //     }
-                    // }
                     success:function(response){
                         if (response.code==0){
                             popup('密码修改成功');
@@ -441,160 +1193,7 @@ $(function(){
                 });
             }
 
-        },
-
-        viewed: function (event) {
-            var bookmarkId = $(event.target).data('bookmarkid');
-            var index = $(event.target).data('index');
-            var that = this;
-            if (!that.lock.viewed) {
-                that.lock.viewed = true;
-                $.ajax({
-                    url: '/api/news/viewed',
-                    type: 'post',
-                    data: {bookmarkId: bookmarkId},
-                    // statusCode: {
-                    //     200: function () {
-                    //         //结果提示
-                    //         var num = $("#news-tab").data('num') - 1;
-                    //         $('#news-' + index).remove();
-                    //         if (num > 0) {
-                    //             $("#news-tab").data('num', num)
-                    //             $("#news-tab").text("新消息(" + num + ")");
-                    //             $("#news-popup-num").text(num);
-                    //         } else {
-                    //             $("#news-tab").text("新消息");
-                    //             $("#news-popup-num").remove();
-                    //         }
-                    //         that.lock.viewed = false;
-                    //     }
-                    // }
-                    success:function(response){
-                        if (response.code==0){
-                            var num = $('#news-tab').data('num') -1;
-                            $('#news-'+index).remove();
-                            if (num>0){
-                                $("#news-tab").data('num', num)
-                                $("#news-tab").text("新消息(" + num + ")");
-                                $("#news-popup-num").text(num);
-                            }
-                            else{
-                                $('#news-tab').text('新消息');
-                                $('#news-popup-num').remove();
-                            }
-                        }
-                        else {
-                            console.log(response);
-                        }
-                        that.lock.viewed = false;
-                    }
-                });
-            }
-        },
-
-        newMessage: function () {
-            var that = this;
-            that.newMes = new newMessage;
-            that.newMes.fetch({
-                url: 'api/home/newmes',
-                data: {'number': 1},
-                success: function (model, response) {
-                    if (response.code==0){
-                        $('.user-news-list').html(that.newMesTemplate(response.data));
-                        that.newMes.set('number', 2);                      
-                    }
-                    else{
-                        console.log(response);
-                    }
-
-                }
-            });
-
-            that.newMesAjax.bScroll = true;   //许可Ajax加载
-            $('.content-page').scroll(function () {
-                that.newMesAjax();
-            });
-        },
-
-        history: function () {
-            var that = this;
-            that.hisMes = new hisMessage;
-            that.hisMes.fetch({
-                url: '/api/home/hismes',
-                data:{'number':1},
-                success: function (model, response) {
-                    if(response.code==0){
-                        $('.user-history-list').html(that.historyTemplate(response.data));
-                        that.hisMes.set('number',2);                      
-                    }
-                    else{
-                        console.log(response);
-                    }
-                }
-            });
-            that.hisMesAjax.bScroll = true;    //许可Ajax加载
-            $('.content-page').scroll(function () {
-                that.hisMesAjax();
-            });
-        },
-
-        newMesAjax: function () {
-            var that = this;
-            var nClientH = $(window).height();
-            var nScrollTop = $('.content-page').scrollTop();
-            var nChannelH = $('.personal-center').height();
-            if ((nClientH + nScrollTop >= nChannelH) && (that.newMesAjax.bScroll == true)) {
-                that.newMesAjax.bScroll = false;   //禁止Ajax加载
-                var nNum = that.newMes.get("number");
-                that.newMes.fetch({
-                    data: {number: nNum},
-                    url: "/api/home/newmes",
-                    success: function (model, response) {
-                        if (response.code==0){
-                            $('.user-news-list').append(that.newMesTemplate(response.data));
-                            if (!response.data.isHave) {
-                                $('.user-news-list').append("<p class='no-news'>无新内容了</p>");
-                            } else {
-                                that.newMes.set("number", ++nNum);
-                                that.newMesAjax.bScroll = true;     //许可Ajax加载
-                            }                            
-                        }
-                        else{
-                            console.log(response);
-                        }
-                    }
-                });
-            }
-        },
-
-        hisMesAjax: function () {
-            var that = this;
-            var nClientH = $(window).height();                  console.log(nClientH);
-            var nScrollTop = $('.content-page').scrollTop();    console.log(nScrollTop);
-            var nChannelH = $('.personal-center').height();     console.log(nChannelH);
-            if ((nClientH + nScrollTop >= nChannelH) && (that.hisMesAjax.bScroll == true)) {
-                that.hisMesAjax.bScroll = false;     //禁止Ajax加载
-                var nNum = that.hisMes.get('number');console.log('function');
-                that.hisMes.fetch({
-                    data: {number: nNum},
-                    url: "/api/home/hismes",
-                    success: function (model, response) {
-                        if (response.code==0){
-                            $('.user-history-list').append(that.historyTemplate(response.data));
-                            if (!response.data.isHave) {
-                                $('.user-history-list').append("<p class='no-news'>无新内容了</p>");
-                            } else {
-                                that.hisMes.set("number", ++nNum);
-                                that.hisMesAjax.bScroll = true;     //许可Ajax加载
-                            }                           
-                        }
-                        else {
-                            console.log(response);
-                        }   
-                    }
-                });
-            }
-        }
+        },                  
     });
 
     //用户发现页面
@@ -643,7 +1242,7 @@ $(function(){
             var that = this;
             var nClientH = $(window).height();
             var nScrollTop = $('#channel-explore').scrollTop();
-            var nChannelH = $('#channel-explore ul').height();
+            var nChannelH = $('#channel-content').height();
             if((nClientH + nScrollTop - 80 >= nChannelH) && (that.exploreAjax.bScroll == true)) {
                 that.exploreAjax.bScroll = false;   //禁止Ajax加载
                 var nNum = that.cList.get('number');
@@ -652,10 +1251,10 @@ $(function(){
                     url: "/api/home/discover",
                     success: function(model, response){
                         if (response.code==0){
-                            $('#channel-explore ul').append(that.addTemplate(response.data));
+                            $('#channel-content').append(that.addTemplate(response.data));
                             $('.ex-creator').tooltip();        //创建者头像绑定tooltip
                             if(!response.data.isHave){
-                                $('#channel-explore ul').append("<p class='no-news'>无新内容了</p>");
+                                $('#channel-content').append("<p class='no-news'>无更多内容</p>");
                             } else {
                                 that.cList.set("number",++nNum);
                                 that.exploreAjax.bScroll = true;     //许可Ajax加载
@@ -678,8 +1277,9 @@ $(function(){
             var that = this;
             var channelId = $(event.currentTarget).data('id');
             var subChannel = new subChannelModel;
-            subChannel.fetch({
-                url: "/channel/sub/"+ channelId,
+            subChannel.set({'channelId': channelId});
+            subChannel.save({},{
+                url: "/channel/sub/",
                 success: function(model, response) {
                     if (response.code==0){
                         $(event.currentTarget).html('已订阅');
@@ -709,48 +1309,152 @@ $(function(){
 
         //向主视图绑定事件
         events: {
-            'click .create-channel>button' : "createChannels",
-            'click #user-center' : "showPerson",
-            'click #admin-channel-list  li' : 'showChannel',
-            'click #sub-channel-list  li' : 'showChannel',
-            'click #explore' : 'showExplore'
+            'click .create-channel>button' : "createChannels",//创建频道
+            'click #admin-channel-list li' : 'showChannel',
+            'click #sub-channel-list li' : 'showChannel',
+            'click #explore' : 'showExplore',
+            'click .subscription' : 'showSubscription',//展示订阅频道
+            'touch .subscription' : 'showSubscription',
+            'click .administration' : 'showAdministration',//展示管理频道
+            'touch .administration' : 'showAdministration',
+            'click .channel-item' :'showSubBkm',//订阅频道的书签
+            'touch .channel-item' :'showSubBkm',
+            'click #message' : 'showMessage',//消息界面
+            'touch #message' : 'showMessage',
+            'click #discover' : 'showDiscover',//发现界面
+            'touch #discover' : 'showDiscover',
+            'click #help' :'showHelp',//帮助页面
+            'touch #help' :'showHelp',
+            'click #set' :'showSet',//设置界面
+            'touch #set' :'showSet'
         },
 
         initialize: function() {
+            if (window.location.href.indexOf('#')>-1){
+                return;
+            }
             this.showExplore();
         },
 
         //展示创建频道弹出页
         createChannels : function(){
-            var view = new NewChannelView();
+            /*var view = new NewChannelView();
             this.main.html(view.render().el);
-            view.renderAfter();
+            view.renderAfter();*/
+            Router.navigate('create',true);
         },
-
-        //展示用户个人中心弹出层
-        showPerson : function(){
-            var view = new PersonView();
-            this.main.html(view.render().el);
-            view.renderAfter();
-
-        },
-
+        
         //展示频道
-        showChannel : function(event){
-            var channelId = $(event.currentTarget).data('id');
-            var list = new listView;
-            list.render(channelId);
-        },
+        // showChannel : function(event){
+        //     var channelId = $(event.currentTarget).data('id');
+        //     var list = new listView;
+        //     list.render(channelId);
+        // },
 
         //展示发现页面
         showExplore : function(){
             var explore = new ExploreView();
             explore.render();
+        },
+        //展示管理频道
+        showAdministration : function(){
+            Router.navigate('manage',true);
+        },
+        //展示订阅频道
+        showSubscription : function(){
+            Router.navigate('sub',true);
+        },
+        //展示对应频道里面的书签
+        showSubBkm : function(event){
+            Router.navigate('channel/'+$(event.currentTarget).data('id'),true);
+            $(event.currentTarget).children('.links-num').remove();
+        },
+        //展示消息
+        showMessage : function(){
+            Router.navigate('message',true);
+        },
+        //展示发现界面
+        showDiscover : function(){
+            Router.navigate('discover',true);
+        },
+        //帮助页面
+        showHelp : function(){
+            Router.navigate('help',true);
+        },
+        //设置界面
+        showSet : function(){
+            Router.navigate('set',true);
         }
     });
 
     //实例化
     var App = new AppView;
+
+    //爱屁屁的路由
+    var AppRouter = Backbone.Router.extend({
+        routes:{
+            'sub' : 'subControl',
+            'sub/:channelId' : 'channelControl',
+            'manage' : 'manage',
+            'channel/:channelId' : 'channelBookmarks',
+            'create' : 'create',
+            'message' : 'message',
+            'discover' : 'discover',
+            'help' : 'help',
+            'set' : 'set'
+        },
+        defaultRoute : function(){
+        },
+        subControl : function(){
+
+            $('.subscription').addClass('active').next().removeClass('active');
+            $('.channel-list').show().next().hide();
+        },
+        manage : function(){
+            $('.administration').addClass('active').prev().removeClass('active');
+            $('.admin-interface').show().prev().hide();
+        },
+        channelBookmarks : function(id){
+            var channelsId = id;
+            var view = newlistView();
+            //
+
+            $('.channel-item').removeClass('active');
+            $('.channel-item[data-id='+ channelsId +']').addClass('active');
+            view.render(channelsId);
+        },
+        create : function(){
+            var view = new NewChannelView();
+            App.main.html(view.render().el);
+            view.renderAfter();
+        },
+        message: function(){
+            //消息部分
+            var view = new MessageView();
+            App.main.html(view.render().el);
+            view.renderAfter();
+            $('#check-btn').click();
+        },
+        discover: function(){
+            var view = new ExploreView();
+            App.main.html(view.render());
+            view.renderAfter();
+        },
+        help: function(){
+            window.location.href = "/our/team";
+        },
+        set: function(){
+            var view = new Setting();
+            App.main.html(view.render().el);
+            view.renderAfter();
+        }
+
+
+    })
+
+    //实例化路由
+    var Router = new AppRouter;
+    Backbone.history.start();
 
 
     //消息提示函数

@@ -46,7 +46,8 @@ button:focus {outline:0;}
 
 #control-page {
     position: fixed;
-    width: 27%;
+    /*vinthony@gmail.com 2014年12月10日19:20:30*/
+    width: 330px;
     min-width: 275px;
     height: 100%;
     z-index: 4;
@@ -60,12 +61,14 @@ button:focus {outline:0;}
     background-position: center center;
     top: 0;
     left: 0;
+    z-index: -9999;
     opacity: 1;
     -webkit-filter: blur(2px);
     filter: blur(2px);
 }
 
 #bg-opacity {
+    z-index: -30;
     width: 100%;
     height: 100%;
     position: absolute;
@@ -179,8 +182,38 @@ button:focus {outline:0;}
 
 #channel-part {
     width: 100%;
-    height: 300px;
-    margin-top: 100px;
+    height: 430px;
+    padding: 50px 20px;
+    /*vinthony@gmail.com  2014年12月11日19:42:24*/
+    /*margin-top: 100px;*/
+}
+#ctrl-tab{
+    list-style: none;
+    font-size: 1.5em;
+    position: relative;
+}
+.ctrl-tab-menu{
+    padding: 30px 0;
+    line-height: 1.5em;
+    text-align: center;
+}
+#ctrl-tab li{
+    width: 100px;
+    display: inline-block;
+}
+#ctrl-tab a{
+    color: #ccc;
+    text-decoration: none;
+}
+#ctrl-tab a:hover{
+    text-decoration: none;
+}
+#ctrl-tab li.active a{
+    color: #00C995;
+    text-decoration: none;
+}
+#ctrl-tab a>span{
+    display: block;
 }
 
 #channel-logo {
@@ -227,8 +260,8 @@ button:focus {outline:0;}
 
 #ctrl-description {
     max-width: 250px;
-    max-height: 300px;
-    margin: 5px auto;
+    height: 150px;
+    margin: 20px auto;
     padding-left: 10px;
     font-size: 1.3em;
     color: #aaa;
@@ -246,26 +279,46 @@ button:focus {outline:0;}
     margin-top: 20px;
     text-align: center;
 }
-
-#subscribe-btn {
+/*点击按钮*/
+.sub-btn,.nosub-btn,.creator-btn {
     height: 38px;
     margin-top: 0;
-    border: 1px solid #ccc;
+    border: 1px solid #999;
     padding: 0 20px;
     font-size: 1.6em;
-    background-color: transparent;
-    color: #fff;
+    background-color: rgba(0, 0, 0, 0);
+    color: #999;
     border-radius: 19px;
     -webkit-transition: all 0.3s ease;
     transition: all 0.3s ease;
 }
-
-#subscribe-btn:hover {
+.nosub-btn:hover {
+    background-color: #E06A6A;
+    border: 1px solid #E06A6A;
+    color: #fff;
+    -webkit-transition: all 0.1s ease;
+    transition: all 0.1s ease;
+}
+.sub-btn:hover {
+    background-color: #40c192;
+    border: 1px solid #40c192;
+    color: #fff;
+    -webkit-transition: all 0.1s ease;
+    transition: all 0.1s ease;
+}
+.creator-btn:hover {
+    background-color: #65CFFB;
+    border: 1px solid #65CFFB;
+    color: #fff;
+    -webkit-transition: all 0.1s ease;
+    transition: all 0.1s ease;
+}
+/*#subscribe-btn:hover {
     background-color: #40c192;
     border-color: #40c192;
     -webkit-transition: all 0.1s ease;
     transition: all 0.1s ease;
-}
+}*/
 
 #subscribe-btn>b:nth-child(2) {display: none;}
 
@@ -281,12 +334,13 @@ button:focus {outline:0;}
 }
 /* ======================================================================================
     content page
-    ===================================================================================== */
+   ===================================================================================== */
 
 #content-page {
+    /*vinthony@gmail.com 2014年12月10日19:21:10*/
     height: 100%;
     background-color: #f3f3f3;
-    margin-left: 27%;
+    margin-left: 330px;
     position: relative;
 }
 
@@ -639,7 +693,7 @@ button:focus {outline:0;}
     box-shadow: 0 0 1px #ccc;
 }
 
-#section-title {margin-bottom: 25px;}
+/*#section-title {margin-bottom: 25px;}*/
 
 .section-title h3 {font-size: 3.0em;}
 
@@ -953,4 +1007,19 @@ button:focus {outline:0;}
 }
 #Channel-Create-Error{
     max-width: 800px;
+}
+#section-title h3{
+    font-size: 2.2em;
+    text-align: center;
+}
+#section-title h3 img{
+    width: 40px; 
+    height: 40px;
+    border-radius: 20px;
+    margin:0 10px;
+}
+#section-title h3 img{
+    width: 40px; 
+    height: 40px;
+    border-radius: 20px;
 }

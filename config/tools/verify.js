@@ -41,18 +41,36 @@ function xssArray(array){
 function isString(str){
 	return typeof str==='string';
 }
+function isEmail(str){
+    if (typeof str!='string') return false;
+	return /^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$/.test(str);
+}
 //判断是否数组
 function isArray(array){
 	 return Object.prototype.toString.call(array) === '[object Array]';  
 }
-//判断是否数字
+//判断是否正整数
 function isNumber(number){
 	var number = +number;
-	return !isNaN(number);
+	if (isNaN(number)) return false;
+	if (number<0) return false;
+	if ((number+'').indexOf('.')>-1) return false;	
+	return true;
 }
+//判断是否url 必须带有头部http://或者https://
+function isUrl(str) { 
+	if (typeof str !=='string') {return false;}
+	var RegUrl = new RegExp(); 
+	RegUrl.compile("^[A-Za-z]+://[A-Za-z0-9-_]+\\.[A-Za-z0-9-_%&\?\/.=]+$");
+		if (!RegUrl.test(str)) { return false; } 
+	return true; 
+} 
+
 exports.userVerify = userVerify;
 exports.idVerify = idVerify;
 exports.xssVerify = xssVerify;
 exports.isString = isString;
 exports.isArray = isArray;
 exports.isNumber = isNumber;
+exports.isUrl = isUrl;
+exports.isEmail = isEmail;

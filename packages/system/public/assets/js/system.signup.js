@@ -16,12 +16,11 @@ $('#YIYE_Signup').click(function(){
         type: "POST",
         url:API_SignupUrl,
         data:$('#YIYE_SignupForm').serialize(),
-        statusCode: {
-            400: function(res) {
-                showSignupError(res.responseJSON[0]['msg']);
-            },
-            200:function(res){
-                location.href = res.redirectUrl;
+        success:function(data){
+            if(data.code == 0){
+                location.href = data.data.redirectUrl;
+            }else{
+                showSignupError(data.msg);
             }
         }
     });
@@ -30,8 +29,8 @@ $('#YIYE_Signup').click(function(){
 //本地验证提交数据是否合法
 function verificationForm(){
     var formArray = $('#YIYE_SignupForm').serializeArray();
-    if(!verification.isEmail(formArray[0]['value']))  {showSignupError("请输入有效的邮箱地址");return false;}
-    if(!verification.len(formArray[1]['value'],2,12)) {showSignupError("用户名长度为2到12位");return false;}
+    if(!verification.len(formArray[0]['value'],2,12)) {showSignupError("用户名长度为2到12位");return false;}
+    if(!verification.isEmail(formArray[1]['value']))  {showSignupError("请输入有效的邮箱地址");return false;}
     if(!verification.len(formArray[2]['value'],6,20)) {showSignupError("密码长度为6到20位");return false;}
     return true;
 }
@@ -59,5 +58,3 @@ verification.len = function(str,min,max){
         return false;
     }
 }
-
-//

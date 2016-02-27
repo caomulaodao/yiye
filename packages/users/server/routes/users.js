@@ -31,10 +31,12 @@ module.exports = function(MeanUser, app, auth, database, passport) {
           passport.authenticate('local',
               function(err, user, info){
                   if (err) { return next(err); }
-                  if (!user) { return res.status(401).send(info) }
+                  if(!user){
+                      return res.sendResult(info.message,3001,null);
+                  }
                   req.logIn(user, function(err) {
                       if (err) { return next(err); }
-                      return res.status(200).send({
+                      return res.sendResult("登录成功",0,{
                           redirectUrl:'/home',
                           success:true
                       });

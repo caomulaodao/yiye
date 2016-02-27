@@ -65,6 +65,10 @@ var UserSchema = new Schema({
       type:String,
       default:'avatar/83e8ef518174e1eb016d71d414509845.png'
   },
+  createTime:{
+      type: Date,
+      default: Date.now
+  },
   provider: {
       type: String,
       default: 'local'

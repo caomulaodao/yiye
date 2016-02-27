@@ -33,4 +33,19 @@ module.exports = function(Home, app, auth, database) {
     //获取历史记录
     app.route('/api/home/hismes')
         .get(home.history);
+    //通知提交者的消息
+    app.route('/api/home/callmsg')//可用
+        .get(home.callmsg);
+    //受理提交的消息
+    app.route('/api/home/checkmsg')//可用
+        .get(home.checkmsg);
+    app.route('/api/home/praisemsg')//可用
+        .get(home.praisemsg);
+    //频道被关注时提醒
+    app.route('/api/home/remind')//可用
+        .get(home.remindmsg);
+    //各种消息的总数
+    app.route('/api/home/msgcount')//可用
+        .get(home.msgcount);
+
 }

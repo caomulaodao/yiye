@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>attention-test</title>
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="/home/assets/css/home.css">
+</head>
+<style type="text/css">
+	body {
+		font-size: 10px;
+	}
+	.attention-box {
+		height: 82px;
+		width: 300px;
+		padding: 10px 0 0 10px;
+		display: table-cell;
+		border: 1px solid #ccc;
+		border-radius: 5px;
+		float: left;
+		margin: 5px;
+		list-style-type: none;
+		background-color: #fff;
+		box-shadow: 0 0 1px #ccc;
+	}
+	.attention-box:hover {
+		border-color: #40c192;
+		box-shadow: 0 0 3px #40c192 inset;
+		transition: all 0.3s;
+		-webkit-transition: all 0.3s;
+	}
+	.attention-box>div {
+		font-size: 1.5em;
+		margin-top: 3px;
+		color: #333;
+	}
+	.at-user-avatar {
+		width: 60px;
+		height: 60px;
+		margin-right: 20px;
+		border-radius: 50%;
+		overflow: hidden;
+		float: left;
+	}
+	.at-user-avatar img {
+		width: 60px;
+		height: 60px;
+	}
+	.at-user-name {
+		display: inline-block;
+		font-size: 1.5em;
+		line-height: 1em;
+		width: 160px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+	.at-channel-name {
+		display: inline-block;
+		font-size: 1.5em;
+		line-height: 1em;
+		width: 200px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+</style>
+<body>
+	<ul class="user-attention-list">
+		<li class="attention-box">
+			<a href="#">
+				<div class="at-user-avatar">
+					<img src="http://yiye.qiniudn.com/avatar/83e8ef518174e1eb016d71d414509845.png">
+				</div>
+			</a>
+			<img src="http://yiye.qiniudn.com/bImage/5527eaab87a00dbe7501bbed1ea5bba8.png">
+			<a class="at-user-name" href="#">zweipix</a><br>
+			<div>关注了</div>
+			<a class="at-channel-name" href="#">才不是前端开发呢！</a>
+		</li>
+		<li class="attention-box"></li>
+		<li class="attention-box"></li>
+		<li class="attention-box"></li>
+		<li class="attention-box"></li>
+	</ul>
+</body>
+</html>

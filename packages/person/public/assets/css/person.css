@@ -34,7 +34,7 @@ button:focus {outline:0;}
 /****************control page******************/
 .control-page {
     position: fixed;
-    width: 30%;
+    width: 330px;
     min-width: 275px;
     height: 100%;
 }
@@ -48,6 +48,7 @@ button:focus {outline:0;}
     background-color: #fff;
     top: 0;
     left: 0;
+    z-index: -9999;
     opacity: 1;
     -webkit-filter: blur(2px);
     filter: blur(2px);
@@ -57,6 +58,7 @@ button:focus {outline:0;}
     height: 100%;
     position: absolute;
     left: 0;
+    z-index: -100;
     top: 0;
     background-color: #24282f;
     opacity: 0.7;
@@ -71,7 +73,7 @@ button:focus {outline:0;}
 
 .control-header {
     height: 60px;
-    padding-top: 5px;
+    /*padding-top: 5px;*/
     padding-right: 20px;
     width: 100%;
     position: relative;
@@ -195,7 +197,7 @@ button:focus {outline:0;}
 #content-page {
     height: 100%;
     background-color: #f3f3f3;
-    margin-left: 30%;
+    margin-left: 330px;
     position: relative;
 }
 
@@ -249,12 +251,13 @@ button:focus {outline:0;}
     margin-right: 20px;
     margin-bottom: 20px;
 }
-.part-title {
+#part-title{
     margin-bottom: 25px;
 }
 
-.part-title h3 {
+#part-title h3{
     font-size: 2.0em;
+    text-align: center;
 }
 
 /* ======================================================================================

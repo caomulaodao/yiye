@@ -49,20 +49,39 @@ module.exports = function(app, passport, db) {
   app.set('view engine', 'html');
   //浏览器头部检测中间件
   app.use(function(req,res,next){
-    var header=req.headers['user-agent'];
+    var header=req.headers['user-agent'];console.log(header);
     if(typeof header !='string') header='';//如果获取的头部不包含user-agent;
     var staticFile1 = new RegExp('/.*?/assets/.*');
     var staticFile2 = new RegExp('/bower_components/.*')
-    function isChrome(str){
-       if (str.indexOf('WebKit')>-1) return true;
-       else return false;
+    function enable(str){
+      var chrome = /WebKit/i;
+      var firefox = /moz/i;
+       if (chrome.test(str)||firefox.test(str)) return true;
+       return false;
     }
-    if (req.url=='/please/use/chrome'||staticFile1.test(req.url)||staticFile2.test(req.url)){
-      next();
+    //手机判断
+    function userPhone(str){
+      if (str.indexOf('Android')>-1) return "Android";
+      if (str.indexOf('iPhone')>-1) return "iPhone";
+    }
+    if (req.url=='/system/ios'||req.url=='/system/android'||req.url=='/please/use/chrome'||staticFile1.test(req.url)||staticFile2.test(req.url)){
+        next();
     }
     else{
-      if(isChrome(header)) next();
-      else{res.redirect('/please/use/chrome');}
+      //如果是安卓 重定向到下载界面
+      if (userPhone(header)=="Android"){
+        return res.redirect('/system/android');
+      }
+      //如果是iPhone
+      if (userPhone(header)=="iPhone"){
+        return res.redirect('/system/ios');
+      }
+      //如果是非webkite内核
+      if(!enable(header)){
+        return res.redirect('/please/use/chrome');
+      }
+      next();
+
     }
   });
 
@@ -83,6 +102,9 @@ module.exports = function(app, passport, db) {
             data:null
         });
       };
+      res.error = function(){
+        res.redirect('/error');
+      }
       next();
   });
   //包装返回服务器错误函数

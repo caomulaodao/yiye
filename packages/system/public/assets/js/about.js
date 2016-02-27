@@ -1,12 +1,21 @@
 (function(){
 	if(window.location.hash){
+		//
+		changeSiblings(window.location.hash);
 		scrollToPage(getPosition(window.location.hash));
+	}else{
+		changeSiblings("#staff");
 	}
 	$('.about-item').delegate('a','click',function(e){
+		changeSiblings($(e.currentTarget).attr('href'));
 		scrollToPage(getPosition($(e.currentTarget).attr('href')));
 	});
 	window.onscroll = function (){
 		return false;
+	}
+	function changeSiblings(hash){
+		$('.about-item a').removeClass('active');
+		$('a[href='+hash+']').addClass('active');
 	}
 	function scrollToPage(pos){
 		$('#content-manage').animate({"top":pos},300,'swing',function(){});
@@ -21,6 +30,10 @@
 				return '-200vh';
 			case '#followUs':
 				return '-300vh';
+            case '#help':
+                return '-400vh';
+            case '#extendInstall':
+                return '-500vh';
 			default:
 				return 0;	
 		}

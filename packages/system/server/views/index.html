@@ -24,7 +24,7 @@
         <div class="collapse navbar-collapse" >
             <ul class="nav navbar-nav navbar-right right-links" id="index-navbar">
                 <li><a href="/explore">发现</a></li>
-                <li><a href="#">帮助</a></li>
+                <li><a href="our/team#help">帮助</a></li>
                 <li><a href="/signup" target="_blank">注册</a></li>
                 <li><button type="button" class="btn btn-default navbar-btn" onclick="window.open('/signin')">登录</button></li>
             </ul>
@@ -49,7 +49,7 @@
     <div class="video-modal" style="display: none;">
         <a href="#" class="video-modal-close"></a>
         <video controls="" preload="">
-            <source src="http://yiye.qiniudn.com/pre.mp4" type="video/mp4">
+            <source src="http://yiye.qiniudn.com/introduction.mp4" type="video/mp4">
         </video>
     </div>
     <div id="signup">
@@ -64,14 +64,14 @@
             <div class="col-md-6">
                 <h2>浏览器插件</h2>
                 <p>帮助你快速存储网页链接，可选择需要提交的书签频道，附带网页截屏，打标签等功能。</p>
-                <div class="down-button" id="down-chrome"><a class="btn btn-lg" onclick="ExtInstall()"><i></i>安装chrome插件</a></div>
+                <div class="down-button" id="down-chrome"><a class="btn btn-lg" onclick="window.open('/our/team/#extendInstall')"><i></i>安装chrome插件</a></div>
             </div>
             <div class="col-md-6">
                 <h2>手机客户端</h2>
                 <p>方便你随时随地通过手机访问你保存的网页，快速浏览你关注的书签频道的最新内容。</p>
-                <div class="down-button"  id="down-android" ><button type="button" id="android-btn"class="btn btn-lg" data-toggle="tooltip" data-placement="right" title="对不起，即将上线"  ><i></i>下载android客户端</button>
+                <div class="down-button"  id="down-android" ><button type="button" id="android-btn" class="btn btn-lg" onclick="window.open('http://yiye.qiniudn.com/yiye-release.apk')"><i></i>下载android客户端</button>
                     <div id="two-dimension-code">
-                        <img src="/system/assets/img/two_dimension_code.png">
+                        <img src="/system/assets/img/yiye-release.png">
                     </div>
                 </div>
             </div>
@@ -127,7 +127,7 @@
         <a id="weibo-us"></a><a id="renren-us"></a><a id="weixin-us"></a><a id="douban-us"></a>
     </div>
     <h5>一叶书签<span>·</span>发现网络之美</h5>
-    <div id="about-us"><a href="our/team" target="_blank">关于我们</a><a href='our/team/#b' target="_blank">加入我们</a><a href="our/team/#d" target="_blank">联系我们</a><a href="#">意见反馈</a></div>
+    <div id="about-us"><a href="our/team#staff" target="_blank">关于我们</a><a href='our/team/#joinUs' target="_blank">加入我们</a><a href="our/team#followUs" target="_blank">联系我们</a><a href="our/team#bugReporter">意见反馈</a></div>
 </div>
 </div>
 <script rel="script" src="/bower_components/jquery/dist/jquery.js"></script>
