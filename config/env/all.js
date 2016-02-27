@@ -37,9 +37,9 @@ module.exports = {
   sessionName: 'connect.sid',
 
   qiniu:{
-      'ACCESS_KEY': 'am7vuItIuMzgttsMSlp7JjmE2DUUprpMDbwyE9I1',
-      'SECRET_KEY': 'IYB9sMkirvxduK4TviDHREIiPNrzVyXUL9GiI_Q8',
-      'Bucket_Name': 'yiye',
+      'ACCESS_KEY': 'your ak',
+      'SECRET_KEY': 'ypur sk',
+      'Bucket_Name': 'your Bucket',
       'Uptoken_Url': '/uptoken',
       'Domain': 'http://yiye.qiniudn.com/'
   }

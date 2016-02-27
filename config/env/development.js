@@ -36,8 +36,8 @@ module.exports = {
     secureConnection: true,
     port:465,
     auth: {
-      user: 'noreply@yiye.me',
-      pass: 'huhua123456789'
+      user: 'your email',
+      pass: 'your pass'
     }
   }
 };

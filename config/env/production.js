@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-  db: 'mongodb://yiye:youqinghuai@localhost/mean-prod',
+  db: 'mongodb://localhost/mean-prod',
   app: {
     name: 'MEAN - A Modern Stack - Production'
   },
@@ -36,8 +36,8 @@ module.exports = {
     secureConnection: true,
     port:465,
     auth: {
-        user: 'noreply@yiye.me',
-        pass: 'huhua123456789'
+        user: 'your email',
+        pass: 'your pass'
     }
   }
 };
